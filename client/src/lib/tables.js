@@ -1,5 +1,5 @@
-const { TextAlign } = require('./dataset.js');
-const { SqlTable } = require('./sql-dataset.js');
+const { SqlTable } = require('./sql-dataset');
+const { TextAlign } = require('./dataset');
 
 
 const fuels = [
