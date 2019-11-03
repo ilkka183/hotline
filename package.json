@@ -1,0 +1,20 @@
+{
+  "name": "hotline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": [],
+  "author": "Ilkka Salmenius",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "mysql": "^2.17.1",
+    "schemas": "file:schemas"
+  }
+}

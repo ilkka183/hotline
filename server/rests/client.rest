@@ -1,0 +1,30 @@
+GET http://localhost:3000/api/Client
+###
+GET http://localhost:3000/api/Client/1
+###
+GET http://localhost:3000/api/sql
+content-type: application/json
+
+{
+    "sql": "SELECT CONCAT(FirstName, ' ', LastName) AS Name FROM Client WHERE Id = 1"
+}
+###
+POST http://localhost:3000/api/Client
+content-type: application/json
+
+{
+    "firstName": "Ella",
+    "lastName": "Salmenius",
+    "phone": "050 61698",
+    "email": "ilkka.salmenius@gmail.com"
+}
+###
+PUT http://localhost:3000/api/Client/1
+content-type: application/json
+
+{
+    "firstName": "Jaska",
+    "email": "jaakko.salmenius@iki.fi"
+}
+###
+DELETE http://localhost:3000/api/Client/1

@@ -1,0 +1,23 @@
+GET http://localhost:3000/api/ClientGroup?orderBy=Id&sortOrder=ASC
+###
+GET http://localhost:3000/api/ClientGroup/2
+###
+POST http://localhost:3000/api/ClientGroup
+content-type: application/json
+
+{
+    "name": "K-Kaara Oy",
+    "phone": "050 61698",
+    "email": "ilkka.salmenius@gmail.com",
+    "enabled": true
+}
+###
+PUT http://localhost:3000/api/ClientGroup/2
+content-type: application/json
+
+{
+    "country": "Finland",
+    "enabled": true
+}
+###
+DELETE http://localhost:3000/api/ClientGroup/8
