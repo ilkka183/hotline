@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { Data } from '../lib/dataset.js';
+import { Data, EditState, EditedData } from '../lib/dataset.js';
 
 export default {
   props: {
@@ -43,20 +43,14 @@ export default {
     return {
       row: null,
       savedRow: null,
+      state: EditState.ADD,
     }
   },
   computed: {
-    isAdding() {
-      return Object.keys(this.$route.query).length == 0;
-    },
-    isEditing() {
-      return Object.keys(this.$route.query).length > 0;
-    },
     caption() {
-      if (this.isAdding) {
-        return this.table.getAddCaption();
-      } else if (this.isEditing) {
-        return this.table.getEditCaption();
+      switch (this.state) {
+        case EditState.ADD: return this.table.getAddCaption();
+        case EditState.EDIT: return this.table.getEditCaption();
       }
 
       return '';
@@ -69,6 +63,11 @@ export default {
     },
   },
   mounted() {
+    if (Object.keys(this.$route.query).length > 0)
+      this.state = EditState.EDIT;
+    else
+      this.state = EditState.ADD;
+      
     this.getRow();
 
     for (let field of this.fields)
@@ -86,30 +85,44 @@ export default {
   },
   methods: {
     async getRow() {
-      if (this.isEditing) {
-        this.row = await this.table.getRow(this.$route.query);
-        this.savedRow = this.copyRow(this.row);
-      }
-      else {
-        this.row = this.table.newRow();
+      switch (this.state) {
+        case EditState.ADD:
+          this.row = this.table.newRow();
+          this.savedRow = this.copyRow(this.row);
+          break;
+
+        case EditState.EDIT:
+          this.row = await this.table.getRow(this.$route.query);
+          this.savedRow = this.copyRow(this.row);
+          break;
       }
     },
     async post() {
       if (!this.validate())
         return;
 
-      if (this.isAdding) {
-        console.log(JSON.stringify(this.row));
-        await this.table.addRow(this.row);
-      } else if (this.isEditing) {
-        console.log(JSON.stringify(this.savedRow));
-        console.log(JSON.stringify(this.row));
+      let row = null;
 
-        if (JSON.stringify(this.savedRow) !== JSON.stringify(this.row)) {
-          await this.table.updateRow(this.savedRow, this.row);
-        }
+      switch (this.state) {
+        case EditState.ADD:
+          console.log(JSON.stringify(this.row));
+          await this.table.addRow(this.row);
+          row = this.row;
+          break;
+
+        case EditState.EDIT:
+          console.log(JSON.stringify(this.savedRow));
+          console.log(JSON.stringify(this.row));
+
+          if (JSON.stringify(this.savedRow) !== JSON.stringify(this.row)) {
+            await this.table.updateRow(this.savedRow, this.row);
+          }
+
+          row = this.savedRow;
+          break;
       }
 
+      this.table.database.editedData = new EditedData(this.table.name, row, this.state);
       this.$router.go(-1);
     },
     cancel() {

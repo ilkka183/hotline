@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { EditState, EditedData } from '../lib/dataset.js';
+
 export default {
   props: {
     dataset: { type: Object, required: true }
@@ -55,14 +57,8 @@ export default {
     fields() {
       return this.dataset.fields.filter(field => !field.hideInGrid);
     },
-    savedRow() {
-      return null;
-    },
-    editedRow() {
-      return null;
-    },
-    editedState() {
-      return null;
+    editedData() {
+      return this.dataset.database.editedData;
     },
   },
   mounted() {
@@ -92,8 +88,7 @@ export default {
     async deleteRow(row) {
       await this.dataset.deleteRow(row);
       this.getRows();
-//      this.editedRow = null;
-//      this.editedState = TableState.DELETE;
+      this.dataset.database.edited = new EditedData(this.dataset.tableName, row, EditState.DELETE);
     },
     confirmDeleteRow(row) {
       if (confirm(`${this.dataset.getDeleteCaption()} (${this.dataset.contentCaptionOf(row)})?`)) {
@@ -108,14 +103,20 @@ export default {
         alignCenter: field.alignCenter
       }
     },
+    hasRowState(row, state) {
+      return (this.editedData != null) &&
+        (this.editedData.table == this.dataset.tableName) &&
+        (this.editedData.state == state) &&
+        this.dataset.primaryKeysEquals(this.editedData.row, row);
+    },
     hasRowAdded(row) {
-      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) /*&& (this.editedState == TableState.ADD)*/;
+      return this.hasRowState(row, EditState.ADD);
     },
     hasRowEdited(row) {
-      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) /*&& (this.editedState == TableState.EDIT)*/;
+      return this.hasRowState(row, EditState.EDIT);
     },
     hasFieldEdited(row, field) {
-      return this.hasRowEdited(row) && (this.savedRow[field.name].value !== this.editedRow[field.name].value);
+      return this.hasRowEdited(row) && (this.editedData.row[field.name].value != row[field.name].value);
     },
     setPageNumber(value) {
       this.pageNumber = value;

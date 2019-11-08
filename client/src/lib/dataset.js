@@ -448,10 +448,27 @@ export class Dataset {
 }
 
 
+export const EditState = {
+  ADD: 0,
+  EDIT: 1,
+  DELETE: 2
+}
+
+
+export class EditedData {
+  constructor(table, row, state) {
+    this.table = table;
+    this.row = row;
+    this.state = state;
+  }
+}
+
+
 export class RestDatabase {
   constructor(host, path) {
     this.host = host;
     this.path = path;
+    this.editedData = null;
   }
 
   get url() {
