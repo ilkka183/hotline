@@ -3,6 +3,16 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import { RestDatabase } from './lib/dataset'
 
+import {
+  BrandTable,
+  BulletinGroupTable,
+  ClientTable,
+  ClientGroupTable,
+  NoticeTable,
+  ProblemTable,
+  VehicleTable
+} from './lib/tables';
+
 Vue.use(Router)
 
 const database = new RestDatabase('http://localhost:3000', '/api/');
@@ -18,49 +28,76 @@ export default new Router({
     },
     {
       path: '/problems',
-      name: 'problems',
-      component: () => import('./views/Problems.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new ProblemTable(database) })
+    },
+    {
+      path: '/problem',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new ProblemTable(database) })
     },
     {
       path: '/notices',
-      name: 'notices',
-      component: () => import('./views/Notices.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new NoticeTable(database) })
+    },
+    {
+      path: '/notice',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new NoticeTable(database) })
     },
     {
       path: '/clientgroups',
-      name: 'clientgroups',
-      component: () => import('./views/ClientGroups.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new ClientGroupTable(database) })
+    },
+    {
+      path: '/clientgroup',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new ClientGroupTable(database) })
     },
     {
       path: '/clients',
-      name: 'clients',
-      component: () => import('./views/Clients.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new ClientTable(database) })
+    },
+    {
+      path: '/client',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new ClientTable(database) })
     },
     {
       path: '/brands',
-      name: 'brands',
-      component: () => import('./views/Brands.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new BrandTable(database) })
+    },
+    {
+      path: '/brand',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new BrandTable(database) })
     },
     {
       path: '/vehicles',
-      name: 'vehicles',
-      component: () => import('./views/Vehicles.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new VehicleTable(database) })
+    },
+    {
+      path: '/vehicle',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new VehicleTable(database) })
     },
     {
       path: '/bulletingroups',
-      name: 'bulletingroups',
-      component: () => import('./views/BulletinGroups.vue'),
-      props: { database }
+      component: () => import('./views/TableRows.vue'),
+      props: () => ({ table: new BulletinGroupTable(database) })
+    },
+    {
+      path: '/bulletingroup',
+      component: () => import('./views/TableRow.vue'),
+      props: () => ({ table: new BulletinGroupTable(database) })
     },
     {
       path: '/about',
-      name: 'about',
       component: () => import('./views/About.vue')
     }
   ]

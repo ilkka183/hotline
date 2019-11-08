@@ -3,7 +3,32 @@ const connection = require('../connection');
 
 const router = express.Router();
 
-router.get('/:table/', (req, res) => {
+router.get('/:table/row', (req, res) => {
+  let sql = 'SELECT * FROM ' + req.params.table;
+  const inserts = [];
+
+  for (let key of Object.keys(req.query)) {
+    if (inserts.length == 0)
+      sql += ' WHERE ';
+    else
+      sql += ' AND ';
+
+    sql += key + '=?';
+    inserts.push(req.query[key]);
+  }
+
+  console.log(sql);
+  console.log(inserts);
+
+  connection.query(sql, inserts, (error, results, fields) => {
+    if (error)
+      return res.status(400).send(error);
+
+    res.send(results);
+  });
+});
+
+router.get('/:table/rows', (req, res) => {
   let sql = 'SELECT COUNT(*) as RowCount FROM ' + req.params.table;
 
   connection.query(sql, (error, results, fields) => {
@@ -39,23 +64,6 @@ router.get('/:table/', (req, res) => {
   
       res.send({ rowCount, rows: results });
     });
-  });
-});
-
-router.get('/:table/:id/', (req, res) => {
-  let sql = 'SELECT * FROM ' + req.params.table;
-  sql += ' WHERE Id=?'
-
-  const inserts = [req.params.id];
-
-  console.log(sql);
-  console.log(inserts);
-
-  connection.query(sql, inserts, (error, results, fields) => {
-    if (error)
-      return res.status(400).send(error);
-
-    res.send(results);
   });
 });
 

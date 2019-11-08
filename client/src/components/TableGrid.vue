@@ -1,55 +1,105 @@
 <template>
   <div>
     <h1>{{caption}}</h1>
-    <TableNavigator :table="table"></TableNavigator>
+    <div class="navigator">
+      <button @click="addRow">Lisää uusi</button>
+      <button @click="refreshRows">Päivitä</button>
+      <template v-if="pageCount > 1">
+        <button :disabled="pageNumber == 1" @click="firstPage">Ensimmäinen</button>
+        <button :disabled="pageNumber == 1" @click="prevPage">Edellinen</button>
+        <button v-for="number in pageCount" :key="number" :disabled="pageNumber == number" @click="setPageNumber(number)">{{number}}</button>
+        <button :disabled="pageNumber == pageCount" @click="nextPage">Seuraava</button>
+        <button :disabled="pageNumber == pageCount" @click="lastPage">Viimeinen</button>
+        <span class="number">sivu {{pageNumber}}/{{pageCount}}</span>
+      </template>
+    </div>
     <table class="grid">
       <tr>
         <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
       </tr>
-      <tr v-for="row in table.rows" v-bind:key="row.id">
+      <tr v-for="row in rows" v-bind:key="row.id">
         <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
-          <span :class="{ code: field.isCode() }">{{field.displayText(row)}}</span>
+          <span :class="{ code: field.isCode }">{{field.displayText(row)}}</span>
         </td>
-        <td class="action"><button @click="table.startEdit(row)">Muokkaa</button></td>
-        <td class="action"><button @click="table.deleteRow(row)">Poista</button></td>
+        <td class="action"><button @click="editRow(row)">Muokkaa</button></td>
+        <td class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
         <td class="added-text" v-if="hasRowAdded(row)">lisätty</td>
         <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
       </tr>
       <tr>
-        <td class="data" :colspan="fields.length">{{table.rowCount}} riviä</td>
+        <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
-import TableComponent from './TableComponent';
-import TableNavigator from './TableNavigator';
-import { TableState } from './Table';
-
 export default {
-  extends: TableComponent,
-  components: {
-    TableNavigator
+  props: {
+    dataset: { type: Object, required: true }
+  },
+  data() {
+    return {
+      pageNumber: 1,
+      rowCount: 0,
+      rows: [],
+    }
   },
   computed: {
     caption() {
       return this.dataset.getListCaption();
     },
+    pageCount() {
+      return Math.ceil(this.rowCount/this.dataset.pageLimit);
+    },
     fields() {
       return this.dataset.fields.filter(field => !field.hideInGrid);
     },
     savedRow() {
-      return this.table.savedRow;
+      return null;
     },
     editedRow() {
-      return this.table.editedRow;
+      return null;
     },
     editedState() {
-      return this.table.editedState;
+      return null;
     },
   },
+  mounted() {
+    this.getRows();
+  },
   methods: {
+    async getRows() {
+      const data = await this.dataset.getRows(this.pageNumber);
+      this.rowCount = data.rowCount;
+      this.rows = data.rows;
+    },
+    async deleteRow(row) {
+      await this.dataset.deleteRow(row);
+      this.getRows();
+//      this.editedRow = null;
+//      this.editedState = TableState.DELETE;
+    },
+    addRow() {
+      this.$router.push(this.dataset.tableName);
+    },
+    editRow(row) {
+      const query = {};
+
+      for (let field of this.dataset.fields)
+        if (field.isPrimaryKey)
+          query[field.name] = row[field.name].value;
+
+      this.$router.push({ path: this.dataset.tableName, query });
+    },
+    confirmDeleteRow(row) {
+      if (confirm(`${this.dataset.getDeleteCaption()} (${this.dataset.contentCaptionOf(row)})?`)) {
+        this.deleteRow(row);
+      }
+    },
+    refreshRows() {
+      this.getRows();
+    },
     cellClasses(row, field) {
       return {
         added: this.hasRowAdded(row),
@@ -59,19 +109,71 @@ export default {
       }
     },
     hasRowAdded(row) {
-      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) && (this.editedState == TableState.ADD);
+      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) /*&& (this.editedState == TableState.ADD)*/;
     },
     hasRowEdited(row) {
-      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) && (this.editedState == TableState.EDIT);
+      return (this.editedRow != null) && this.dataset.primaryKeysEquals(this.editedRow, row) /*&& (this.editedState == TableState.EDIT)*/;
     },
     hasFieldEdited(row, field) {
       return this.hasRowEdited(row) && (this.savedRow[field.name].value !== this.editedRow[field.name].value);
     },
+    setPageNumber(value) {
+      this.pageNumber = value;
+      this.getRows();
+    },
+    firstPage() {
+      this.setPageNumber(1);
+    },
+    prevPage() {
+      if (this.pageNumber > 0)
+        this.setPageNumber(this.pageNumber - 1);
+    },
+    nextPage() {
+      if (this.pageNumber < this.pageCount)
+        this.setPageNumber(this.pageNumber + 1);
+    },
+    lastPage() {
+      this.setPageNumber(this.pageCount);
+    },
+    async seekToPageBy(id) {
+      if (this.dataset.primaryKeyField != null) {
+        this.pageNumber = 1;
+
+        do {
+          let data = await this.dataset.getRows(this.pageNumber);
+
+          for (let row of data.rows) {
+            if (row[this.dataset.primaryKeyField.name].value == id) {
+              this.rows = data.rows;
+              return;
+            }
+          }
+
+          this.pageNumber++;
+        } while (this.pageNumber <= this.pageCount);
+      } else {
+        this.firstPage();
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
+button:disabled {
+/*  background-color: transparent;
+  border-color: transparent; */
+}
+
+.navigator button {
+  margin-right: 4px
+}
+
+.number {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .code {
   font-family: 'Courier New', Courier, monospace;
 }

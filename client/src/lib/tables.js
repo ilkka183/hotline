@@ -227,6 +227,10 @@ export class ProblemTable extends BaseTable {
     this.addIntegerField('Status', 'Tila', { displayTexts: ['Avoin', 'Ratkaistu', 'Ratkaisematon'], readonly: true });
   }
 
+  get pageLimit() {
+    return 5;
+  }
+
   getListCaption() {
     return 'Vikatapaukset';
   }

@@ -11,7 +11,7 @@
       <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
       <router-link to="/about">Tietoja</router-link>
     </div>
-    <router-view/>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 

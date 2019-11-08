@@ -7,6 +7,10 @@ class SqlDataset extends Dataset {
     super(database);
   }
 
+  get tableName() {
+    return null;
+  }
+
   async getLookupText(sql, id) {
     sql += ' WHERE Id=?';
 
@@ -51,16 +55,48 @@ export class SqlTable extends SqlDataset {
     this.name = name;
   }
 
+  get tableName() {
+    return this.name;
+  }
+
   get url() {
     return this.database.url + 'table/' + this.name;
   }
 
+  async getRow(query) {
+    let url = this.url + '/row';
+    let params = '';
+
+    for (let key of Object.keys(query)) {
+      if (params == '')
+        params += '?';
+      else
+        params += '&';
+
+      params += key + '=' + query[key];
+    }
+
+    url += params;
+
+    console.log('GET ' + url);
+
+    const response = await axios.get(url);
+
+    const source = response.data[0];
+    const row = {};
+
+    for (let key in source) {
+      row[key] = new Data(source[key]);
+    }
+
+    return row;
+  }
+
   async getRows(pageNumber = 1) {
-    let url = this.url;
-    url += '?' + 'limit=' + this.pageLimit
+    let url = this.url + '/rows?limit=' + this.pageLimit;
 
     if (pageNumber > 1)
-       url += '&' + 'offset=' + (pageNumber - 1)*this.pageLimit;
+       url += '&offset=' + (pageNumber - 1)*this.pageLimit;
 
     console.log('GET ' + url);
 

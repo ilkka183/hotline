@@ -91,7 +91,7 @@ class Field {
     return (this.align === TextAlign.CENTER);
   }
 
-  isCode() {
+  get isCode() {
     return false;
   }
 
@@ -99,7 +99,7 @@ class Field {
     return this.primaryKey;
   }
 
-  isReadOnly() {
+  get isReadOnly() {
     return this.readonly;
   }
 
@@ -124,7 +124,7 @@ class Field {
   }
 
   isVisibleInDialog(row) {
-    return !this.isReadOnly() || row[this.name].value;
+    return !this.isReadOnly || row[this.name].value;
   }
 
   showDialogCaption() {
@@ -314,7 +314,7 @@ class StringField extends Field {
       return super.getInputTextLength();
   }
 
-  isCode() {
+  get isCode() {
     return this.code;
   }
 
@@ -353,7 +353,7 @@ export class Dataset {
   addField(field) {
     field.dataset = this;
 
-    if ((this.autoFocusField == null) && !field.isReadOnly())
+    if ((this.autoFocusField == null) && !field.isReadOnly)
       this.autoFocusField = field;
 
     this.fields.push(field);
@@ -393,7 +393,7 @@ export class Dataset {
     for (let field of this.fields) {
       const data = new Data(null);
 
-      if (!field.isReadOnly() && (field.default !== undefined))
+      if (!field.isReadOnly && (field.default !== undefined))
         data.value = field.default;
 
       row[field.name] = data;
@@ -420,7 +420,7 @@ export class Dataset {
     return keys;
   }
 
-  contentOf(row) {
+  contentCaptionOf(row) {
     let text = '';
 
     for (let field of this.fields)
