@@ -74,11 +74,8 @@ export default {
       this.rowCount = data.rowCount;
       this.rows = data.rows;
     },
-    async deleteRow(row) {
-      await this.dataset.deleteRow(row);
+    refreshRows() {
       this.getRows();
-//      this.editedRow = null;
-//      this.editedState = TableState.DELETE;
     },
     addRow() {
       this.$router.push(this.dataset.tableName);
@@ -92,13 +89,16 @@ export default {
 
       this.$router.push({ path: this.dataset.tableName, query });
     },
+    async deleteRow(row) {
+      await this.dataset.deleteRow(row);
+      this.getRows();
+//      this.editedRow = null;
+//      this.editedState = TableState.DELETE;
+    },
     confirmDeleteRow(row) {
       if (confirm(`${this.dataset.getDeleteCaption()} (${this.dataset.contentCaptionOf(row)})?`)) {
         this.deleteRow(row);
       }
-    },
-    refreshRows() {
-      this.getRows();
     },
     cellClasses(row, field) {
       return {

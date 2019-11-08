@@ -35,12 +35,6 @@
 <script>
 import { Data } from '../lib/dataset.js';
 
-export const TableState = {
-  ADD: 0,
-  EDIT: 1,
-  DELETE: 2
-}
-
 export default {
   props: {
     table: { type: Object, required: true }
@@ -48,20 +42,15 @@ export default {
   data() {
     return {
       row: null,
-      posted: false,
       savedRow: null,
-      currentRow: null,
-      editedRow: null,
-      editedState: null,
-      state: TableState.LIST,
     }
   },
   computed: {
     isAdding() {
-      return this.state == TableState.ADD;
+      return Object.keys(this.$route.query).length == 0;
     },
     isEditing() {
-      return this.state == TableState.EDIT;
+      return Object.keys(this.$route.query).length > 0;
     },
     caption() {
       if (this.isAdding) {
@@ -97,35 +86,37 @@ export default {
   },
   methods: {
     async getRow() {
-      this.row = await this.table.getRow(this.$route.query);
+      if (this.isEditing) {
+        this.row = await this.table.getRow(this.$route.query);
+        this.savedRow = this.copyRow(this.row);
+      }
+      else {
+        this.row = this.table.newRow();
+      }
     },
-    async addRow(row) {
-      const id = await this.table.addRow(row);
-      this.editedRow = row;
-      this.editedState = TableState.ADD;
-      this.seekToPageBy(id);
-    },
-    async updateRow(oldRow, newRow) {
-      await this.table.updateRow(oldRow, newRow);
-      this.getRows();
-      this.editedRow = newRow;
-      this.editedState = TableState.EDIT;
-    },
-    isMissing(field) {
-      return this.posted && !field.isValid(this.row);
-    },
-    post() {
-      this.$router.go(-1);
-/*      this.posted = true;
-
+    async post() {
       if (!this.validate())
         return;
 
-      this.table.postEdit(); */
+      if (this.isAdding) {
+        console.log(JSON.stringify(this.row));
+        await this.table.addRow(this.row);
+      } else if (this.isEditing) {
+        console.log(JSON.stringify(this.savedRow));
+        console.log(JSON.stringify(this.row));
+
+        if (JSON.stringify(this.savedRow) !== JSON.stringify(this.row)) {
+          await this.table.updateRow(this.savedRow, this.row);
+        }
+      }
+
+      this.$router.go(-1);
     },
     cancel() {
       this.$router.go(-1);
-//      this.table.cancelEdit();
+    },
+    isMissing(field) {
+      return this.posted && !field.isValid(this.row);
     },
     validate() {
       for (let field of this.table.fields) {
@@ -140,18 +131,6 @@ export default {
 
       return true;
     },
-    startState(state, savedRow, currentRow) {
-      this.state = state;
-      this.savedRow = savedRow;
-      this.currentRow = currentRow;
-      this.editedRow = null;
-    },
-    startAdd() {
-      this.startState(
-        TableState.ADD,
-        null,
-        this.table.newRow());
-    },
     copyRow(row) {
       const result = {};
 
@@ -162,37 +141,6 @@ export default {
       }
 
       return result;
-    },
-    startEdit(row) {
-      this.startState(
-        TableState.EDIT,
-        this.copyRow(row),
-        this.copyRow(row));
-    },
-    async postEdit() {
-      switch (this.state) {
-        case TableState.ADD:
-          console.log(JSON.stringify(this.currentRow));
-
-          this.addRow(this.currentRow);
-          break;
-
-        case TableState.EDIT:
-          console.log(JSON.stringify(this.savedRow));
-          console.log(JSON.stringify(this.currentRow));
-
-          if (JSON.stringify(this.savedRow) !== JSON.stringify(this.currentRow)) {
-            this.updateRow(this.savedRow, this.currentRow);
-          }
-
-          break;
-      }
-
-      this.row = Object.assign({}, this.currentRow);
-      this.state = TableState.LIST;
-    },
-    cancelEdit() {
-      this.state = TableState.LIST;
     },
   }
 }
