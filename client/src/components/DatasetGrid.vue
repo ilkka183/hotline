@@ -23,8 +23,8 @@
         </td>
         <td class="action"><button @click="editRow(row)">Muokkaa</button></td>
         <td class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
-        <td class="added-text" v-if="hasRowAdded(row)">lisätty</td>
-        <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
+        <td class="added-text" v-if="hasRowAdded(row)">lisätty viimeksi</td>
+        <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu viimeksi</td>
       </tr>
       <tr>
         <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>

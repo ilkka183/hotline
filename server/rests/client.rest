@@ -1,4 +1,4 @@
-GET http://localhost:3000/api/Client
+GET http://localhost:3000/api/query
 ###
 GET http://localhost:3000/api/Client/1
 ###

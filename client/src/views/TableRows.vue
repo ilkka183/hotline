@@ -1,13 +1,13 @@
 <template>
-  <TableGrid :dataset="table"></TableGrid>
+  <DatasetGrid :dataset="table"></DatasetGrid>
 </template>
 
 <script>
-import TableGrid from '../components/TableGrid';
+import DatasetGrid from '../components/DatasetGrid';
 
 export default {
   components: {
-    TableGrid
+    DatasetGrid
   },
   props: {
     table: { type: Object, required: true }

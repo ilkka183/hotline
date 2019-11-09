@@ -117,10 +117,14 @@ class Field {
   displayText(row) {
     const data = row[this.name];
 
-    if (data.displayText != undefined)
-      return data.displayText
-    else
-      return data.value;
+    if (data) {
+      if (data.displayText != undefined)
+        return data.displayText
+      else
+        return data.value;
+    }
+
+    return null;
   }
 
   isVisibleInDialog(row) {
@@ -190,7 +194,9 @@ class BooleanField extends Field {
   }
 
   displayText(row) {
-    if (row[this.name].value)
+    const data = row[this.name];
+
+    if (data.value)
       return 'kyllä';
     else
       return 'ei';
@@ -216,7 +222,8 @@ class DateField extends Field {
   }
 
   displayText(row) {
-    const value = row[this.name].value;
+    const data = row[this.name];
+    const value = data.value;
 
     if (value) {
       const date = new Date(value);

@@ -3,15 +3,12 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import { RestDatabase } from './lib/dataset'
 
-import {
-  BrandTable,
-  BulletinGroupTable,
-  ClientTable,
-  ClientGroupTable,
-  NoticeTable,
-  ProblemTable,
-  VehicleTable
-} from './lib/tables';
+import { BrandTable } from './tables/brand';
+import { BulletinGroupTable } from './tables/bulletin';
+import { ClientTable, ClientGroupTable } from './tables/client';
+import { NoticeTable } from './tables/notice';
+import { ProblemTable } from './tables/problem';
+import { VehicleTable } from './tables/vehicle';
 
 Vue.use(Router)
 
@@ -101,4 +98,4 @@ export default new Router({
       component: () => import('./views/About.vue')
     }
   ]
-})
+});

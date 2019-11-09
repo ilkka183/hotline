@@ -35,24 +35,12 @@ class SqlDataset extends Dataset {
   }
 }
 
-export class SqlQuery extends SqlDataset {
-  constructor(database, sql) {
-    super(database);
-
-    this.sql = sql;
-  }
-
-  get url() {
-    return this.database.url + 'query/' + this.sql;
-  }
-}
-
-
 export class SqlTable extends SqlDataset {
-  constructor(database, name) {
+  constructor(database, name, sql) {
     super(database);
 
     this.name = name;
+    this.sql = sql;
   }
 
   get tableName() {
@@ -92,7 +80,34 @@ export class SqlTable extends SqlDataset {
     return row;
   }
 
-  async getRows(pageNumber = 1) {
+  async getQueryRows(pageNumber = 1) {
+    let url = this.database.url + 'query/rows';
+    url += '?table=' + this.tableName;
+    url += '&sql=' + this.sql;
+    url += '&limit=' + this.pageLimit;
+
+    if (pageNumber > 1)
+       url += '&offset=' + (pageNumber - 1)*this.pageLimit;
+
+    console.log('GET ' + url);
+
+    const response = await axios.get(url)
+    const rows = [];
+
+    for (let source of response.data.rows) {
+      const row = {};
+
+      for (let key in source) {
+        row[key] = new Data(source[key]);
+      }
+
+      rows.push(row);
+    }
+
+    return { rowCount: response.data.rowCount, rows }
+  }
+  
+  async getTableRows(pageNumber = 1) {
     let url = this.url + '/rows?limit=' + this.pageLimit;
 
     if (pageNumber > 1)
@@ -120,6 +135,13 @@ export class SqlTable extends SqlDataset {
     return { rowCount: response.data.rowCount, rows }
   }
 
+  async getRows(pageNumber = 1) {
+    if (this.sql)
+      return this.getQueryRows(pageNumber);
+    else
+      return this.getTableRows(pageNumber);
+  }
+
   async addRow(row) {
     const fields = {};
 
@@ -142,7 +164,7 @@ export class SqlTable extends SqlDataset {
 
     return response.data.insertId;
   }
-
+  
   async updateRow(oldRow, newRow) {
     const keys = this.primaryKeys(newRow);
 
