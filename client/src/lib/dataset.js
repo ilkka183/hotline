@@ -110,6 +110,10 @@ class Field {
     return true;
   }
 
+  value(row) {
+    return row[this.name];
+  }
+
   displayText(row) {
     return row[this.name];
   }

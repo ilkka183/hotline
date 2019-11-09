@@ -3,16 +3,16 @@
     <h1>{{caption}}</h1>
     <form @submit.prevent="post" @keydown.esc="cancel">
       <table>
-        <tr v-for="(field, index) in fields" v-bind:key="index">
-          <td> <!-- caption -->
+        <tr v-for="(field, index) in fields" :key="index + 20">
+          <td>
             <div v-if="field.showDialogCaption()">
               <span :class="{ missing: isMissing(field)}">{{field.caption}}:</span>
               <span v-if="field.required && !field.isReadOnly" class="required-asterix"></span>
             </div>
           </td>
-          <td> <!-- control -->
+          <td>
             <div v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }">{{field.displayText(row)}}</div>
-            <input v-else-if="field.dialogInputType() == 'text'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" type="text" :size="field.getInputTextLength()">
+            <input v-else-if="field.dialogInputType() == 'text'" type="text" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :size="field.getInputTextLength()">
             <textarea v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :cols="field.getCols()" :rows="field.getRows()"></textarea>
             <select v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
               <option v-for="option in field.lookupList" :key="option.value" :value="option.value">{{option.text}}</option>
@@ -62,7 +62,7 @@ export default {
       return [];
     },
   },
-  mounted() {
+  async mounted() {
     if (Object.keys(this.$route.query).length > 0)
       this.state = EditState.EDIT;
     else
@@ -72,15 +72,15 @@ export default {
       if (!field.isReadOnly)
         field.findLookupList();
 
-    this.getRow();
+    await this.getRow();
     this.posted = false;
   },
   updated() {
-    const list = document.getElementsByTagName('input');
+/*    const list = document.getElementsByTagName('input');
 
     if (list.length > 0) {
       list[0].focus();
-    }
+    } */
   },
   methods: {
     async getRow() {
@@ -134,8 +134,9 @@ export default {
       for (let field of this.table.fields) {
         if (!field.isReadOnly && !field.isValid(this.row))
         {
-          if (this.$refs[field.name])
+          if (this.$refs[field.name]) {
             this.$refs[field.name][0].focus();
+          }
 
           return false;
         }
