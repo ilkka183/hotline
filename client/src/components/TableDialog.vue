@@ -12,13 +12,13 @@
           </td>
           <td> <!-- control -->
             <div v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }">{{field.displayText(row)}}</div>
-            <input v-else-if="field.dialogInputType() == 'text'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name].value" type="text" :size="field.getInputTextLength()">
-            <textarea v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name].value" :cols="field.getCols()" :rows="field.getRows()"></textarea>
-            <select v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name].value">
+            <input v-else-if="field.dialogInputType() == 'text'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" type="text" :size="field.getInputTextLength()">
+            <textarea v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :cols="field.getCols()" :rows="field.getRows()"></textarea>
+            <select v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
               <option v-for="option in field.lookupList" :key="option.value" :value="option.value">{{option.text}}</option>
             </select>
             <div v-else-if="field.dialogInputType() == 'checkbox'">
-              <input type="checkbox" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name].value">
+              <input type="checkbox" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
               <span>{{field.caption}}</span>
             </div>
           </td>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { Data, EditState, EditedData } from '../lib/dataset.js';
+import { EditState, EditedData } from '../lib/dataset.js';
 
 export default {
   props: {
@@ -68,12 +68,11 @@ export default {
     else
       this.state = EditState.ADD;
       
-    this.getRow();
-
-    for (let field of this.fields)
+    for (let field of this.table.fields)
       if (!field.isReadOnly)
         field.findLookupList();
 
+    this.getRow();
     this.posted = false;
   },
   updated() {
@@ -147,11 +146,8 @@ export default {
     copyRow(row) {
       const result = {};
 
-      for (let key of Object.keys(row)) {
-        const data = row[key];
-        
-        result[key] = new Data(data.value, data.displayText);
-      }
+      for (let key of Object.keys(row))
+        result[key] = row[key];
 
       return result;
     },

@@ -5,14 +5,6 @@ export const TextAlign = {
 }
 
 
-export class Data {
-  constructor(value, displayText = undefined) {
-    this.value = value;
-    this.displayText = displayText;
-  }
-}
-
-
 export class SelectOption {
   constructor(value, text) {
     this.value = value;
@@ -32,6 +24,7 @@ class Field {
 
     this.align = TextAlign.LEFT;
     this.default = undefined;
+    this.hideInDialog = false;
     this.hideInGrid = false;
     this.lookupList = null;
     this.lookupSQL = null;
@@ -46,6 +39,9 @@ class Field {
 
       if ('default' in options)
         this.default = options.default;
+
+      if ('hideInDialog' in options)
+        this.hideInDialog = options.hideInDialog;
 
       if ('hideInGrid' in options)
         this.hideInGrid = options.hideInGrid;
@@ -104,31 +100,22 @@ class Field {
   }
 
   isNull(row) {
-    return !row[this.name].value;
+    return !row[this.name];
   }
 
   isValid(row) {
     if (this.required)
-      return row[this.name].value != undefined;
+      return row[this.name] != undefined;
 
     return true;
   }
 
   displayText(row) {
-    const data = row[this.name];
-
-    if (data) {
-      if (data.displayText != undefined)
-        return data.displayText
-      else
-        return data.value;
-    }
-
-    return null;
+    return row[this.name];
   }
 
   isVisibleInDialog(row) {
-    return !this.isReadOnly || row[this.name].value;
+    return (!this.isReadOnly || row[this.name]) && !this.hideInDialog;
   }
 
   showDialogCaption() {
@@ -146,20 +133,21 @@ class Field {
     return this.lookupList || this.lookupSQL;
   }
 
-  async findLookupText(data) {
+  async findLookupText(value) {
     if (this.lookupList) {
-      if (data.value !== null)
-        data.displayText = this.lookupList[data.value].text;
+      if (value !== null)
+        return this.lookupList[value].text;
       else
-        data.displayText = undefined;
+        return undefined;
     }
     else if (this.lookupSQL)
-      data.displayText = await this.dataset.getLookupText(this.lookupSQL, data.value);
+      return await this.dataset.getLookupText(this.lookupSQL, value);
   }
 
   async findLookupList() {
-    if (!this.lookupList && this.lookupSQL)
+    if (!this.lookupList && this.lookupSQL) { 
       this.lookupList = await this.dataset.getLookupList(this.lookupSQL);
+    }
 
     return this.lookupList;
   }
@@ -194,9 +182,7 @@ class BooleanField extends Field {
   }
 
   displayText(row) {
-    const data = row[this.name];
-
-    if (data.value)
+    if (row[this.name])
       return 'kyllä';
     else
       return 'ei';
@@ -222,8 +208,7 @@ class DateField extends Field {
   }
 
   displayText(row) {
-    const data = row[this.name];
-    const value = data.value;
+    const value = row[this.name];
 
     if (value) {
       const date = new Date(value);
@@ -398,12 +383,12 @@ export class Dataset {
     let row = {};
 
     for (let field of this.fields) {
-      const data = new Data(null);
+      let value = null;
 
       if (!field.isReadOnly && (field.default !== undefined))
-        data.value = field.default;
+        value = field.default;
 
-      row[field.name] = data;
+      row[field.name] = value;
     }
 
     return row;
@@ -422,7 +407,7 @@ export class Dataset {
 
     for (let field of this.fields)
       if (field.isPrimaryKey)
-        keys[field.name] = row[field.name].value;
+        keys[field.name] = row[field.name];
 
     return keys;
   }
@@ -432,13 +417,13 @@ export class Dataset {
 
     for (let field of this.fields)
       if ((field.isPrimaryKey) || (field.getType() == String)) {
-        const data = row[field.name];
+        const value = row[field.name];
 
-        if (data.value) {
+        if (value) {
           if (text)
             text += ', ';
 
-          text += data.value;
+          text += value;
         }
       }
 
@@ -447,7 +432,7 @@ export class Dataset {
 
   primaryKeysEquals(row1, row2) {
     for (let field of this.fields)
-      if ((field.isPrimaryKey) && (row1[field.name].value != row2[field.name].value))
+      if ((field.isPrimaryKey) && (row1[field.name] != row2[field.name]))
         return false;
 
     return true;

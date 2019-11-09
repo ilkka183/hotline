@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Data, Dataset, SelectOption } from './dataset';
+import { Dataset, SelectOption } from './dataset';
 
 
 class SqlDataset extends Dataset {
@@ -74,7 +74,7 @@ export class SqlTable extends SqlDataset {
     const row = {};
 
     for (let key in source) {
-      row[key] = new Data(source[key]);
+      row[key] = source[key];
     }
 
     return row;
@@ -98,7 +98,7 @@ export class SqlTable extends SqlDataset {
       const row = {};
 
       for (let key in source) {
-        row[key] = new Data(source[key]);
+        row[key] = source[key];
       }
 
       rows.push(row);
@@ -122,7 +122,7 @@ export class SqlTable extends SqlDataset {
       const row = {};
 
       for (let key in source) {
-        row[key] = new Data(source[key]);
+        row[key] = source[key];
       }
 
       rows.push(row);
@@ -146,7 +146,7 @@ export class SqlTable extends SqlDataset {
     const fields = {};
 
     for (let key in row) {
-      const value = row[key].value;
+      const value = row[key];
 
       if (value !== null)
         fields[key] = value;
@@ -160,7 +160,7 @@ export class SqlTable extends SqlDataset {
     const field = this.primaryKeyField;
 
     if (field)
-      row[field.name].value = response.data.insertId;
+      row[field.name] = response.data.insertId;
 
     return response.data.insertId;
   }
@@ -171,9 +171,9 @@ export class SqlTable extends SqlDataset {
     const fields = {};
 
     for (let key in newRow) {
-      const value = newRow[key].value;
+      const value = newRow[key];
       
-      if (value != oldRow[key].value)
+      if (value != oldRow[key])
         fields[key] = value;
     }
 

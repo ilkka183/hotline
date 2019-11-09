@@ -81,7 +81,7 @@ export default {
 
       for (let field of this.dataset.fields)
         if (field.isPrimaryKey)
-          query[field.name] = row[field.name].value;
+          query[field.name] = row[field.name];
 
       this.$router.push({ path: this.dataset.tableName, query });
     },
@@ -116,7 +116,7 @@ export default {
       return this.hasRowState(row, EditState.EDIT);
     },
     hasFieldEdited(row, field) {
-      return this.hasRowEdited(row) && (this.editedData.row[field.name].value != row[field.name].value);
+      return this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]);
     },
     setPageNumber(value) {
       this.pageNumber = value;
@@ -144,7 +144,7 @@ export default {
           let data = await this.dataset.getRows(this.pageNumber);
 
           for (let row of data.rows) {
-            if (row[this.dataset.primaryKeyField.name].value == id) {
+            if (row[this.dataset.primaryKeyField.name] == id) {
               this.rows = data.rows;
               return;
             }

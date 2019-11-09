@@ -37,14 +37,16 @@ export class ClientTable extends BaseTable {
   constructor(database) {
     super(database, 'Client');
 
-    this.sql = 'SELECT Client.Id, ClientGroup.Name AS GroupName, Client.ClientType, Client.FirstName, Client.LastName, Client.Title,';
+    this.sql = 'SELECT Client.Id, Client.GroupId, ClientGroup.Name AS GroupName, Client.ClientType, Client.FirstName, Client.LastName, Client.Title,';
+    this.sql += ' Client.Address, Client.PostalCode, Client.PostOffice, Client.Country, Client.Phone, Client.Email,';
     this.sql += ' Client.Info, Client.LicenseBegin, Client.LicenseEnd, Client.Enabled';
     this.sql += ' FROM Client, ClientGroup';
     this.sql += ' WHERE Client.GroupId = ClientGroup.Id';
     this.sql += ' ORDER BY Client.Id';
 
     this.addAutoIncrementField('Id', 'No');
-    this.addIntegerField('GroupId', 'Käyttäjäryhmä', { lookupSQL: "SELECT Id, Name AS Text FROM ClientGroup", foreignKey: true, required: true });
+    this.addIntegerField('GroupId', 'Käyttäjäryhmä', { lookupSQL: "SELECT Id, Name AS Text FROM ClientGroup", hideInGrid: true, foreignKey: true, required: true });
+    this.addStringField('GroupName', 'Käyttäjäryhmä', { hideInDialog: true });
     this.addIntegerField('ClientType', 'Tyyppi', { displayTexts: ['Pääkäyttäjä', 'Tehokäyttäjä', 'Käyttäjä', 'Demokäyttäjä'], required: true });
     this.addStringField('Username', 'Käyttäjätunnus', { length: 20, hideInGrid: true, required: true });
     this.addStringField('Password', 'Salasana', { length: 20, hideInGrid: true, required: true });
