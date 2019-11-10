@@ -21,7 +21,7 @@
             </select>
           </td>
         </tr>
-        <tr>
+        <tr v-if="brand !== null">
           <td><label for="modelYear">Vuosimalli:</label></td>
           <td>
             <select id="modelYear" v-model="year" @change="fillFuels">
@@ -30,7 +30,7 @@
             </select>
           </td>
         </tr>
-        <tr>
+        <tr v-if="year != null">
           <td><label for="fuel">Käyttövoima:</label></td>
           <td>
             <select id="fuel" v-model="fuel" @change="fillModels">
@@ -39,7 +39,7 @@
             </select>
           </td>
         </tr>
-        <tr>
+        <tr v-if="fuel !== null">
           <td><label for="model">Malli:</label></td>
           <td>
             <select id="model" v-model="model" @change="fillEngineDisplacements">
@@ -48,7 +48,7 @@
             </select>
           </td>
         </tr>
-        <tr>
+        <tr v-if="model !== null">
           <td><label for="engineDisplacement">Iskutilavuus:</label></td>
           <td>
             <select id="engineDisplacement" v-model="engineDisplacement">
@@ -60,7 +60,7 @@
         <tr>
           <td></td>
           <td>
-            <button :disabled="engineDisplacement == null" @click="post">Jatka</button>
+            <button :disabled="engineDisplacement === null" @click="post">Jatka</button>
             <button @click="clear">Tyhjennä</button>
           </td>
         </tr>
@@ -68,19 +68,26 @@
     </div>
     <div v-if="method == 2">
     </div>
+    <TableDialog :table="table" :showCaption="false" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import TableDialog from '@/components/TableDialog';
 import { fuels as fuelTexts } from '@/tables/base';
+import { ProblemTable } from '@/tables/problem';
 
 export default {
+  components: {
+    TableDialog
+  },
   props: {
     database: { type: Object, required: true }
   },
   data() {
     return {
+      table: new ProblemTable(this.database),
       method: null,
       licenseNumber: 'ZLP-833',
       brand: null,

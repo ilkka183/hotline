@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{caption}}</h1>
+    <h1 v-if="showCaption">{{caption}}</h1>
     <form @submit.prevent="post" @keydown.esc="cancel">
       <table>
         <tr v-for="(field, index) in fields" :key="index + 20">
@@ -37,7 +37,8 @@ import { EditState, EditedData } from '../lib/dataset.js';
 
 export default {
   props: {
-    table: { type: Object, required: true }
+    table: { type: Object, required: true },
+    showCaption: { type: Boolean, default: true }
   },
   data() {
     return {
