@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import TableDialog from '../components/TableDialog';
+import TableDialog from '@/components/TableDialog';
 
 export default {
   components: {

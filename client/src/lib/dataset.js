@@ -266,6 +266,17 @@ class IntegerField extends Field {
   getType() {
     return Number;
   }
+
+  displayText(row) {
+    if (this.lookupList) {
+      const key = row[this.name];
+
+      if (key !== null)
+        return this.lookupList[key].text;
+    }
+
+    return super.displayText(row);
+  }
 }
 
 

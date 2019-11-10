@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>{{caption}}</h1>
-    <div class="navigator">
+    <div v-if="showNavigator" class="navigator">
       <button @click="addRow">Lisää uusi</button>
       <button @click="refreshRows">Päivitä</button>
       <template v-if="pageCount > 1">
@@ -19,14 +18,15 @@
       </tr>
       <tr v-for="row in rows" v-bind:key="row.id">
         <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
-          <span :class="{ code: field.isCode }">{{field.displayText(row)}}</span>
+          <span :class="{ code: field.isCode }">{{cellText(row, field)}}</span>
         </td>
-        <td class="action"><button @click="editRow(row)">Muokkaa</button></td>
-        <td class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
+        <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
+        <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
+        <td v-if="showDeleteButton" class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
         <td class="added-text" v-if="hasRowAdded(row)">lisätty viimeksi</td>
         <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu viimeksi</td>
       </tr>
-      <tr>
+      <tr v-if="showFooter">
         <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>
       </tr>
     </table>
@@ -38,7 +38,12 @@ import { EditState, EditedData } from '../lib/dataset.js';
 
 export default {
   props: {
-    dataset: { type: Object, required: true }
+    dataset: { type: Object, required: true },
+    showNavigator: { type: Boolean, default: true },
+    showOpenButton: { type: Boolean, default: false },
+    showEditButton: { type: Boolean, default: true },
+    showDeleteButton: { type: Boolean, default: true },
+    showFooter: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -48,9 +53,6 @@ export default {
     }
   },
   computed: {
-    caption() {
-      return this.dataset.getListCaption();
-    },
     pageCount() {
       return Math.ceil(this.rowCount/this.dataset.pageLimit);
     },
@@ -76,6 +78,8 @@ export default {
     addRow() {
       this.$router.push(this.dataset.tableName);
     },
+    openRow() {
+    },
     editRow(row) {
       const query = {};
 
@@ -95,10 +99,19 @@ export default {
         this.deleteRow(row);
       }
     },
+    cellText(row, field) {
+      const value = row[field.name];
+
+      if (value !== undefined)
+        return field.displayText(row);
+
+      return 'undefined';
+    },
     cellClasses(row, field) {
       return {
         added: this.hasRowAdded(row),
         edited: this.hasFieldEdited(row, field),
+        undefined: row[field.name] === undefined,
         alignRight: field.alignRight,
         alignCenter: field.alignCenter
       }
@@ -208,6 +221,10 @@ td.action {
 
 .grid tr:nth-child(even) {
   background-color: #F6F6F6;
+}
+
+.undefined {
+  color: red;
 }
 
 .added {

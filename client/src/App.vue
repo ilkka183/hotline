@@ -9,6 +9,7 @@
       <router-link to="/brands">Automerkit</router-link> |
       <router-link to="/vehicles">Autot</router-link> |
       <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
+      <router-link to="/test">Testi</router-link> |
       <router-link to="/about">Tietoja</router-link>
     </div>
     <router-view :key="$route.fullPath"></router-view>

@@ -125,6 +125,18 @@ CREATE TABLE Vehicle
 CREATE UNIQUE INDEX VehicleLicenseNumberIndex ON Vehicle(LicenseNumber);
 
 
+CREATE TABLE Model
+(
+  Brand VARCHAR(80) NOT NULL,
+  Model VARCHAR(80) NOT NULL,
+  Fuel SMALLINT UNSIGNED NOT NULL, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
+  EngineDisplacement SMALLINT UNSIGNED NOT NULL,
+  FirstYear SMALLINT UNSIGNED NOT NULL,
+  LastYear SMALLINT UNSIGNED,
+  Data JSON
+);
+
+
 CREATE TABLE Notice
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
@@ -262,6 +274,11 @@ INSERT INTO Brand(Name) VALUES('Volvo');
 INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, VIN) VALUES('SIO-913', 1999, 'Ford', 'Focus STW 1.8 TDdi', 1, 1798, '12345');
 INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, EngineCode, VIN) VALUES('ISI-651', 2005, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 0, 1598, 'ABC', '67890');
 INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, EngineCode, VIN) VALUES('ZLP-833', 2017, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 0, 999, 'ABC', 'ABC12345');
+
+
+INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Ford', 'Focus', 1, 1799, 1999, 2005);
+INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Seat', 'Leon', 0, 999, 2017, NULL);
+INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Volkswagen', 'Golf', 0, 1599, 1999, 2005);
 
 
 INSERT INTO Notice(ClientId, Title, Message) VALUES(2, 'Päivitys SMS palveluun', 'HotLinen SMS palvelun hallintaan on tehty muutos.');

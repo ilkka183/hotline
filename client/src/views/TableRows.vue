@@ -1,9 +1,12 @@
 <template>
-  <DatasetGrid :dataset="table"></DatasetGrid>
+  <div>
+    <h1>{{caption}}</h1>
+    <DatasetGrid :dataset="table"></DatasetGrid>
+  </div>
 </template>
 
 <script>
-import DatasetGrid from '../components/DatasetGrid';
+import DatasetGrid from '@/components/DatasetGrid';
 
 export default {
   components: {
@@ -12,6 +15,11 @@ export default {
   props: {
     table: { type: Object, required: true }
   },
+  computed: {
+    caption() {
+      return this.table.getListCaption();
+    },
+  }
 }
 </script>
 

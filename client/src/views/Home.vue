@@ -1,16 +1,41 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h2>Avoimet vikatapaukset</h2>
+    <button @click="newProblem">Lisää uusi</button>
+    <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
+    <h2>Viimeksi ratkaistut vikatapaukset</h2>
+    <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
+    <h2>Viimeisimmät tiedotteet</h2>
+    <DatasetGrid :dataset="otherProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
+    <h2>Ilmoitukset</h2>
+    <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import DatasetGrid from '@/components/DatasetGrid';
+import { NoticeTable } from '@/tables/notice';
+import { ProblemTable } from '@/tables/problem';
 
 export default {
   components: {
-    HelloWorld
+    DatasetGrid
+  },
+  props: {
+    database: { type: Object, required: true }
+  },
+  data() {
+    return {
+      openProblems: new ProblemTable(this.database, { type: 0, status: 0 }),
+      closedProblems: new ProblemTable(this.database, { type: 0, status: 1 }),
+      otherProblems: new ProblemTable(this.database, { type: 1 }),
+      notices: new NoticeTable(this.database),
+    }
+  },
+  methods: {
+    newProblem() {
+      this.$router.push('newproblem');
+    }
   }
 }
 </script>

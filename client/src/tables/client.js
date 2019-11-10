@@ -5,7 +5,11 @@ export class ClientGroupTable extends BaseTable {
   constructor(database) {
     super(database, 'ClientGroup');
 
-    this.sql = 'SELECT Id, Name, Logo, Info, Enabled FROM ClientGroup ORDER BY Id';
+    this.sql = 'SELECT Id, Name,';
+    this.sql += ' Address, PostalCode, PostOffice, Country, Phone, Email, Website,';
+    this.sql += ' Logo, Info, Enabled';
+    this.sql += ' FROM ClientGroup';
+    this.sql += ' ORDER BY Id';
 
     this.addAutoIncrementField('Id', 'No');
     this.addStringField('Name', 'Nimi', { length: 40, required: true });
@@ -38,7 +42,7 @@ export class ClientTable extends BaseTable {
     super(database, 'Client');
 
     this.sql = 'SELECT Client.Id, Client.GroupId, ClientGroup.Name AS GroupName, Client.ClientType, Client.FirstName, Client.LastName, Client.Title,';
-    this.sql += ' Client.Address, Client.PostalCode, Client.PostOffice, Client.Country, Client.Phone, Client.Email,';
+    this.sql += ' Client.Address, Client.PostalCode, Client.PostOffice, Client.Country, Client.Phone, Client.Email, Client.Website,';
     this.sql += ' Client.Info, Client.LicenseBegin, Client.LicenseEnd, Client.Enabled';
     this.sql += ' FROM Client, ClientGroup';
     this.sql += ' WHERE Client.GroupId = ClientGroup.Id';

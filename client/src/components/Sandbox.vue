@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div>
+    <h1>Sandbox</h1>
     <form @submit.prevent="post" @keydown.esc="cancel">
     <table>
       <tr v-for="(field, index) in fields1" :key="index">
@@ -18,10 +18,6 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  },
   data() {
     return {
       fields1: [
