@@ -33,18 +33,19 @@
 </template>
 
 <script>
-import { EditState, EditedData } from '../lib/dataset.js';
+import { EditState, EditedData } from '@/lib/dataset.js';
 
 export default {
   props: {
     table: { type: Object, required: true },
+    state: { type: Number, required: true },
     showCaption: { type: Boolean, default: true }
   },
   data() {
     return {
       row: null,
       savedRow: null,
-      state: EditState.ADD,
+      posted: false,
     }
   },
   computed: {
@@ -58,23 +59,19 @@ export default {
     },
     fields() {
       if (this.row != null)
-        return this.table.fields.filter(field => field.isVisibleInDialog(this.row));
+        return this.table.fields.filter(field => {
+          return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));
+        });
 
       return [];
     },
   },
   async mounted() {
-    if (Object.keys(this.$route.query).length > 0)
-      this.state = EditState.EDIT;
-    else
-      this.state = EditState.ADD;
-      
     for (let field of this.table.fields)
       if (!field.isReadOnly)
         field.findLookupList();
 
     await this.getRow();
-    this.posted = false;
   },
   updated() {
 /*    const list = document.getElementsByTagName('input');
@@ -98,6 +95,8 @@ export default {
       }
     },
     async post() {
+      this.posted = true;
+
       if (!this.validate())
         return;
 

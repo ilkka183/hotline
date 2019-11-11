@@ -40,6 +40,11 @@ export default new Router({
       props: { database }
     },
     {
+      path: '/openproblem',
+      component: () => import('@/views/OpenProblem.vue'),
+      props: { database }
+    },
+    {
       path: '/notices',
       component: () => import('@/views/TableRows.vue'),
       props: () => ({ table: new NoticeTable(database) })

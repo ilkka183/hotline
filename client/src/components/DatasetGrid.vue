@@ -76,18 +76,13 @@ export default {
       this.getRows();
     },
     addRow() {
-      this.$router.push(this.dataset.tableName);
+      this.dataset.navigateAdd(this.$router);
     },
-    openRow() {
+    openRow(row) {
+      this.dataset.navigateOpen(this.$router, row);
     },
     editRow(row) {
-      const query = {};
-
-      for (let field of this.dataset.fields)
-        if (field.isPrimaryKey)
-          query[field.name] = row[field.name];
-
-      this.$router.push({ path: this.dataset.tableName, query });
+      this.dataset.navigateEdit(this.$router, row);
     },
     async deleteRow(row) {
       await this.dataset.deleteRow(row);

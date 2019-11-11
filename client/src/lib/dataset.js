@@ -100,12 +100,12 @@ class Field {
   }
 
   isNull(row) {
-    return !row[this.name];
+    return row[this.name] === null;
   }
 
   isValid(row) {
     if (this.required)
-      return row[this.name] != undefined;
+      return row[this.name] != null;
 
     return true;
   }
@@ -116,10 +116,6 @@ class Field {
 
   displayText(row) {
     return row[this.name];
-  }
-
-  isVisibleInDialog(row) {
-    return (!this.isReadOnly || row[this.name]) && !this.hideInDialog;
   }
 
   showDialogCaption() {

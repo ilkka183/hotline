@@ -194,4 +194,18 @@ export class SqlTable extends SqlDataset {
 
     await axios.delete(url, { params: keys });
   }
+
+  navigateAdd(router) {
+    router.push(this.tableName);
+  }
+
+  navigateOpen(router, row) {
+    const query = this.primaryKeys(row);
+    router.push({ path: this.tableName, query });
+  }
+
+  navigateEdit(router, row) {
+    const query = this.primaryKeys(row);
+    router.push({ path: this.tableName, query });
+  }
 }

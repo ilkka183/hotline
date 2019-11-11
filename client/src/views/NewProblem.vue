@@ -5,10 +5,20 @@
     <button @click="setMethod(1)">Ohjattu syöttö</button>
     <button @click="setMethod(2)">Manuaalinen syöttö</button>
     <div v-if="method == 0">
-      <label for="licenseNumber">Rekisterinumero:</label>
-      <input id="licenseNumber" type="text" v-model="licenseNumber">
-      <button @click="searchByLicenseNumber" :disabled="licenseNumber == ''">Hae</button>
-      <button @click="clearLicenseNumber" :disabled="licenseNumber == ''">Tyhjennä</button>
+      <table>
+        <tr>
+          <td>
+            <label for="licenseNumber">Rekisterinumero:</label>
+          </td>
+          <td>
+            <input id="licenseNumber" type="text" v-model="licenseNumber">
+          </td>
+          <td>
+            <button @click="searchByLicenseNumber" :disabled="licenseNumber == ''">Hae</button>
+            <button @click="clearLicenseNumber" :disabled="licenseNumber == ''">Tyhjennä</button>
+          </td>
+        </tr>
+      </table>
     </div>
     <div v-if="method == 1">
       <table>
@@ -60,20 +70,21 @@
         <tr>
           <td></td>
           <td>
-            <button :disabled="engineDisplacement === null" @click="post">Jatka</button>
-            <button @click="clear">Tyhjennä</button>
+            <button :disabled="engineDisplacement === null" @click="postSelection">Jatka</button>
+            <button @click="clearSelection">Tyhjennä</button>
           </td>
         </tr>
       </table>
     </div>
     <div v-if="method == 2">
     </div>
-    <TableDialog :table="table" :showCaption="false" />
+    <TableDialog ref="dialog" :table="table" :state="state" :showCaption="false" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { EditState } from '@/lib/dataset';
 import TableDialog from '@/components/TableDialog';
 import { fuels as fuelTexts } from '@/tables/base';
 import { ProblemTable } from '@/tables/problem';
@@ -102,12 +113,41 @@ export default {
       engineDisplacements: [],
     }
   },
+  computed: {
+    state() {
+      return EditState.ADD;
+    },
+    row() {
+      return this.$refs.dialog.row;
+    }
+  },
   methods: {
     async setMethod(value) {
       this.method = value;
 
       if (value == 1)
         await this.fillBrands();
+    },
+    async searchByLicenseNumber() {
+      const response = await axios.get('http://localhost:3000/api/table/Vehicle/row?LicenseNumber=' + this.licenseNumber);
+      console.log(response.data);
+
+      if (response.data.length > 0) {
+        const row = response.data[0];
+
+        this.row.ClientId = 1;
+        this.row.Type = 0;
+        this.row.LicenseNumber = row.LicenseNumber;
+        this.row.Brand = row.Brand;
+        this.row.Model = row.Model;
+        this.row.ModelYear = row.ModelYear;
+        this.row.Fuel = row.Fuel;
+        this.row.EngineDisplacement = this.engineDisplacement;
+        this.row.Status = 0;
+      }
+    },
+    clearLicenseNumber() {
+      this.licenseNumber = '';
     },
     async fillBrands() {
       let sql = 'SELECT DISTINCT Brand FROM Model ORDER BY Brand';
@@ -186,11 +226,17 @@ export default {
 
       this.engineDisplacements = engineDisplacements;
     },
-    async searchByLicenseNumber() {
-      const response = await axios.get('http://localhost:3000/api/table/Vehicle/row?LicenseNumber=' + this.licenseNumber);
-      console.log(response.data);
+    postSelection() {
+      this.row.ClientId = 1;
+      this.row.Type = 0;
+      this.row.Brand = this.brand;
+      this.row.Model = this.model;
+      this.row.ModelYear = this.year;
+      this.row.Fuel = this.fuel;
+      this.row.EngineDisplacement = this.engineDisplacement;
+      this.row.Status = 0;
     },
-    clear() {
+    clearSelection() {
       this.brand = null;
       this.year = null;
       this.years = [];
@@ -201,11 +247,12 @@ export default {
       this.engineDisplacement = null;
       this.engineDisplacements = [];
     },
-    post() {
-    },
-    clearLicenseNumber() {
-      this.licenseNumber = '';
-    }
   }
 }
 </script>
+
+<style scoped>
+button {
+  margin-right: 5px;
+}
+</style>

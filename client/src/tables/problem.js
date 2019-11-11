@@ -7,7 +7,7 @@ export class ProblemTable extends BaseTable {
     super(database, 'Problem');
 
     this.sql = 'SELECT Problem.Id, Problem.Date, CONCAT(Client.FirstName, " ", Client.LastName) AS ClientName,';
-    this.sql += ' Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Status';
+    this.sql += ' Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status';
     this.sql += ' FROM Problem, Client';
     this.sql += ' WHERE Problem.ClientId = Client.Id';
 
@@ -25,13 +25,14 @@ export class ProblemTable extends BaseTable {
     this.addDateField('Date', 'Pvm', { readonly: true, required: true });
     this.addIntegerField('ClientId', 'Lähettäjä', { lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM Client", hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField('ClientName', 'Lähettäjä', { hideInDialog: true });
-    this.addIntegerField('Type', 'Tyyppi', { displayTexts: ['Vikatapaus', 'Tiedote'], required: true });
+    this.addIntegerField('Type', 'Tyyppi', { displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
     this.addStringField('LicenseNumber', 'Rekistenumero', { length: 7, code: true });
     this.addStringField('Brand', 'Merkki', { length: 40 });
     this.addStringField('Model', 'Malli', { length: 40 });
     this.addIntegerField('ModelYear', 'Vuosimalli', { align: TextAlign.RIGHT });
     this.addIntegerField('Fuel', 'Käyttövoima', { displayTexts: fuels });
-    this.addStringField('Title', 'Viesti', { length: 40 });
+    this.addStringField('Title', 'Otsikko', { length: 80, required: true });
+    this.addStringField('Description', 'Kuvaus', { cols: 80, rows: 10, required: true });
     this.addIntegerField('Status', 'Tila', { displayTexts: ['Avoin', 'Ratkaistu', 'Ratkaisematon'], readonly: true });
   }
 
@@ -53,5 +54,10 @@ export class ProblemTable extends BaseTable {
 
   getDeleteCaption() {
     return 'Poista vikatapaus';
+  }
+
+  navigateOpen(router, row) {
+    const query = this.primaryKeys(row);
+    router.push({ path: 'openproblem', query });
   }
 }
