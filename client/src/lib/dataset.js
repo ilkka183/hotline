@@ -251,7 +251,7 @@ class IntegerField extends Field {
       if ('displayTexts' in options) {
         const list = [];
 
-        for (let index in options.displayTexts)
+        for (const index in options.displayTexts)
           list.push(new SelectOption(index, options.displayTexts[index]));
 
         this.lookupList = list;
@@ -344,7 +344,7 @@ export class Dataset {
       throw new TypeError('Can not construct an abstract class');
 
     this.database = database;
-    this.fields = [];
+    this.fields = {};
     this.model = null;
     this.autoFocusField = null;
   }
@@ -359,7 +359,7 @@ export class Dataset {
     if ((this.autoFocusField == null) && !field.isReadOnly)
       this.autoFocusField = field;
 
-    this.fields.push(field);
+    this.fields[field.name] = field;
   }
 
   addAutoIncrementField(name, caption) {
@@ -390,10 +390,14 @@ export class Dataset {
     this.addField(new StringField(name, caption, options));
   }
 
+  get fieldsAsList() {
+    return Object.values(this.fields);
+  }
+
   newRow() {
     let row = {};
 
-    for (let field of this.fields) {
+    for (const field of this.fieldsAsList) {
       let value = null;
 
       if (!field.isReadOnly && (field.default !== undefined))
@@ -406,7 +410,7 @@ export class Dataset {
   }
 
   get primaryKeyField() {
-    for (let field of this.fields)
+    for (const field of this.fieldsAsList)
       if (field.isPrimaryKey)
         return field;
 
@@ -416,7 +420,7 @@ export class Dataset {
   primaryKeys(row) {
     const keys = {};
 
-    for (let field of this.fields)
+    for (const field of this.fieldsAsList)
       if (field.isPrimaryKey)
         keys[field.name] = row[field.name];
 
@@ -426,7 +430,7 @@ export class Dataset {
   contentCaptionOf(row) {
     let text = '';
 
-    for (let field of this.fields)
+    for (const field of this.fieldsAsList)
       if ((field.isPrimaryKey) || (field.getType() == String)) {
         const value = row[field.name];
 
@@ -442,7 +446,7 @@ export class Dataset {
   }
 
   primaryKeysEquals(row1, row2) {
-    for (let field of this.fields)
+    for (const field of this.fieldsAsList)
       if ((field.isPrimaryKey) && (row1[field.name] != row2[field.name]))
         return false;
 

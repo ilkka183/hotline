@@ -28,7 +28,7 @@ class SqlDataset extends Dataset {
     const response = await axios.get(this.database.url + 'lookup/list', { params: { sql } });
     const list = [];
 
-    for (let item of response.data)
+    for (const item of response.data)
       list.push(new SelectOption(item.Id, item.Text));
 
     return list;
@@ -55,7 +55,7 @@ export class SqlTable extends SqlDataset {
     let url = this.url + '/row';
     let params = '';
 
-    for (let key of Object.keys(query)) {
+    for (const key of Object.keys(query)) {
       if (params == '')
         params += '?';
       else
@@ -73,7 +73,7 @@ export class SqlTable extends SqlDataset {
     const source = response.data[0];
     const row = {};
 
-    for (let key in source) {
+    for (const key in source) {
       row[key] = source[key];
     }
 
@@ -94,10 +94,10 @@ export class SqlTable extends SqlDataset {
     const response = await axios.get(url)
     const rows = [];
 
-    for (let source of response.data.rows) {
+    for (const source of response.data.rows) {
       const row = {};
 
-      for (let key in source) {
+      for (const key in source) {
         row[key] = source[key];
       }
 
@@ -118,19 +118,15 @@ export class SqlTable extends SqlDataset {
     const response = await axios.get(url)
     const rows = [];
 
-    for (let source of response.data.rows) {
+    for (const source of response.data.rows) {
       const row = {};
 
-      for (let key in source) {
+      for (const key in source) {
         row[key] = source[key];
       }
 
       rows.push(row);
     }
-
-    for (let row of rows)
-      for (let field of this.fields)
-        field.findLookupText(row[field.name]);
 
     return { rowCount: response.data.rowCount, rows }
   }
@@ -145,7 +141,7 @@ export class SqlTable extends SqlDataset {
   async addRow(row) {
     const fields = {};
 
-    for (let key in row) {
+    for (const key in row) {
       const value = row[key];
 
       if (value !== null)
@@ -170,7 +166,7 @@ export class SqlTable extends SqlDataset {
 
     const fields = {};
 
-    for (let key in newRow) {
+    for (const key in newRow) {
       const value = newRow[key];
       
       if (value != oldRow[key])
@@ -193,6 +189,10 @@ export class SqlTable extends SqlDataset {
     console.log(keys);
 
     await axios.delete(url, { params: keys });
+  }
+
+  confirmDeleteRow(row) {
+    return confirm(`${this.getDeleteCaption()} (${this.contentCaptionOf(row)})?`);
   }
 
   navigateAdd(router) {

@@ -1,93 +1,98 @@
 <template>
   <div>
     <h1>Lisää uusi vikatapaus</h1>
-    <button @click="setMethod(0)">Hae rekisterinumerolla</button>
-    <button @click="setMethod(1)">Ohjattu syöttö</button>
-    <button @click="setMethod(2)">Manuaalinen syöttö</button>
-    <div v-if="method == 0">
+    <div class="buttons">
+      <button @click="setMethod(0)">Hae rekisterinumerolla</button>
+      <button @click="setMethod(1)">Ohjattu syöttö</button>
+      <button @click="setMethod(2)">Manuaalinen syöttö</button>
+    </div>
+    <div v-if="method == 0 && !ready">
       <table>
         <tr>
           <td>
             <label for="licenseNumber">Rekisterinumero:</label>
           </td>
           <td>
-            <input id="licenseNumber" type="text" v-model="licenseNumber">
+            <input id="licenseNumber" type="text" v-model="selections.licenseNumber">
           </td>
           <td>
-            <button @click="searchByLicenseNumber" :disabled="licenseNumber == ''">Hae</button>
-            <button @click="clearLicenseNumber" :disabled="licenseNumber == ''">Tyhjennä</button>
+            <div class="buttons">
+              <button @click="searchByLicenseNumber" :disabled="!selections.licenseNumber">Hae</button>
+              <button @click="clearLicenseNumber" :disabled="!selections.licenseNumber">Tyhjennä</button>
+            </div>
           </td>
         </tr>
       </table>
     </div>
-    <div v-if="method == 1">
+    <div v-if="method == 1 && !ready">
       <table>
         <tr>
           <td><label for="brand">Merkki:</label></td>
           <td>
-            <select id="brand" v-model="brand" @change="fillYears">
+            <select id="brand" v-model="selections.brand" @change="fillYears">
               <option :value="null">-</option>
-              <option v-for="brand in brands" :key="brand">{{brand}}</option>
+              <option v-for="brand in selections.brands" :key="brand">{{brand}}</option>
             </select>
           </td>
         </tr>
-        <tr v-if="brand !== null">
+        <tr v-if="selections.brand !== null">
           <td><label for="modelYear">Vuosimalli:</label></td>
           <td>
-            <select id="modelYear" v-model="year" @change="fillFuels">
+            <select id="modelYear" v-model="selections.year" @change="fillFuels">
               <option :value="null">-</option>
-              <option v-for="year in years" :key="year">{{year}}</option>
+              <option v-for="year in selections.years" :key="year">{{year}}</option>
             </select>
           </td>
         </tr>
-        <tr v-if="year != null">
+        <tr v-if="selections.year != null">
           <td><label for="fuel">Käyttövoima:</label></td>
           <td>
-            <select id="fuel" v-model="fuel" @change="fillModels">
+            <select id="fuel" v-model="selections.fuel" @change="fillModels">
               <option :value="null">-</option>
-              <option v-for="fuel in fuels" :key="fuel.value" :value="fuel.value">{{fuel.text}}</option>
+              <option v-for="fuel in selections.fuels" :key="fuel.value" :value="fuel.value">{{fuel.text}}</option>
             </select>
           </td>
         </tr>
-        <tr v-if="fuel !== null">
+        <tr v-if="selections.fuel !== null">
           <td><label for="model">Malli:</label></td>
           <td>
-            <select id="model" v-model="model" @change="fillEngineDisplacements">
+            <select id="model" v-model="selections.model" @change="fillEngineDisplacements">
               <option :value="null">-</option>
-              <option v-for="model in models" :key="model">{{model}}</option>
+              <option v-for="model in selections.models" :key="model">{{model}}</option>
             </select>
           </td>
         </tr>
-        <tr v-if="model !== null">
+        <tr v-if="selections.model !== null">
           <td><label for="engineDisplacement">Iskutilavuus:</label></td>
           <td>
-            <select id="engineDisplacement" v-model="engineDisplacement">
+            <select id="engineDisplacement" v-model="selections.engineDisplacement">
               <option :value="null">-</option>
-              <option v-for="engineDisplacement in engineDisplacements" :key="engineDisplacement">{{engineDisplacement}}</option>
+              <option v-for="engineDisplacement in selections.engineDisplacements" :key="engineDisplacement">{{engineDisplacement}}</option>
             </select>
           </td>
         </tr>
         <tr>
           <td></td>
           <td>
-            <button :disabled="engineDisplacement === null" @click="postSelection">Jatka</button>
-            <button @click="clearSelection">Tyhjennä</button>
+            <div class="buttons">
+              <button :disabled="selections.engineDisplacement === null" @click="postSelections">Jatka</button>
+              <button @click="clearSelections">Tyhjennä</button>
+            </div>
           </td>
         </tr>
       </table>
     </div>
     <div v-if="method == 2">
     </div>
-    <TableDialog ref="dialog" :table="table" :state="state" :showCaption="false" />
+    <TableDialog v-show="ready" ref="dialog" :table="table" :state="state" :showCaption="false" />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import { EditState } from '@/lib/dataset';
 import TableDialog from '@/components/TableDialog';
-import { fuels as fuelTexts } from '@/tables/base';
 import { ProblemTable } from '@/tables/problem';
+import Selections from './selections';
 
 export default {
   components: {
@@ -99,18 +104,9 @@ export default {
   data() {
     return {
       table: new ProblemTable(this.database),
+      ready: false,
       method: null,
-      licenseNumber: 'ZLP-833',
-      brand: null,
-      brands: [],
-      year: null,
-      years: [],
-      fuel: null,
-      fuels: [],
-      model: null,
-      models: [],
-      engineDisplacement: null,
-      engineDisplacements: [],
+      selections: new Selections(),
     }
   },
   computed: {
@@ -125,134 +121,69 @@ export default {
     async setMethod(value) {
       this.method = value;
 
-      if (value == 1)
-        await this.fillBrands();
-    },
-    async searchByLicenseNumber() {
-      const response = await axios.get('http://localhost:3000/api/table/Vehicle/row?LicenseNumber=' + this.licenseNumber);
-      console.log(response.data);
+      switch (value) {
+        case 0:
+          this.ready = false;
+          break;
 
-      if (response.data.length > 0) {
-        const row = response.data[0];
+        case 1:
+          this.ready = false;
+          this.selections.clear();
+          await this.selections.fillBrands();
+          break;
 
-        this.row.ClientId = 1;
-        this.row.Type = 0;
-        this.row.LicenseNumber = row.LicenseNumber;
-        this.row.Brand = row.Brand;
-        this.row.Model = row.Model;
-        this.row.ModelYear = row.ModelYear;
-        this.row.Fuel = row.Fuel;
-        this.row.EngineDisplacement = this.engineDisplacement;
-        this.row.Status = 0;
+        case 2:
+          console.log('manual');
+          this.ready = true;
+          break;
       }
     },
-    clearLicenseNumber() {
-      this.licenseNumber = '';
-    },
-    async fillBrands() {
-      let sql = 'SELECT DISTINCT Brand FROM Model ORDER BY Brand';
+    apply(includeLicenseNumber) {
+      this.ready = true;
 
-      const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + sql);
-      const brands = [];
+      console.log(this.selections);
 
-      for (let row of response.data.rows)
-        brands.push(row.Brand);
-
-      this.brands = brands;
-    },
-    async fillYears() {
-      let sql = 'SELECT MIN(FirstYear) AS FirstYear, MAX(LastYear) AS LastYear FROM Model';
-      sql += ' WHERE Brand ="' + this.brand + '"';
-
-      const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + sql);
-      const years = [];
-
-      let firstYear = response.data.rows[0].FirstYear;
-      let lastYear = response.data.rows[0].LastYear;
-
-      if (lastYear == null)
-        lastYear = 2020;
-
-      for (let year = lastYear; year >= firstYear; year--)
-        years.push(year);
-
-      this.years = years;
-    },
-    async fillFuels() {
-      let sql = 'SELECT DISTINCT Fuel FROM Model';
-      sql += ' WHERE Brand ="' + this.brand + '"';
-      sql += ' AND FirstYear <= ' + this.year + ' AND (' + this.year + ' <= LastYear OR LastYear IS NULL)';
-
-      console.log(sql);
-
-      const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + sql);
-      const fuels = [];
-
-      for (let row of response.data.rows)
-        fuels.push({ value: row.Fuel, text: fuelTexts[row.Fuel] });
-
-      this.fuels = fuels;
-    },
-    async fillModels() {
-      let sql = 'SELECT DISTINCT Model FROM Model';
-      sql += ' WHERE Brand ="' + this.brand + '"';
-      sql += ' AND FirstYear <= ' + this.year + ' AND (' + this.year + ' <= LastYear OR LastYear IS NULL)';
-      sql += ' AND Fuel = ' + this.fuel;
-      
-      console.log(sql);
-
-      const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + sql);
-      const models = [];
-
-      for (let row of response.data.rows)
-        models.push(row.Model);
-
-      this.models = models;
-    },
-    async fillEngineDisplacements() {
-      let sql = 'SELECT DISTINCT EngineDisplacement FROM Model';
-      sql += ' WHERE Brand ="' + this.brand + '"';
-      sql += ' AND FirstYear <= ' + this.year + ' AND (' + this.year + ' <= LastYear OR LastYear IS NULL)';
-      sql += ' AND Fuel = ' + this.fuel;
-      sql += ' AND Model = "' + this.model + '"';
-
-      console.log(sql);
-      
-      const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + sql);
-      const engineDisplacements = [];
-
-      for (let row of response.data.rows)
-        engineDisplacements.push(row.EngineDisplacement);
-
-      this.engineDisplacements = engineDisplacements;
-    },
-    postSelection() {
       this.row.ClientId = 1;
       this.row.Type = 0;
-      this.row.Brand = this.brand;
-      this.row.Model = this.model;
-      this.row.ModelYear = this.year;
-      this.row.Fuel = this.fuel;
-      this.row.EngineDisplacement = this.engineDisplacement;
+
+      if (includeLicenseNumber)
+        this.row.LicenseNumber = this.selections.licenseNumber;
+
+      this.row.Brand = this.selections.brand;
+      this.row.Model = this.selections.model;
+      this.row.ModelYear = this.selections.year;
+      this.row.Fuel = this.selections.fuel;
+      this.row.EngineDisplacement = this.selections.engineDisplacement;
       this.row.Status = 0;
     },
-    clearSelection() {
-      this.brand = null;
-      this.year = null;
-      this.years = [];
-      this.fuel = null;
-      this.fuels = [];
-      this.model = null;
-      this.models = [];
-      this.engineDisplacement = null;
-      this.engineDisplacements = [];
+    async searchByLicenseNumber() {
+      if (await this.selections.findByLicenseNumber())
+        this.apply(true);
     },
+    postSelections() {
+      this.apply(false);
+    },
+    clearLicenseNumber() {
+      this.selections.licenseNumber = null;
+    },
+    clearSelections() {
+      this.selections.clear();
+    },
+    fillYears() {
+      this.selections.fillYears();
+    },
+    fillFuels() {
+      this.selections.fillFuels();
+    },
+    fillModels() {
+      this.selections.fillModels();
+    },
+    fillEngineDisplacements() {
+      this.selections.fillEngineDisplacements();
+    }
   }
 }
 </script>
 
 <style scoped>
-button {
-  margin-right: 5px;
-}
 </style>

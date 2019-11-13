@@ -35,4 +35,11 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.buttons {
+}
+
+.buttons button {
+  margin-right: 5px;
+}
 </style>

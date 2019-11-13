@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showNavigator" class="navigator">
+    <div v-if="showNavigator" class="navigator buttons">
       <button @click="addRow">Lisää uusi</button>
       <button @click="refreshRows">Päivitä</button>
       <template v-if="pageCount > 1">
@@ -57,7 +57,7 @@ export default {
       return Math.ceil(this.rowCount/this.dataset.pageLimit);
     },
     fields() {
-      return this.dataset.fields.filter(field => !field.hideInGrid);
+      return this.dataset.fieldsAsList.filter(field => !field.hideInGrid);
     },
     editedData() {
       return this.dataset.database.editedData;
@@ -90,7 +90,7 @@ export default {
       this.dataset.database.edited = new EditedData(this.dataset.tableName, row, EditState.DELETE);
     },
     confirmDeleteRow(row) {
-      if (confirm(`${this.dataset.getDeleteCaption()} (${this.dataset.contentCaptionOf(row)})?`)) {
+      if (this.dataset.confirmDeleteRow(row)) {
         this.deleteRow(row);
       }
     },
@@ -151,7 +151,7 @@ export default {
         do {
           let data = await this.dataset.getRows(this.pageNumber);
 
-          for (let row of data.rows) {
+          for (const row of data.rows) {
             if (row[this.dataset.primaryKeyField.name] == id) {
               this.rows = data.rows;
               return;
@@ -169,15 +169,6 @@ export default {
 </script>
 
 <style scoped>
-button:disabled {
-/*  background-color: transparent;
-  border-color: transparent; */
-}
-
-.navigator button {
-  margin-right: 4px
-}
-
 .number {
   padding-left: 5px;
   padding-right: 5px;

@@ -59,7 +59,7 @@ export default {
     },
     fields() {
       if (this.row != null)
-        return this.table.fields.filter(field => {
+        return this.table.fieldsAsList.filter(field => {
           return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));
         });
 
@@ -67,7 +67,7 @@ export default {
     },
   },
   async mounted() {
-    for (let field of this.table.fields)
+    for (const field of this.table.fieldsAsList)
       if (!field.isReadOnly)
         field.findLookupList();
 
@@ -131,7 +131,7 @@ export default {
       return this.posted && !field.isValid(this.row);
     },
     validate() {
-      for (let field of this.table.fields) {
+      for (const field of this.table.fieldsAsList) {
         if (!field.isReadOnly && !field.isValid(this.row))
         {
           if (this.$refs[field.name]) {
@@ -147,7 +147,7 @@ export default {
     copyRow(row) {
       const result = {};
 
-      for (let key of Object.keys(row))
+      for (const key of Object.keys(row))
         result[key] = row[key];
 
       return result;
@@ -174,13 +174,5 @@ export default {
 
 .required-asterix:after {
   content: "*";
-}
-
-.buttons {
-  margin-bottom: 5px;
-}
-
-.buttons button {
-  margin-right: 5px;
 }
 </style>

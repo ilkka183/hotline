@@ -1,23 +1,29 @@
 <template>
   <div>
     <h1>Vikatapaus</h1>
-    <button @click="editRow">Muokkaa</button>
-    <button @click="deleteRow">Poista</button>
-    <table v-if="row">
-      <tr><td>No:</td><td>{{row.Id}}</td></tr>
-      <tr><td>Pvm:</td><td>{{row.Date}}</td></tr>
-      <tr><td>Lähettäjä:</td><td>{{row.ClientId}}</td></tr>
-      <tr><td>Tyyppi:</td><td>{{row.Type}}</td></tr>
-      <tr><td>Rekisterinumero:</td><td>{{row.LicenseNumber}}</td></tr>
-      <tr><td>Merkki:</td><td>{{row.Brand}}</td></tr>
-      <tr><td>Malli:</td><td>{{row.Model}}</td></tr>
-      <tr><td>Vuosimalli:</td><td>{{row.ModelYear}}</td></tr>
-      <tr><td>Käyttövoima:</td><td>{{row.Fuel}}</td></tr>
-      <tr><td>Otsikko:</td><td>{{row.Title}}</td></tr>
-      <tr><td>Kuvaus:</td><td>{{row.Description}}</td></tr>
-      <tr><td>Tila:</td><td>{{row.Status}}</td></tr>
-    </table>
-    <button @click="close">Sulje</button>
+    <div class="buttons">
+      <button @click="editRow">Muokkaa</button>
+      <button @click="deleteRow">Poista</button>
+    </div>
+    <template v-if="row">
+      <table>
+        <tr><td>No:</td><td>{{row.Id}}</td></tr>
+        <tr><td>Pvm:</td><td>{{table.fields.Date.displayText(row)}}</td></tr>
+        <tr><td>Lähettäjä:</td><td>{{row.ClientId}}</td></tr>
+        <tr><td>Tyyppi:</td><td>{{table.fields.Type.displayText(row)}}</td></tr>
+        <tr><td>Rekisterinumero:</td><td>{{table.fields.LicenseNumber.displayText(row)}}</td></tr>
+        <tr><td>Merkki:</td><td>{{row.Brand}}</td></tr>
+        <tr><td>Malli:</td><td>{{row.Model}}</td></tr>
+        <tr><td>Vuosimalli:</td><td>{{table.fields.ModelYear.displayText(row)}}</td></tr>
+        <tr><td>Käyttövoima:</td><td>{{table.fields.Fuel.displayText(row)}}</td></tr>
+        <tr><td>Tila:</td><td>{{table.fields.Status.displayText(row)}}</td></tr>
+      </table>
+      <h2 class="title">{{row.Title}}</h2>
+      <p class="decription">{{row.Description}}</p>
+    </template>
+    <div class="buttons">
+      <button class="default" @click="close">Sulje</button>
+    </div>
   </div>
 </template>
 
@@ -41,8 +47,14 @@ export default {
   },
   methods: {
     editRow() {
+      const query = this.table.primaryKeys(this.row);
+      this.$router.push({ path: this.table.tableName, query });
     },
-    deleteRow() {
+    async deleteRow() {
+      if (this.table.confirmDeleteRow(this.row)) {
+        await this.table.deleteRow(this.row);
+        this.close();
+      }
     },
     close() {
       this.$router.go(-1);
