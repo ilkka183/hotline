@@ -9,7 +9,7 @@
       <table>
         <tr><td>No:</td><td>{{row.Id}}</td></tr>
         <tr><td>Pvm:</td><td>{{table.fields.Date.displayText(row)}}</td></tr>
-        <tr><td>Lähettäjä:</td><td>{{row.ClientId}}</td></tr>
+        <tr><td>Lähettäjä:</td><td>{{table.fields.ClientId.displayText(row)}}</td></tr>
         <tr><td>Tyyppi:</td><td>{{table.fields.Type.displayText(row)}}</td></tr>
         <tr><td>Rekisterinumero:</td><td>{{table.fields.LicenseNumber.displayText(row)}}</td></tr>
         <tr><td>Merkki:</td><td>{{row.Brand}}</td></tr>
@@ -34,15 +34,16 @@ export default {
   components: {
   },
   props: {
-    database: { type: Object, required: true }
+    connection: { type: Object, required: true }
   },
   data() {
     return {
-      table: new ProblemTable(this.database),
+      table: new ProblemTable(this.connection.database),
       row: null,
     }
   },
   async mounted() {
+    await this.table.findLookupLists();
     this.row = await this.table.getRow(this.$route.query);
   },
   methods: {

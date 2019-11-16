@@ -92,18 +92,27 @@
 import { EditState } from '@/lib/dataset';
 import TableDialog from '@/components/TableDialog';
 import { ProblemTable } from '@/tables/problem';
-import Selections from './selections';
+import Selections from '@/js/selections';
+
+/*
+  - Liite
+  - a) tietokantaan
+  - b) suomaan käyttäjälle sähköpotina
+  -   *** 1) anonyymi 2) yrityksen nimellä
+  - palkitaan paras vastaus, valitaan yksi vastaus
+  - luokitus vastaajilta
+*/
 
 export default {
   components: {
     TableDialog
   },
   props: {
-    database: { type: Object, required: true }
+    connection: { type: Object, required: true }
   },
   data() {
     return {
-      table: new ProblemTable(this.database),
+      table: new ProblemTable(this.connection.database),
       ready: false,
       method: null,
       selections: new Selections(),

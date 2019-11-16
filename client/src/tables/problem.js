@@ -33,7 +33,7 @@ export class ProblemTable extends BaseTable {
     this.addIntegerField('Fuel', 'Käyttövoima', { displayTexts: fuels });
     this.addStringField('Title', 'Otsikko', { length: 80, required: true });
     this.addStringField('Description', 'Kuvaus', { cols: 80, rows: 10, required: true });
-    this.addIntegerField('Status', 'Tila', { displayTexts: ['Avoin', 'Ratkaistu', 'Ratkaisematon'], readonly: true });
+    this.addIntegerField('Status', 'Tila', { displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
   }
 
   get pageLimit() {
@@ -54,6 +54,15 @@ export class ProblemTable extends BaseTable {
 
   getDeleteCaption() {
     return 'Poista vikatapaus';
+  }
+
+  statusCellColor(row) {
+    switch (row[this.name]) {
+      case 0: return 'red';
+      case 1: return 'green';
+    }
+
+    return null;
   }
 
   navigateOpen(router, row) {

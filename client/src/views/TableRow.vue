@@ -1,5 +1,5 @@
 <template>
-  <TableDialog :table="table" :state="state"></TableDialog>
+  <TableDialog :table="table" :state="state" :query="query"></TableDialog>
 </template>
 
 <script>
@@ -14,8 +14,11 @@ export default {
     table: { type: Object, required: true }
   },
   computed: {
+    query() {
+      return this.$route.query;
+    },
     state() {
-      if (Object.keys(this.$route.query).length > 0)
+      if (Object.keys(this.query).length > 0)
         return EditState.EDIT;
       else
         return EditState.ADD;

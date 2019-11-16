@@ -28,6 +28,7 @@
         <button class="default" type="button" @click="post">OK</button>
         <button type="button" @click="cancel">Peru</button>
       </div>
+      <div v-if="missingValues" class="info missing">Punaisella merkityt kentät puuttuvat</div>
     </form>
   </div>
 </template>
@@ -39,13 +40,15 @@ export default {
   props: {
     table: { type: Object, required: true },
     state: { type: Number, required: true },
-    showCaption: { type: Boolean, default: true }
+    showCaption: { type: Boolean, default: true },
+    query: { type: Array }
   },
   data() {
     return {
       row: null,
       savedRow: null,
       posted: false,
+      missingValues: false
     }
   },
   computed: {
@@ -59,7 +62,7 @@ export default {
     },
     fields() {
       if (this.row != null)
-        return this.table.fieldsAsList.filter(field => {
+        return this.table.fieldsAsArray.filter(field => {
           return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));
         });
 
@@ -67,18 +70,16 @@ export default {
     },
   },
   async mounted() {
-    for (const field of this.table.fieldsAsList)
-      if (!field.isReadOnly)
-        field.findLookupList();
-
+    await this.table.findLookupLists();
     await this.getRow();
-  },
-  updated() {
-/*    const list = document.getElementsByTagName('input');
+
+    const list = document.getElementsByTagName('input');
 
     if (list.length > 0) {
       list[0].focus();
-    } */
+    }
+  },
+  updated() {
   },
   methods: {
     async getRow() {
@@ -89,15 +90,16 @@ export default {
           break;
 
         case EditState.EDIT:
-          this.row = await this.table.getRow(this.$route.query);
+          this.row = await this.table.getRow(this.query);
           this.savedRow = this.copyRow(this.row);
           break;
       }
     },
     async post() {
       this.posted = true;
+      this.missingValues = !this.validate();
 
-      if (!this.validate())
+      if (this.missingValues)
         return;
 
       let row = null;
@@ -131,7 +133,7 @@ export default {
       return this.posted && !field.isValid(this.row);
     },
     validate() {
-      for (const field of this.table.fieldsAsList) {
+      for (const field of this.table.fieldsAsArray) {
         if (!field.isReadOnly && !field.isValid(this.row))
         {
           if (this.$refs[field.name]) {
@@ -174,5 +176,9 @@ export default {
 
 .required-asterix:after {
   content: "*";
+}
+
+.info {
+  margin-top: 10px;
 }
 </style>

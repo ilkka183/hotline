@@ -22,14 +22,14 @@ export default {
     DatasetGrid
   },
   props: {
-    database: { type: Object, required: true }
+    connection: { type: Object, required: true }
   },
   data() {
     return {
-      openProblems: new ProblemTable(this.database, { type: 0, status: 0 }),
-      closedProblems: new ProblemTable(this.database, { type: 0, status: 1 }),
-      otherProblems: new ProblemTable(this.database, { type: 1 }),
-      notices: new NoticeTable(this.database),
+      openProblems: new ProblemTable(this.connection.database, { type: 0, status: 0 }),
+      closedProblems: new ProblemTable(this.connection.database, { type: 0, status: 1 }),
+      otherProblems: new ProblemTable(this.connection.database, { type: 1 }),
+      notices: new NoticeTable(this.connection.database),
     }
   },
   methods: {

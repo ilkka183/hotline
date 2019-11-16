@@ -23,7 +23,7 @@ class SqlDataset extends Dataset {
   }
 
   async getLookupList(sql) {
-    sql += ' ORDER BY Name';
+    sql += ' ORDER BY Text';
 
     const response = await axios.get(this.database.url + 'lookup/list', { params: { sql } });
     const list = [];

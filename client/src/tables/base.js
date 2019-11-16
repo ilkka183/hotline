@@ -2,10 +2,10 @@ import { SqlTable } from '../lib/sql-dataset';
 
 
 export const fuels = [
-  'Bensiini',
-  'Diesel',
-  'Kaasu',
-  'Sähkö'
+  'bensiini',
+  'diesel',
+  'kaasu',
+  'sähkö'
 ];
 
 

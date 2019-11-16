@@ -33,6 +33,8 @@ class Field {
     this.readonly = false;
     this.required = false;
 
+    this.onCellColor = null;
+
     if (options !== undefined) {
       if ('align' in options)
         this.align = options.align;
@@ -60,6 +62,10 @@ class Field {
 
       if ('required' in options)
         this.required = options.required;
+
+
+      if ('onCellColor' in options)
+        this.onCellColor = options.onCellColor;
     }
   }
 
@@ -116,6 +122,13 @@ class Field {
 
   displayText(row) {
     return row[this.name];
+  }
+
+  cellColor(row) {
+    if (this.onCellColor)
+      return this.onCellColor(row);
+
+    return null;
   }
 
   showDialogCaption() {
@@ -390,14 +403,14 @@ export class Dataset {
     this.addField(new StringField(name, caption, options));
   }
 
-  get fieldsAsList() {
+  get fieldsAsArray() {
     return Object.values(this.fields);
   }
 
   newRow() {
     let row = {};
 
-    for (const field of this.fieldsAsList) {
+    for (const field of this.fieldsAsArray) {
       let value = null;
 
       if (!field.isReadOnly && (field.default !== undefined))
@@ -410,7 +423,7 @@ export class Dataset {
   }
 
   get primaryKeyField() {
-    for (const field of this.fieldsAsList)
+    for (const field of this.fieldsAsArray)
       if (field.isPrimaryKey)
         return field;
 
@@ -420,7 +433,7 @@ export class Dataset {
   primaryKeys(row) {
     const keys = {};
 
-    for (const field of this.fieldsAsList)
+    for (const field of this.fieldsAsArray)
       if (field.isPrimaryKey)
         keys[field.name] = row[field.name];
 
@@ -430,7 +443,7 @@ export class Dataset {
   contentCaptionOf(row) {
     let text = '';
 
-    for (const field of this.fieldsAsList)
+    for (const field of this.fieldsAsArray)
       if ((field.isPrimaryKey) || (field.getType() == String)) {
         const value = row[field.name];
 
@@ -446,12 +459,25 @@ export class Dataset {
   }
 
   primaryKeysEquals(row1, row2) {
-    for (const field of this.fieldsAsList)
+    for (const field of this.fieldsAsArray)
       if ((field.isPrimaryKey) && (row1[field.name] != row2[field.name]))
         return false;
 
     return true;
   }
+
+  async findLookupLists() {
+    for (const field of this.fieldsAsArray)
+      await field.findLookupList();
+  }
+
+  async getLookupText(/* sql, id */) {
+    throw new TypeError('Calling abstract method getLookupText');
+  }
+
+  async getLookupList(/* sql */) {
+    throw new TypeError('Calling abstract method getLookupList');
+  }  
 }
 
 

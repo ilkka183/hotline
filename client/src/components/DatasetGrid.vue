@@ -18,7 +18,7 @@
       </tr>
       <tr v-for="row in rows" v-bind:key="row.id">
         <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
-          <span :class="{ code: field.isCode }">{{cellText(row, field)}}</span>
+          <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
         </td>
         <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
         <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
@@ -57,7 +57,7 @@ export default {
       return Math.ceil(this.rowCount/this.dataset.pageLimit);
     },
     fields() {
-      return this.dataset.fieldsAsList.filter(field => !field.hideInGrid);
+      return this.dataset.fieldsAsArray.filter(field => !field.hideInGrid);
     },
     editedData() {
       return this.dataset.database.editedData;
@@ -94,7 +94,22 @@ export default {
         this.deleteRow(row);
       }
     },
-    cellText(row, field) {
+    cellClass(field) {
+      return {
+          code: field.isCode
+        };
+    },
+    cellStyle(field, row) {
+      const style = {};
+
+      const color = field.cellColor(row);
+
+      if (color)
+        style['color'] = color;
+
+      return style;
+    },
+    cellText(field, row) {
       const value = row[field.name];
 
       if (value !== undefined)

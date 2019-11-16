@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Koti</router-link> |
-      <router-link to="/problems">Vikatapaukset</router-link> |
-      <router-link to="/notices">Ilmoitukset</router-link> |
-      <router-link to="/clientgroups">Käyttäjäryhmät</router-link> |
-      <router-link to="/clients">Käyttäjät</router-link> |
-      <router-link to="/brands">Automerkit</router-link> |
-      <router-link to="/vehicles">Autot</router-link> |
-      <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
-      <router-link to="/test">Testi</router-link> |
-      <router-link to="/about">Tietoja</router-link>
-    </div>
-    <router-view :key="$route.fullPath"></router-view>
+    <NavBar/>
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
+
+<script>
+import NavBar from '@/components/NavBar';
+
+export default {
+  components: {
+    NavBar
+  }
+}
+</script>
 
 <style>
 #app {
@@ -34,6 +33,20 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+h1 {
+  margin-block-start: 0.2em;
+  margin-block-end: 0.3em;
+}
+
+h2 {
+  margin-block-start: 0.4em;
+  margin-block-end: 0.1em;
+}
+
+.block {
+  margin-top: 5px;
 }
 
 .buttons {

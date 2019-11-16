@@ -6,6 +6,10 @@ class Query {
   constructor(sql) {
     this.sql = sql;
   }
+
+  async execute() {
+    return await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + this.sql);
+  }
 }
 
 
@@ -67,7 +71,7 @@ export default class Selections {
   async fillBrands() {
     const query = new Query('SELECT DISTINCT Brand FROM Model ORDER BY Brand');
 
-    const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + query.sql);
+    const response = await query.execute();
     const brands = [];
 
     for (let row of response.data.rows)
@@ -80,7 +84,7 @@ export default class Selections {
     const query = new Query('SELECT MIN(FirstYear) AS FirstYear, MAX(LastYear) AS LastYear FROM Model');
     this.filterByBrand(query);
 
-    const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + query.sql);
+    const response = await query.execute();
     const years = [];
 
     let firstYear = response.data.rows[0].FirstYear;
@@ -100,7 +104,7 @@ export default class Selections {
     this.filterByBrand(query);
     this.filterByYear(query);
 
-    const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + query.sql);
+    const response = await query.execute();
     const fuels = [];
 
     for (let row of response.data.rows)
@@ -115,7 +119,7 @@ export default class Selections {
     this.filterByYear(query);
     this.filterByFuel(query);
     
-    const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + query.sql);
+    const response = await query.execute();
     const models = [];
 
     for (let row of response.data.rows)
@@ -131,7 +135,7 @@ export default class Selections {
     this.filterByFuel(query);
     this.filterByModel(query);
 
-    const response = await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + query.sql);
+    const response = await query.execute();
     const engineDisplacements = [];
 
     for (let row of response.data.rows)
