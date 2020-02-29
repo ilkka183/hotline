@@ -20,14 +20,14 @@
   - onko lisenssi käyttäjä vai ryhmäkohtainen?
 
 
-  version 1.0, 21.10.2019
+  version 1, 25.10.2020
 
 */
 
 
-DROP DATABASE Hotline_1_0;
-CREATE DATABASE Hotline_1_0 CHARACTER SET utf8mb4;
-CONNECT Hotline_1_0;
+DROP DATABASE hotline1;
+CREATE DATABASE hotline1 CHARACTER SET utf8mb4;
+CONNECT hotline1;
 SET NAMES 'utf8';
 
 

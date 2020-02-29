@@ -1,17 +1,32 @@
 <template>
   <div id="app">
-    <NavBar/>
+    <v-header>
+      <router-link to="/">Koti</router-link> |
+      <template v-if="$store.state.user">
+        <router-link to="/problems/0">Vikatapaukset</router-link> |
+        <router-link to="/problems/1">Tiedotteet</router-link> |
+        <router-link to="/notices">Ilmoitukset</router-link> |
+        <router-link to="/clientgroups">Käyttäjäryhmät</router-link> |
+        <router-link to="/clients">Käyttäjät</router-link> |
+        <router-link to="/brands">Automerkit</router-link> |
+        <router-link to="/vehicles">Autot</router-link> |
+        <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
+        <router-link to="/test">Testi</router-link> |
+        <router-link to="/about">Tietoja</router-link> |
+        <router-link to="/"><span @click="$store.dispatch('logout')">Kirjaudu ulos</span></router-link>
+      </template>
+      <template v-else >
+        <router-link to="/login">Kirjaudu sisään</router-link>
+      </template>
+    </v-header>
     <router-view :key="$route.fullPath"/>
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar';
-
 export default {
   components: {
-    NavBar
-  }
+  },
 }
 </script>
 
@@ -19,20 +34,6 @@ export default {
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #2c3e50;
-}
-
-#nav {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 
 h1 {

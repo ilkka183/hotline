@@ -1,9 +1,9 @@
-import { TextAlign } from '../lib/dataset';
+import { TextAlign, RestDatabase } from '../lib/dataset';
 import { BaseTable, fuels } from './base';
 
 
 export class ProblemTable extends BaseTable {
-  constructor(database, filters) {
+  constructor(database: RestDatabase, filters: any = null) {
     super(database, 'Problem');
 
     this.sql = 'SELECT Problem.Id, Problem.Date, CONCAT(Client.FirstName, " ", Client.LastName) AS ClientName,';
@@ -36,27 +36,27 @@ export class ProblemTable extends BaseTable {
     this.addIntegerField('Status', 'Tila', { displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
   }
 
-  get pageLimit() {
+  get pageLimit(): number {
     return 10;
   }
 
-  getListCaption() {
+  public getListCaption(): string {
     return 'Vikatapaukset';
   }
 
-  getAddCaption() {
+  public getAddCaption(): string {
     return 'Lisää vikatapaus';
   }
 
-  getEditCaption() {
+  public getEditCaption(): string {
     return 'Muokkaa vikatapausta';
   }
 
-  getDeleteCaption() {
+  public getDeleteCaption(): string {
     return 'Poista vikatapaus';
   }
 
-  statusCellColor(row) {
+  statusCellColor(row: any): string | null {
     switch (row[this.name]) {
       case 0: return 'red';
       case 1: return 'green';
@@ -65,7 +65,7 @@ export class ProblemTable extends BaseTable {
     return null;
   }
 
-  navigateOpen(router, row) {
+  navigateOpen(router: any, row: any) {
     const query = this.primaryKeys(row);
     router.push({ path: 'open-problem', query });
   }
