@@ -5,20 +5,21 @@
   </div>
 </template>
 
-<script>
-import DatasetGrid from '@/components/DatasetGrid';
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import DatasetGrid from '@/components/DatasetGrid.vue';
+import { SqlTable } from '../lib/sql-dataset';
 
-export default {
+@Component({
   components: {
     DatasetGrid
-  },
-  props: {
-    table: { type: Object, required: true }
-  },
-  computed: {
-    caption() {
-      return this.table.getListCaption();
-    },
+  }
+})
+export default class TableRows extends Vue {
+  @Prop({ type: Object, required: true }) readonly table: SqlTable; 
+
+  get caption(): string {
+    return this.table.listCaption;
   }
 }
 </script>

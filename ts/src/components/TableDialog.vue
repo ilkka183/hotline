@@ -36,29 +36,30 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { EditState, EditedData, Field } from '../lib/dataset';
+import { SqlTable } from '../lib/sql-dataset';
 
 @Component
 export default class TableDialog extends Vue {
-  @Prop({ type: Object, required: true }) table: any;
-  @Prop({ type: Number, required: true }) state: EditState;
-  @Prop({ type: Boolean, default: true }) showCaption: boolean;
-  @Prop({ type: Array }) query: any;
+  @Prop({ type: Object, required: true }) readonly table: SqlTable;
+  @Prop({ type: Number, required: true }) readonly state: EditState;
+  @Prop({ type: Boolean, default: true }) readonly showCaption: boolean;
+  @Prop({ type: Object }) readonly query: any;
 
-  private row: any = null;
-  private savedRow: any =  null;
+  public row: object = null;
+  private savedRow: object =  null;
   private posted = false;
   private missingValues = false;
 
   get caption(): string {
     switch (this.state) {
-      case EditState.ADD: return this.table.getAddCaption();
-      case EditState.EDIT: return this.table.getEditCaption();
+      case EditState.Add: return this.table.addCaption;
+      case EditState.Edit: return this.table.editCaption;
     }
 
     return '';
   }
   
-  get fields(): any {
+  get fields(): any[] {
     if (this.row != null)
       return this.table.fieldsAsArray.filter(field => {
         return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));
@@ -80,12 +81,12 @@ export default class TableDialog extends Vue {
 
   async getRow() {
     switch (this.state) {
-      case EditState.ADD:
+      case EditState.Add:
         this.row = this.table.newRow();
         this.savedRow = this.copyRow(this.row);
         break;
 
-      case EditState.EDIT:
+      case EditState.Edit:
         this.row = await this.table.getRow(this.query);
         this.savedRow = this.copyRow(this.row);
         break;
@@ -102,13 +103,13 @@ export default class TableDialog extends Vue {
     let row = null;
 
     switch (this.state) {
-      case EditState.ADD:
+      case EditState.Add:
         console.log(JSON.stringify(this.row));
         await this.table.addRow(this.row);
         row = this.row;
         break;
 
-      case EditState.EDIT:
+      case EditState.Edit:
         console.log(JSON.stringify(this.savedRow));
         console.log(JSON.stringify(this.row));
 
@@ -120,7 +121,7 @@ export default class TableDialog extends Vue {
         break;
     }
 
-    this.table.database.editedData = new EditedData(this.table.name, row, this.state);
+    this.table.database.editedData = new EditedData(this.table.tableName, row, this.state);
     this.$router.go(-1);
   }
 
@@ -147,8 +148,8 @@ export default class TableDialog extends Vue {
     return true;
   }
 
-  copyRow(row: any) {
-    const result: any = {};
+  copyRow(row: object) {
+    const result: object = {};
 
     for (const key of Object.keys(row))
       result[key] = row[key];

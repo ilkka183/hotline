@@ -1,37 +1,36 @@
-import { SqlTable } from '../lib/sql-dataset';
 import { RestDatabase } from '@/lib/dataset';
-
-
-export const fuels = [
-  'bensiini',
-  'diesel',
-  'kaasu',
-  'sähkö'
-];
+import { SqlTable } from '@/lib/sql-dataset';
 
 
 export abstract class BaseTable extends SqlTable {
+  public static FUELS = [
+    'bensiini',
+    'diesel',
+    'kaasu',
+    'sähkö'
+  ];
+
   constructor(database: RestDatabase, name: string) {
     super(database, name);
   }
   
-  addAddressFields() {
-    this.addStringField('Address', 'Lähiosoite', { length: 80 });
-    this.addStringField('PostalCode', 'Postinumero', { length: 10 });
-    this.addStringField('PostOffice', 'Postitoimipaikka', { length: 40 });
-    this.addStringField('Country', 'Maa', { length: 40 });
-    this.addStringField('Phone', 'Puhelin', { length: 20 });
-    this.addStringField('Email', 'Sähköposti', { length: 80, code: true });
-    this.addStringField('Website', 'Kotisivut', { length: 80, code: true });
+  protected addAddressFields() {
+    this.addStringField({ name: 'Address', caption: 'Lähiosoite', length: 80 });
+    this.addStringField({ name: 'PostalCode', caption: 'Postinumero', length: 10 });
+    this.addStringField({ name: 'PostOffice', caption: 'Postitoimipaikka', length: 40 });
+    this.addStringField({ name: 'Country', caption: 'Maa', length: 40 });
+    this.addStringField({ name: 'Phone', caption: 'Puhelin', length: 20 });
+    this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true });
+    this.addStringField({ name: 'Website', caption: 'Kotisivut', length: 80, code: true });
   }
 
-  addInfoField() {
-    this.addStringField('Info', 'Lisätietoja', { cols: 80, rows: 10 });
+  protected addInfoField() {
+    this.addStringField({ name: 'Info', caption: 'Lisätietoja', cols: 80, rows: 10 });
   }
 
-  addStatusFields() {
-    this.addBooleanField('Enabled', 'Voimassa', { default: true, required: true });
-    this.addDateTimeField('CreatedAt', 'Luotu', { hideInGrid: true, readonly: true, required: true });
-    this.addDateTimeField('UpdatedAt', 'Päivitetty', { hideInGrid: true, readonly: true });
+  protected addStatusFields() {
+    this.addBooleanField({ name: 'Enabled', caption: 'Voimassa', default: true, required: true });
+    this.addDateTimeField({ name: 'CreatedAt', caption: 'Luotu', hideInGrid: true, readonly: true, required: true });
+    this.addDateTimeField({ name: 'UpdatedAt', caption: 'Päivitetty', hideInGrid: true, readonly: true });
   }
 }

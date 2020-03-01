@@ -27,39 +27,36 @@
   </div>
 </template>
 
-<script>
-import { ProblemTable } from '@/tables/problem';
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { ProblemTable } from '../tables/problem';
 
-export default {
-  components: {
-  },
-  props: {
-    connection: { type: Object, required: true }
-  },
-  data() {
-    return {
-      table: new ProblemTable(this.connection.database),
-      row: null,
-    }
-  },
+@Component
+export default class OpenProblem extends Vue {
+  @Prop({ type: Object, required: true }) connection: any;
+
+  private table: ProblemTable = new ProblemTable(this.connection.database);
+  private row: any = null;
+
   async mounted() {
     await this.table.findLookupLists();
     this.row = await this.table.getRow(this.$route.query);
-  },
-  methods: {
-    editRow() {
-      const query = this.table.primaryKeys(this.row);
-      this.$router.push({ path: this.table.tableName, query });
-    },
-    async deleteRow() {
-      if (this.table.confirmDeleteRow(this.row)) {
-        await this.table.deleteRow(this.row);
-        this.close();
-      }
-    },
-    close() {
-      this.$router.go(-1);
+  }
+
+  private editRow() {
+    const query = this.table.primaryKeys(this.row);
+    this.$router.push({ path: this.table.tableName, query });
+  }
+
+  private async deleteRow() {
+    if (this.table.confirmDeleteRow(this.row)) {
+      await this.table.deleteRow(this.row);
+      this.close();
     }
+  }
+
+  private close() {
+    this.$router.go(-1);
   }
 }
 </script>

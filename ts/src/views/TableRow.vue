@@ -2,27 +2,29 @@
   <TableDialog :table="table" :state="state" :query="query"></TableDialog>
 </template>
 
-<script>
-import TableDialog from '@/components/TableDialog';
-import { EditState } from '@/lib/dataset';
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import TableDialog from '@/components/TableDialog.vue';
+import { EditState } from '../lib/dataset';
+import { SqlTable } from '../lib/sql-dataset';
 
-export default {
+@Component({
   components: {
     TableDialog
-  },
-  props: {
-    table: { type: Object, required: true }
-  },
-  computed: {
-    query() {
-      return this.$route.query;
-    },
-    state() {
-      if (Object.keys(this.query).length > 0)
-        return EditState.EDIT;
-      else
-        return EditState.ADD;
-    }
+  }
+})
+export default class TableRow extends Vue {
+  @Prop({ type: Object, required: true }) readonly table: SqlTable;
+
+  get query() {
+    return this.$route.query;
+  }
+
+  get state(): EditState {
+    if (Object.keys(this.query).length > 0)
+      return EditState.Edit;
+    else
+      return EditState.Add;
   }
 }
 </script>

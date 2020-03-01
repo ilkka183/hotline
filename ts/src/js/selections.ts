@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { fuels as fuelTexts } from '@/tables/base';
+import { BaseTable } from '@/tables/base';
 
 
 class Query {
@@ -123,7 +123,7 @@ export default class Selections {
     const fuels: any[] = [];
 
     for (let row of response.data.rows)
-      fuels.push({ value: row.Fuel, text: fuelTexts[row.Fuel] });
+      fuels.push({ value: row.Fuel, text: BaseTable.FUELS[row.Fuel] });
 
     this.fuels = fuels;
   }

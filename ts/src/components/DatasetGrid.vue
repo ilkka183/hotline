@@ -9,7 +9,7 @@
         <button v-for="number in pageCount" :key="number" :disabled="pageNumber == number" @click="setPageNumber(number)">{{number}}</button>
         <button :disabled="pageNumber == pageCount" @click="nextPage">Seuraava</button>
         <button :disabled="pageNumber == pageCount" @click="lastPage">Viimeinen</button>
-        <span class="number">sivu {{pageNumber}}/{{pageCount}}</span>
+        <span class="number">sivu {{ pageNumber }}/{{ pageCount }}</span>
       </template>
     </div>
     <table class="grid">
@@ -36,10 +36,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Dataset, EditState, EditedData, Field } from '../lib/dataset';
+import { SqlTable } from '../lib/sql-dataset';
 
 @Component
 export default class DatasetGrid extends Vue {
-  @Prop({ type: Object, required: true }) readonly dataset: any;
+  @Prop({ type: Object, required: true }) readonly dataset: SqlTable;
   @Prop({ type: Boolean, default: true }) readonly showNavigator: boolean;
   @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showEditButton: boolean;
@@ -48,13 +49,13 @@ export default class DatasetGrid extends Vue {
 
   private pageNumber = 1;
   private rowCount = 0;
-  private rows: any = [];
+  private rows: object[] = [];
 
   get pageCount(): number {
     return Math.ceil(this.rowCount/this.dataset.pageLimit);
   }
 
-  get fields(): any {
+  get fields(): Field[] {
     return this.dataset.fieldsAsArray.filter(field => !field.hideInGrid);
   }
 
@@ -82,21 +83,21 @@ export default class DatasetGrid extends Vue {
     this.dataset.navigateAdd(this.$router);
   }
 
-  private openRow(row: any) {
+  private openRow(row: object) {
     this.dataset.navigateOpen(this.$router, row);
   }
 
-  private editRow(row: any) {
+  private editRow(row: object) {
     this.dataset.navigateEdit(this.$router, row);
   }
 
-  private async deleteRow(row: any) {
+  private async deleteRow(row: object) {
     await this.dataset.deleteRow(row);
     this.getRows();
-    this.dataset.database.edited = new EditedData(this.dataset.tableName, row, EditState.DELETE);
+    this.dataset.database.editedData = new EditedData(this.dataset.tableName, row, EditState.Delete);
   }
 
-  private confirmDeleteRow(row: any) {
+  private confirmDeleteRow(row: object) {
     if (this.dataset.confirmDeleteRow(row)) {
       this.deleteRow(row);
     }
@@ -108,7 +109,7 @@ export default class DatasetGrid extends Vue {
       };
   }
 
-  private cellStyle(field: Field, row: any) {
+  private cellStyle(field: Field, row: object) {
     const style = {};
 
     const color = field.cellColor(row);
@@ -119,7 +120,7 @@ export default class DatasetGrid extends Vue {
     return style;
   }
 
-  private cellText(field: Field, row: any) {
+  private cellText(field: Field, row: object) {
     const value = row[field.name];
 
     if (value !== undefined)
@@ -128,7 +129,7 @@ export default class DatasetGrid extends Vue {
     return 'undefined';
   }
 
-  private cellClasses(row: any, field: Field) {
+  private cellClasses(row: object, field: Field) {
     return {
       added: this.hasRowAdded(row),
       edited: this.hasFieldEdited(row, field),
@@ -138,22 +139,22 @@ export default class DatasetGrid extends Vue {
     }
   }
 
-  private hasRowState(row: any, state: EditState) {
+  private hasRowState(row: object, state: EditState) {
     return (this.editedData != null) &&
       (this.editedData.table == this.dataset.tableName) &&
       (this.editedData.state == state) &&
       this.dataset.primaryKeysEquals(this.editedData.row, row);
   }
 
-  private hasRowAdded(row: any) {
-    return this.hasRowState(row, EditState.ADD);
+  private hasRowAdded(row: object) {
+    return this.hasRowState(row, EditState.Add);
   }
 
-  private hasRowEdited(row: any) {
-    return this.hasRowState(row, EditState.EDIT);
+  private hasRowEdited(row: object) {
+    return this.hasRowState(row, EditState.Edit);
   }
 
-  private hasFieldEdited(row: any, field: Field) {
+  private hasFieldEdited(row: object, field: Field) {
     return this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]);
   }
 

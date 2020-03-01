@@ -16,15 +16,17 @@
   </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    login() {
-      this.$router.go(-1);
-    },
-    cancel() {
-      this.$router.go(-1);
-    }
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+@Component
+export default class Login extends Vue {
+  private login() {
+    this.$router.go(-1);
+  }
+
+  private cancel() {
+    this.$router.go(-1);
   }
 }
 </script>

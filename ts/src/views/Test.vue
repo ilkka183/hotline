@@ -14,12 +14,15 @@
   </div>
 </template>
 
-<script>
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import Sandbox from '@/components/Sandbox.vue'
 
-export default {
+@Component({
   components: {
     Sandbox
   }
+})
+export default class Test extends Vue {
 }
 </script>

@@ -88,11 +88,12 @@
   </div>
 </template>
 
-<script>
-import { EditState } from '@/lib/dataset';
-import TableDialog from '@/components/TableDialog';
-import { ProblemTable } from '@/tables/problem';
-import Selections from '@/js/selections';
+<script  lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import TableDialog from '@/components/TableDialog.vue';
+import { ProblemTable } from '../tables/problem';
+import Selections from '../js/selections';
+import { EditState } from '../lib/dataset';
 
 /*
   - Liite
@@ -103,93 +104,102 @@ import Selections from '@/js/selections';
   - luokitus vastaajilta
 */
 
-export default {
+@Component({
   components: {
     TableDialog
-  },
-  props: {
-    connection: { type: Object, required: true }
-  },
-  data() {
-    return {
-      table: new ProblemTable(this.connection.database),
-      ready: false,
-      method: null,
-      selections: new Selections(),
+  }
+})
+export default class NewProblem extends Vue {
+  @Prop({ type: Object, required: true }) connection: any;
+
+  private table: ProblemTable = new ProblemTable(this.connection.database);
+  private ready = false;
+  private method: number = null;
+  private selections: Selections = new Selections();
+
+  get state(): EditState {
+    return EditState.Add;
+  }
+
+  private get dialog(): any {
+    return this.$refs.dialog;
+  }
+
+  get row() {
+    return this.dialog.row;
+  }
+
+  private async setMethod(value: number) {
+    this.method = value;
+
+    switch (value) {
+      case 0:
+        this.ready = false;
+        break;
+
+      case 1:
+        this.ready = false;
+        this.selections.clear();
+        await this.selections.fillBrands();
+        break;
+
+      case 2:
+        console.log('manual');
+        this.ready = true;
+        break;
     }
-  },
-  computed: {
-    state() {
-      return EditState.ADD;
-    },
-    row() {
-      return this.$refs.dialog.row;
-    }
-  },
-  methods: {
-    async setMethod(value) {
-      this.method = value;
+  }
 
-      switch (value) {
-        case 0:
-          this.ready = false;
-          break;
+  private apply(includeLicenseNumber: boolean) {
+    this.ready = true;
 
-        case 1:
-          this.ready = false;
-          this.selections.clear();
-          await this.selections.fillBrands();
-          break;
+    console.log(this.selections);
 
-        case 2:
-          console.log('manual');
-          this.ready = true;
-          break;
-      }
-    },
-    apply(includeLicenseNumber) {
-      this.ready = true;
+    this.row.ClientId = 1;
+    this.row.Type = 0;
 
-      console.log(this.selections);
+    if (includeLicenseNumber)
+      this.row.LicenseNumber = this.selections.licenseNumber;
 
-      this.row.ClientId = 1;
-      this.row.Type = 0;
+    this.row.Brand = this.selections.brand;
+    this.row.Model = this.selections.model;
+    this.row.ModelYear = this.selections.year;
+    this.row.Fuel = this.selections.fuel;
+    this.row.EngineDisplacement = this.selections.engineDisplacement;
+    this.row.Status = 0;
+  }
 
-      if (includeLicenseNumber)
-        this.row.LicenseNumber = this.selections.licenseNumber;
+  private async searchByLicenseNumber() {
+    if (await this.selections.findByLicenseNumber())
+      this.apply(true);
+  }
 
-      this.row.Brand = this.selections.brand;
-      this.row.Model = this.selections.model;
-      this.row.ModelYear = this.selections.year;
-      this.row.Fuel = this.selections.fuel;
-      this.row.EngineDisplacement = this.selections.engineDisplacement;
-      this.row.Status = 0;
-    },
-    async searchByLicenseNumber() {
-      if (await this.selections.findByLicenseNumber())
-        this.apply(true);
-    },
-    postSelections() {
-      this.apply(false);
-    },
-    clearLicenseNumber() {
-      this.selections.licenseNumber = null;
-    },
-    clearSelections() {
-      this.selections.clear();
-    },
-    fillYears() {
-      this.selections.fillYears();
-    },
-    fillFuels() {
-      this.selections.fillFuels();
-    },
-    fillModels() {
-      this.selections.fillModels();
-    },
-    fillEngineDisplacements() {
-      this.selections.fillEngineDisplacements();
-    }
+  private postSelections() {
+    this.apply(false);
+  }
+
+  private clearLicenseNumber() {
+    this.selections.licenseNumber = null;
+  }
+
+  private clearSelections() {
+    this.selections.clear();
+  }
+
+  private fillYears() {
+    this.selections.fillYears();
+  }
+
+  private fillFuels() {
+    this.selections.fillFuels();
+  }
+
+  private fillModels() {
+    this.selections.fillModels();
+  }
+
+  private fillEngineDisplacements() {
+    this.selections.fillEngineDisplacements();
   }
 }
 </script>

@@ -1,7 +1,7 @@
 export enum TextAlign {
-  LEFT,
-  CENTER,
-  RIGHT
+  Left,
+  Center,
+  Right
 }
 
 
@@ -16,124 +16,134 @@ export class SelectOption {
 }
 
 
+interface FieldParams {
+  name: string;
+  caption: string;
+  align?: TextAlign;
+  default?: any;
+  hideInDialog?: boolean;
+  hideInGrid?: boolean;
+  primaryKey?: boolean;
+  foreignKey?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  lookupSQL?: string;
+  onCellColor?: any;
+}
+
+
 export abstract class Field {
   public dataset: Dataset | undefined;
   public name: string;
   public caption: string;
-  public align: TextAlign = TextAlign.LEFT;
+  public align: TextAlign = TextAlign.Left;
   public default: any = undefined;
-  public hideInDialog: boolean = false;
-  public hideInGrid: boolean = false;
-  public primaryKey: boolean = false;
-  public foreignKey: boolean = false;
-  public readonly: boolean = false;
-  public required: boolean = false;
+  public hideInDialog = false;
+  public hideInGrid = false;
+  public primaryKey = false;
+  public foreignKey = false;
+  public readonly = false;
+  public required = false;
   public lookupList: any = null;
-  public lookupSQL: string = '';
+  public lookupSQL = '';
   public onCellColor: any = null;
 
-  constructor(name: string, caption: string, options: any) {
-    if (this.constructor === Field)
-      throw new TypeError('Can not construct an abstract class');
+  constructor(params: FieldParams) {
+    this.name = params.name;
+    this.caption = params.caption;
 
-    this.name = name;
-    this.caption = caption;
+    if (params.align)
+      this.align = params.align;
 
-    if (options) {
-      if ('align' in options)
-        this.align = options['align'];
+    if (params.default)
+      this.default = params.default;
 
-      if ('default' in options)
-        this.default = options['default'];
+    if (params.hideInDialog)
+      this.hideInDialog = params.hideInDialog;
 
-      if ('hideInDialog' in options)
-        this.hideInDialog = options['hideInDialog'];
+    if (params.hideInGrid)
+      this.hideInGrid = params.hideInGrid;
 
-      if ('hideInGrid' in options)
-        this.hideInGrid = options['hideInGrid'];
+    if (params.lookupSQL)
+      this.lookupSQL = params.lookupSQL;
 
-      if ('lookupSQL' in options)
-        this.lookupSQL = options['lookupSQL'];
+    if (params.primaryKey)
+      this.primaryKey = params.primaryKey;
 
-      if ('primaryKey' in options)
-        this.primaryKey = options['primaryKey'];
+    if (params.foreignKey)
+      this.foreignKey = params.foreignKey;
 
-      if ('foreignKey' in options)
-        this.foreignKey = options['foreignKey'];
+    if (params.readonly)
+      this.readonly = params.readonly;
 
-      if ('readonly' in options)
-        this.readonly = options['readonly'];
+    if (params.required)
+      this.required = params.required;
 
-      if ('required' in options)
-        this.required = options['required'];
-
-
-      if ('onCellColor' in options)
-        this.onCellColor = options['onCellColor'];
-    }
+    if (params.onCellColor)
+      this.onCellColor = params.onCellColor;
   }
 
-  get database(): RestDatabase | undefined {
+  get database(): RestDatabase | null {
     return this.dataset?.database;
   }
 
-  getAutoFocus() {
+  public getAutoFocus(): boolean {
     return this == this.dataset?.autoFocusField;
   }
 
-  abstract getType(): any;
+  public abstract getType(): any;
 
-  getInputTextLength() {
+  public getInputTextLength(): number {
     return 10;
   }
 
   get alignRight(): boolean {
-    return (this.align === TextAlign.RIGHT);
+    return (this.align === TextAlign.Right);
   }
 
   get alignCenter(): boolean {
-    return (this.align === TextAlign.CENTER);
+    return (this.align === TextAlign.Center);
   }
 
-  get isCode() {
+  get isCode(): boolean {
     return false;
   }
 
-  get isPrimaryKey() {
+  get isPrimaryKey(): boolean {
     return this.primaryKey;
   }
 
-  get isReadOnly() {
+  get isReadOnly(): boolean {
     return this.readonly;
   }
 
-  isNull(row: any) {
+  isNull(row: object): boolean {
     return row[this.name] === null;
   }
 
-  isValid(row: any) {
+  isValid(row: object): boolean {
     if (this.required)
       return row[this.name] != null;
 
     return true;
   }
 
-  value(row: any) {
+  value(row: object): any {
     return row[this.name];
   }
 
-  displayText(row: any) {
+  displayText(row: object): string {
     return row[this.name];
   }
 
-  cellColor(row: any) {
+  cellColor(row: object) {
     if (this.onCellColor)
       return this.onCellColor(row);
 
     return null;
   }
 
-  showDialogCaption() {
+  showDialogCaption(): boolean {
     return true;
   }
 
@@ -144,25 +154,22 @@ export abstract class Field {
       return 'text';
   }
 
-  get hasLookup() {
+  get hasLookup(): boolean {
     return this.lookupList || this.lookupSQL;
   }
 
   async findLookupText(value: any) {
-    if (this.lookupList) {
-      if (value !== null)
-        return this.lookupList[value].text;
-      else
-        return undefined;
-    }
-    else if (this.lookupSQL)
-      return await this.dataset?.getLookupText(this.lookupSQL, value);
+    if (this.lookupList && value !== null)
+      return this.lookupList[value].text;
+    else if (this.dataset && this.lookupSQL)
+      return await this.dataset.getLookupText(this.lookupSQL, value);
+
+    return undefined;
   }
 
   async findLookupList() {
-    if (!this.lookupList && this.lookupSQL) { 
-      this.lookupList = await this.dataset?.getLookupList(this.lookupSQL);
-    }
+    if (!this.lookupList && this.dataset && this.lookupSQL)
+      this.lookupList = await this.dataset.getLookupList(this.lookupSQL);
 
     return this.lookupList;
   }
@@ -170,33 +177,33 @@ export abstract class Field {
 
 
 class BinaryField extends Field {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
   }
 
-  getType() {
+  public getType(): any {
     return ArrayBuffer;
   }
 }
 
 
 class ImageField extends BinaryField {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
   }
 }
 
 
 class BooleanField extends Field {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
   }
 
-  getType() {
+  public getType(): any {
     return Boolean;
   }
 
-  displayText(row: any): string {
+  displayText(row: object): string {
     if (row[this.name])
       return 'kyllä';
     else
@@ -214,15 +221,15 @@ class BooleanField extends Field {
 
 
 class DateField extends Field {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
   }
 
-  getType() {
+  public getType(): any {
     return Date;
   }
 
-  displayText(row: any) {
+  displayText(row: object): string {
     const value = row[this.name];
 
     if (value) {
@@ -233,52 +240,55 @@ class DateField extends Field {
     return null;
   }
 
-  toDisplayString(date: Date) {
+  toDisplayString(date: Date): string {
     return date.toLocaleDateString();
   }
 
-  getInputTextLength() {
+  getInputTextLength(): number {
     return 20;
   }
 }
 
 
 class DateTimeField extends DateField {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
   }
 
-  toDisplayString(date: Date) {
+  toDisplayString(date: Date): string {
     return date.toLocaleString();
   }
 
-  getInputTextLength() {
+  getInputTextLength(): number {
     return 20;
   }
 }
 
 
+interface IntegerFieldParams extends FieldParams {
+  displayTexts?: string[];
+}
+
+
 class IntegerField extends Field {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: IntegerFieldParams) {
+    super(params);
 
-    if (options) {
-      if ('displayTexts' in options) {
-        const list = [];
+    if (params.displayTexts) {
+      const list: SelectOption[] = [];
 
-        for (const index in options.displayTexts)
-          list.push(new SelectOption(index, options.displayTexts[index]));
+      for (const index in params.displayTexts)
+        list.push(new SelectOption(index, params.displayTexts[index]));
 
-        this.lookupList = list;
-      }
+      this.lookupList = list;
     }
   }
 
-  getType() {
+  public getType(): any {
     return Number;
   }
 
-  displayText(row: any) {
+  displayText(row: object): string {
     if (this.lookupList) {
       const key = row[this.name];
 
@@ -292,56 +302,64 @@ class IntegerField extends Field {
 
 
 class AutoIncrementField extends IntegerField {
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: FieldParams) {
+    super(params);
+    
+    this.primaryKey = true;
   }
 }
 
 
+interface StringFieldParams extends FieldParams {
+  code?: boolean;
+  length?: number;
+  cols?: number;
+  rows?: number;
+}
+
+
 class StringField extends Field {
-  public code: boolean = false;
+  public code = false;
   public length: number | undefined;
   public cols: number | undefined;
   public rows: number | undefined;
 
-  constructor(name: string, caption: string, options: any) {
-    super(name, caption, options);
+  constructor(params: StringFieldParams) {
+    super(params);
 
-    if (options) {
-      if ('code' in options)
-        this.code = options['code'];
+    if (params.code)
+      this.code = params.code;
 
-      if ('length' in options)
-        this.length = options['length'];
+    if (params.length)
+      this.length = params.length;
 
-      if ('cols' in options)
-        this.cols = options['cols'];
+    if (params.cols)
+      this.cols = params.cols;
 
-      if ('rows' in options)
-        this.rows = options['rows'];
-    }
+    if (params.rows)
+      this.rows = params.rows;
   }
 
-  getType() {
+  public getType(): any {
     return String;
   }
 
-  getInputTextLength() {
+  getInputTextLength(): number {
     if (this.length != null)
       return this.length;
     else
       return super.getInputTextLength();
   }
 
-  get isCode() {
+  get isCode(): boolean {
     return this.code;
   }
 
-  getCols() {
+  getCols(): number {
     return this.cols;
   }
   
-  getRows() {
+  getRows(): number {
     return this.rows;
   }
   
@@ -365,6 +383,10 @@ export abstract class Dataset {
   }
 
   public get pageLimit(): number {
+    return this.getPageLimit();
+  }
+
+  protected getPageLimit(): number {
     return 10;
   }
 
@@ -381,35 +403,35 @@ export abstract class Dataset {
     this.fields[field.name] = field;
   }
 
-  protected addAutoIncrementField(name: string, caption: string) {
-    this.addField(new AutoIncrementField(name, caption, { required: true, readonly: true, primaryKey: true }));
+  protected addAutoIncrementField(params: FieldParams) {
+    this.addField(new AutoIncrementField(params));
   }
 
-  protected addBooleanField(name: string, caption: string, options: any = undefined) {
-    this.addField(new BooleanField(name, caption, options));
+  protected addBooleanField(params: FieldParams) {
+    this.addField(new BooleanField(params));
   }
 
-  protected addDateField(name: string, caption: string, options: any = undefined) {
-    this.addField(new DateField(name, caption, options));
+  protected addDateField(params: FieldParams) {
+    this.addField(new DateField(params));
   }
 
-  protected addDateTimeField(name: string, caption: string, options: any = undefined) {
-    this.addField(new DateTimeField(name, caption, options));
+  protected addDateTimeField(params: FieldParams) {
+    this.addField(new DateTimeField(params));
   }
 
-  protected addImageField(name: string, caption: string, options: any = undefined) {
-    this.addField(new ImageField(name, caption, options));
+  protected addImageField(params: FieldParams) {
+    this.addField(new ImageField(params));
   }
 
-  protected addIntegerField(name: string, caption: string, options: any = undefined) {
-    this.addField(new IntegerField(name, caption, options));
+  protected addIntegerField(params: IntegerFieldParams) {
+    this.addField(new IntegerField(params));
   }
 
-  protected addStringField(name: string, caption: string, options: any = undefined) {
-    this.addField(new StringField(name, caption, options));
+  protected addStringField(params: StringFieldParams) {
+    this.addField(new StringField(params));
   }
 
-  newRow() {
+  public newRow(): any {
     const row: any = {};
 
     for (const field of this.fieldsAsArray) {
@@ -432,7 +454,7 @@ export abstract class Dataset {
     return null;
   }
 
-  primaryKeys(row: any) {
+  public primaryKeys(row: object) {
     const keys: any = {};
 
     for (const field of this.fieldsAsArray)
@@ -442,7 +464,7 @@ export abstract class Dataset {
     return keys;
   }
 
-  contentCaptionOf(row: any) {
+  public contentCaptionOf(row: object): string {
     let text = '';
 
     for (const field of this.fieldsAsArray)
@@ -460,7 +482,7 @@ export abstract class Dataset {
     return text;
   }
 
-  primaryKeysEquals(row1: any, row2: any) {
+  public primaryKeysEquals(row1: any, row2: any) {
     for (const field of this.fieldsAsArray)
       if ((field.isPrimaryKey) && (row1[field.name] != row2[field.name]))
         return false;
@@ -479,17 +501,17 @@ export abstract class Dataset {
 
 
 export enum EditState {
-  ADD,
-  EDIT,
-  DELETE
+  Add,
+  Edit,
+  Delete
 }
 
 export class EditedData {
   public table: any;
-  public row: any;
+  public row: object;
   public state: EditState;
   
-  constructor(table: any, row: any, state: EditState) {
+  constructor(table: any, row: object, state: EditState) {
     this.table = table;
     this.row = row;
     this.state = state;
@@ -498,8 +520,8 @@ export class EditedData {
 
 
 export class RestDatabase {
-  public host: string;
-  public path: string;
+  private host: string;
+  private path: string;
   public editedData: EditedData | null = null;
   
   constructor(host: string, path: string) {

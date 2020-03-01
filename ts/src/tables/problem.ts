@@ -1,63 +1,70 @@
-import { TextAlign, RestDatabase } from '../lib/dataset';
-import { BaseTable, fuels } from './base';
+import { TextAlign, RestDatabase } from '@/lib/dataset';
+import { BaseTable } from './base';
+
+
+export interface ProblemFilter {
+  type?: number | string;
+  status?: number;
+}
 
 
 export class ProblemTable extends BaseTable {
-  constructor(database: RestDatabase, filters: any = null) {
+  constructor(database: RestDatabase, filter: ProblemFilter = {}) {
     super(database, 'Problem');
 
-    this.sql = 'SELECT Problem.Id, Problem.Date, CONCAT(Client.FirstName, " ", Client.LastName) AS ClientName,';
-    this.sql += ' Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status';
-    this.sql += ' FROM Problem, Client';
-    this.sql += ' WHERE Problem.ClientId = Client.Id';
+    let sql =
+      'SELECT Problem.Id, Problem.Date, CONCAT(Client.FirstName, " ", Client.LastName) AS ClientName, ' +
+      'Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+      'FROM Problem, Client ' +
+      'WHERE Problem.ClientId = Client.Id';
 
-    if (filters) {
-      if (filters.type !== undefined)
-        this.sql += ' AND Problem.Type = ' + filters.type;
+    if (filter.type)
+      sql += ' AND Problem.Type = ' + filter.type;
 
-      if (filters.status !== undefined)
-        this.sql += ' AND Problem.Status = ' + filters.status;
-    }
+    if (filter.status)
+      sql += ' AND Problem.Status = ' + filter.status;
 
-    this.sql += ' ORDER BY Problem.Id';
+    sql += ' ORDER BY Problem.Id';
 
-    this.addAutoIncrementField('Id', 'No');
-    this.addDateField('Date', 'Pvm', { readonly: true, required: true });
-    this.addIntegerField('ClientId', 'Lähettäjä', { lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM Client", hideInGrid: true, foreignKey: true, readonly: true, required: true });
-    this.addStringField('ClientName', 'Lähettäjä', { hideInDialog: true });
-    this.addIntegerField('Type', 'Tyyppi', { displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
-    this.addStringField('LicenseNumber', 'Rekistenumero', { length: 7, code: true });
-    this.addStringField('Brand', 'Merkki', { length: 40 });
-    this.addStringField('Model', 'Malli', { length: 40 });
-    this.addIntegerField('ModelYear', 'Vuosimalli', { align: TextAlign.RIGHT });
-    this.addIntegerField('Fuel', 'Käyttövoima', { displayTexts: fuels });
-    this.addStringField('Title', 'Otsikko', { length: 80, required: true });
-    this.addStringField('Description', 'Kuvaus', { cols: 80, rows: 10, required: true });
-    this.addIntegerField('Status', 'Tila', { displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
+    this.SQL = sql;
+
+    this.addAutoIncrementField({ name: 'Id', caption: 'No' });
+    this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
+    this.addIntegerField({ name: 'ClientId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM Client", hideInGrid: true, foreignKey: true, readonly: true, required: true });
+    this.addStringField({ name: 'ClientName', caption: 'Lähettäjä', hideInDialog: true });
+    this.addIntegerField({ name: 'Type', caption: 'Tyyppi', displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
+    this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true });
+    this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40 });
+    this.addStringField({ name: 'Model', caption: 'Malli', length: 40 });
+    this.addIntegerField({ name: 'ModelYear', caption: 'Vuosimalli', align: TextAlign.Right });
+    this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', displayTexts: ProblemTable.FUELS });
+    this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
+    this.addStringField({ name: 'Description', caption: 'Kuvaus', cols: 80, rows: 10, required: true });
+    this.addIntegerField({ name: 'Status', caption: 'Tila', displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
   }
 
-  get pageLimit(): number {
+  protected getPageLimit(): number {
     return 10;
   }
 
-  public getListCaption(): string {
+  protected getListCaption(): string {
     return 'Vikatapaukset';
   }
 
-  public getAddCaption(): string {
+  protected getAddCaption(): string {
     return 'Lisää vikatapaus';
   }
 
-  public getEditCaption(): string {
+  protected getEditCaption(): string {
     return 'Muokkaa vikatapausta';
   }
 
-  public getDeleteCaption(): string {
+  protected getDeleteCaption(): string {
     return 'Poista vikatapaus';
   }
 
-  statusCellColor(row: any): string | null {
-    switch (row[this.name]) {
+  private statusCellColor(row: object): string | null {
+    switch (row[this.tableName]) {
       case 0: return 'red';
       case 1: return 'green';
     }
@@ -65,7 +72,7 @@ export class ProblemTable extends BaseTable {
     return null;
   }
 
-  navigateOpen(router: any, row: any) {
+  public navigateOpen(router: any, row: object) {
     const query = this.primaryKeys(row);
     router.push({ path: 'open-problem', query });
   }

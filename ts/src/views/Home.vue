@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="$store.state.user">
+    <template v-if="!$store.state.user">
       <h2>Avoimet vikatapaukset</h2>
       <button @click="newProblem">Lisää uusi</button>
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
@@ -17,30 +17,27 @@
   </div>
 </template>
 
-<script>
-import DatasetGrid from '@/components/DatasetGrid';
-import { NoticeTable } from '@/tables/notice';
-import { ProblemTable } from '@/tables/problem';
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import DatasetGrid from '../components/DatasetGrid.vue';
+import { NoticeTable } from '../tables/notice';
+import { ProblemTable } from '../tables/problem';
 
-export default {
+@Component({
   components: {
     DatasetGrid
-  },
-  props: {
-    connection: { type: Object, required: true }
-  },
-  data() {
-    return {
-      openProblems: new ProblemTable(this.connection.database, { type: 0, status: 0 }),
-      closedProblems: new ProblemTable(this.connection.database, { type: 0, status: 1 }),
-      otherProblems: new ProblemTable(this.connection.database, { type: 1 }),
-      notices: new NoticeTable(this.connection.database),
-    }
-  },
-  methods: {
-    newProblem() {
-      this.$router.push('new-problem');
-    }
+  }
+})
+export default class Home extends Vue {
+  @Prop({ type: Object, required: true }) connection: any;
+
+  private openProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 0, status: 0 });
+  private closedProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 0, status: 1 });
+  private otherProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 1 });
+  private notices: NoticeTable = new NoticeTable(this.connection.database);
+
+  newProblem() {
+    this.$router.push('new-problem');
   }
 }
 </script>

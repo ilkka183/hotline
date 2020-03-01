@@ -1,33 +1,33 @@
-import { BaseTable } from './base';
 import { RestDatabase } from '@/lib/dataset';
+import { BaseTable } from './base';
 
 
 export class BrandTable extends BaseTable {
   constructor(database: RestDatabase) {
     super(database, 'Brand');
 
-    this.sql = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
+    this.SQL = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
 
-    this.addAutoIncrementField('Id', 'No');
-    this.addStringField('Name', 'Nimi', { length: 80, required: true });
-    this.addImageField('Logo', 'Logo', { readonly: true });
+    this.addAutoIncrementField({ name: 'Id', caption: 'No' });
+    this.addStringField({ name: 'Name', caption: 'Nimi', length: 80, required: true });
+    this.addImageField({ name: 'Logo', caption: 'Logo', readonly: true });
     this.addInfoField();
     this.addStatusFields();
   }
 
-  public getListCaption(): string {
+  protected getListCaption(): string {
     return 'Automerkit';
   }
 
-  public getAddCaption(): string {
+  protected getAddCaption(): string {
     return 'Lisää automerkki';
   }
 
-  public getEditCaption(): string {
+  protected getEditCaption(): string {
     return 'Muokkaa automerkkiä';
   }
 
-  public getDeleteCaption(): string {
+  protected getDeleteCaption(): string {
     return 'Poista automerkki';
   }
 }

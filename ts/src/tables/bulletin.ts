@@ -1,31 +1,31 @@
-import { BaseTable } from './base';
 import { RestDatabase } from '@/lib/dataset';
+import { BaseTable } from './base';
 
 
 export class BulletinGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
     super(database, 'BulletinGroup');
 
-    this.sql = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
+    this.SQL = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
 
-    this.addAutoIncrementField('Id', 'No');
-    this.addStringField('Name', 'Nimi', { length: 80, required: true });
+    this.addAutoIncrementField({ name: 'Id', caption: 'No' });
+    this.addStringField({ name: 'Name', caption: 'Nimi', length: 80, required: true });
     this.addStatusFields();
   }
 
-  public getListCaption(): string {
+  protected getListCaption(): string {
     return 'Tiedoteryhmät';
   }
 
-  public getAddCaption(): string {
+  protected getAddCaption(): string {
     return 'Lisää tiedoteryhmä';
   }
 
-  public getEditCaption(): string {
+  protected getEditCaption(): string {
     return 'Muokkaa tiedoteryhmää';
   }
 
-  public getDeleteCaption(): string {
+  protected getDeleteCaption(): string {
     return 'Poista tiedoteryhmä';
   }
 }
