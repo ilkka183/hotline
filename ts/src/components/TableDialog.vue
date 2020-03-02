@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-if="showCaption">{{ caption }}</h1>
+    <h2 v-if="showCaption">{{ caption }}</h2>
     <form @submit.prevent="post" @keydown.esc="cancel">
       <table>
         <tr v-for="(field, index) in fields" :key="index + 20">
@@ -59,7 +59,7 @@ export default class TableDialog extends Vue {
     return '';
   }
   
-  get fields(): any[] {
+  get fields(): Field[] {
     if (this.row != null)
       return this.table.fieldsAsArray.filter(field => {
         return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));

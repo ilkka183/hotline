@@ -75,7 +75,7 @@ export abstract class SqlTable extends SqlDataset {
     const response = await axios.get(url);
 
     const source = response.data[0];
-    const row: any = {};
+    const row: object = {};
 
     for (const key in source) {
       row[key] = source[key];
@@ -99,7 +99,7 @@ export abstract class SqlTable extends SqlDataset {
     const rows = [];
 
     for (const source of response.data.rows) {
-      const row: any = {};
+      const row: object = {};
 
       for (const key in source) {
         row[key] = source[key];
@@ -123,7 +123,7 @@ export abstract class SqlTable extends SqlDataset {
     const rows = [];
 
     for (const source of response.data.rows) {
-      const row: any = {};
+      const row: object = {};
 
       for (const key in source) {
         row[key] = source[key];
@@ -143,7 +143,7 @@ export abstract class SqlTable extends SqlDataset {
   }
 
   public async addRow(row: object) {
-    const fields: any = {};
+    const fields: object = {};
 
     for (const key in row) {
       const value = row[key];
@@ -168,7 +168,7 @@ export abstract class SqlTable extends SqlDataset {
   public async updateRow(oldRow: object, newRow: object) {
     const keys = this.primaryKeys(newRow);
 
-    const fields: any = {};
+    const fields: object = {};
 
     for (const key in newRow) {
       const value = newRow[key];

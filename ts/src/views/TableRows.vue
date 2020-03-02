@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{caption}}</h1>
+    <h2>{{ caption }}</h2>
     <DatasetGrid :dataset="table"></DatasetGrid>
   </div>
 </template>

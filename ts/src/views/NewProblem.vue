@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Lisää uusi vikatapaus</h1>
+    <h2>Lisää uusi vikatapaus</h2>
     <div class="buttons">
       <button @click="setMethod(0)">Hae rekisterinumerolla</button>
       <button @click="setMethod(1)">Ohjattu syöttö</button>
@@ -31,7 +31,7 @@
           <td>
             <select id="brand" v-model="selections.brand" @change="fillYears">
               <option :value="null">-</option>
-              <option v-for="brand in selections.brands" :key="brand">{{brand}}</option>
+              <option v-for="brand in selections.brands" :key="brand">{{ brand }}</option>
             </select>
           </td>
         </tr>
@@ -40,7 +40,7 @@
           <td>
             <select id="modelYear" v-model="selections.year" @change="fillFuels">
               <option :value="null">-</option>
-              <option v-for="year in selections.years" :key="year">{{year}}</option>
+              <option v-for="year in selections.years" :key="year">{{ year }}</option>
             </select>
           </td>
         </tr>
@@ -49,7 +49,7 @@
           <td>
             <select id="fuel" v-model="selections.fuel" @change="fillModels">
               <option :value="null">-</option>
-              <option v-for="fuel in selections.fuels" :key="fuel.value" :value="fuel.value">{{fuel.text}}</option>
+              <option v-for="fuel in selections.fuels" :key="fuel.value" :value="fuel.value">{{ fuel.text }}</option>
             </select>
           </td>
         </tr>
@@ -58,7 +58,7 @@
           <td>
             <select id="model" v-model="selections.model" @change="fillEngineDisplacements">
               <option :value="null">-</option>
-              <option v-for="model in selections.models" :key="model">{{model}}</option>
+              <option v-for="model in selections.models" :key="model">{{ model }}</option>
             </select>
           </td>
         </tr>
@@ -67,7 +67,7 @@
           <td>
             <select id="engineDisplacement" v-model="selections.engineDisplacement">
               <option :value="null">-</option>
-              <option v-for="engineDisplacement in selections.engineDisplacements" :key="engineDisplacement">{{engineDisplacement}}</option>
+              <option v-for="engineDisplacement in selections.engineDisplacements" :key="engineDisplacement">{{ engineDisplacement }}</option>
             </select>
           </td>
         </tr>
@@ -110,12 +110,14 @@ import { EditState } from '../lib/dataset';
   }
 })
 export default class NewProblem extends Vue {
-  @Prop({ type: Object, required: true }) connection: any;
-
-  private table: ProblemTable = new ProblemTable(this.connection.database);
+  private table: ProblemTable = new ProblemTable(this.database);
   private ready = false;
   private method: number = null;
   private selections: Selections = new Selections();
+
+  private get database() {
+    return this.$store.state.database;
+  }
 
   get state(): EditState {
     return EditState.Add;

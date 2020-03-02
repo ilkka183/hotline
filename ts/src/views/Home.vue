@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="!$store.state.user">
+    <template v-if="$store.state.user">
       <h2>Avoimet vikatapaukset</h2>
       <button @click="newProblem">Lisää uusi</button>
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
@@ -29,14 +29,16 @@ import { ProblemTable } from '../tables/problem';
   }
 })
 export default class Home extends Vue {
-  @Prop({ type: Object, required: true }) connection: any;
+  private openProblems: ProblemTable = new ProblemTable(this.database, { type: 0, status: 0 });
+  private closedProblems: ProblemTable = new ProblemTable(this.database, { type: 0, status: 1 });
+  private otherProblems: ProblemTable = new ProblemTable(this.database, { type: 1 });
+  private notices: NoticeTable = new NoticeTable(this.database);
 
-  private openProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 0, status: 0 });
-  private closedProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 0, status: 1 });
-  private otherProblems: ProblemTable = new ProblemTable(this.connection.database, { type: 1 });
-  private notices: NoticeTable = new NoticeTable(this.connection.database);
+  private get database() {
+    return this.$store.state.database;
+  }
 
-  newProblem() {
+  private newProblem() {
     this.$router.push('new-problem');
   }
 }

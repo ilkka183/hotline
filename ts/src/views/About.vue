@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tietoja sovelluksesta</h1>
+    <h2>Tietoja sovelluksesta</h2>
   </div>
 </template>
 

@@ -1,11 +1,31 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { RestDatabase } from '@/lib/dataset'
+import { User, UserType } from '@/js/user'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
+  state: {
+    database: new RestDatabase('http://localhost:3000', '/api/'),
+    user: new User(1, 'Ilkka', 'Salmenius', UserType.Admin)
+  },
+  mutations: {
+    LOGIN(state, user) {
+      state.user = user;
+    },
+    LOGOUT(state) {
+      state.user = null;
+    }
+  },
+  actions: {
+    login(context, user) {
+      context.commit('LOGIN', user);
+    },
+    logout(context) {
+      context.commit('LOGOUT');
+    }
+  },
+  getters: {
+  }
 });
