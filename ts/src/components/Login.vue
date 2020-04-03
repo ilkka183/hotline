@@ -12,12 +12,14 @@
     </table>
     <div class="buttons">
       <button @click="login">Kirjaudu</button>
-      <button @click="fillTestUser">Testikäyttäjä</button>
+      <button @click="fill('albert', 'ilkka')">Ilkka</button>
+      <button @click="fill('opeJorma', 'weber')">Jorma</button>
     </div>
   </div>
 </template>
 
 <script  lang="ts">
+import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, UserType } from '../js/user'
 
@@ -27,12 +29,27 @@ export default class Login extends Vue {
   private password = null;
   
   private login() {
-    this.$store.dispatch('login', new User(1,UserType.Admin, 'Ilkka', 'Salmenius', '050 61698'));
+    axios.post('http://localhost:3000/api/auth', { username: this.username, password: this.password })
+      .then(response => {
+        const token = response.data;
+
+        axios.get('http://localhost:3000/api/auth/me', { headers: { 'x-auth-token': token }})
+          .then(response => {
+            const data = response.data;
+            this.$store.dispatch('login', new User(data.id, UserType.Admin, data.firstName, data.lastName, data.phone));
+          })
+          .catch(error => {
+            console.log(error.response);
+          });
+      })
+      .catch(error => {
+         console.log(error.response);
+      })
   }
   
-  private fillTestUser() {
-    this.username = 'ilkka.salmenius@gmail.com';
-    this.password = 'ohion300';
+  private fill(username: string, password: string) {
+    this.username = username;
+    this.password = password;
   }
 }
 </script>

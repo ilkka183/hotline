@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const auth = require('../middleware/auth');
+const connection = require('../connection');
 
 const router = express.Router();
 
@@ -15,24 +16,29 @@ router.post('/', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  if (username !== 'albert')
-    return res.status(401).send('Invalid username or password');
-  
-  if (password !== 'ilkka')
-    return res.status(401).send('Invalid username or password');
+  const sql = 'SELECT Id, ClientType, Username, Password, FirstName, LastName, Email, Phone FROM Client WHERE Username=?';
 
-  const payload = {
-    id: 1,
-    firstName: 'Ilkka',
-    lastName: 'Salmenius',
-    email: 'ilkka.salmenius@gmail.com',
-    phone: '050 61698',
-    type: 0
-  }  
+  connection.query(sql, [username], (error, results, fields) => {
+    if (error)
+      return res.status(400).send(error);
 
-  const token = jwt.sign(payload, config.get('jwtPrivateKey'));
+    if ((results.length == 0) || (password !== results[0].Password))
+      return res.status(401).send('Invalid username or password');
+
+    const row = results[0];
   
-  res.send(token);
+    const payload = {
+      id: row.Id,
+      firstName: row.FirstName,
+      lastName: row.LastName,
+      email: row.Email,
+      phone: row.Phone,
+      type: row.ClientType
+    }
+
+    const token = jwt.sign(payload, config.get('jwtPrivateKey'));
+    res.send(token);
+  });
 });
 
 
