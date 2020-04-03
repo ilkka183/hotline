@@ -21,7 +21,7 @@ export abstract class BaseTable extends SqlTable {
     this.addStringField({ name: 'Country', caption: 'Maa', length: 40 });
     this.addStringField({ name: 'Phone', caption: 'Puhelin', length: 20 });
     this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true });
-    this.addStringField({ name: 'Website', caption: 'Kotisivut', length: 80, code: true });
+    this.addStringField({ name: 'Website', caption: 'Kotisivut', hideInGrid: true, length: 80, code: true });
   }
 
   protected addInfoField() {

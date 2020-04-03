@@ -3,6 +3,7 @@ const connection = require('../connection');
 
 const router = express.Router();
 
+
 router.get('/rows', (req, res) => {
   let sql = 'SELECT COUNT(*) as RowCount FROM ' + req.query.table;
   console.log(sql);
@@ -34,5 +35,6 @@ router.get('/rows', (req, res) => {
     });
   });
 });
+
 
 module.exports = router;

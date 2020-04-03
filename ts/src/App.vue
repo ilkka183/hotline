@@ -2,8 +2,8 @@
   <div id="app">
     <div id="nav">
       <span class="left">
-        <router-link to="/">Koti</router-link>
-        <template v-if="$store.state.user"> |
+        <template v-if="$store.state.user">
+          <router-link to="/">Koti</router-link> |
           <router-link to="/problems/0">Vikatapaukset</router-link> |
           <router-link to="/problems/1">Tiedotteet</router-link> |
           <router-link to="/notices">Ilmoitukset</router-link> |
@@ -18,11 +18,8 @@
       </span>
       <span class="right">
         <template v-if="$store.state.user">
-          <router-link to="/user">{{ $store.state.user.firstName }}</router-link> |
+          <router-link to="/user">Omat tiedot ({{ $store.state.user.firstName }})</router-link> |
           <router-link to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
-        </template>
-        <template v-else >
-          <router-link to="/login">Kirjaudu sisään</router-link>
         </template>
       </span>
     </div>

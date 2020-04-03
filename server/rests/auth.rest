@@ -1,5 +1,13 @@
 @host = http://localhost:3000
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGdtYWlsLmNvbSIsInBob25lIjoiMDUwIDYxNjk4IiwidHlwZSI6MCwiaWF0IjoxNTg1OTA2NzU0fQ.BkPUrYebgt5fSlwC73mrj2Vxe8bIJYPgTWJ6VGwZEcs
 
-GET {{host}}/api/table/Vehicle/row?LicenseNumber=ZLP-833
+GET {{host}}/api/auth/me
 x-auth-token: {{token}}
+###
+POST {{host}}/api/auth
+content-type: application/json
+
+{
+  "username": "albert",
+  "password": "ilkka"
+}

@@ -25,11 +25,6 @@ export default new Router({
       component: Home
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/Login.vue')
-    },
-    {
       path: '/problems/:type',
       name: 'problems',
       component: () => import('@/views/TableRows.vue'),
@@ -132,6 +127,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: () => import('@/views/About.vue')
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('@/views/UserInfo.vue')
     }
   ]
 });

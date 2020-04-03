@@ -13,6 +13,7 @@
     </template>
     <template v-else>
       <h2>Hotline</h2>
+      <Login />
     </template>
   </div>
 </template>
@@ -20,12 +21,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
+import Login from '../components/Login.vue';
 import { NoticeTable } from '../tables/notice';
 import { ProblemTable } from '../tables/problem';
 
 @Component({
   components: {
-    DatasetGrid
+    DatasetGrid,
+    Login
   }
 })
 export default class Home extends Vue {

@@ -3,6 +3,7 @@ const connection = require('../connection');
 
 const router = express.Router();
 
+
 router.get('/text', (req, res) => {
   const sql = req.query.sql;
   const inserts = [req.query.id];
@@ -19,6 +20,7 @@ router.get('/text', (req, res) => {
   });
 });
 
+
 router.get('/list', (req, res) => {
   const sql = req.query.sql;
 
@@ -32,5 +34,6 @@ router.get('/list', (req, res) => {
       res.send(results);
   });
 });
+
 
 module.exports = router;

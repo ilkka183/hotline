@@ -13,22 +13,28 @@
       </template>
     </div>
     <table class="grid">
-      <tr>
-        <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
-      </tr>
-      <tr v-for="row in rows" v-bind:key="row.id">
-        <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
-          <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
-        </td>
-        <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
-        <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
-        <td v-if="showDeleteButton" class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
-        <td class="added-text" v-if="hasRowAdded(row)">lisätty viimeksi</td>
-        <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu viimeksi</td>
-      </tr>
-      <tr v-if="showFooter">
-        <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>
-      </tr>
+      <thead>
+        <tr>
+          <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="row in rows" v-bind:key="row.id">
+          <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
+            <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
+          </td>
+          <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
+          <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
+          <td v-if="showDeleteButton" class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
+          <td class="added-text" v-if="hasRowAdded(row)">lisätty viimeksi</td>
+          <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu viimeksi</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr v-if="showFooter">
+          <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>

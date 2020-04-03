@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Sandbox</h1>
+    <h2>Sandbox</h2>
     <form @submit.prevent="post" @keydown.esc="cancel">
     <table>
       <tr v-for="(field, index) in fields1" :key="index">

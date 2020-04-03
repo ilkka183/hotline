@@ -1,9 +1,12 @@
 const express = require('express');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const connection = require('../connection');
 
 const router = express.Router();
 
-router.get('/:table/row', (req, res) => {
+
+router.get('/:table/row', auth, (req, res) => {
   let sql = 'SELECT * FROM ' + req.params.table;
   const inserts = [];
 
@@ -28,7 +31,8 @@ router.get('/:table/row', (req, res) => {
   });
 });
 
-router.get('/:table/rows', (req, res) => {
+
+router.get('/:table/rows', auth, (req, res) => {
   let sql = 'SELECT COUNT(*) as RowCount FROM ' + req.params.table;
 
   connection.query(sql, (error, results, fields) => {
@@ -67,7 +71,8 @@ router.get('/:table/rows', (req, res) => {
   });
 });
 
-router.post('/:table/', async (req, res) => {
+
+router.post('/:table', auth, (req, res) => {
   let sql = 'INSERT INTO ' + req.params.table + ' (';
 
   const columns = [];
@@ -115,7 +120,8 @@ router.post('/:table/', async (req, res) => {
   });
 });
 
-router.put('/:table/', async (req, res) => {
+
+router.put('/:table', auth, (req, res) => {
   let sql = 'UPDATE ' + req.params.table + ' SET ';
 
   const inserts = [];
@@ -146,7 +152,8 @@ router.put('/:table/', async (req, res) => {
   });
 });
 
-router.delete('/:table/', async (req, res) => {
+
+router.delete('/:table', [auth, admin], (req, res) => {
   let sql = 'DELETE FROM ' + req.params.table;
 
   const inserts = [];
@@ -162,6 +169,7 @@ router.delete('/:table/', async (req, res) => {
     res.send(results);
   });
 });
+
 
 function formatWhere(query, inserts) {
   let sql = ' WHERE ';
@@ -180,5 +188,6 @@ function formatWhere(query, inserts) {
 
   return sql;
 }
+
 
 module.exports = router;

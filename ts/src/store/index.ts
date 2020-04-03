@@ -8,7 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     database: new RestDatabase('http://localhost:3000', '/api/'),
-    user: new User(1, 'Ilkka', 'Salmenius', UserType.Admin)
+    user: null
   },
   mutations: {
     LOGIN(state, user) {
