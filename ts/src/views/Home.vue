@@ -24,6 +24,7 @@ import DatasetGrid from '../components/DatasetGrid.vue';
 import Login from '../components/Login.vue';
 import { NoticeTable } from '../tables/notice';
 import { ProblemTable } from '../tables/problem';
+import { RestDatabase } from '../lib/dataset';
 
 @Component({
   components: {
@@ -37,7 +38,7 @@ export default class Home extends Vue {
   private otherProblems: ProblemTable = new ProblemTable(this.database, { type: 1 });
   private notices: NoticeTable = new NoticeTable(this.database);
 
-  private get database() {
+  private get database(): RestDatabase {
     return this.$store.state.database;
   }
 

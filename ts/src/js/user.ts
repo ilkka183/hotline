@@ -9,20 +9,20 @@ export enum UserRole {
 export class User {
   public static readonly typeTexts: string[] = ['Pääkäyttäjä', 'Tehokäyttäjä', 'Käyttäjä', 'Demokäyttäjä'];
 
+  public token: string;
   public id: number;
   public role: UserRole;
   public firstName: string;
   public lastName: string;
   public phone: string;
-  public token: string;
   
-  constructor(id: number, role: UserRole, firstName: string, lastName: string, phone: string, token: string) {
-    this.id = id;
-    this.role = role;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.phone = phone;
+  constructor(token: string, data: any) {
     this.token = token;
+    this.id = data.id;
+    this.role = data.role;
+    this.firstName = data.firstName;
+    this.lastName = data.lastName;
+    this.phone = data.phone;
   }
 
   public get name() {

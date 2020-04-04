@@ -21,9 +21,7 @@
 </template>
 
 <script  lang="ts">
-import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { setToken } from '../js/rest';
 import { User, UserRole } from '../js/user'
 
 @Component
@@ -32,15 +30,15 @@ export default class Login extends Vue {
   private password = null;
   
   private login() {
-    axios.post('http://localhost:3000/api/auth', { username: this.username, password: this.password })
+    this.$store.state.rest.post('/auth', { username: this.username, password: this.password })
       .then(response => {
         const token = response.data;
-        setToken(token);
 
-        axios.get('http://localhost:3000/api/auth/me', { headers: { 'x-auth-token': token }})
+        this.$store.state.rest.get('/auth/me', { headers: { 'x-auth-token': token }})
           .then(response => {
             const data = response.data;
-            this.$store.dispatch('login', new User(data.id, data.role, data.firstName, data.lastName, data.phone, token));
+
+            this.$store.dispatch('login', new User(token, data));
           })
           .catch(error => {
             console.log(error.response);
