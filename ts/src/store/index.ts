@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { RestDatabase } from '@/lib/dataset'
-import { User, UserType } from '@/js/user'
 
 Vue.use(Vuex);
 

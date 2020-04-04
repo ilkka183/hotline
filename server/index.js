@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const config = require('config');
 const auth = require('./routes/auth');
 const lookup = require('./routes/lookup');
 const query = require('./routes/query');
@@ -8,7 +7,7 @@ const table = require('./routes/table');
 
 const app = express();
 
-if (!config.get('jwtPrivateKey')) {
+if (!process.env.hotline_jwtPrivateKey) {
   console.error('FATAL ERROR: jwtPrivateKey is not defined.');
   process.exit(1);
 }

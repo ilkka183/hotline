@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const auth = require('../middleware/auth');
 const connection = require('../connection');
 
@@ -16,7 +15,7 @@ router.post('/', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const sql = 'SELECT Id, ClientType, Username, Password, FirstName, LastName, Email, Phone FROM Client WHERE Username=?';
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Email, Phone FROM Client WHERE Username=?';
 
   connection.query(sql, [username], (error, results, fields) => {
     if (error)
@@ -33,10 +32,12 @@ router.post('/', (req, res) => {
       lastName: row.LastName,
       email: row.Email,
       phone: row.Phone,
-      type: row.ClientType
+      role: row.Role
     }
 
-    const token = jwt.sign(payload, config.get('jwtPrivateKey'));
+    console.log(payload);
+
+    const token = jwt.sign(payload, process.env.hotline_jwtPrivateKey);
     res.send(token);
   });
 });

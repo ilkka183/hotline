@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Omat tiedot</h2>
-    <table>
+    <table v-if="user">
       <tr>
         <td>No:</td>
         <td>{{ user.id }}</td>
@@ -11,8 +11,8 @@
         <td>{{ user.name }}</td>
       </tr>
       <tr>
-        <td>Tyyppi:</td>
-        <td>{{ user.typeText }}</td>
+        <td>Rooli:</td>
+        <td>{{ user.roleText }}</td>
       </tr>
       <tr>
         <td>Puhelinnumero:</td>
@@ -38,6 +38,7 @@
 <script  lang="ts">
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { rest } from '../js/rest';
 import { User } from '../js/user';
 
 @Component
@@ -51,17 +52,20 @@ export default class UserInfo extends Vue {
   }
 
   mounted() {
-    this.phone = this.user.phone;
+    if (this.user)
+      this.phone = this.user.phone;
   }
 
   private async update(fields: object) {
-    const url = this.$store.state.database.url + 'table/Client';
+//    const url = this.$store.state.database.url + 'table/Client';
+    const url = '/table/Client';
 
     const keys = {
       Id: this.user.id
     }
 
-    await axios.put(url, fields, { params: keys });
+//    await axios.put(url, fields, { params: keys, headers: {'x-auth-token': this.$store.state.user.token } });
+    await rest.put(url, fields, { params: keys });
   }
 
   private async save() {

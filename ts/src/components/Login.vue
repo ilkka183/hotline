@@ -11,9 +11,11 @@
       </tr>
     </table>
     <div class="buttons">
-      <button @click="login">Kirjaudu</button>
-      <button @click="fill('albert', 'ilkka')">Ilkka</button>
+      <button :disabled="!username || !password" @click="login">Kirjaudu</button>
+      <button @click="clear">Tyhjennä</button>
+      <button @click="fill('albert', 'weber')">Ilkka</button>
       <button @click="fill('opeJorma', 'weber')">Jorma</button>
+      <button @click="fill('arto', 'weber')">Arto</button>
     </div>
   </div>
 </template>
@@ -21,7 +23,8 @@
 <script  lang="ts">
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { User, UserType } from '../js/user'
+import { setToken } from '../js/rest';
+import { User, UserRole } from '../js/user'
 
 @Component
 export default class Login extends Vue {
@@ -32,11 +35,12 @@ export default class Login extends Vue {
     axios.post('http://localhost:3000/api/auth', { username: this.username, password: this.password })
       .then(response => {
         const token = response.data;
+        setToken(token);
 
         axios.get('http://localhost:3000/api/auth/me', { headers: { 'x-auth-token': token }})
           .then(response => {
             const data = response.data;
-            this.$store.dispatch('login', new User(data.id, UserType.Admin, data.firstName, data.lastName, data.phone));
+            this.$store.dispatch('login', new User(data.id, data.role, data.firstName, data.lastName, data.phone, token));
           })
           .catch(error => {
             console.log(error.response);
@@ -44,7 +48,13 @@ export default class Login extends Vue {
       })
       .catch(error => {
          console.log(error.response);
+         window.alert('Virheellinen käyttäjätunnus tai salasana');
       })
+  }
+
+  private clear() {
+    this.username = null;
+    this.password = null;
   }
   
   private fill(username: string, password: string) {

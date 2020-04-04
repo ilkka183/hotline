@@ -56,7 +56,7 @@ CREATE TABLE Client
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   GroupId BIGINT UNSIGNED  NOT NULL,
-  ClientType SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=power-user, 2=user, 3=demo-user */
+  Role SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=power-user, 2=user, 3=demo-user */
   Username VARCHAR(20) NOT NULL UNIQUE,
   Password VARCHAR(20) NOT NULL,
   FirstName VARCHAR(40) NOT NULL,
@@ -240,9 +240,9 @@ INSERT INTO ClientGroup(Name, Website) VALUES('Juniper Code', 'http://www.junipe
 INSERT INTO ClientGroup(Name, Website) VALUES('HMV-Systems', 'http://www.hmv-systems.fi');
 INSERT INTO ClientGroup(Name, Website) VALUES('Prodiags', 'http://www.prodiags.com');
 
-INSERT INTO Client(GroupId, ClientType, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
-INSERT INTO Client(GroupId, ClientType, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
-INSERT INTO Client(GroupId, ClientType, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'matti', 'weber', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
+INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'arto', 'weber', NOW() - INTERVAL 1 DAY, NULL);
 
 INSERT INTO Brand(Name) VALUES('SEAT');
 INSERT INTO Brand(Name) VALUES('Volkswagen');

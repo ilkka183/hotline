@@ -46,7 +46,7 @@ export class ClientTable extends BaseTable {
 
     this.SQL =
       'SELECT Client.Id, Client.GroupId, Client.Username, Client.Password, ' + 
-      'ClientGroup.Name AS GroupName, Client.ClientType, Client.FirstName, Client.LastName, Client.Title, ' +
+      'ClientGroup.Name AS GroupName, Client.Role, Client.FirstName, Client.LastName, Client.Title, ' +
       'Client.Address, Client.PostalCode, Client.PostOffice, Client.Country, Client.Phone, Client.Email, Client.Website, ' +
       'Client.Info, Client.LicenseBegin, Client.LicenseEnd, Client.Enabled ' +
       'FROM Client, ClientGroup ' +
@@ -56,7 +56,7 @@ export class ClientTable extends BaseTable {
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM ClientGroup", hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
-    this.addIntegerField({ name: 'ClientType', caption: 'Tyyppi', displayTexts: User.typeTexts, required: true });
+    this.addIntegerField({ name: 'Role', caption: 'Rooli', displayTexts: User.typeTexts, required: true });
     this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: false, required: true });
     this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: false, required: true });
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });

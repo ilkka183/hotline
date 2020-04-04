@@ -18,7 +18,7 @@
       </span>
       <span class="right">
         <template v-if="$store.state.user">
-          <router-link to="/user">Omat tiedot ({{ $store.state.user.firstName }})</router-link> |
+          <router-link to="/user">{{ $store.state.user.name }}</router-link> |
           <router-link to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
         </template>
       </span>
