@@ -31,25 +31,21 @@
         <td><input type="password" v-model="password2"></td>
       </tr>
     </table>
-    <button @click="changePassword">Vaihda salasana</button>
+    <button @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</button>
   </div>
 </template>
 
 <script  lang="ts">
-import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { rest } from '../js/rest';
 import { User } from '../js/user';
+import Base from '../components/Base.vue';
 
 @Component
-export default class UserInfo extends Vue {
+export default class UserInfo extends Base {
   private phone = '';
   private password1 = '';
   private password2 = '';
-
-  private get user(): User {
-    return this.$store.state.user;
-  }
 
   mounted() {
     if (this.user)
@@ -57,15 +53,13 @@ export default class UserInfo extends Vue {
   }
 
   private async update(fields: object) {
-//    const url = this.$store.state.database.url + 'table/Client';
     const url = '/table/Client';
 
     const keys = {
       Id: this.user.id
     }
 
-//    await axios.put(url, fields, { params: keys, headers: {'x-auth-token': this.$store.state.user.token } });
-    await rest.put(url, fields, { params: keys });
+    await this.axios.put(url, fields, { params: keys });
   }
 
   private async save() {

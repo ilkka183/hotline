@@ -161,6 +161,9 @@ export default class DatasetGrid extends Vue {
   }
 
   private hasFieldEdited(row: object, field: Field) {
+    if (this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]))
+      console.log(this.editedData.row[field.name], row[field.name]);
+
     return this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]);
   }
 

@@ -23,18 +23,19 @@
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, UserRole } from '../js/user'
+import Base from './Base.vue';
 
 @Component
-export default class Login extends Vue {
+export default class Login extends Base {
   private username = null;
   private password = null;
   
   private login() {
-    this.$store.state.rest.post('/auth', { username: this.username, password: this.password })
+    this.axios.post('/auth', { username: this.username, password: this.password })
       .then(response => {
         const token = response.data;
 
-        this.$store.state.rest.get('/auth/me', { headers: { 'x-auth-token': token }})
+        this.axios.get('/auth/me', { headers: { 'x-auth-token': token }})
           .then(response => {
             const data = response.data;
 

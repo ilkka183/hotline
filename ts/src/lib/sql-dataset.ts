@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { Dataset, Field, RestDatabase, SelectOption } from './dataset';
+import { Dataset, Field, SelectOption, RestDatabase } from './dataset';
 
 
-export abstract class SqlDataset extends Dataset {
-
+export abstract class SqlDataset extends Dataset
+{
   constructor(database: RestDatabase) {
     super(database);
   }
@@ -11,7 +10,7 @@ export abstract class SqlDataset extends Dataset {
   public async getLookupText(sql: string, id: any) {
     sql += ' WHERE Id=?';
 
-    const response = await axios.get(this.database.url + 'lookup/text', { params: { sql, id } });
+    const response = await this.axios.get('/lookup/text', { params: { sql, id } });
 
     if (response.data.length > 0)
       return response.data[0].Text;
@@ -22,7 +21,7 @@ export abstract class SqlDataset extends Dataset {
   public async getLookupList(sql: string) {
     sql += ' ORDER BY Text';
 
-    const response = await axios.get(this.database.url + 'lookup/list', { params: { sql } });
+    const response = await this.axios.get('/lookup/list', { params: { sql } });
     const list = [];
 
     for (const item of response.data)
@@ -52,7 +51,7 @@ export abstract class SqlTable extends SqlDataset {
   }
 
   get url(): string {
-    return this.database.url + 'table/' + this.name;
+    return '/table/' + this.name;
   }
 
   async getRow(query: any) {
@@ -72,7 +71,7 @@ export abstract class SqlTable extends SqlDataset {
 
     console.log('GET ' + url);
 
-    const response = await axios.get(url);
+    const response = await this.axios.get(url);
 
     const source = response.data[0];
     const row: object = {};
@@ -85,7 +84,7 @@ export abstract class SqlTable extends SqlDataset {
   }
 
   private async getQueryRows(pageNumber = 1) {
-    let url = this.database.url + 'query/rows';
+    let url = '/query/rows';
     url += '?table=' + this.tableName;
     url += '&sql=' + this.sql;
     url += '&limit=' + this.pageLimit;
@@ -95,7 +94,7 @@ export abstract class SqlTable extends SqlDataset {
 
     console.log('GET ' + url);
 
-    const response = await axios.get(url)
+    const response = await this.axios.get(url)
     const rows = [];
 
     for (const source of response.data.rows) {
@@ -119,7 +118,7 @@ export abstract class SqlTable extends SqlDataset {
 
     console.log('GET ' + url);
 
-    const response = await axios.get(url)
+    const response = await this.axios.get(url)
     const rows = [];
 
     for (const source of response.data.rows) {
@@ -156,7 +155,7 @@ export abstract class SqlTable extends SqlDataset {
     console.log('POST ' + url);
     console.log(fields);
 
-    const response = await axios.post(url, fields);
+    const response = await this.axios.post(url, fields);
     const field: Field | null = this.primaryKeyField;
 
     if (field)
@@ -182,7 +181,7 @@ export abstract class SqlTable extends SqlDataset {
     console.log(fields);
     console.log(keys);
 
-    await axios.put(url, fields, { params: keys });
+    await this.axios.put(url, fields, { params: keys });
   }
 
   public async deleteRow(row: object) {
@@ -192,7 +191,7 @@ export abstract class SqlTable extends SqlDataset {
     console.log('DELETE ' + url);
     console.log(keys);
 
-    await axios.delete(url, { params: keys });
+    await this.axios.delete(url, { params: keys });
   }
 
   public confirmDeleteRow(row: object): boolean {

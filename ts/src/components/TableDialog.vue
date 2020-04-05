@@ -93,6 +93,11 @@ export default class TableDialog extends Vue {
     }
   }
 
+  submit(row: object) {
+    this.table.database.editedData = new EditedData(this.table.tableName, row, this.state);
+    this.$router.go(-1);
+  }
+
   async post() {
     this.posted = true;
     this.missingValues = !this.validate();
@@ -100,13 +105,18 @@ export default class TableDialog extends Vue {
     if (this.missingValues)
       return;
 
-    let row = null;
-
     switch (this.state) {
       case EditState.Add:
         console.log(JSON.stringify(this.row));
-        await this.table.addRow(this.row);
-        row = this.row;
+
+        try {
+          await this.table.addRow(this.row);
+          this.submit(this.row);
+        }
+        catch (e) {
+          alert(e.response.data.sqlMessage);
+        }
+
         break;
 
       case EditState.Edit:
@@ -114,15 +124,18 @@ export default class TableDialog extends Vue {
         console.log(JSON.stringify(this.row));
 
         if (JSON.stringify(this.savedRow) !== JSON.stringify(this.row)) {
-          await this.table.updateRow(this.savedRow, this.row);
+          try {
+            await this.table.updateRow(this.savedRow, this.row);
+            this.submit(this.savedRow);
+          }
+          catch (e) {
+            console.log('virhe');
+            alert(e.response.data.sqlMessage);
+          }
         }
 
-        row = this.savedRow;
         break;
     }
-
-    this.table.database.editedData = new EditedData(this.table.tableName, row, this.state);
-    this.$router.go(-1);
   }
 
   cancel() {

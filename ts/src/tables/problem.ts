@@ -1,4 +1,5 @@
-import { TextAlign, RestDatabase } from '@/lib/dataset';
+import { RestDatabase } from '@/lib/dataset';
+import { TextAlign } from '@/lib/dataset';
 import { BaseTable } from './base';
 
 

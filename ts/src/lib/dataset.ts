@@ -1,3 +1,5 @@
+import { AxiosInstance } from 'axios';
+
 export enum TextAlign {
   Left,
   Center,
@@ -85,7 +87,7 @@ export abstract class Field {
 
   get database(): RestDatabase | null {
     return this.dataset?.database;
-  }
+  }  
 
   public getAutoFocus(): boolean {
     return this == this.dataset?.autoFocusField;
@@ -373,7 +375,7 @@ class StringField extends Field {
 
 
 export abstract class Dataset {
-  public database: RestDatabase;
+  public database: RestDatabase;  
   public fields: any = {};
   public model: any = null;
   public autoFocusField: Field | null = null;
@@ -381,6 +383,10 @@ export abstract class Dataset {
   constructor(database: RestDatabase) {
     this.database = database;
   }
+
+  get axios(): AxiosInstance {
+    return this.database.axios;
+  }  
 
   public get pageLimit(): number {
     return this.getPageLimit();
@@ -520,16 +526,10 @@ export class EditedData {
 
 
 export class RestDatabase {
-  private host: string;
-  private path: string;
+  public axios: AxiosInstance;
   public editedData: EditedData | null = null;
   
-  constructor(host: string, path: string) {
-    this.host = host;
-    this.path = path;
-  }
-
-  get url(): string {
-    return this.host + this.path;
+  constructor(axios: AxiosInstance) {
+    this.axios = axios;
   }
 }
