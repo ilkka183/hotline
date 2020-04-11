@@ -142,20 +142,20 @@ export abstract class SqlTable extends SqlDataset {
   }
 
   public async addRow(row: object) {
-    const fields: object = {};
+    const body: object = {};
 
     for (const key in row) {
       const value = row[key];
 
       if (value !== null)
-        fields[key] = value;
+        body[key] = value;
     }
 
     const url = this.url;
     console.log('POST ' + url);
-    console.log(fields);
+    console.log('body', body);
 
-    const response = await this.axios.post(url, fields);
+    const response = await this.axios.post(url, body);
     const field: Field | null = this.primaryKeyField;
 
     if (field)
@@ -165,33 +165,31 @@ export abstract class SqlTable extends SqlDataset {
   }
   
   public async updateRow(oldRow: object, newRow: object) {
-    const keys = this.primaryKeys(newRow);
+    const params = this.primaryKeys(oldRow);
 
-    const fields: object = {};
+    const body: object = {};
 
     for (const key in newRow) {
       const value = newRow[key];
       
       if (value != oldRow[key])
-        fields[key] = value;
+        body[key] = value;
     }
 
     const url = this.url;
-    console.log('PUT ' + url);
-    console.log(fields);
-    console.log(keys);
+    console.log('PUT ' + url, params);
+    console.log('body', body);
 
-    await this.axios.put(url, fields, { params: keys });
+    await this.axios.put(url, body, { params });
   }
 
   public async deleteRow(row: object) {
-    const keys = this.primaryKeys(row);
+    const params = this.primaryKeys(row);
 
     const url = this.url;
-    console.log('DELETE ' + url);
-    console.log(keys);
+    console.log('DELETE ' + url, params);
 
-    await this.axios.delete(url, { params: keys });
+    await this.axios.delete(url, { params });
   }
 
   public confirmDeleteRow(row: object): boolean {

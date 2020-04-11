@@ -23,7 +23,6 @@ router.get('/text', (req, res) => {
 
 router.get('/list', (req, res) => {
   const sql = req.query.sql;
-
   console.log(sql);
 
   connection.query(sql, (error, results, fields) => {

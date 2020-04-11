@@ -43,6 +43,10 @@ export default class Home extends Base {
     return this.$store.state.database;
   }
 
+  created() {
+    this.login('albert', 'weber');
+  }
+
   private newProblem() {
     this.$router.push('new-problem');
   }

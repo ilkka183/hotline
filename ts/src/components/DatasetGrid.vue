@@ -25,9 +25,8 @@
           </td>
           <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
           <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
-          <td v-if="showDeleteButton" class="action"><button @click="confirmDeleteRow(row)">Poista</button></td>
-          <td class="added-text" v-if="hasRowAdded(row)">lisätty viimeksi</td>
-          <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu viimeksi</td>
+          <td class="added-text" v-if="hasRowAdded(row)">lisätty</td>
+          <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
         </tr>
       </tbody>
       <tfoot>
@@ -78,7 +77,7 @@ export default class DatasetGrid extends Vue {
     this.rowCount = data.rowCount;
     this.rows = data.rows;
 
-    console.log(data.rows);
+//    console.log(data.rows);
   }
 
   private refreshRows() {
@@ -95,18 +94,6 @@ export default class DatasetGrid extends Vue {
 
   private editRow(row: object) {
     this.dataset.navigateEdit(this.$router, row);
-  }
-
-  private async deleteRow(row: object) {
-    await this.dataset.deleteRow(row);
-    this.getRows();
-    this.dataset.database.editedData = new EditedData(this.dataset.tableName, row, EditState.Delete);
-  }
-
-  private confirmDeleteRow(row: object) {
-    if (this.dataset.confirmDeleteRow(row)) {
-      this.deleteRow(row);
-    }
   }
 
   private cellClass(field: Field) {
@@ -161,8 +148,8 @@ export default class DatasetGrid extends Vue {
   }
 
   private hasFieldEdited(row: object, field: Field) {
-    if (this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]))
-      console.log(this.editedData.row[field.name], row[field.name]);
+//    if (this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]))
+//      console.log(this.editedData.row[field.name], row[field.name]);
 
     return this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]);
   }

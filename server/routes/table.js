@@ -8,16 +8,20 @@ const router = express.Router();
 
 router.get('/:table/row', auth, (req, res) => {
   let sql = 'SELECT * FROM ' + req.params.table;
-  const inserts = [];
 
-  for (let key of Object.keys(req.query)) {
-    if (inserts.length == 0)
+  const inserts = [];
+  let index = 0;
+
+  for (const key of Object.keys(req.query)) {
+    inserts.push(req.query[key]);
+
+    if (index == 0)
       sql += ' WHERE ';
     else
       sql += ' AND ';
 
     sql += key + '=?';
-    inserts.push(req.query[key]);
+    index++;
   }
 
   console.log(sql);
@@ -80,7 +84,7 @@ router.post('/:table', auth, (req, res) => {
 
   let index = 0;
 
-  for (let column in req.body) {
+  for (const column in req.body) {
     columns.push(column);
     values.push(req.body[column]);
 
@@ -94,7 +98,7 @@ router.post('/:table', auth, (req, res) => {
   sql += ') VALUES (';
   index = 0;
 
-  for (let column in req.body) {
+  for (const column in req.body) {
     if (index > 0)
       sql += ', ';
 
@@ -127,7 +131,7 @@ router.put('/:table', auth, (req, res) => {
   const inserts = [];
   let index = 0;
 
-  for (let name in req.body) {
+  for (const name in req.body) {
     inserts.push(name);
     inserts.push(req.body[name]);
 
@@ -138,7 +142,20 @@ router.put('/:table', auth, (req, res) => {
     index++;
   }
 
-  sql += formatWhere(req.query, inserts);
+  index = 0;
+
+  for (const name in req.query) {
+    inserts.push(name);
+    inserts.push(req.query[name]);
+
+    if (index == 0)
+      sql += ' WHERE ';
+    else
+      sql += ' AND ';
+
+    sql += '??=?';
+    index++;
+  }
 
   console.log(sql);
   console.log(inserts);
@@ -153,11 +170,24 @@ router.put('/:table', auth, (req, res) => {
 });
 
 
-router.delete('/:table', [auth, admin], (req, res) => {
+router.delete('/:table', auth, (req, res) => {
   let sql = 'DELETE FROM ' + req.params.table;
 
   const inserts = [];
-  sql += formatWhere(req.query, inserts);
+  let index = 0;
+
+  for (const name in req.query) {
+    inserts.push(name);
+    inserts.push(req.query[name]);
+
+    if (index == 0)
+      sql += ' WHERE ';
+    else
+      sql += ' AND ';
+
+    sql += '??=?';
+    index++;
+  }
 
   console.log(sql);
   console.log(inserts);
@@ -169,25 +199,6 @@ router.delete('/:table', [auth, admin], (req, res) => {
     res.send(results);
   });
 });
-
-
-function formatWhere(query, inserts) {
-  let sql = ' WHERE ';
-  let index = 0;
-
-  for (let name in query) {
-    inserts.push(name);
-    inserts.push(query[name]);
-
-    if (index > 0)
-      sql += ' AND ';
-
-    sql += '??=?';
-    index++;
-  }
-
-  return sql;
-}
 
 
 module.exports = router;

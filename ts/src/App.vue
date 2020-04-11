@@ -65,4 +65,16 @@ export default class Aoo extends Vue {
 .right {
   float: right;
 }
+
+.buttons {
+  margin-top: 10px;
+
+  button {
+    margin-right: 5px;
+  }
+
+  .right {
+    float: right;
+  }
+}
 </style>

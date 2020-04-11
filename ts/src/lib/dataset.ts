@@ -119,15 +119,16 @@ export abstract class Field {
     return this.readonly;
   }
 
-  isNull(row: object): boolean {
+  public isNull(row: object): boolean {
     return row[this.name] === null;
   }
 
-  isValid(row: object): boolean {
-    if (this.required)
-      return row[this.name] != null;
+  public  isNullOrEmpty(row: object): boolean {
+    return (row[this.name] === null) || (row[this.name] === '');
+  }
 
-    return true;
+  public isValid(row: object): boolean {
+    return this.required ? !this.isNullOrEmpty(row) : true;
   }
 
   value(row: object): any {
