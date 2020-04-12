@@ -35,7 +35,7 @@ export class ProblemTable extends BaseTable {
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addIntegerField({ name: 'Type', caption: 'Tyyppi', displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
     this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true });
-    this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40 });
+    this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40, required: true });
     this.addStringField({ name: 'Model', caption: 'Malli', length: 40 });
     this.addIntegerField({ name: 'ModelYear', caption: 'Vuosimalli', align: TextAlign.Right });
     this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', displayTexts: ProblemTable.FUELS });

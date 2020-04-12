@@ -34,7 +34,7 @@ import { ProblemTable } from '../tables/problem';
 
 @Component
 export default class OpenProblem extends Vue {
-  private table: ProblemTable = new ProblemTable(this.database);
+  private table: any = new ProblemTable(this.database);
   private row: object | null = null;
 
   private get database() {
