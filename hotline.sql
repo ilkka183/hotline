@@ -31,7 +31,7 @@ CONNECT hotline1;
 SET NAMES 'utf8';
 
 
-CREATE TABLE ClientGroup
+CREATE TABLE UserGroup
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   Name VARCHAR(80) NOT NULL UNIQUE,
@@ -52,7 +52,7 @@ CREATE TABLE ClientGroup
 );
 
 
-CREATE TABLE Client
+CREATE TABLE User
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   GroupId BIGINT UNSIGNED  NOT NULL,
@@ -77,17 +77,17 @@ CREATE TABLE Client
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (GroupId) REFERENCES ClientGroup(Id)
+  FOREIGN KEY (GroupId) REFERENCES UserGroup(Id)
 );
 
 
-CREATE TABLE ClientLogin
+CREATE TABLE UserLogin
 (
-  ClientId BIGINT UNSIGNED NOT NULL,
+  UserId BIGINT UNSIGNED NOT NULL,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   IPAddress VARCHAR(40) NOT NULL,
   Data JSON,
-  FOREIGN KEY (ClientId) REFERENCES Client(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 
@@ -107,28 +107,16 @@ CREATE TABLE Brand
 CREATE UNIQUE INDEX BrandIndex ON Brand(Name);
 
 
-CREATE TABLE Model
-(
-  Brand VARCHAR(80) NOT NULL,
-  Model VARCHAR(80) NOT NULL,
-  Fuel SMALLINT UNSIGNED NOT NULL, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
-  EngineDisplacement SMALLINT UNSIGNED NOT NULL,
-  FirstYear SMALLINT UNSIGNED NOT NULL,
-  LastYear SMALLINT UNSIGNED,
-  Data JSON
-);
-
-
 CREATE TABLE Notice
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  UserId BIGINT UNSIGNED NOT NULL,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  ClientId BIGINT UNSIGNED NOT NULL,
   Title VARCHAR(160) NOT NULL,
   Message TEXT NOT NULL,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (ClientId) REFERENCES Client(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 
@@ -147,9 +135,9 @@ CREATE TABLE BulletinGroup
 CREATE TABLE Problem
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  UserId BIGINT UNSIGNED NOT NULL,
   Type SMALLINT UNSIGNED NOT NULL, /* 0=malfunction, 1=bulletin */
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  ClientId BIGINT UNSIGNED NOT NULL,
   BulletinGroupId BIGINT UNSIGNED,
   LicenseNumber VARCHAR(7),
   Brand VARCHAR(80) NOT NULL,
@@ -167,7 +155,7 @@ CREATE TABLE Problem
   Status SMALLINT UNSIGNED NOT NULL, /* 0=open, 1=solved, 2=unsolved */
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (ClientId) REFERENCES Client(Id),
+  FOREIGN KEY (UserId) REFERENCES User(Id),
   FOREIGN KEY (BulletinGroupId) REFERENCES BulletinGroup(Id)
 );
 
@@ -191,13 +179,13 @@ CREATE TABLE ProblemReply
 (
   ProblemId BIGINT UNSIGNED NOT NULL,
   Id INTEGER UNSIGNED NOT NULL,
+  UserId BIGINT UNSIGNED NOT NULL,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  ClientId BIGINT UNSIGNED NOT NULL,
   Message TEXT NOT NULL,
   Data JSON,
   PRIMARY KEY (ProblemId, Id),
   FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
-  FOREIGN KEY (ClientId) REFERENCES Client(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 
@@ -218,13 +206,13 @@ CREATE TABLE ProblemReplyAttachment
 );
 
 
-INSERT INTO ClientGroup(Name, Website) VALUES('Juniper Code', 'http://www.junipercode.com');
-INSERT INTO ClientGroup(Name, Website) VALUES('HMV-Systems', 'http://www.hmv-systems.fi');
-INSERT INTO ClientGroup(Name, Website) VALUES('Prodiags', 'http://www.prodiags.com');
+INSERT INTO UserGroup(Name, Website) VALUES('Juniper Code', 'http://www.junipercode.com');
+INSERT INTO UserGroup(Name, Website) VALUES('HMV-Systems', 'http://www.hmv-systems.fi');
+INSERT INTO UserGroup(Name, Website) VALUES('Prodiags', 'http://www.prodiags.com');
 
-INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
-INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
-INSERT INTO Client(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'arto', 'weber', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'arto', 'weber', NOW() - INTERVAL 1 DAY, NULL);
 
 INSERT INTO Brand(Name) VALUES('SEAT');
 INSERT INTO Brand(Name) VALUES('Volkswagen');
@@ -252,49 +240,44 @@ INSERT INTO Brand(Name) VALUES('Toyota');
 INSERT INTO Brand(Name) VALUES('Volvo');
 
 
-INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Ford', 'Focus', 1, 1799, 1999, 2005);
-INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Seat', 'Leon', 0, 999, 2017, NULL);
-INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Volkswagen', 'Golf', 0, 1599, 1999, 2005);
+INSERT INTO Notice(UserId, Title, Message) VALUES(2, 'Päivitys SMS palveluun', 'HotLinen SMS palvelun hallintaan on tehty muutos.');
+INSERT INTO Notice(UserId, Title, Message) VALUES(1, 'Gates apulaitehihnat', 'Gatesin koulutuksesta muutama hyödyllinen linkki. Varaosakirja www.gatesautocat.com');
 
-
-INSERT INTO Notice(ClientId, Title, Message) VALUES(2, 'Päivitys SMS palveluun', 'HotLinen SMS palvelun hallintaan on tehty muutos.');
-INSERT INTO Notice(ClientId, Title, Message) VALUES(1, 'Gates apulaitehihnat', 'Gatesin koulutuksesta muutama hyödyllinen linkki. Varaosakirja www.gatesautocat.com');
-
-INSERT INTO Notice(ClientId, Title, Message) VALUES(1, 'Vuosilisenssi 1.10.2013 alkaen', 'HotLinen vuosilisenssin hinta on 280€ (alv 0%) 1.10.2013 alkaen.
+INSERT INTO Notice(UserId, Title, Message) VALUES(1, 'Vuosilisenssi 1.10.2013 alkaen', 'HotLinen vuosilisenssin hinta on 280€ (alv 0%) 1.10.2013 alkaen.
 Uusi hinta tulee voimaan lisenssin uudistuksen yhteydessä 1.10.2013 alkaen, eli muutos tulee voimassa 1.10.2013-30.9.2014 välisenä aikana.');
 
 
 /* Vikatapaukset */
-INSERT INTO Problem(Type, ClientId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
+INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
   VALUES(0, 1, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.', 'Lataa akku.', 1);
 
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(1, 1, 2, 'Käännä virta-avainta');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(1, 1, 2, 'Käännä virta-avainta');
 
 
-INSERT INTO Problem(Type, ClientId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(0, 1, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 2005, 0, 'ISI-560', 'ABC', '123', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(2, 1, 3, 'Vaihda jarrulevyt');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(2, 1, 3, 'Vaihda jarrulevyt');
 
 
-INSERT INTO Problem(Type, ClientId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(0, 2, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(3, 1, 1, 'Aja tarkemmin');
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(3, 2, 2, 'Tarkista renkaiden ilmanpaineet');
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(3, 3, 3, 'Käytä huollossa');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 1, 1, 'Aja tarkemmin');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 2, 2, 'Tarkista renkaiden ilmanpaineet');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 3, 3, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Type, ClientId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(0, 2, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Kulkee huonosti', 'Auto ei kulje hyvin.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(4, 1, 1, 'Käytä huollossa');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(4, 1, 1, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Type, ClientId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(0, 3, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, ClientId, Message) VALUES(5, 1, 1, 'Vaihda vetonivelet');
+INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(5, 1, 1, 'Vaihda vetonivelet');
 
 
 /* Tiedotteet */
@@ -303,6 +286,6 @@ INSERT INTO BulletinGroup(Name) VALUES('AD-merkkitiedote');
 INSERT INTO BulletinGroup(Name) VALUES('Autodata');
 
 
-INSERT INTO Problem(Type, ClientId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'BMW', 'Moottorinohjauksen HEX vikakoodeja', '', '2711 DMTL pump final stage', 1);
-INSERT INTO Problem(Type, ClientId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'Volvo', 'Heikko alavääntö', 'Aktiiviselta HotLine -korjaamolta tuli vinkki D5 Volvoja piinaavasta ongelmasta.', 'Asiakasvalitus: Heikko alavääntö, normaalia kovempi savutus, ei vikakoodeja, puristuspaineet normaalit', 1);
-INSERT INTO Problem(Type, ClientId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 2, 1, 'Volvo', 'Volvo VIDA diagnostiikka VDS protokollan ajoneuvoi', 'Hella Gutmann Solutions -tiedote', 'Hella Gutmann Solutions -tiedote', 1);
+INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'BMW', 'Moottorinohjauksen HEX vikakoodeja', '', '2711 DMTL pump final stage', 1);
+INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'Volvo', 'Heikko alavääntö', 'Aktiiviselta HotLine -korjaamolta tuli vinkki D5 Volvoja piinaavasta ongelmasta.', 'Asiakasvalitus: Heikko alavääntö, normaalia kovempi savutus, ei vikakoodeja, puristuspaineet normaalit', 1);
+INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 2, 1, 'Volvo', 'Volvo VIDA diagnostiikka VDS protokollan ajoneuvoi', 'Hella Gutmann Solutions -tiedote', 'Hella Gutmann Solutions -tiedote', 1);

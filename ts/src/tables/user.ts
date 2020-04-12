@@ -3,15 +3,15 @@ import { BaseTable } from './base';
 import { User } from '../js/user';
 
 
-export class ClientGroupTable extends BaseTable {
+export class UserGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'ClientGroup');
+    super(database, 'UserGroup');
 
     this.SQL =
       'SELECT Id, Name, ' +
       'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
       'Logo, Info, Enabled ' +
-      'FROM ClientGroup ' +
+      'FROM UserGroup ' +
       'ORDER BY Id';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
@@ -40,21 +40,21 @@ export class ClientGroupTable extends BaseTable {
 }
 
 
-export class ClientTable extends BaseTable {
+export class UserTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'Client');
+    super(database, 'User');
 
     this.SQL =
-      'SELECT Client.Id, Client.GroupId, Client.Username, Client.Password, ' + 
-      'ClientGroup.Name AS GroupName, Client.Role, Client.FirstName, Client.LastName, Client.Title, ' +
-      'Client.Address, Client.PostalCode, Client.PostOffice, Client.Country, Client.Phone, Client.Email, Client.Website, ' +
-      'Client.Info, Client.LicenseBegin, Client.LicenseEnd, Client.Enabled ' +
-      'FROM Client, ClientGroup ' +
-      'WHERE Client.GroupId = ClientGroup.Id ' +
-      'ORDER BY Client.Id';
+      'SELECT User.Id, User.GroupId, User.Username, User.Password, ' + 
+      'UserGroup.Name AS GroupName, User.Role, User.FirstName, User.LastName, User.Title, ' +
+      'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Email, User.Website, ' +
+      'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
+      'FROM User, UserGroup ' +
+      'WHERE User.GroupId = UserGroup.Id ' +
+      'ORDER BY User.Id';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
-    this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM ClientGroup", hideInGrid: true, foreignKey: true, required: true });
+    this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM UserGroup", hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
     this.addIntegerField({ name: 'Role', caption: 'Rooli', displayTexts: User.typeTexts, required: true });
     this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: false, required: true });

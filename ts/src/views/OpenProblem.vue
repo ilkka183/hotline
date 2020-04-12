@@ -9,7 +9,7 @@
       <table>
         <tr><td>No:</td><td>{{ row.Id }}</td></tr>
         <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
-        <tr><td>Lähettäjä:</td><td>{{ table.fields.ClientId.displayText(row) }}</td></tr>
+        <tr><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
         <tr><td>Tyyppi:</td><td>{{ table.fields.Type.displayText(row) }}</td></tr>
         <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
         <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>

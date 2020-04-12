@@ -4,7 +4,7 @@ import Home from '@/views/Home.vue'
 
 import { BrandTable } from '@/tables/brand';
 import { BulletinGroupTable } from '@/tables/bulletin';
-import { ClientTable, ClientGroupTable } from '@/tables/client';
+import { UserTable, UserGroupTable } from '@/tables/user';
 import { NoticeTable } from '@/tables/notice';
 import { ProblemTable } from '@/tables/problem';
 import { VehicleTable } from '@/tables/vehicle';
@@ -59,28 +59,28 @@ export default new Router({
       props: () => ({ table: new NoticeTable(database) })
     },
     {
-      path: '/clientgroups',
-      name: 'clientgroups',
+      path: '/usergroups',
+      name: 'usergroups',
       component: () => import('@/views/TableRows.vue'),
-      props: () => ({ table: new ClientGroupTable(database) })
+      props: () => ({ table: new UserGroupTable(database) })
     },
     {
-      path: '/clientgroup',
-      name: 'clientgroup',
+      path: '/usergroup',
+      name: 'usergroup',
       component: () => import('@/views/TableRow.vue'),
-      props: () => ({ table: new ClientGroupTable(database) })
+      props: () => ({ table: new UserGroupTable(database) })
     },
     {
-      path: '/clients',
-      name: 'clients',
+      path: '/users',
+      name: 'users',
       component: () => import('@/views/TableRows.vue'),
-      props: () => ({ table: new ClientTable(database) })
+      props: () => ({ table: new UserTable(database) })
     },
     {
-      path: '/client',
-      name: 'client',
+      path: '/user',
+      name: 'user',
       component: () => import('@/views/TableRow.vue'),
-      props: () => ({ table: new ClientTable(database) })
+      props: () => ({ table: new UserTable(database) })
     },
     {
       path: '/brands',

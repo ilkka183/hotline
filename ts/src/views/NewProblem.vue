@@ -146,7 +146,7 @@ export default class NewProblem extends Vue {
 
     console.log(this.selections);
 
-    this.row.ClientId = 1;
+    this.row.UserId = 1;
     this.row.Type = 0;
 
     if (includeLicenseNumber)

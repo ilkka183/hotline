@@ -14,10 +14,10 @@ export class ProblemTable extends BaseTable {
     super(database, 'Problem');
 
     let sql =
-      'SELECT Problem.Id, Problem.Date, CONCAT(Client.FirstName, " ", Client.LastName) AS ClientName, ' +
+      'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
       'Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
-      'FROM Problem, Client ' +
-      'WHERE Problem.ClientId = Client.Id';
+      'FROM Problem, User ' +
+      'WHERE Problem.UserId = User.Id';
 
     if (filter.type)
       sql += ' AND Problem.Type = ' + filter.type;
@@ -31,8 +31,8 @@ export class ProblemTable extends BaseTable {
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
-    this.addIntegerField({ name: 'ClientId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM Client", hideInGrid: true, foreignKey: true, readonly: true, required: true });
-    this.addStringField({ name: 'ClientName', caption: 'Lähettäjä', hideInDialog: true });
+    this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
+    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addIntegerField({ name: 'Type', caption: 'Tyyppi', displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
     this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true });
     this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40 });

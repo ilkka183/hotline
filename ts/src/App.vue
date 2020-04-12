@@ -7,8 +7,8 @@
           <router-link to="/problems/0">Vikatapaukset</router-link> |
           <router-link to="/problems/1">Tiedotteet</router-link> |
           <router-link to="/notices">Ilmoitukset</router-link> |
-          <router-link to="/clientgroups">Käyttäjäryhmät</router-link> |
-          <router-link to="/clients">Käyttäjät</router-link> |
+          <router-link to="/usergroups">Käyttäjäryhmät</router-link> |
+          <router-link to="/users">Käyttäjät</router-link> |
           <router-link to="/brands">Automerkit</router-link> |
           <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
           <router-link to="/about">Tietoja</router-link> |

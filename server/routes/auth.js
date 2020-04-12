@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Email, Phone FROM Client WHERE Username=?';
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Email, Phone FROM User WHERE Username=?';
 
   connection.query(sql, [username], (error, results, fields) => {
     if (error)

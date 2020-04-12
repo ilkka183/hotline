@@ -53,7 +53,7 @@ export default class UserInfo extends Base {
   }
 
   private async update(fields: object) {
-    const url = '/table/Client';
+    const url = '/table/user';
 
     const keys = {
       Id: this.user.id
