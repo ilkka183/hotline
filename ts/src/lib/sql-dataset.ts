@@ -32,7 +32,7 @@ export abstract class SqlDataset extends Dataset
 }
 
 export abstract class SqlTable extends SqlDataset {
-  private name: string;
+  private readonly name: string;
   private sql: string;
   
   constructor(database: RestDatabase, name: string) {

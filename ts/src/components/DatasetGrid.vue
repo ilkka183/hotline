@@ -2,15 +2,13 @@
   <div>
     <div v-if="showNavigator" class="navigator buttons">
       <button @click="addRow">Lisää uusi</button>
-      <button @click="refreshRows">Päivitä</button>
       <template v-if="pageCount > 1">
-        <button :disabled="pageNumber == 1" @click="firstPage">Ensimmäinen</button>
         <button :disabled="pageNumber == 1" @click="prevPage">Edellinen</button>
-        <button v-for="number in pageCount" :key="number" :disabled="pageNumber == number" @click="setPageNumber(number)">{{number}}</button>
+        <button v-for="number in pageCount" :key="number" :class="{ selected: number == pageNumber }" :disabled="pageNumber == number" @click="setPageNumber(number)">{{number}}</button>
         <button :disabled="pageNumber == pageCount" @click="nextPage">Seuraava</button>
-        <button :disabled="pageNumber == pageCount" @click="lastPage">Viimeinen</button>
         <span class="number">sivu {{ pageNumber }}/{{ pageCount }}</span>
       </template>
+      <button @click="refreshRows">Päivitä</button>
     </div>
     <table class="grid">
       <thead>
@@ -40,7 +38,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Dataset, EditState, EditedData, Field } from '../lib/dataset';
+import { Dataset, EditedData, Field } from '../lib/dataset';
 import { SqlTable } from '../lib/sql-dataset';
 
 @Component
@@ -64,11 +62,24 @@ export default class DatasetGrid extends Vue {
     return this.dataset.fieldsAsArray.filter(field => !field.hideInGrid);
   }
 
+  get savedData(): EditedData | null {
+    return this.dataset.database.savedData;
+  }
+
   get editedData(): EditedData | null {
     return this.dataset.database.editedData;
   }
 
+  get addedData(): EditedData | null {
+    return this.dataset.database.addedData;
+  }
+
   mounted() {
+    if (this.dataset.database.pageNumber != null) {
+      this.pageNumber = this.dataset.database.pageNumber
+      this.dataset.database.pageNumber = null;
+    }
+
     this.getRows();
   }
 
@@ -85,15 +96,17 @@ export default class DatasetGrid extends Vue {
   }
 
   private addRow() {
+    this.dataset.database.startEditRow(this.pageNumber, null);
     this.dataset.navigateAdd(this.$router);
+  }
+
+  private editRow(row: object) {
+    this.dataset.database.startEditRow(this.pageNumber, new EditedData(this.dataset.tableName, Dataset.copyRow(row)));
+    this.dataset.navigateEdit(this.$router, row);
   }
 
   private openRow(row: object) {
     this.dataset.navigateOpen(this.$router, row);
-  }
-
-  private editRow(row: object) {
-    this.dataset.navigateEdit(this.$router, row);
   }
 
   private cellClass(field: Field) {
@@ -132,35 +145,21 @@ export default class DatasetGrid extends Vue {
     }
   }
 
-  private hasRowState(row: object, state: EditState) {
-    return (this.editedData != null) &&
-      (this.editedData.table == this.dataset.tableName) &&
-      (this.editedData.state == state) &&
-      this.dataset.primaryKeysEquals(this.editedData.row, row);
-  }
-
   private hasRowAdded(row: object) {
-    return this.hasRowState(row, EditState.Add);
+    return (this.addedData != null) && (this.addedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.addedData.row, row);
   }
 
   private hasRowEdited(row: object) {
-    return this.hasRowState(row, EditState.Edit);
+    return (this.editedData != null) && (this.editedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.editedData.row, row);
   }
 
   private hasFieldEdited(row: object, field: Field) {
-//    if (this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]))
-//      console.log(this.editedData.row[field.name], row[field.name]);
-
-    return this.hasRowEdited(row) && (this.editedData.row[field.name] != row[field.name]);
+    return this.hasRowEdited(row) && (this.savedData.row[field.name] != row[field.name]);
   }
 
   private setPageNumber(value: number) {
     this.pageNumber = value;
     this.getRows();
-  }
-
-  private firstPage() {
-    this.setPageNumber(1);
   }
 
   private prevPage() {
@@ -171,10 +170,6 @@ export default class DatasetGrid extends Vue {
   private nextPage() {
     if (this.pageNumber < this.pageCount)
       this.setPageNumber(this.pageNumber + 1);
-  }
-
-  private lastPage() {
-    this.setPageNumber(this.pageCount);
   }
 
   private async seekToPageBy(id: any) {
@@ -194,7 +189,7 @@ export default class DatasetGrid extends Vue {
         this.pageNumber++;
       } while (this.pageNumber <= this.pageCount);
     } else {
-      this.firstPage();
+      this.setPageNumber(0);
     }
   }
 }
@@ -243,6 +238,11 @@ td.action {
 
 .undefined {
   color: red;
+}
+
+.selected {
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 .added {

@@ -27,7 +27,7 @@
       <div class="buttons">
         <button class="default" type="button" @click="post">OK</button>
         <button type="button" @click="cancel">Peru</button>
-        <button class="right" type="button" @click="confirmDelete">Poista</button>
+        <button v-if="isEditing" class="right" type="button" @click="confirmDelete">Poista</button>
       </div>
       <div v-if="missingValues" class="info missing">Punaisella merkityt kentät puuttuvat</div>
       <div v-if="errorMessage" class="error">{{errorMessage}}</div>
@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { EditState, EditedData, Field } from '../lib/dataset';
+import { Dataset, EditState, EditedData, Field } from '../lib/dataset';
 import { SqlTable } from '../lib/sql-dataset';
 
 @Component
@@ -60,6 +60,14 @@ export default class TableDialog extends Vue {
     }
 
     return '';
+  }
+
+  get isAdding(): boolean {
+    return this.state == EditState.Add;
+  }
+  
+  get isEditing(): boolean {
+    return this.state == EditState.Edit;
   }
   
   get fields(): Field[] {
@@ -86,12 +94,12 @@ export default class TableDialog extends Vue {
     switch (this.state) {
       case EditState.Add:
         this.row = this.table.newRow();
-        this.savedRow = this.copyRow(this.row);
+        this.savedRow = Dataset.copyRow(this.row);
         break;
 
       case EditState.Edit:
         this.row = await this.table.getRow(this.query);
-        this.savedRow = this.copyRow(this.row);
+        this.savedRow = Dataset.copyRow(this.row);
         break;
     }
   }
@@ -113,7 +121,8 @@ export default class TableDialog extends Vue {
 
         try {
           await this.table.addRow(this.row);
-          this.submit(this.row);
+          this.table.database.addedData = new EditedData(this.table.tableName, this.row);
+          this.back();
         }
         catch (e) {
           this.sqlError(e);
@@ -128,24 +137,19 @@ export default class TableDialog extends Vue {
         if (JSON.stringify(this.savedRow) !== JSON.stringify(this.row)) {
           try {
             await this.table.updateRow(this.savedRow, this.row);
-            this.submit(this.savedRow);
+            this.table.database.editedData = new EditedData(this.table.tableName, this.row);
+            this.back();
           }
           catch (e) {
             this.sqlError(e);
           }
         }
+        else
+          this.back();
+
 
         break;
     }
-  }
-
-  private submit(row: object) {
-    this.table.database.editedData = new EditedData(this.table.tableName, row, this.state);
-    this.back();
-  }
-
-  private cancel() {
-    this.back();
   }
 
   private async confirmDelete() {
@@ -158,6 +162,10 @@ export default class TableDialog extends Vue {
         this.sqlError(e);
       }
     }
+  }
+
+  private cancel() {
+    this.back();
   }
 
   private back() {
@@ -181,15 +189,6 @@ export default class TableDialog extends Vue {
     }
 
     return true;
-  }
-
-  copyRow(row: object) {
-    const result: object = {};
-
-    for (const key of Object.keys(row))
-      result[key] = row[key];
-
-    return result;
   }
 }
 </script>

@@ -95,12 +95,6 @@ export default new Router({
       props: () => ({ table: new BrandTable(database) })
     },
     {
-      path: '/vehicles',
-      name: 'vehicles',
-      component: () => import('@/views/TableRows.vue'),
-      props: () => ({ table: new VehicleTable(database) })
-    },
-    {
       path: '/vehicle',
       name: 'vehicle',
       component: () => import('@/views/TableRow.vue'),

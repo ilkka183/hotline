@@ -10,7 +10,6 @@
           <router-link to="/clientgroups">Käyttäjäryhmät</router-link> |
           <router-link to="/clients">Käyttäjät</router-link> |
           <router-link to="/brands">Automerkit</router-link> |
-          <router-link to="/vehicles">Autot</router-link> |
           <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
           <router-link to="/about">Tietoja</router-link> |
           <router-link to="/test">Testi</router-link>

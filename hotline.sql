@@ -107,24 +107,6 @@ CREATE TABLE Brand
 CREATE UNIQUE INDEX BrandIndex ON Brand(Name);
 
 
-CREATE TABLE Vehicle
-(
-  LicenseNumber VARCHAR(7) NOT NULL UNIQUE,
-  Brand VARCHAR(80) NOT NULL,
-  Model VARCHAR(80) NOT NULL,
-  ModelYear SMALLINT UNSIGNED NOT NULL,
-  Fuel SMALLINT UNSIGNED NOT NULL, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
-  EngineDisplacement SMALLINT UNSIGNED,
-  EngineCode VARCHAR(10),
-  VIN VARCHAR(20),
-  MID VARCHAR(10),
-  Data JSON,
-  PRIMARY KEY (LicenseNumber)
-);
-
-CREATE UNIQUE INDEX VehicleLicenseNumberIndex ON Vehicle(LicenseNumber);
-
-
 CREATE TABLE Model
 (
   Brand VARCHAR(80) NOT NULL,
@@ -268,12 +250,6 @@ INSERT INTO Brand(Name) VALUES('Skoda');
 INSERT INTO Brand(Name) VALUES('Tesla');
 INSERT INTO Brand(Name) VALUES('Toyota');
 INSERT INTO Brand(Name) VALUES('Volvo');
-
-
-/* TraFi */
-INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, VIN) VALUES('SIO-913', 1999, 'Ford', 'Focus STW 1.8 TDdi', 1, 1798, '12345');
-INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, EngineCode, VIN) VALUES('ISI-651', 2005, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 0, 1598, 'ABC', '67890');
-INSERT INTO Vehicle(LicenseNumber, ModelYear, Brand, Model, Fuel, EngineDisplacement, EngineCode, VIN) VALUES('ZLP-833', 2017, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 0, 999, 'ABC', 'ABC12345');
 
 
 INSERT INTO Model(Brand, Model, Fuel, EngineDisplacement, FirstYear, LastYear) VALUES('Ford', 'Focus', 1, 1799, 1999, 2005);

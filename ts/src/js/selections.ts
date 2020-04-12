@@ -2,19 +2,6 @@ import axios from 'axios';
 import { BaseTable } from '@/tables/base';
 
 
-class Query {
-  public sql: string;
-
-  constructor(sql: string) {
-    this.sql = sql;
-  }
-
-  async execute() {
-    return await axios.get('http://localhost:3000/api/query/Rows?table=Model&sql=' + this.sql);
-  }
-}
-
-
 export default class Selections {
   public licenseNumber: string;
 
@@ -22,13 +9,13 @@ export default class Selections {
   public year?: number = null;
   public fuel?: number = null;
   public model?: string = null;
-  public engineDisplacement?: number = null;
+  public engineSize?: number = null;
 
   public brands: string[] = [];
   public years: number[] = [];
   public fuels: object[] = [];
   public models: string[] = [];
-  public engineDisplacements: number[] = [];
+  public engineSizes: number[] = [];
 
   constructor() {
     this.licenseNumber = 'ZLP-833',
@@ -41,121 +28,88 @@ export default class Selections {
     this.year = null;
     this.fuel = null;
     this.model = null;
-    this.engineDisplacement = null;
+    this.engineSize = null;
 
     this.years = [];
     this.fuels = [];
     this.models = [];
-    this.engineDisplacements = [];
+    this.engineSizes = [];
   }
 
   public async findByLicenseNumber() {
-    const response = await axios.get('http://localhost:3000/api/table/Vehicle/row?LicenseNumber=' + this.licenseNumber);
+    const response = await axios.get('http://localhost:3000/api/traficom/' + this.licenseNumber);
     
-    if (response.data.length > 0) {
-      const row = response.data[0];
+    this.brand = response.data.carMake;
+    this.model = response.data.carModel;
+    this.year = response.data.registrationYear;
 
-      this.brand = row.Brand;
-      this.model = row.Model;
-      this.year = row.ModelYear;
-      this.fuel = row.Fuel;
-      this.engineDisplacement = row.EngineDisplacement;
+    switch (response.data.fuelType) {
+      case 'bensiini':
+        this.fuel = 0;
+        break;
+      }
 
-      return true;
-    }
+    this.engineSize = response.data.engineSize;
 
-    return false;
-  }
-
-  public filterByBrand(query: Query) {
-    query.sql += ' WHERE Brand ="' + this.brand + '"';
-  }
-
-  public filterByYear(query: Query) {
-    query.sql += ' AND FirstYear <= ' + this.year + ' AND (' + this.year + ' <= LastYear OR LastYear IS NULL)';
-  }
-
-  public filterByFuel(query: Query) {
-    query.sql += ' AND Fuel = ' + this.fuel;
-  }
-
-  public filterByModel(query: Query) {
-    query.sql += ' AND Model = "' + this.model + '"';
+    return true;
   }
 
   public async fillBrands() {
-    const query = new Query('SELECT DISTINCT Brand FROM Model ORDER BY Brand');
-
-    const response = await query.execute();
+    const response = await axios.get('http://localhost:3000/api/data/brands');
+    
     const brands: string[] = [];
 
-    for (const row of response.data.rows)
-      brands.push(row.Brand);
+    for (const brand of response.data)
+      brands.push(brand);
 
     this.brands = brands;
   }
 
   public async fillYears() {
-    const query = new Query('SELECT MIN(FirstYear) AS FirstYear, MAX(LastYear) AS LastYear FROM Model');
-    this.filterByBrand(query);
+    const response = await axios.get('http://localhost:3000/api/data/years?brand=' + this.brand);
 
-    const response = await query.execute();
     const years: number[] = [];
 
-    const firstYear = response.data.rows[0].FirstYear;
-    let lastYear = response.data.rows[0].LastYear;
-
-    if (lastYear == null)
-      lastYear = 2020;
-
-    for (let year = lastYear; year >= firstYear; year--)
+    for (const year of response.data)
       years.push(year);
 
     this.years = years;
   }
 
   public async fillFuels() {
-    const query = new Query('SELECT DISTINCT Fuel FROM Model');
-    this.filterByBrand(query);
-    this.filterByYear(query);
+    const url = 'http://localhost:3000/api/data/fuels?brand=' + this.brand + '&year=' + this.year;
+    const response = await axios.get(url);
 
-    const response = await query.execute();
     const fuels: object[] = [];
 
-    for (const row of response.data.rows)
-      fuels.push({ value: row.Fuel, text: BaseTable.FUELS[row.Fuel] });
+    for (const fuel of response.data)
+      fuels.push({ value: fuel, text: BaseTable.FUELS[fuel] });
 
     this.fuels = fuels;
   }
 
   public async fillModels() {
-    const query = new Query('SELECT DISTINCT Model FROM Model');
-    this.filterByBrand(query);
-    this.filterByYear(query);
-    this.filterByFuel(query);
-    
-    const response = await query.execute();
+    const url = 'http://localhost:3000/api/data/models?brand=' + this.brand + '&year=' + this.year + '&fuel=' + this.fuel;
+    const response = await axios.get(url);
+
     const models: string[] = [];
 
-    for (const row of response.data.rows)
-      models.push(row.Model);
+    for (const model of response.data)
+      models.push(model);
 
     this.models = models;
   }
 
-  public async fillEngineDisplacements() {
-    const query = new Query('SELECT DISTINCT EngineDisplacement FROM Model');
-    this.filterByBrand(query);
-    this.filterByYear(query);
-    this.filterByFuel(query);
-    this.filterByModel(query);
+  public async fillEngineSizes() {
+    const url = 'http://localhost:3000/api/data/engineSizes?brand=' + this.brand + '&year=' + this.year + '&fuel=' + this.fuel + '&model=' + this.model;
+    console.log(url);
+    const response = await axios.get(url);
 
-    const response = await query.execute();
-    const engineDisplacements: number[] = [];
+    const engineSizes: number[] = [];
 
-    for (const row of response.data.rows)
-      engineDisplacements.push(row.EngineDisplacement);
+    for (const engineSize of response.data)
+      engineSizes.push(engineSize);
 
-    this.engineDisplacements = engineDisplacements;
+    this.engineSizes = engineSizes;
   }
 }

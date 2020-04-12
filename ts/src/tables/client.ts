@@ -16,7 +16,7 @@ export class ClientGroupTable extends BaseTable {
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 40, required: true });
-    this.addAddressFields();
+    this.addAddressFields(false);
     this.addImageField({ name: 'Logo', caption: 'Logo' });
     this.addInfoField();
     this.addStatusFields();
@@ -62,7 +62,7 @@ export class ClientTable extends BaseTable {
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });
     this.addStringField({ name: 'LastName', caption: 'Sukunimi', length: 20, required: true });
     this.addStringField({ name: 'Title', caption: 'Toimenkuva', length: 20 });
-    this.addAddressFields();
+    this.addAddressFields(true);
     this.addInfoField();
     this.addDateField({ name: 'LicenseBegin', caption: 'Alku' });
     this.addDateField({ name: 'LicenseEnd', caption: 'Loppu' });

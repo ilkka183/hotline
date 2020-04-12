@@ -7,22 +7,12 @@
       <button @click="setMethod(2)">Manuaalinen syöttö</button>
     </div>
     <div v-if="method == 0 && !ready">
-      <table>
-        <tr>
-          <td>
-            <label for="licenseNumber">Rekisterinumero:</label>
-          </td>
-          <td>
-            <input id="licenseNumber" type="text" v-model="selections.licenseNumber">
-          </td>
-          <td>
-            <div class="buttons">
-              <button @click="searchByLicenseNumber" :disabled="!selections.licenseNumber">Hae</button>
-              <button @click="clearLicenseNumber" :disabled="!selections.licenseNumber">Tyhjennä</button>
-            </div>
-          </td>
-        </tr>
-      </table>
+      <label for="licenseNumber">Rekisterinumero:</label>
+      <input id="licenseNumber" type="text" v-model="selections.licenseNumber">
+      <button @click="searchByLicenseNumber" :disabled="!selections.licenseNumber">Hae</button>
+      <button @click="clearLicenseNumber" :disabled="!selections.licenseNumber">Tyhjennä</button>
+      <button @click="fillLicenseNumber('ZLP-833')">Leon</button>
+      <button @click="fillLicenseNumber('ISI-560')">Focus</button>
     </div>
     <div v-if="method == 1 && !ready">
       <table>
@@ -56,18 +46,18 @@
         <tr v-if="selections.fuel !== null">
           <td><label for="model">Malli:</label></td>
           <td>
-            <select id="model" v-model="selections.model" @change="fillEngineDisplacements">
+            <select id="model" v-model="selections.model" @change="fillEngineSizes">
               <option :value="null">-</option>
               <option v-for="model in selections.models" :key="model">{{ model }}</option>
             </select>
           </td>
         </tr>
         <tr v-if="selections.model !== null">
-          <td><label for="engineDisplacement">Iskutilavuus:</label></td>
+          <td><label for="engineSize">Iskutilavuus:</label></td>
           <td>
-            <select id="engineDisplacement" v-model="selections.engineDisplacement">
+            <select id="engineSize" v-model="selections.engineSize">
               <option :value="null">-</option>
-              <option v-for="engineDisplacement in selections.engineDisplacements" :key="engineDisplacement">{{ engineDisplacement }}</option>
+              <option v-for="engineSize in selections.engineSizes" :key="engineSize">{{ engineSize }}</option>
             </select>
           </td>
         </tr>
@@ -75,7 +65,7 @@
           <td></td>
           <td>
             <div class="buttons">
-              <button :disabled="selections.engineDisplacement === null" @click="postSelections">Jatka</button>
+              <button :disabled="selections.engineSize === null" @click="postSelections">Jatka</button>
               <button @click="clearSelections">Tyhjennä</button>
             </div>
           </td>
@@ -146,7 +136,6 @@ export default class NewProblem extends Vue {
         break;
 
       case 2:
-        console.log('manual');
         this.ready = true;
         break;
     }
@@ -167,7 +156,7 @@ export default class NewProblem extends Vue {
     this.row.Model = this.selections.model;
     this.row.ModelYear = this.selections.year;
     this.row.Fuel = this.selections.fuel;
-    this.row.EngineDisplacement = this.selections.engineDisplacement;
+    this.row.EngineSize = this.selections.engineSize;
     this.row.Status = 0;
   }
 
@@ -176,12 +165,16 @@ export default class NewProblem extends Vue {
       this.apply(true);
   }
 
-  private postSelections() {
-    this.apply(false);
-  }
-
   private clearLicenseNumber() {
     this.selections.licenseNumber = null;
+  }
+
+  private fillLicenseNumber(licenseNumber: string) {
+    this.selections.licenseNumber = licenseNumber;
+  }
+
+  private postSelections() {
+    this.apply(false);
   }
 
   private clearSelections() {
@@ -200,8 +193,8 @@ export default class NewProblem extends Vue {
     this.selections.fillModels();
   }
 
-  private fillEngineDisplacements() {
-    this.selections.fillEngineDisplacements();
+  private fillEngineSizes() {
+    this.selections.fillEngineSizes();
   }
 }
 </script>

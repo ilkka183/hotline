@@ -36,7 +36,7 @@ interface FieldParams {
 
 export abstract class Field {
   public dataset: Dataset | undefined;
-  public name: string;
+  public readonly name: string;
   public caption: string;
   public align: TextAlign = TextAlign.Left;
   public default: any = undefined;
@@ -310,6 +310,10 @@ class AutoIncrementField extends IntegerField {
     
     this.primaryKey = true;
   }
+
+  get isReadOnly(): boolean {
+    return true;
+  }
 }
 
 
@@ -376,7 +380,7 @@ class StringField extends Field {
 
 
 export abstract class Dataset {
-  public database: RestDatabase;  
+  public readonly database: RestDatabase;  
   public fields: any = {};
   public model: any = null;
   public autoFocusField: Field | null = null;
@@ -453,6 +457,15 @@ export abstract class Dataset {
     return row;
   }
 
+  public static copyRow(row: object) {
+    const result: object = {};
+
+    for (const key of Object.keys(row))
+      result[key] = row[key];
+
+    return result;
+  }
+
   public get primaryKeyField(): Field | null {
     for (const field of this.fieldsAsArray)
       if (field.isPrimaryKey)
@@ -509,28 +522,37 @@ export abstract class Dataset {
 
 export enum EditState {
   Add,
-  Edit,
-  Delete
+  Edit
 }
+
 
 export class EditedData {
   public table: any;
   public row: object;
-  public state: EditState;
   
-  constructor(table: any, row: object, state: EditState) {
+  constructor(table: any, row: object) {
     this.table = table;
     this.row = row;
-    this.state = state;
   }
 }
 
 
 export class RestDatabase {
-  public axios: AxiosInstance;
+  public readonly axios: AxiosInstance;
+  public pageNumber: number | null = null;
+  public savedData: EditedData | null = null;
+  public addedData: EditedData | null = null;
   public editedData: EditedData | null = null;
   
   constructor(axios: AxiosInstance) {
     this.axios = axios;
   }
+
+  public startEditRow(pageNumber: number | null, savedData: EditedData | null) {
+    this.pageNumber = pageNumber;
+    this.savedData = savedData;
+    this.addedData = null;
+    this.editedData = null;
+  }
+
 }
