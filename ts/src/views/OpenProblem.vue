@@ -10,7 +10,6 @@
         <tr><td>No:</td><td>{{ row.Id }}</td></tr>
         <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
         <tr><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
-        <tr><td>Tyyppi:</td><td>{{ table.fields.Type.displayText(row) }}</td></tr>
         <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
         <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
         <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
@@ -20,6 +19,8 @@
       </table>
       <h2 class="title">{{ row.Title }}</h2>
       <p class="decription">{{ row.Description }}</p>
+      <h2>Vastaukset</h2>
+      <DatasetGrid :dataset="replies" :showFooter="false"></DatasetGrid>
     </template>
     <div class="buttons">
       <button class="default" @click="close">Sulje</button>
@@ -29,21 +30,29 @@
 
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import DatasetGrid from '../components/DatasetGrid.vue';
 import { SqlTable } from '../lib/sql-dataset';
-import { ProblemTable } from '../tables/problem';
+import { ProblemTable, ProblemReplyTable } from '../tables/problem';
+import BaseVue from './BaseVue.vue';
 
-@Component
-export default class OpenProblem extends Vue {
-  private table: any = new ProblemTable(this.database);
+@Component({
+  components: {
+    DatasetGrid
+  }
+})
+export default class OpenProblem extends BaseVue {
+  private table: any;
+  private replies: any;
   private row: object | null = null;
 
-  private get database() {
-    return this.$store.state.database;
+  created() {
+    this.table = new ProblemTable(this.database, this.user);
   }
 
   async mounted() {
     await this.table.findLookupLists();
     this.row = await this.table.getRow(this.$route.query);
+    this.replies = new ProblemReplyTable(this.database, this.user, this.$route.query['Id']);
   }
 
   private editRow() {

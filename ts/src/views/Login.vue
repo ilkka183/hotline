@@ -23,10 +23,10 @@
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { User, UserRole } from '../js/user'
-import Base from './Base.vue';
+import BaseVue from './BaseVue.vue';
 
 @Component
-export default class Login extends Base {
+export default class Login extends BaseVue {
   private username = null;
   private password = null;
 

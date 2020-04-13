@@ -4,8 +4,7 @@
       <span class="left">
         <template v-if="$store.state.user">
           <router-link to="/">Koti</router-link> |
-          <router-link to="/problems/0">Vikatapaukset</router-link> |
-          <router-link to="/problems/1">Tiedotteet</router-link> |
+          <router-link to="/problems">Vikatapaukset</router-link> |
           <router-link to="/notices">Ilmoitukset</router-link> |
           <router-link to="/usergroups">Käyttäjäryhmät</router-link> |
           <router-link to="/users">Käyttäjät</router-link> |
@@ -17,7 +16,7 @@
       </span>
       <span class="right">
         <template v-if="$store.state.user">
-          <router-link to="/user">{{ $store.state.user.firstName }}</router-link> |
+          <router-link to="/account">{{ $store.state.user.firstName }}</router-link> |
           <router-link to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
         </template>
       </span>

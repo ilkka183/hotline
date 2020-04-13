@@ -120,25 +120,11 @@ CREATE TABLE Notice
 );
 
 
-CREATE TABLE BulletinGroup
-(
-  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  Name VARCHAR(80) NOT NULL UNIQUE,
-  Enabled BOOLEAN NOT NULL DEFAULT TRUE,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
-  Data JSON,
-  PRIMARY KEY (Id)
-);
-
-
 CREATE TABLE Problem
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   UserId BIGINT UNSIGNED NOT NULL,
-  Type SMALLINT UNSIGNED NOT NULL, /* 0=malfunction, 1=bulletin */
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  BulletinGroupId BIGINT UNSIGNED,
   LicenseNumber VARCHAR(7),
   Brand VARCHAR(80) NOT NULL,
   Model VARCHAR(80),
@@ -152,11 +138,10 @@ CREATE TABLE Problem
   Title VARCHAR(160) NOT NULL,
   Description TEXT NOT NULL,
   Solution TEXT,
-  Status SMALLINT UNSIGNED NOT NULL, /* 0=open, 1=solved, 2=unsolved */
+  Status SMALLINT UNSIGNED NOT NULL DEFAULT 0, /* 0=open, 1=solved, 2=unsolved */
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (UserId) REFERENCES User(Id),
-  FOREIGN KEY (BulletinGroupId) REFERENCES BulletinGroup(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 
@@ -248,44 +233,33 @@ Uusi hinta tulee voimaan lisenssin uudistuksen yhteydessä 1.10.2013 alkaen, eli
 
 
 /* Vikatapaukset */
-INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
-  VALUES(0, 1, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.', 'Lataa akku.', 1);
+INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
+  VALUES(1, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.', 'Lataa akku.', 1);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(1, 1, 2, 'Käännä virta-avainta');
 
 
-INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
-  VALUES(0, 1, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 2005, 0, 'ISI-560', 'ABC', '123', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.', 0);
+INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+  VALUES(1, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 2005, 0, 'ISI-560', 'ABC', '123', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.', 0);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(2, 1, 3, 'Vaihda jarrulevyt');
 
 
-INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
-  VALUES(0, 2, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.', 0);
+INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+  VALUES(2, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.', 0);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 1, 1, 'Aja tarkemmin');
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 2, 2, 'Tarkista renkaiden ilmanpaineet');
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 3, 3, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
-  VALUES(0, 2, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Kulkee huonosti', 'Auto ei kulje hyvin.', 0);
+INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+  VALUES(2, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Kulkee huonosti', 'Auto ei kulje hyvin.', 0);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(4, 1, 1, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Type, UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
-  VALUES(0, 3, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.', 0);
+INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+  VALUES(3, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.', 0);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(5, 1, 1, 'Vaihda vetonivelet');
-
-
-/* Tiedotteet */
-INSERT INTO BulletinGroup(Name) VALUES('Yleinen');
-INSERT INTO BulletinGroup(Name) VALUES('AD-merkkitiedote');
-INSERT INTO BulletinGroup(Name) VALUES('Autodata');
-
-
-INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'BMW', 'Moottorinohjauksen HEX vikakoodeja', '', '2711 DMTL pump final stage', 1);
-INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 1, 1, 'Volvo', 'Heikko alavääntö', 'Aktiiviselta HotLine -korjaamolta tuli vinkki D5 Volvoja piinaavasta ongelmasta.', 'Asiakasvalitus: Heikko alavääntö, normaalia kovempi savutus, ei vikakoodeja, puristuspaineet normaalit', 1);
-INSERT INTO Problem(Type, UserId, BulletinGroupId, Brand, Title, Description, Solution, Status) VALUES(1, 2, 1, 'Volvo', 'Volvo VIDA diagnostiikka VDS protokollan ajoneuvoi', 'Hella Gutmann Solutions -tiedote', 'Hella Gutmann Solutions -tiedote', 1);

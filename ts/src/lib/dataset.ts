@@ -7,17 +7,6 @@ export enum TextAlign {
 }
 
 
-export class SelectOption {
-  public value: any;
-  public text: string;
-
-  constructor(value: any, text: string) {
-    this.value = value;
-    this.text = text;
-  }
-}
-
-
 interface FieldParams {
   name: string;
   caption: string;
@@ -278,10 +267,10 @@ class IntegerField extends Field {
     super(params);
 
     if (params.displayTexts) {
-      const list: SelectOption[] = [];
+      const list = {};
 
       for (const index in params.displayTexts)
-        list.push(new SelectOption(index, params.displayTexts[index]));
+        list[index] = params.displayTexts[index];
 
       this.lookupList = list;
     }
@@ -295,8 +284,8 @@ class IntegerField extends Field {
     if (this.lookupList) {
       const key = row[this.name];
 
-      if (key !== null)
-        return this.lookupList[key].text;
+      if ((key !== null) && (key !== undefined))
+        return this.lookupList[key];
     }
 
     return super.displayText(row);
@@ -442,8 +431,8 @@ export abstract class Dataset {
     this.addField(new StringField(params));
   }
 
-  public newRow(): any {
-    const row: any = {};
+  public newRow(): object {
+    const row: object = {};
 
     for (const field of this.fieldsAsArray) {
       let value = null;
@@ -454,7 +443,13 @@ export abstract class Dataset {
       row[field.name] = value;
     }
 
+    this.initialize(row);
+
     return row;
+  }
+
+  protected initialize(row: object) {
+    // Do nothing
   }
 
   public static copyRow(row: object) {

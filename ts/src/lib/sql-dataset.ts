@@ -1,4 +1,4 @@
-import { Dataset, Field, SelectOption, RestDatabase } from './dataset';
+import { Dataset, Field, RestDatabase } from './dataset';
 
 
 export abstract class SqlDataset extends Dataset
@@ -22,10 +22,10 @@ export abstract class SqlDataset extends Dataset
     sql += ' ORDER BY Text';
 
     const response = await this.axios.get('/lookup/list', { params: { sql } });
-    const list = [];
+    const list = {};
 
     for (const item of response.data)
-      list.push(new SelectOption(item.Id, item.Text));
+      list[item.Id] = item.Text;
 
     return list;
   }
@@ -218,6 +218,7 @@ export abstract class SqlTable extends SqlDataset {
   protected abstract getDeleteCaption(): string;
 
   public navigateAdd(router: any) {
+    console.log(this.tableName);
     router.push(this.tableName);
   }
 

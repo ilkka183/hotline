@@ -1,26 +1,27 @@
 import { RestDatabase } from '@/lib/dataset';
 import { TextAlign } from '@/lib/dataset';
 import { BaseTable } from './base';
+import { User } from '../js/user'
 
 
 export interface ProblemFilter {
-  type?: number | string;
   status?: number;
 }
 
 
 export class ProblemTable extends BaseTable {
-  constructor(database: RestDatabase, filter: ProblemFilter = {}) {
+  private readonly user: User;
+  
+  constructor(database: RestDatabase, user: User, filter: ProblemFilter = {}) {
     super(database, 'Problem');
+
+    this.user = user;
 
     let sql =
       'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
-      'Problem.Type, Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+      'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
       'FROM Problem, User ' +
       'WHERE Problem.UserId = User.Id';
-
-    if (filter.type)
-      sql += ' AND Problem.Type = ' + filter.type;
 
     if (filter.status)
       sql += ' AND Problem.Status = ' + filter.status;
@@ -33,7 +34,6 @@ export class ProblemTable extends BaseTable {
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
-    this.addIntegerField({ name: 'Type', caption: 'Tyyppi', displayTexts: ['Vikatapaus', 'Tiedote'], readonly: true, required: true });
     this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true });
     this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40, required: true });
     this.addStringField({ name: 'Model', caption: 'Malli', length: 40 });
@@ -42,6 +42,11 @@ export class ProblemTable extends BaseTable {
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
     this.addStringField({ name: 'Description', caption: 'Kuvaus', cols: 80, rows: 10, required: true });
     this.addIntegerField({ name: 'Status', caption: 'Tila', displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
+  }
+
+  protected initialize(row: object) {
+    super.initialize(row);
+    row['UserId'] = this.user.id;
   }
 
   protected getPageLimit(): number {
@@ -76,5 +81,50 @@ export class ProblemTable extends BaseTable {
   public navigateOpen(router: any, row: object) {
     const query = this.primaryKeys(row);
     router.push({ path: 'open-problem', query });
+  }
+}
+
+
+export class ProblemReplyTable extends BaseTable {
+  private readonly user: User;
+  private readonly problemId: any;
+  
+  constructor(database: RestDatabase, user: User, problemId: any) {
+    super(database, 'ProblemReply');
+
+    this.user = user;
+    this.problemId = problemId;
+
+    let sql =
+      'SELECT ProblemReply.ProblemId, ProblemReply.Id, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
+      'FROM ProblemReply, User ' +
+      'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + problemId;
+
+    sql += ' ORDER BY ProblemReply.ProblemId, ProblemReply.Id';
+
+    this.SQL = sql;
+
+    this.addIntegerField({ name: 'ProblemId', caption: 'Vikatapaus No', primaryKey: true, hideInGrid: true });
+    this.addIntegerField({ name: 'Id', caption: 'Vastaus No', primaryKey: true, hideInGrid: true });
+    this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
+    this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
+    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
+    this.addStringField({ name: 'Message', caption: 'Viesti', cols: 80, rows: 10, required: true });
+  }
+
+  protected getListCaption(): string {
+    return 'Vastaukset';
+  }
+
+  protected getAddCaption(): string {
+    return 'Lisää vastaus';
+  }
+
+  protected getEditCaption(): string {
+    return 'Muokkaa vastausta';
+  }
+
+  protected getDeleteCaption(): string {
+    return 'Poista vastaus';
   }
 }

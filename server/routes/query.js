@@ -28,8 +28,10 @@ router.get('/rows', (req, res) => {
     console.log(sql);
   
     connection.query(sql, (error, results, fields) => {
-      if (error)
+      if (error) {
+        console.log(error);        
         return res.status(400).send(error);
+      }
   
       res.send({ rowCount, rows: results });
     });

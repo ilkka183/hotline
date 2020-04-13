@@ -6,10 +6,8 @@
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Viimeksi ratkaistut vikatapaukset</h2>
       <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
-      <h2>Viimeisimmät tiedotteet</h2>
-      <DatasetGrid :dataset="otherProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Ilmoitukset</h2>
-      <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
+      <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid> 
     </template>
     <template v-else>
       <h2>Hotline</h2>
@@ -21,11 +19,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
-import Base from '../components/Base.vue';
-import Login from '../components/Login.vue';
 import { NoticeTable } from '../tables/notice';
 import { ProblemTable } from '../tables/problem';
 import { RestDatabase } from '../lib/dataset';
+import BaseVue from './BaseVue.vue';
+import Login from './Login.vue';
 
 @Component({
   components: {
@@ -33,17 +31,16 @@ import { RestDatabase } from '../lib/dataset';
     Login
   }
 })
-export default class Home extends Base {
-  private openProblems: ProblemTable = new ProblemTable(this.database, { type: 0, status: 0 });
-  private closedProblems: ProblemTable = new ProblemTable(this.database, { type: 0, status: 1 });
-  private otherProblems: ProblemTable = new ProblemTable(this.database, { type: 1 });
-  private notices: NoticeTable = new NoticeTable(this.database);
-
-  get database(): RestDatabase {
-    return this.$store.state.database;
-  }
+export default class Home extends BaseVue {
+  private openProblems: ProblemTable;
+  private closedProblems: ProblemTable;
+  private notices: NoticeTable;
 
   created() {
+    this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
+    this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
+    this.notices = new NoticeTable(this.database, this.user);
+
     this.login('albert', 'weber');
   }
 

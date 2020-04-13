@@ -5,7 +5,7 @@ import { RestDatabase } from '../lib/dataset';
 import { User } from '../js/user';
 
 @Component
-export default class Base extends Vue
+export default class BaseVue extends Vue
 {
   protected get user(): User {
     return this.$store.state.user;

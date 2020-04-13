@@ -17,12 +17,13 @@
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Sandbox from '@/components/Sandbox.vue'
+import BaseVue from './BaseVue.vue';
 
 @Component({
   components: {
     Sandbox
   }
 })
-export default class Test extends Vue {
+export default class Test extends BaseVue {
 }
 </script>

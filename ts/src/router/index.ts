@@ -6,7 +6,7 @@ import { BrandTable } from '@/tables/brand';
 import { BulletinGroupTable } from '@/tables/bulletin';
 import { UserTable, UserGroupTable } from '@/tables/user';
 import { NoticeTable } from '@/tables/notice';
-import { ProblemTable } from '@/tables/problem';
+import { ProblemTable, ProblemReplyTable } from '@/tables/problem';
 import { VehicleTable } from '@/tables/vehicle';
 import store from '@/store/index';
 import { RestDatabase } from '@/lib/dataset';
@@ -25,16 +25,22 @@ export default new Router({
       component: Home
     },
     {
-      path: '/problems/:type',
+      path: '/problems',
       name: 'problems',
       component: () => import('@/views/TableRows.vue'),
-      props: (route) => ({ table: new ProblemTable(database, { type: route.params.type }) })
+      props: (route) => ({ table: new ProblemTable(database, store.state.user) })
     },
     {
       path: '/problem',
       name: 'problem',
       component: () => import('@/views/TableRow.vue'),
-      props: () => ({ table: new ProblemTable(database) })
+      props: () => ({ table: new ProblemTable(database, store.state.user) })
+    },
+    {
+      path: '/problemreply',
+      name: 'problemreply',
+      component: () => import('@/views/TableRow.vue'),
+      props: () => ({ table: new ProblemReplyTable(database, store.state.user, undefined) })
     },
     {
       path: '/new-problem',
@@ -50,13 +56,13 @@ export default new Router({
       path: '/notices',
       name: 'notices',
       component: () => import('@/views/TableRows.vue'),
-      props: () => ({ table: new NoticeTable(database) })
+      props: () => ({ table: new NoticeTable(database, store.state.user) })
     },
     {
       path: '/notice',
       name: '/notice',
       component: () => import('@/views/TableRow.vue'),
-      props: () => ({ table: new NoticeTable(database) })
+      props: () => ({ table: new NoticeTable(database, store.state.user) })
     },
     {
       path: '/usergroups',
@@ -123,9 +129,9 @@ export default new Router({
       component: () => import('@/views/About.vue')
     },
     {
-      path: '/user',
-      name: 'user',
-      component: () => import('@/views/UserInfo.vue')
+      path: '/account',
+      name: 'account',
+      component: () => import('@/views/UserAccount.vue')
     }
   ]
 });

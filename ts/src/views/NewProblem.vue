@@ -97,6 +97,7 @@ import TableDialog from '@/components/TableDialog.vue';
 import { BaseTable } from '../tables/base';
 import { ProblemTable } from '../tables/problem';
 import { EditState } from '../lib/dataset';
+import BaseVue from './BaseVue.vue';
 
 /*
   - Liite
@@ -118,8 +119,8 @@ enum CreateMethod {
     TableDialog
   }
 })
-export default class NewProblem extends Vue {
-  private readonly table: ProblemTable = new ProblemTable(this.database);
+export default class NewProblem extends BaseVue {
+  private readonly table: ProblemTable = new ProblemTable(this.database, this.user);
   private method: CreateMethod = null;
   private ready = false;
 
@@ -143,10 +144,6 @@ export default class NewProblem extends Vue {
 
   get row() {
     return this.dialog.row;
-  }
-
-  private get database() {
-    return this.$store.state.database;
   }
 
   get state(): EditState {

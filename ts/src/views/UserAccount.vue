@@ -39,10 +39,10 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { rest } from '../js/rest';
 import { User } from '../js/user';
-import Base from '../components/Base.vue';
+import BaseVue from './BaseVue.vue';
 
 @Component
-export default class UserInfo extends Base {
+export default class UserInfo extends BaseVue {
   private phone = '';
   private password1 = '';
   private password2 = '';

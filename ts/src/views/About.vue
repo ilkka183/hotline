@@ -6,8 +6,9 @@
 
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import BaseVue from './BaseVue.vue';
 
 @Component
-export default class About extends Vue {
+export default class About extends BaseVue {
 }
 </script>

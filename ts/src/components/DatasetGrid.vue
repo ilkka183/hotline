@@ -47,7 +47,6 @@ export default class DatasetGrid extends Vue {
   @Prop({ type: Boolean, default: true }) readonly showNavigator: boolean;
   @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showEditButton: boolean;
-  @Prop({ type: Boolean, default: true }) readonly showDeleteButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showFooter: boolean;
 
   private pageNumber = 1;

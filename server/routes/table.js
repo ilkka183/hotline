@@ -28,8 +28,10 @@ router.get('/:table/row', auth, (req, res) => {
   console.log(inserts);
 
   connection.query(sql, inserts, (error, results, fields) => {
-    if (error)
+    if (error) {
+      console.log(error);        
       return res.status(400).send(error);
+    }
 
     res.send(results);
   });
@@ -67,9 +69,11 @@ router.get('/:table/rows', auth, (req, res) => {
     console.log(sql);
   
     connection.query(sql, (error, results, fields) => {
-      if (error)
+      if (error) {
+        console.log(error);        
         return res.status(400).send(error);
-  
+      }
+    
       res.send({ rowCount, rows: results });
     });
   });
@@ -115,10 +119,10 @@ router.post('/:table', auth, (req, res) => {
 
   connection.query(sql, inserts, (error, results, fields) => {
     if (error) {
+      console.log(error);        
       return res.status(400).send(error);
     }
 
-    console.log(results);
     res.status(201);
     res.send(results);
   });
@@ -161,10 +165,11 @@ router.put('/:table', auth, (req, res) => {
   console.log(inserts);
 
   connection.query(sql, inserts, (error, results, fields) => {
-    if (error)
+    if (error) {
+      console.log(error);        
       return res.status(400).send(error);
+    }
 
-    console.log(results);
     res.send(results);
   });
 });
@@ -193,8 +198,10 @@ router.delete('/:table', auth, (req, res) => {
   console.log(inserts);
 
   connection.query(sql, inserts, (error, results, fields) => {
-    if (error)
+    if (error) {
+      console.log(error);        
       return res.status(400).send(error);
+    }
 
     res.send(results);
   });

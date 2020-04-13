@@ -1,10 +1,15 @@
 import { RestDatabase } from '@/lib/dataset';
 import { BaseTable } from './base';
+import { User } from '../js/user'
 
 
 export class NoticeTable extends BaseTable {
-  constructor(database: RestDatabase) {
+  private user: User;
+
+  constructor(database: RestDatabase, user: User) {
     super(database, 'Notice');
+
+    this.user = user;
 
     this.SQL =
       'SELECT Notice.Id, Notice.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Notice.Title, Notice.Message ' +
@@ -18,6 +23,11 @@ export class NoticeTable extends BaseTable {
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
     this.addStringField({ name: 'Message', caption: 'Viesti', cols: 80, rows: 10, required: true });
+  }
+
+  protected initialize(row: object) {
+    super.initialize(row);
+    row['UserId'] = this.user.id;
   }
 
   protected getListCaption(): string {
