@@ -1,26 +1,39 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <span class="left">
-        <template v-if="$store.state.user">
-          <router-link to="/">Koti</router-link> |
-          <router-link to="/problems">Vikatapaukset</router-link> |
-          <router-link to="/notices">Ilmoitukset</router-link> |
-          <router-link to="/usergroups">Käyttäjäryhmät</router-link> |
-          <router-link to="/users">Käyttäjät</router-link> |
-          <router-link to="/brands">Automerkit</router-link> |
-          <router-link to="/bulletingroups">Tiedoteryhmät</router-link> |
-          <router-link to="/about">Tietoja</router-link> |
-          <router-link to="/test">Testi</router-link>
-        </template>
-      </span>
-      <span class="right">
-        <template v-if="$store.state.user">
-          <router-link to="/account">{{ $store.state.user.firstName }}</router-link> |
-          <router-link to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
-        </template>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/">Koti</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/problems">Vikatapaukset</router-link>
+          </li>
+            <router-link class="nav-link" to="/notices">Ilmoitukset</router-link>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/usergroups">Käyttäjäryhmät</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/users">Käyttäjät</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/brands">Automerkit</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/bulletingroups">Tiedoteryhmät</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/about">Tietoja</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/account">Omat tiedot</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
+          </li>
+        </ul>
+      </div>
+    </nav>
     <router-view :key="$route.fullPath"/>
   </div>
 </template>
@@ -37,42 +50,4 @@ export default class Aoo extends Vue {
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: left;
-  color: #2c3e50;
-}
-
-#nav {
-  padding-top: 5px;
-  padding-bottom: 10px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-.left {
-}
-
-.right {
-  float: right;
-}
-
-.buttons {
-  margin-top: 10px;
-
-  button {
-    margin-right: 5px;
-  }
-
-  .right {
-    float: right;
-  }
-}
 </style>

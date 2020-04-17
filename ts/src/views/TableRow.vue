@@ -1,5 +1,7 @@
 <template>
-  <TableDialog :table="table" :state="state" :query="query"></TableDialog>
+  <main class="container">
+    <TableDialog :table="table" :state="state" :query="query"></TableDialog>
+  </main>
 </template>
 
 <script  lang="ts">

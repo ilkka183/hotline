@@ -1,18 +1,18 @@
 <template>
   <div>
-    <template v-if="user">
+    <main class="container" v-if="!user">
+      <h2>Hotline</h2>
+      <Login />
+    </main>
+    <main class="container-fluid" v-else>
       <h2>Avoimet vikatapaukset</h2>
-      <button @click="newProblem">Lisää uusi</button>
+      <button class="btn btn-primary mb-2" @click="newProblem">Lisää uusi</button>
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Viimeksi ratkaistut vikatapaukset</h2>
       <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Ilmoitukset</h2>
       <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid> 
-    </template>
-    <template v-else>
-      <h2>Hotline</h2>
-      <Login />
-    </template>
+    </main>
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default class Home extends BaseVue {
     this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
     this.notices = new NoticeTable(this.database, this.user);
 
-    this.login('albert', 'weber');
+//    this.login('albert', 'weber');
   }
 
   private newProblem() {

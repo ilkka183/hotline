@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <main class="container-fluid">
     <h2>{{ caption }}</h2>
     <DatasetGrid :dataset="table"></DatasetGrid>
-  </div>
+  </main>
 </template>
 
 <script  lang="ts">

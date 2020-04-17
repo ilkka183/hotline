@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+
 const auth = require('./routes/auth');
 const data = require('./routes/data');
 const lookup = require('./routes/lookup');

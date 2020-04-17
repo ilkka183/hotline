@@ -1,38 +1,41 @@
 <template>
-  <div>
-    <h2>Omat tiedot</h2>
-    <table v-if="user">
-      <tr>
-        <td>No:</td>
-        <td>{{ user.id }}</td>
-      </tr>
-      <tr>
-        <td>Nimi:</td>
-        <td>{{ user.name }}</td>
-      </tr>
-      <tr>
-        <td>Rooli:</td>
-        <td>{{ user.roleText }}</td>
-      </tr>
-      <tr>
-        <td>Puhelinnumero:</td>
-        <td><input type="tel" v-model="phone"></td>
-      </tr>
-    </table>
-    <button @click="save">Tallenna</button>
-    <h3>Vaihda salasana</h3>
-    <table>
-      <tr>
-        <td>Salasana:</td>
-        <td><input type="password" v-model="password1"></td>
-      </tr>
-      <tr>
-        <td>Salasana uudestaan:</td>
-        <td><input type="password" v-model="password2"></td>
-      </tr>
-    </table>
-    <button @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</button>
-  </div>
+  <main class="container">
+
+    <div class="form-group mb-5">
+      <h2>Omat tiedot</h2>
+      <div class="form-group">
+        <label for="firstName">Etunimi</label>
+        <input class="form-control" name="firstName" :value="user.firstName" readonly>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Etunimi</label>
+        <input class="form-control" name="lastName" :value="user.lastName" readonly>
+      </div>
+      <div class="form-group">
+        <label for="role">Rooli</label>
+        <input class="form-control" name="role" v-model="user.roleText" readonly>
+      </div>
+      <div class="form-group">
+        <label for="phone">Puhelinnumero</label>
+        <input class="form-control" name="phone" v-model="phone">
+      </div>
+      <button class="btn btn-primary" @click="save">Tallenna</button>
+    </div>
+
+    <div class="form-group">
+      <h3>Vaihda salasana</h3>
+      <div class="form-group">
+        <label for="password1">Salasana</label>
+        <input class="form-control" name="password1" type="password" v-model="password1">
+      </div>
+      <div class="form-group">
+        <label for="password2">Salasana uudestaan</label>
+        <input class="form-control" name="password2" type="password" v-model="password2">
+      </div>
+      <button class="btn btn-primary" @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</button>
+    </div>
+
+  </main>
 </template>
 
 <script  lang="ts">

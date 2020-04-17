@@ -1,33 +1,19 @@
 <template>
-  <div>
+  <main class="container">
     <h2>Lisää uusi vikatapaus</h2>
-    <div class="buttons methods">
-      <button @click="setMethod(0)">Hae rekisterinumerolla</button>
-      <button @click="setMethod(1)">Ohjattu syöttö</button>
-      <button @click="setMethod(2)">Manuaalinen syöttö</button>
-      <button @click="back()">Peru</button>
+    <div class="mb-2">
+      <button class="btn btn-primary mr-2" @click="setMethod(0)">Hae rekisterinumerolla</button>
+      <button class="btn btn-primary mr-2" @click="setMethod(1)">Ohjattu syöttö</button>
+      <button class="btn btn-primary mr-2" @click="setMethod(2)">Manuaalinen syöttö</button>
+      <button class="btn btn-secondary mr-2" @click="back()">Peru</button>
     </div>
     <div v-if="method == 0 && !ready">
-      <table>
-        <tr>
-          <td>
-            <label for="licenseNumber">Rekisterinumero:</label>
-            <input id="licenseNumber" type="text" v-model="licenseNumber">
-          </td>
-          <td>
-            <button @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</button>
-          </td>
-          <td>
-            <button @click="clearRegistrationNumber" :disabled="!licenseNumber">Tyhjennä</button>
-          </td>
-          <td>
-            <button @click="setRegistrationNumber('ZLP-833')">Leon</button>
-          </td>
-          <td>
-            <button @click="setRegistrationNumber('ISI-560')">Focus</button>
-          </td>
-        </tr>
-      </table>
+      <h3>Hae rekisterinumerolla</h3>
+      <input class="form-control mb-2" id="licenseNumber" type="text" v-model="licenseNumber">
+      <button class="btn btn-primary mr-2" @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</button>
+      <button class="btn btn-primary mr-2" @click="clearRegistrationNumber" :disabled="!licenseNumber">Tyhjennä</button>
+      <button class="btn btn-primary mr-2" @click="setRegistrationNumber('ZLP-833')">Leon</button>
+      <button class="btn btn-primary mr-2" @click="setRegistrationNumber('ISI-560')">Focus</button>
     </div>
     <div v-if="method == 1 && !ready">
       <table>
@@ -87,7 +73,7 @@
     <div v-if="method == 2">
     </div>
     <TableDialog v-show="ready" ref="dialog" :table="table" :state="state" :showCaption="false" />
-  </div>
+  </main>
 </template>
 
 <script  lang="ts">

@@ -1,19 +1,19 @@
 <template>
   <div>
     <div v-if="showNavigator" class="navigator buttons">
-      <button @click="addRow">Lisää uusi</button>
-      <template v-if="pageCount > 1">
-        <button :disabled="pageNumber == 1" @click="prevPage">Edellinen</button>
-        <button v-for="number in pageCount" :key="number" :class="{ selected: number == pageNumber }" :disabled="pageNumber == number" @click="setPageNumber(number)">{{number}}</button>
-        <button :disabled="pageNumber == pageCount" @click="nextPage">Seuraava</button>
-        <span class="number">sivu {{ pageNumber }}/{{ pageCount }}</span>
-      </template>
-      <button @click="refreshRows">Päivitä</button>
+      <button class="btn btn-primary mb-2" @click="addRow">Lisää uusi</button>
+      <ul class="pagination" v-if="pageCount > 1">
+        <li class="page-item" :class="{ disabled: pageNumber == 1 }" ><span class="page-link" @click="prevPage">Edellinen</span></li>
+        <li class="page-item" v-for="number in pageCount" :key="number" :class="{ active: number == pageNumber }"><span class="page-link" @click="setPageNumber(number)">{{number}}</span></li>
+        <li class="page-item" :class="{ disabled: pageNumber == pageCount }"><span class="page-link" @click="nextPage">Seuraava</span></li>
+      </ul>
     </div>
-    <table class="grid">
+    <table class="table table-fit">
       <thead>
         <tr>
           <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
+          <th v-if="showOpenButton"></th>
+          <th v-if="showEditButton"></th>
         </tr>
       </thead>
       <tbody>
@@ -21,8 +21,8 @@
           <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
             <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
           </td>
-          <td v-if="showOpenButton" class="action"><button @click="openRow(row)">Avaa</button></td>
-          <td v-if="showEditButton" class="action"><button @click="editRow(row)">Muokkaa</button></td>
+          <td v-if="showOpenButton" class="action"><button class="btn btn-primary btn-sm" @click="openRow(row)">Avaa</button></td>
+          <td v-if="showEditButton" class="action"><button class="btn btn-primary btn-sm" @click="editRow(row)">Muokkaa</button></td>
           <td class="added-text" v-if="hasRowAdded(row)">lisätty</td>
           <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
         </tr>
@@ -210,29 +210,6 @@ export default class DatasetGrid extends Vue {
 
 .alignCenter {
   text-align: center;
-}
-
-.grid {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-th.data {
-  background-color: #E0E0E0;
-}
-      
-th.data, td.data {
-  border: 1px solid #C0C0C0;
-  vertical-align: top;
-  padding: 4px;
-}
-
-td.action {
-  background-color: white;
-}
-
-.grid tr:nth-child(even) {
-  background-color: #F6F6F6;
 }
 
 .undefined {

@@ -1,21 +1,19 @@
 <template>
   <div>
-    <table>
-      <tr>
-        <td><label for="username">Käyttäjätunnus:</label></td>
-        <td><input ref="username" type="text" name="username" :size="30" autofocus v-model="username"></td>
-      </tr>
-      <tr>
-        <td><label for="password">Salasana:</label></td>
-        <td><input ref="password" type="password" name="password" :size="30" v-model="password"></td>
-      </tr>
-    </table>
+    <div class="form-group">
+      <label for="username">Käyttäjätunnus</label>
+      <input class="form-control" ref="username" type="text" name="username" :size="30" autofocus v-model="username">
+    </div>
+    <div class="form-group">
+      <label for="password">Salasana</label>
+      <input class="form-control" ref="password" type="password" name="password" :size="30" v-model="password">
+    </div>
     <div class="buttons">
-      <button :disabled="!username || !password" @click="login(username, password)">Kirjaudu</button>
-      <button @click="clear">Tyhjennä</button>
-      <button @click="fill('albert', 'weber')">Ilkka</button>
-      <button @click="fill('opeJorma', 'weber')">Jorma</button>
-      <button @click="fill('arto', 'weber')">Arto</button>
+      <button class="btn btn-primary mr-2" :disabled="!username || !password" @click="login(username, password)">Kirjaudu</button>
+      <button class="btn btn-secondary mr-2" @click="clear">Tyhjennä</button>
+      <button class="btn btn-light mr-2" @click="fill('albert', 'weber')">Ilkka</button>
+      <button class="btn btn-light mr-2" @click="fill('opeJorma', 'weber')">Jorma</button>
+      <button class="btn btn-light mr-2" @click="fill('arto', 'weber')">Arto</button>
     </div>
   </div>
 </template>

@@ -119,11 +119,6 @@ export default new Router({
       props: () => ({ table: new BulletinGroupTable(database) })
     },
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('@/views/Test.vue')
-    },
-    {
       path: '/about',
       name: 'about',
       component: () => import('@/views/About.vue')
