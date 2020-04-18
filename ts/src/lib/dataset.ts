@@ -391,11 +391,11 @@ export abstract class Dataset {
     return this.database.axios;
   }  
 
-  public get pageLimit(): number {
-    return this.getPageLimit();
+  public get rowsPerPage(): number {
+    return this.getRowsPerPage();
   }
 
-  protected getPageLimit(): number {
+  protected getRowsPerPage(): number {
     return 10;
   }
 

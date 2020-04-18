@@ -2,87 +2,45 @@
   <main class="container">
     <h2>Lisää uusi vikatapaus</h2>
     <div class="mb-2">
-      <button class="btn btn-primary mr-2" @click="setMethod(0)">Hae rekisterinumerolla</button>
-      <button class="btn btn-primary mr-2" @click="setMethod(1)">Ohjattu syöttö</button>
-      <button class="btn btn-primary mr-2" @click="setMethod(2)">Manuaalinen syöttö</button>
-      <button class="btn btn-secondary mr-2" @click="back()">Peru</button>
+      <b-button variant="primary" class="mr-2" @click="setMethod(0)">Hae rekisterinumerolla</b-button>
+      <b-button variant="primary" class="mr-2" @click="setMethod(1)">Ohjattu syöttö</b-button>
+      <b-button variant="primary" class="mr-2" @click="setMethod(2)">Manuaalinen syöttö</b-button>
+      <b-button variant="secondary" class="mr-2" @click="back()">Peru</b-button>
     </div>
+
     <div v-if="method == 0 && !ready">
       <h3>Hae rekisterinumerolla</h3>
-      <input class="form-control mb-2" id="licenseNumber" type="text" v-model="licenseNumber">
-      <button class="btn btn-primary mr-2" @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</button>
-      <button class="btn btn-primary mr-2" @click="clearRegistrationNumber" :disabled="!licenseNumber">Tyhjennä</button>
-      <button class="btn btn-primary mr-2" @click="setRegistrationNumber('ZLP-833')">Leon</button>
-      <button class="btn btn-primary mr-2" @click="setRegistrationNumber('ISI-560')">Focus</button>
+      <b-form inline>
+        <b-input class="mr-2" type="text" v-model="licenseNumber" />
+        <b-button variant="primary" class="mr-2" @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</b-button>
+        <b-button variant="primary" class="mr-2" @click="clearRegistrationNumber" :disabled="!licenseNumber">Tyhjennä</b-button>
+        <b-button variant="light" class="mr-2" @click="setRegistrationNumber('ZLP-833')">Leon</b-button>
+        <b-button variant="light" class="mr-2" @click="setRegistrationNumber('ISI-560')">Focus</b-button>
+      </b-form>
     </div>
+
     <div v-if="method == 1 && !ready">
-      <table>
-        <tr>
-          <td><label for="brand">Merkki:</label></td>
-          <td>
-            <select id="brand" v-model="brand" @change="fillYears">
-              <option :value="null">-</option>
-              <option v-for="brand in brands" :key="brand">{{ brand }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr v-if="brand !== null">
-          <td><label for="modelYear">Vuosimalli:</label></td>
-          <td>
-            <select id="modelYear" v-model="year" @change="fillFuels">
-              <option :value="null">-</option>
-              <option v-for="year in years" :key="year">{{ year }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr v-if="year != null">
-          <td><label for="fuel">Käyttövoima:</label></td>
-          <td>
-            <select id="fuel" v-model="fuel" @change="fillModels">
-              <option :value="null">-</option>
-              <option v-for="fuel in fuels" :key="fuel.value" :value="fuel.value">{{ fuel.text }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr v-if="fuel !== null">
-          <td><label for="model">Malli:</label></td>
-          <td>
-            <select id="model" v-model="model" @change="fillEngineSizes">
-              <option :value="null">-</option>
-              <option v-for="model in models" :key="model">{{ model }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr v-if="model !== null">
-          <td><label for="engineSize">Iskutilavuus:</label></td>
-          <td>
-            <select id="engineSize" v-model="engineSize">
-              <option :value="null">-</option>
-              <option v-for="engineSize in engineSizes" :key="engineSize">{{ engineSize }}</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button :disabled="engineSize === null" @click="postSelections">Jatka</button>
-            <button @click="clearSelections">Tyhjennä</button>
-          </td>
-        </tr>
-      </table>
+      <b-select class="mb-2" v-model="brand" :options="brands" @change="fillYears" />
+      <b-select class="mb-2" v-model="year" :options="years" @change="fillFuels" v-if="brand !== null" />
+      <b-select class="mb-2" v-model="fuel" :options="fuels" @change="fillModels" v-if="year !== null" />
+      <b-select class="mb-2" v-model="model" :options="models" @change="fillEngineSizes" v-if="fuel !== null" />
+      <b-select class="mb-2" v-model="engineSize" :options="engineSizes" v-if="model !== null" />
+      <b-button variant="primary" class="mr-2" :disabled="engineSize === null" @click="postSelections">Jatka</b-button>
+      <b-button variant="primary" class="mr-2" @click="clearSelections">Tyhjennä</b-button>
     </div>
-    <div v-if="method == 2">
-    </div>
+    
     <TableDialog v-show="ready" ref="dialog" :table="table" :state="state" :showCaption="false" />
   </main>
 </template>
 
 <script  lang="ts">
-import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TableDialog from '@/components/TableDialog.vue';
 import { BaseTable } from '../tables/base';
 import { ProblemTable } from '../tables/problem';
 import { EditState } from '../lib/dataset';
+import { getTraficom } from '../services/traficomService';
+import { getBrands, getYears, getFuels, getModels, getEngineSizes } from '../services/dataService';
 import BaseVue from './BaseVue.vue';
 
 /*
@@ -106,11 +64,11 @@ enum CreateMethod {
   }
 })
 export default class NewProblem extends BaseVue {
-  private readonly table: ProblemTable = new ProblemTable(this.database, this.user);
+  private table: ProblemTable;
   private method: CreateMethod = null;
   private ready = false;
 
-  public licenseNumber = '';
+  public licenseNumber: string = null;
 
   private brand: string = null;
   private year: number = null;
@@ -118,28 +76,32 @@ export default class NewProblem extends BaseVue {
   private model: string = null;
   private engineSize: number = null;
 
-  private brands: string[] = [];
-  private years: number[] = [];
-  private fuels: object[] = [];
-  private models: string[] = [];
-  private engineSizes: number[] = [];
+  private brands = [];
+  private years = [];
+  private fuels = [];
+  private models = [];
+  private engineSizes = [];
+
+  created() {
+    this.table = new ProblemTable(this.database, this.user);
+  }
+
+  mounted() {
+    this.licenseNumber = 'ZLP-833',
+
+    this.clearSelections();
+  }
 
   private get dialog(): any {
     return this.$refs.dialog;
   }
 
-  get row() {
+  private get row() {
     return this.dialog.row;
   }
 
-  get state(): EditState {
+  private get state(): EditState {
     return EditState.Add;
-  }
-
-  protected mounted() {
-    this.licenseNumber = 'ZLP-833',
-
-    this.clearSelections();
   }
 
   private setMethod(value: number) {
@@ -183,8 +145,10 @@ export default class NewProblem extends BaseVue {
 
   // 0) Registration number
   private findRegistrationNumber() {
-    axios.get('http://localhost:3000/api/traficom/' + this.licenseNumber)
+    getTraficom(this.licenseNumber)
       .then(response => {
+        console.log(response.data);
+
         this.brand = response.data.carMake;
         this.model = response.data.carModel;
         this.year = response.data.registrationYear;
@@ -227,72 +191,67 @@ export default class NewProblem extends BaseVue {
   }
 
   private fillBrands() {
-    const url = 'http://localhost:3000/api/data/brands';
-    
-    axios.get(url)
+    getBrands()
       .then(response => {
-        const brands: string[] = [];
+        const items = [];
+        items.push({ value: null, text: 'Valitse merkki' });
 
-        for (const brand of response.data)
-          brands.push(brand);
+        for (const item of response.data)
+          items.push({ value: item, text: item });
 
-        this.brands = brands;
+        this.brands = items;
       });
   }
 
   private fillYears() {
-    const url = 'http://localhost:3000/api/data/years?brand=' + this.brand;
-
-    axios.get(url)
+    getYears(this.brand)
       .then(response => {
-        const years: number[] = [];
+        const items = [];
+        items.push({ value: null, text: 'Valitse vuosimalli' });
 
-        for (const year of response.data)
-          years.push(year);
+        for (const item of response.data)
+          items.push({ value: item, text: item });
 
-        this.years = years;
+        this.years = items;
       });
   }
 
   private fillFuels() {
-    const url = 'http://localhost:3000/api/data/fuels?brand=' + this.brand + '&year=' + this.year;
-
-    axios.get(url)
+    getFuels(this.brand, this.year)
       .then(response => {
-        const fuels: object[] = [];
+        const items = [];
+        items.push({ value: null, text: 'Valitse käyttövoima' });
 
-        for (const fuel of response.data)
-          fuels.push({ value: fuel, text: BaseTable.FUELS[fuel] });
+        for (const item of response.data)
+          items.push({ value: item, text: BaseTable.FUELS[item] });
 
-        this.fuels = fuels;
+        this.fuels = items;
       });
   }
 
   private fillModels() {
-    const url = 'http://localhost:3000/api/data/models?brand=' + this.brand + '&year=' + this.year + '&fuel=' + this.fuel;
-
-    axios.get(url)
+    getModels(this.brand, this.year, this.fuel)
       .then(response => {
-        const models: string[] = [];
+        const items = [];
+        items.push({ value: null, text: 'Valitse malli' });
 
-        for (const model of response.data)
-          models.push(model);
+        for (const item of response.data)
+          items.push({ value: item, text: item });
 
-        this.models = models;
+        this.models = items;
       });
   }
 
   private async fillEngineSizes() {
-    const url = 'http://localhost:3000/api/data/engineSizes?brand=' + this.brand + '&year=' + this.year + '&fuel=' + this.fuel + '&model=' + this.model;
-
-    axios.get(url)
+    getEngineSizes(this.brand, this.year, this.fuel, this.model)
       .then(response => {
-        const engineSizes: number[] = [];
+        const items = [];
+        items.push({ value: null, text: 'Valitse moottori' });
 
-        for (const engineSize of response.data)
-          engineSizes.push(engineSize);
+        for (const item of response.data)
+          items.push({ value: item, text: item });
 
-        this.engineSizes = engineSizes;
+        this.engineSizes = items;
       });
   }
 

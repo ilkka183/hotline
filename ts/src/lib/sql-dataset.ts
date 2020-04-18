@@ -87,10 +87,10 @@ export abstract class SqlTable extends SqlDataset {
     let url = '/query/rows';
     url += '?table=' + this.tableName;
     url += '&sql=' + this.sql;
-    url += '&limit=' + this.pageLimit;
+    url += '&limit=' + this.rowsPerPage;
 
     if (pageNumber > 1)
-       url += '&offset=' + (pageNumber - 1)*this.pageLimit;
+       url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
 
     console.log('GET ' + url);
 
@@ -111,10 +111,10 @@ export abstract class SqlTable extends SqlDataset {
   }
   
   private async getTableRows(pageNumber = 1) {
-    let url = this.url + '/rows?limit=' + this.pageLimit;
+    let url = this.url + '/rows?limit=' + this.rowsPerPage;
 
     if (pageNumber > 1)
-       url += '&offset=' + (pageNumber - 1)*this.pageLimit;
+       url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
 
     console.log('GET ' + url);
 

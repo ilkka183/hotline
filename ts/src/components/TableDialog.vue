@@ -2,11 +2,6 @@
   <div>
     <h2 v-if="showCaption">{{ caption }}</h2>
     <form class="form" @submit.prevent="post" @keydown.esc="cancel">
-      <div class="mb-3">
-        <button class="btn btn-primary mr-2" type="button" @click="post">OK</button>
-        <button class="btn btn-light mr-2" type="button" @click="cancel">Peru</button>
-        <button class="btn btn-danger float-right" v-if="isEditing" type="button" @click="confirmDelete">Poista</button>
-      </div>
       <div class="form-group row mb-2" v-for="(field, index) in fields" :key="index + 20">
         <div class="col-sm-2 col-form-label col-form-label-sm">
           <div v-if="field.showDialogCaption()">
@@ -26,6 +21,11 @@
             <label class="form-check-label" for="field.name">{{ field.caption }}</label>
           </div>
         </div>
+      </div>
+      <div class="mb-3">
+        <b-button variant="primary" class="mr-2" @click="post">OK</b-button>
+        <b-button variant="light" class="mr-2" @click="cancel">Peru</b-button>
+        <b-button variant="danger" class="float-right" v-if="isEditing" @click="confirmDelete">Poista</b-button>
       </div>
       <div class="alert alert-danger alert-dismissible fade show" v-if="missingValues">
         <div>Punaisella merkityt kentät puuttuvat!</div>
