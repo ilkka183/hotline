@@ -40,7 +40,7 @@ export class ProblemTable extends BaseTable {
     this.addIntegerField({ name: 'ModelYear', caption: 'Vuosimalli', align: TextAlign.Right });
     this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', displayTexts: ProblemTable.FUELS });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
-    this.addStringField({ name: 'Description', caption: 'Kuvaus', cols: 80, rows: 10, required: true });
+    this.addTextField({ name: 'Description', caption: 'Kuvaus', required: true });
     this.addIntegerField({ name: 'Status', caption: 'Tila', displayTexts: ['avoin', 'ratkaistu', 'ratkaisematon'], readonly: true, onCellColor: this.statusCellColor });
   }
 
@@ -109,7 +109,7 @@ export class ProblemReplyTable extends BaseTable {
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
-    this.addStringField({ name: 'Message', caption: 'Viesti', cols: 80, rows: 10, required: true });
+    this.addTextField({ name: 'Message', caption: 'Viesti', required: true });
   }
 
   protected getListCaption(): string {

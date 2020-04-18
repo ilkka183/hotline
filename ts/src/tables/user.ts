@@ -57,8 +57,8 @@ export class UserTable extends BaseTable {
     this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM UserGroup", hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
     this.addIntegerField({ name: 'Role', caption: 'Rooli', displayTexts: User.typeTexts, required: true });
-    this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: false, required: true });
-    this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: false, required: true });
+    this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: true, required: true });
+    this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: true, required: true });
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });
     this.addStringField({ name: 'LastName', caption: 'Sukunimi', length: 20, required: true });
     this.addStringField({ name: 'Title', caption: 'Toimenkuva', length: 20 });

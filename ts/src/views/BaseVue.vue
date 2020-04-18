@@ -18,15 +18,5 @@ export default class BaseVue extends Vue
   protected get axios(): AxiosInstance {
     return this.database.axios;
   }
-
-  protected login(username: string, password: string) {
-    this.$store.dispatch('login', { username, password })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(error => {
-        window.alert('Virheellinen käyttäjätunnus tai salasana');
-      });
-  }
 }
 </script>

@@ -19,11 +19,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
+import Login from '../components/Login.vue';
 import { NoticeTable } from '../tables/notice';
 import { ProblemTable } from '../tables/problem';
 import { RestDatabase } from '../lib/dataset';
 import BaseVue from './BaseVue.vue';
-import Login from './Login.vue';
 
 @Component({
   components: {
@@ -41,7 +41,7 @@ export default class Home extends BaseVue {
     this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
     this.notices = new NoticeTable(this.database, this.user);
 
-//    this.login('albert', 'weber');
+    this.$store.dispatch('login', { username: 'albert', password: 'weber' })
   }
 
   private newProblem() {

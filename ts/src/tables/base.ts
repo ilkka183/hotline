@@ -25,7 +25,7 @@ export abstract class BaseTable extends SqlTable {
   }
 
   protected addInfoField() {
-    this.addStringField({ name: 'Info', caption: 'Lisätietoja', cols: 80, rows: 10 });
+    this.addTextField({ name: 'Info', caption: 'Lisätietoja' });
   }
 
   protected addStatusFields() {

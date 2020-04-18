@@ -22,7 +22,7 @@ export class NoticeTable extends BaseTable {
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
-    this.addStringField({ name: 'Message', caption: 'Viesti', cols: 80, rows: 10, required: true });
+    this.addTextField({ name: 'Message', caption: 'Viesti', required: true });
   }
 
   protected initialize(row: object) {

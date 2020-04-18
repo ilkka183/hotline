@@ -22,7 +22,6 @@ interface FieldParams {
   onCellColor?: any;
 }
 
-
 export abstract class Field {
   public dataset: Dataset | undefined;
   public readonly name: string;
@@ -261,7 +260,6 @@ interface IntegerFieldParams extends FieldParams {
   displayTexts?: string[];
 }
 
-
 class IntegerField extends Field {
   constructor(params: IntegerFieldParams) {
     super(params);
@@ -309,16 +307,11 @@ class AutoIncrementField extends IntegerField {
 interface StringFieldParams extends FieldParams {
   code?: boolean;
   length?: number;
-  cols?: number;
-  rows?: number;
 }
-
 
 class StringField extends Field {
   public code = false;
   public length: number | undefined;
-  public cols: number | undefined;
-  public rows: number | undefined;
 
   constructor(params: StringFieldParams) {
     super(params);
@@ -328,12 +321,6 @@ class StringField extends Field {
 
     if (params.length)
       this.length = params.length;
-
-    if (params.cols)
-      this.cols = params.cols;
-
-    if (params.rows)
-      this.rows = params.rows;
   }
 
   public getType(): any {
@@ -351,6 +338,31 @@ class StringField extends Field {
     return this.code;
   }
 
+  dialogInputType(): string {
+    return 'text';
+  }
+}
+
+
+interface TextFieldParams extends StringFieldParams {
+  cols?: number;
+  rows?: number;
+}
+
+class TextField extends StringField {
+  public cols: number | undefined;
+  public rows: number | undefined = 5;
+
+  constructor(params: TextFieldParams) {
+    super(params);
+
+    if (params.cols)
+      this.cols = params.cols;
+
+    if (params.rows)
+      this.rows = params.rows;
+  }
+
   getCols(): number {
     return this.cols;
   }
@@ -360,10 +372,7 @@ class StringField extends Field {
   }
   
   dialogInputType(): string {
-    if (this.rows != null)
-      return 'textarea';
-    else
-      return 'text';
+    return 'textarea';
   }
 }
 
@@ -429,6 +438,10 @@ export abstract class Dataset {
 
   protected addStringField(params: StringFieldParams) {
     this.addField(new StringField(params));
+  }
+
+  protected addTextField(params: TextFieldParams) {
+    this.addField(new TextField(params));
   }
 
   public newRow(): object {

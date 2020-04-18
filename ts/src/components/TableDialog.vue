@@ -1,34 +1,38 @@
 <template>
   <div>
     <h2 v-if="showCaption">{{ caption }}</h2>
-    <form @submit.prevent="post" @keydown.esc="cancel">
-      <div class="form-group row" v-for="(field, index) in fields" :key="index + 20">
-        <div class="col-sm-2 col-form-label">
+    <form class="form" @submit.prevent="post" @keydown.esc="cancel">
+      <div class="mb-3">
+        <button class="btn btn-primary mr-2" type="button" @click="post">OK</button>
+        <button class="btn btn-light mr-2" type="button" @click="cancel">Peru</button>
+        <button class="btn btn-danger float-right" v-if="isEditing" type="button" @click="confirmDelete">Poista</button>
+      </div>
+      <div class="form-group row mb-2" v-for="(field, index) in fields" :key="index + 20">
+        <div class="col-sm-2 col-form-label col-form-label-sm">
           <div v-if="field.showDialogCaption()">
             <span :class="{ missing: isMissing(field)}">{{ field.caption }}:</span>
             <span v-if="field.required && !field.isReadOnly" class="required-asterix"></span>
           </div>
         </div>
-        <div>
-          <input class="form-control" v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }" :value="field.displayText(row)" readonly>
-          <input class="form-control" v-else-if="field.dialogInputType() == 'text'" type="text" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :size="field.getInputTextLength()">
-          <textarea class="form-control" v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :cols="field.getCols()" :rows="field.getRows()"></textarea>
+        <div class="col-sm-10">
+          <input class="form-control form-control-sm shadow-none" v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }" :value="field.displayText(row)" readonly>
+          <input class="form-control form-control-sm" v-else-if="field.dialogInputType() == 'text'" type="text" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
+          <textarea class="form-control" v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :rows="field.getRows()"></textarea>
           <select class="form-control" v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
             <option v-for="option in field.lookupList" :key="option.value" :value="option.value">{{option.text}}</option>
           </select>
-          <div v-else-if="field.dialogInputType() == 'checkbox'">
-            <input class="form-control" type="checkbox" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
-            <span>{{ field.caption }}</span>
+          <div class="form-check" v-else-if="field.dialogInputType() == 'checkbox'">
+            <input class="form-check-input" type="checkbox" :ref="field.name" :id="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
+            <label class="form-check-label" for="field.name">{{ field.caption }}</label>
           </div>
         </div>
       </div>
-      <div class="buttons">
-        <button class="btn btn-primary mr-2" type="button" @click="post">OK</button>
-        <button class="btn btn-secondary mr-2" type="button" @click="cancel">Peru</button>
-        <button class="btn btn-danger float-right" v-if="isEditing" type="button" @click="confirmDelete">Poista</button>
+      <div class="alert alert-danger alert-dismissible fade show" v-if="missingValues">
+        <div>Punaisella merkityt kentät puuttuvat!</div>
       </div>
-      <div v-if="missingValues" class="info missing">Punaisella merkityt kentät puuttuvat</div>
-      <div v-if="errorMessage" class="error">{{errorMessage}}</div>
+      <div class="alert alert-danger alert-dismissible fade show" v-if="errorMessage">
+        <div>{{ errorMessage }}</div>
+      </div>
     </form>
   </div>
 </template>

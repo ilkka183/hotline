@@ -193,7 +193,7 @@ export abstract class SqlTable extends SqlDataset {
   }
 
   public confirmDeleteRow(row: object): boolean {
-    return confirm(`${this.getDeleteCaption()} (${this.contentCaptionOf(row)})?`);
+    return confirm(this.getDeleteCaption());
   }
 
   public get listCaption() {

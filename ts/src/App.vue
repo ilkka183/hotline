@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -42,7 +42,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class Aoo extends Vue {
+export default class App extends Vue {
   private logout() {
     this.$store.dispatch('logout');
   }
@@ -50,4 +50,15 @@ export default class Aoo extends Vue {
 </script>
 
 <style lang="scss">
+h2 {
+  margin-bottom: 20px !important;
+}
+
+.navbar {
+  margin-bottom: 30px;
+}
+
+.form {
+  margin-bottom: 30px;
+}
 </style>

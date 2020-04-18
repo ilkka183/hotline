@@ -1,19 +1,21 @@
 <template>
   <div>
-    <div v-if="showNavigator" class="navigator buttons">
-      <button class="btn btn-primary mb-2" @click="addRow">Lisää uusi</button>
-      <ul class="pagination" v-if="pageCount > 1">
+    <nav class="navbar m-1" v-if="showNavigator">
+      <button class="btn btn-primary" @click="addRow">Lisää uusi</button>
+      <div class="navbar-text" :colspan="fields.length">{{rowCount}} riviä</div>
+      <ul class="pagination m-0" v-if="pageCount > 1">
         <li class="page-item" :class="{ disabled: pageNumber == 1 }" ><span class="page-link" @click="prevPage">Edellinen</span></li>
         <li class="page-item" v-for="number in pageCount" :key="number" :class="{ active: number == pageNumber }"><span class="page-link" @click="setPageNumber(number)">{{number}}</span></li>
         <li class="page-item" :class="{ disabled: pageNumber == pageCount }"><span class="page-link" @click="nextPage">Seuraava</span></li>
       </ul>
-    </div>
+    </nav>
     <table class="table table-fit">
       <thead>
         <tr>
           <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
           <th v-if="showOpenButton"></th>
           <th v-if="showEditButton"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -27,11 +29,6 @@
           <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
         </tr>
       </tbody>
-      <tfoot>
-        <tr v-if="showFooter">
-          <td class="data" :colspan="fields.length">{{rowCount}} riviä</td>
-        </tr>
-      </tfoot>
     </table>
   </div>
 </template>
