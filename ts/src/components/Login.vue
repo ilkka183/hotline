@@ -1,25 +1,25 @@
 <template>
   <div class="form">
-    <h2>Hotline</h2>
-    <div class="form-group">
-      <label for="username">Käyttäjätunnus</label>
-      <input class="form-control" ref="username" type="text" name="username" :size="30" v-model="username">
-    </div>
-    <div class="form-group">
-      <label for="password">Salasana</label>
-      <input class="form-control" ref="password" type="password" name="password" :size="30" v-model="password">
-    </div>
+    <h2>Kirjaudu</h2>
+
+    <b-form-group label="Käyttäjätunnus" label-for="username">
+      <b-form-input type="text" ref="username" id="username" v-model="username" />
+    </b-form-group>
+
+    <b-form-group label="Salasana" label-for="password">
+      <b-form-input type="password" ref="password" id="password" v-model="password" />
+    </b-form-group>
+
     <div class="buttons mb-3">
-      <button class="btn btn-primary mr-2" :disabled="!username || !password" @click="doLogin()">Kirjaudu</button>
-      <button class="btn btn-secondary mr-2" :disabled="!username && !password" @click="clear">Tyhjennä</button>
-      <button class="btn btn-light mr-2" @click="fill('albert', 'weber')">Ilkka</button>
-      <button class="btn btn-light mr-2" @click="fill('opeJorma', 'weber')">Jorma</button>
-      <button class="btn btn-light mr-2" @click="fill('arto', 'weber')">Arto</button>
-      <button class="btn btn-light mr-2" @click="fill('mikko', 'weber')">Mikko</button>
+      <b-button variant="primary" class="mr-2" :disabled="!username || !password" @click="onLogin">Kirjaudu</b-button>
+      <b-button variant="secondary" class="mr-2" :disabled="!username && !password" @click="onClear">Tyhjennä</b-button>
+      <b-button variant="light" class="mr-2" @click="onFill('albert', 'weber')">Ilkka</b-button>
+      <b-button variant="light" class="mr-2" @click="onFill('opeJorma', 'weber')">Jorma</b-button>
+      <b-button variant="light" class="mr-2" @click="onFill('arto', 'weber')">Arto</b-button>
+      <b-button variant="light" class="mr-2" @click="onFill('mikko', 'weber')">Mikko</b-button>
     </div>
-    <div class="alert alert-danger alert-dismissible fade show" v-if="errorMessage">
-      <div>{{ errorMessage }}</div>
-    </div>
+
+    <b-alert variant="danger" fade show v-if="errorMessage">{{ errorMessage }}</b-alert>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ import { login } from '../services/authService'
 
 @Component
 export default class Login extends Vue {
-  private username: string= null;
+  private username: string = null;
   private password: string = null;
   private errorMessage: string = null;
 
@@ -38,27 +38,26 @@ export default class Login extends Vue {
     (this.$refs.username as any).focus();
   }
 
-  public doLogin() {
+  private onLogin() {
     login(this.username, this.password)
       .then(response => {
-        const token = response.data;
-        localStorage.setItem('token', token);
-        this.$store.dispatch('setToken', token);
+        this.$store.dispatch('login', response.data);
       })
       .catch(error => {
         this.errorMessage = 'Virheellinen käyttäjätunnus tai salasana!';
       });
   }
 
-  private clear() {
+  private onClear() {
     this.username = null;
     this.password = null;
     this.errorMessage = null;
   }
   
-  private fill(username: string, password: string) {
+  private onFill(username: string, password: string) {
     this.username = username;
     this.password = password;
+    this.errorMessage = null;
   }
 }
 </script>

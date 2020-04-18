@@ -1,41 +1,29 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/">Koti</router-link>
-          </li>
-          <template v-if="$store.state.token">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/problems">Vikatapaukset</router-link>
-            </li>
-              <router-link class="nav-link" to="/notices">Ilmoitukset</router-link>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/usergroups">Käyttäjäryhmät</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/users">Käyttäjät</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/brands">Automerkit</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/bulletingroups">Tiedoteryhmät</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/about">Tietoja</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/account">{{ $store.state.user.firstName }}</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
-            </li>
-          </template>
-        </ul>
-      </div>
-    </nav>
+    <b-navbar toggleable="lg" type="light" variant="light">
+      <b-navbar-brand to="/">Hotline</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav  v-if="$store.state.token">
+          <b-nav-item to="/">Koti</b-nav-item>
+          <b-nav-item to="/problems">Vikatapaukset</b-nav-item>
+          <b-nav-item to="/notices">Ilmoitukset</b-nav-item>
+          <b-nav-item-dropdown text="Asetukset">
+            <b-nav-item to="/usergroups">Käyttäjäryhmät</b-nav-item>
+            <b-nav-item to="/users">Käyttäjät</b-nav-item>
+            <b-nav-item to="/brands">Automerkit</b-nav-item>
+            <b-nav-item to="/bulletingroups">Tiedoteryhmät</b-nav-item>
+          </b-nav-item-dropdown>
+          <b-nav-item to="/about">Tietoja</b-nav-item>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto" v-if="$store.state.token">
+          <b-nav-item-dropdown :text="$store.state.user.firstName" right>
+            <b-nav-item to="/account">Omat tiedot</b-nav-item>
+          </b-nav-item-dropdown>
+          <b-nav-item to="/"><span @click="logout">Kirjaudu ulos</span></b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
     <router-view :key="$route.fullPath"/>
   </div>
 </template>
@@ -51,9 +39,7 @@ export default class App extends Vue {
   }
 
   private logout() {
-    const token = null;
-    localStorage.removeItem('token');
-    this.$store.dispatch('setToken', token);
+    this.$store.dispatch('logout', null);
   }
 }
 </script>

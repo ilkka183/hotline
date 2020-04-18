@@ -5,7 +5,7 @@
     </main>
     <main class="container-fluid" v-else>
       <h2>Avoimet vikatapaukset</h2>
-      <button class="btn btn-primary mb-2" @click="newProblem">Lisää uusi</button>
+      <router-link class="btn btn-primary mb-2" to="/new-problem">Lisää uusi</router-link>
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Viimeksi ratkaistut vikatapaukset</h2>
       <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
@@ -39,10 +39,6 @@ export default class Home extends BaseVue {
     this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
     this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
     this.notices = new NoticeTable(this.database, this.user);
-  }
-
-  private newProblem() {
-    this.$router.push('new-problem');
   }
 }
 </script>

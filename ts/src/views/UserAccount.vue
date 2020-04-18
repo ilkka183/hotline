@@ -3,45 +3,41 @@
 
     <div class="form">
       <h2>Omat tiedot</h2>
-      <div class="form-group">
-        <label for="firstName">Etunimi</label>
-        <input class="form-control" name="firstName" :value="user.firstName" readonly>
-      </div>
-      <div class="form-group">
-        <label for="lastName">Etunimi</label>
-        <input class="form-control" name="lastName" :value="user.lastName" readonly>
-      </div>
-      <div class="form-group">
-        <label for="role">Rooli</label>
-        <input class="form-control" name="role" v-model="user.roleText" readonly>
-      </div>
-      <div class="form-group">
-        <label for="phone">Puhelinnumero</label>
-        <input class="form-control" name="phone" v-model="phone">
-      </div>
-      <button class="btn btn-primary mb-3" @click="save">Tallenna</button>
-      <div class="alert alert-success alert-dismissible fade show" v-if="updateSuccess">
-        <div>{{ updateSuccess }}</div>
-      </div>
+
+      <b-form-group label="Etunimi" label-for="firstName">
+        <b-form-input name="firstName" :value="user.firstName" readonly />
+      </b-form-group>
+
+      <b-form-group label="Etunimi" label-for="lastName">
+        <b-form-input name="lastName" :value="user.lastName" readonly />
+      </b-form-group>
+
+      <b-form-group label="Rooli" label-for="role">
+        <b-form-input name="role" v-model="user.roleText" readonly />
+      </b-form-group>
+
+      <b-form-group label="Puhelinnumero" label-for="phone">
+        <b-form-input name="phone" v-model="phone" />
+      </b-form-group>
+
+      <b-button variant="primary" class="mb-3" @click="save">Tallenna</b-button>
+      <b-alert variant="success" fade show v-if="updateSuccess">{{ updateSuccess }}</b-alert>
     </div>
 
     <div class="form">
       <h3>Vaihda salasana</h3>
-      <div class="form-group">
-        <label for="password1">Salasana</label>
-        <input class="form-control" name="password1" type="password" v-model="password1">
-      </div>
-      <div class="form-group">
-        <label for="password2">Salasana uudestaan</label>
-        <input class="form-control" name="password2" type="password" v-model="password2">
-      </div>
-      <button class="btn btn-primary mb-3" @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</button>
-      <div class="alert alert-success alert-dismissible fade show" v-if="changePasswordSuccess">
-        <div>{{ changePasswordSuccess }}</div>
-      </div>
-      <div class="alert alert-danger alert-dismissible fade show" v-if="changePasswordError">
-        <div>{{ changePasswordError }}</div>
-      </div>
+
+      <b-form-group label="Salasana" label-for="password1">
+        <b-form-input name="password1" type="password" v-model="password1" />
+      </b-form-group>
+
+      <b-form-group label="Salasana uudestaan" label-for="password2">
+        <b-form-input name="password2" type="password" v-model="password2" />
+      </b-form-group>
+
+      <b-button variant="primary" class="mb-3" @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</b-button>
+      <b-alert variant="success" fade show v-if="changePasswordSuccess">{{ changePasswordSuccess }}</b-alert>
+      <b-alert variant="danger" fade show v-if="changePasswordError">{{ changePasswordError }}</b-alert>
     </div>
 
   </main>
