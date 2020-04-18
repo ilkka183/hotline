@@ -6,31 +6,33 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/">Koti</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/problems">Vikatapaukset</router-link>
-          </li>
-            <router-link class="nav-link" to="/notices">Ilmoitukset</router-link>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/usergroups">Käyttäjäryhmät</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/users">Käyttäjät</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/brands">Automerkit</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/bulletingroups">Tiedoteryhmät</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/about">Tietoja</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/account">Omat tiedot</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
-          </li>
+          <template v-if="$store.state.token">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/problems">Vikatapaukset</router-link>
+            </li>
+              <router-link class="nav-link" to="/notices">Ilmoitukset</router-link>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/usergroups">Käyttäjäryhmät</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/users">Käyttäjät</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/brands">Automerkit</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/bulletingroups">Tiedoteryhmät</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/about">Tietoja</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/account">{{ $store.state.user.firstName }}</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/"><span @click="logout">Kirjaudu ulos</span></router-link>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
@@ -43,8 +45,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
+  mounted() {
+    const token = localStorage.getItem('token');
+    this.$store.dispatch('setToken', token);
+  }
+
   private logout() {
-    this.$store.dispatch('logout');
+    const token = null;
+    localStorage.removeItem('token');
+    this.$store.dispatch('setToken', token);
   }
 }
 </script>
@@ -55,7 +64,7 @@ h2 {
 }
 
 .navbar {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .form {

@@ -562,5 +562,4 @@ export class RestDatabase {
     this.addedData = null;
     this.editedData = null;
   }
-
 }

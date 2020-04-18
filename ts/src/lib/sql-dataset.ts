@@ -70,7 +70,7 @@ export abstract class SqlTable extends SqlDataset {
     url += params;
 
     console.log('GET ' + url);
-
+    
     const response = await this.axios.get(url);
 
     const source = response.data[0];

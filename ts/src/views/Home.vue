@@ -1,7 +1,6 @@
 <template>
   <div>
-    <main class="container" v-if="!user">
-      <h2>Hotline</h2>
+    <main class="container" v-if="$store.state.token == null">
       <Login />
     </main>
     <main class="container-fluid" v-else>
@@ -40,8 +39,6 @@ export default class Home extends BaseVue {
     this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
     this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
     this.notices = new NoticeTable(this.database, this.user);
-
-    this.$store.dispatch('login', { username: 'albert', password: 'weber' })
   }
 
   private newProblem() {
