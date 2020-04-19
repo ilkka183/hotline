@@ -31,13 +31,13 @@ export default new Router({
       props: (route) => ({ table: new ProblemTable(database, store.state.user) })
     },
     {
-      path: '/problem',
+      path: '/:state/problem',
       name: 'problem',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new ProblemTable(database, store.state.user) })
     },
     {
-      path: '/problemreply',
+      path: '/:state/problemreply',
       name: 'problemreply',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new ProblemReplyTable(database, store.state.user, undefined) })
@@ -59,7 +59,7 @@ export default new Router({
       props: () => ({ table: new NoticeTable(database, store.state.user) })
     },
     {
-      path: '/notice',
+      path: '/:state/notice',
       name: '/notice',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new NoticeTable(database, store.state.user) })
@@ -71,7 +71,7 @@ export default new Router({
       props: () => ({ table: new UserGroupTable(database) })
     },
     {
-      path: '/usergroup',
+      path: '/:state/usergroup',
       name: 'usergroup',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new UserGroupTable(database) })
@@ -83,7 +83,7 @@ export default new Router({
       props: () => ({ table: new UserTable(database) })
     },
     {
-      path: '/user',
+      path: '/:state/user',
       name: 'user',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new UserTable(database) })
@@ -95,16 +95,10 @@ export default new Router({
       props: () => ({ table: new BrandTable(database) })
     },
     {
-      path: '/brand',
+      path: '/:state/brand',
       name: 'brand',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new BrandTable(database) })
-    },
-    {
-      path: '/vehicle',
-      name: 'vehicle',
-      component: () => import('@/views/TableRow.vue'),
-      props: () => ({ table: new VehicleTable(database) })
     },
     {
       path: '/bulletingroups',
@@ -113,7 +107,7 @@ export default new Router({
       props: () => ({ table: new BulletinGroupTable(database) })
     },
     {
-      path: '/bulletingroup',
+      path: '/:state/bulletingroup',
       name: 'bulletingroup',
       component: () => import('@/views/TableRow.vue'),
       props: () => ({ table: new BulletinGroupTable(database) })

@@ -1,7 +1,7 @@
 <template>
-  <main class="container">
+  <b-container>
 
-    <div class="form">
+    <b-form>
       <h2>Omat tiedot</h2>
 
       <b-form-group label="Etunimi" label-for="firstName">
@@ -22,9 +22,9 @@
 
       <b-button variant="primary" class="mb-3" @click="save">Tallenna</b-button>
       <b-alert variant="success" fade show v-if="updateSuccess">{{ updateSuccess }}</b-alert>
-    </div>
+    </b-form>
 
-    <div class="form">
+    <b-form>
       <h3>Vaihda salasana</h3>
 
       <b-form-group label="Salasana" label-for="password1">
@@ -38,9 +38,9 @@
       <b-button variant="primary" class="mb-3" @click="changePassword" :disabled="!password1 || !password2">Vaihda salasana</b-button>
       <b-alert variant="success" fade show v-if="changePasswordSuccess">{{ changePasswordSuccess }}</b-alert>
       <b-alert variant="danger" fade show v-if="changePasswordError">{{ changePasswordError }}</b-alert>
-    </div>
+    </b-form>
 
-  </main>
+  </b-container>
 </template>
 
 <script  lang="ts">

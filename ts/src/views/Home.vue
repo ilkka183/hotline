@@ -1,9 +1,9 @@
 <template>
   <div>
-    <main class="container" v-if="$store.state.token == null">
+    <b-container v-if="$store.state.token == null">
       <Login />
-    </main>
-    <main class="container-fluid" v-else>
+    </b-container>
+    <b-container fluid v-else>
       <h2>Avoimet vikatapaukset</h2>
       <router-link class="btn btn-primary mb-2" to="/new-problem">Lisää uusi</router-link>
       <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
@@ -11,7 +11,7 @@
       <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
       <h2>Ilmoitukset</h2>
       <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid> 
-    </main>
+    </b-container>
   </div>
 </template>
 

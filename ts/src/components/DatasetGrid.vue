@@ -10,7 +10,7 @@
         :per-page="dataset.rowsPerPage"
         @change="pageChanged"
       />
-      <b-navbar-text :colspan="fields.length">{{rowCount}} riviä</b-navbar-text>
+      <b-nav-text :colspan="fields.length">{{rowCount}} riviä</b-nav-text>
     </b-navbar>
     <table class="table">
       <thead>

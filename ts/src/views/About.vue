@@ -1,7 +1,7 @@
 <template>
-  <main class="container">
+  <b-container>
     <h2>Tietoja sovelluksesta</h2>
-  </main>
+  </b-container>
 </template>
 
 <script  lang="ts">

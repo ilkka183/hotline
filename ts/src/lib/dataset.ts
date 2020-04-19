@@ -107,6 +107,10 @@ export abstract class Field {
     return this.readonly;
   }
 
+  get isRequired(): boolean {
+    return this.required || this.primaryKey;
+  }
+
   public isNull(row: object): boolean {
     return row[this.name] === null;
   }
@@ -116,7 +120,7 @@ export abstract class Field {
   }
 
   public isValid(row: object): boolean {
-    return this.required ? !this.isNullOrEmpty(row) : true;
+    return this.isRequired ? !this.isNullOrEmpty(row) : true;
   }
 
   value(row: object): any {
@@ -379,8 +383,9 @@ class TextField extends StringField {
 
 export abstract class Dataset {
   public readonly database: RestDatabase;  
-  public fields: any = {};
-  public model: any = null;
+  public fields: object = {};
+  public fixedValues: object = {};
+//  public model: any = null;
   public autoFocusField: Field | null = null;
 
   constructor(database: RestDatabase) {
@@ -456,13 +461,20 @@ export abstract class Dataset {
       row[field.name] = value;
     }
 
+    console.log('Fixed', this.fixedValues);
+
+    for (const name in this.fixedValues) {
+      console.log('Fixed', name, this.fixedValues[name]);
+      row[name] = this.fixedValues[name];
+    }
+
     this.initialize(row);
 
     return row;
   }
 
   protected initialize(row: object) {
-    // Do nothing
+    //
   }
 
   public static copyRow(row: object) {
@@ -530,7 +542,8 @@ export abstract class Dataset {
 
 export enum EditState {
   Add,
-  Edit
+  Edit,
+  Open
 }
 
 

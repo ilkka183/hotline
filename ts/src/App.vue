@@ -49,11 +49,11 @@ h2 {
   margin-bottom: 20px !important;
 }
 
-.navbar {
-  margin-bottom: 20px;
+form {
+  margin-bottom: 30px;
 }
 
-.form {
-  margin-bottom: 30px;
+.navbar {
+  margin-bottom: 20px;
 }
 </style>

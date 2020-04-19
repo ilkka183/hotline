@@ -142,7 +142,7 @@ CREATE TABLE Problem
   Model VARCHAR(80),
   ModelYear SMALLINT UNSIGNED,
   Fuel SMALLINT UNSIGNED, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
-  EngineDisplacement SMALLINT UNSIGNED,
+  EngineSize SMALLINT UNSIGNED,
   EngineCode VARCHAR(10),
   VIN VARCHAR(20),
   MID VARCHAR(10),
@@ -174,13 +174,13 @@ CREATE TABLE ProblemAttachment
 
 CREATE TABLE ProblemReply
 (
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   ProblemId BIGINT UNSIGNED NOT NULL,
-  Id INTEGER UNSIGNED NOT NULL,
   UserId BIGINT UNSIGNED NOT NULL,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Message TEXT NOT NULL,
   Data JSON,
-  PRIMARY KEY (ProblemId, Id),
+  PRIMARY KEY (Id),
   FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
   FOREIGN KEY (UserId) REFERENCES User(Id)
 );
@@ -188,8 +188,7 @@ CREATE TABLE ProblemReply
 
 CREATE TABLE ProblemReplyAttachment
 (
-  ProblemId BIGINT UNSIGNED NOT NULL,
-  ReplyId INTEGER UNSIGNED NOT NULL,
+  ReplyId BIGINT UNSIGNED NOT NULL,
   Id INTEGER UNSIGNED NOT NULL,
   FileName VARCHAR(80) NOT NULL,
   FileType VARCHAR(80) NOT NULL,
@@ -197,9 +196,8 @@ CREATE TABLE ProblemReplyAttachment
   Content LONGBLOB NOT NULL,
   Description TEXT,
   Data JSON,
-  PRIMARY KEY (ProblemId, ReplyId, Id),
-  FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
-  FOREIGN KEY (ProblemId, ReplyId) REFERENCES ProblemReply(ProblemId, Id)
+  PRIMARY KEY (ReplyId, Id),
+  FOREIGN KEY (ReplyId) REFERENCES ProblemReply(Id)
 );
 
 
@@ -254,24 +252,24 @@ INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(1, 1, 2, 'Kään
 INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(1, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 2005, 0, 'ISI-560', 'ABC', '123', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(2, 1, 3, 'Vaihda jarrulevyt');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
 
 
 INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(2, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 1, 1, 'Aja tarkemmin');
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 2, 2, 'Tarkista renkaiden ilmanpaineet');
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(3, 3, 3, 'Käytä huollossa');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 1, 'Aja tarkemmin');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 2, 'Tarkista renkaiden ilmanpaineet');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 3, 'Käytä huollossa');
 
 
 INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(2, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Kulkee huonosti', 'Auto ei kulje hyvin.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(4, 1, 1, 'Käytä huollossa');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(4, 1, 'Käytä huollossa');
 
 
 INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(3, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.', 0);
 
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(5, 1, 1, 'Vaihda vetonivelet');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');

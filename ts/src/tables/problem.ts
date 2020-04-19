@@ -46,6 +46,7 @@ export class ProblemTable extends BaseTable {
 
   protected initialize(row: object) {
     super.initialize(row);
+
     row['UserId'] = this.user.id;
   }
 
@@ -86,30 +87,37 @@ export class ProblemTable extends BaseTable {
 
 
 export class ProblemReplyTable extends BaseTable {
-  private readonly user: User;
-  private readonly problemId: any;
+  private user: User;
   
-  constructor(database: RestDatabase, user: User, problemId: any) {
+  constructor(database: RestDatabase, user: User, problemId: number) {
     super(database, 'ProblemReply');
 
     this.user = user;
-    this.problemId = problemId;
+    this.fixedValues = { ProblemId: problemId };
+
+    console.log(this.fixedValues);
 
     let sql =
-      'SELECT ProblemReply.ProblemId, ProblemReply.Id, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
+      'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
       'FROM ProblemReply, User ' +
       'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + problemId;
 
-    sql += ' ORDER BY ProblemReply.ProblemId, ProblemReply.Id';
+    sql += ' ORDER BY ProblemReply.Date';
 
     this.SQL = sql;
 
-    this.addIntegerField({ name: 'ProblemId', caption: 'Vikatapaus No', primaryKey: true, hideInGrid: true });
-    this.addIntegerField({ name: 'Id', caption: 'Vastaus No', primaryKey: true, hideInGrid: true });
+    this.addAutoIncrementField({ name: 'Id', caption: 'Vastaus No', hideInGrid: true });
+    this.addIntegerField({ name: 'ProblemId', caption: 'Vikatapaus No', primaryKey: true, hideInGrid: true, readonly: true });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addTextField({ name: 'Message', caption: 'Viesti', required: true });
+  }
+
+  protected initialize(row: object) {
+    super.initialize(row);
+
+    row['UserId'] = this.user.id;
   }
 
   protected getListCaption(): string {

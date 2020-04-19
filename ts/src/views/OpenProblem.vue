@@ -1,31 +1,39 @@
 <template>
-  <div>
+  <b-container>
+
     <h2>Vikatapaus</h2>
-    <div class="buttons">
-      <button @click="editRow">Muokkaa</button>
-      <button @click="deleteRow">Poista</button>
+    <div class="mb-2">
+      <b-button variant="primary" class="mr-2" @click="editRow">Muokkaa</b-button>
+      <b-button variant="danger" class="float-right" @click="deleteRow">Poista</b-button>
     </div>
+    <b-alert variant="danger" fade show v-if="errorMessage">
+      <div>{{ errorMessage }}</div>
+    </b-alert>
+
     <template v-if="row">
-      <table>
-        <tr><td>No:</td><td>{{ row.Id }}</td></tr>
-        <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
-        <tr><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
-        <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
-        <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
-        <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
-        <tr><td>Vuosimalli:</td><td>{{ table.fields.ModelYear.displayText(row) }}</td></tr>
-        <tr><td>Käyttövoima:</td><td>{{ table.fields.Fuel.displayText(row) }}</td></tr>
-        <tr><td>Tila:</td><td>{{ table.fields.Status.displayText(row) }}</td></tr>
-      </table>
+      <b-table-simple borderless small>
+        <b-tbody>
+          <tr><td>No:</td><td>{{ row.Id }}</td></tr>
+          <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
+          <tr><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
+          <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
+          <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
+          <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
+          <tr><td>Vuosimalli:</td><td>{{ table.fields.ModelYear.displayText(row) }}</td></tr>
+          <tr><td>Käyttövoima:</td><td>{{ table.fields.Fuel.displayText(row) }}</td></tr>
+          <tr><td>Tila:</td><td>{{ table.fields.Status.displayText(row) }}</td></tr>
+        </b-tbody>
+      </b-table-simple>
+
       <h2 class="title">{{ row.Title }}</h2>
       <p class="decription">{{ row.Description }}</p>
+
       <h2>Vastaukset</h2>
       <DatasetGrid :dataset="replies" :showFooter="false"></DatasetGrid>
     </template>
-    <div class="buttons">
-      <button class="default" @click="close">Sulje</button>
-    </div>
-  </div>
+
+    <b-button variant="primary" class="mr-2" @click="close">Sulje</b-button>
+  </b-container>
 </template>
 
 <script  lang="ts">
@@ -42,17 +50,20 @@ import BaseVue from './BaseVue.vue';
 })
 export default class OpenProblem extends BaseVue {
   private table: any;
-  private replies: any;
+  private replies: ProblemReplyTable;
   private row: object | null = null;
+  private errorMessage: string = null;
 
   created() {
     this.table = new ProblemTable(this.database, this.user);
   }
 
   async mounted() {
+    const id = Number(this.$route.query.Id);
+
     await this.table.findLookupLists();
     this.row = await this.table.getRow(this.$route.query);
-    this.replies = new ProblemReplyTable(this.database, this.user, this.$route.query['Id']);
+    this.replies = new ProblemReplyTable(this.database, this.user, id);
   }
 
   private editRow() {
@@ -60,10 +71,19 @@ export default class OpenProblem extends BaseVue {
     this.$router.push({ path: this.table.tableName, query });
   }
 
+  private sqlError(error) {
+    this.errorMessage = error.response.data.sqlMessage;
+  }
+
   private async deleteRow() {
     if (this.table.confirmDeleteRow(this.row)) {
-      await this.table.deleteRow(this.row);
-      this.close();
+      try {
+        await this.table.deleteRow(this.row);
+        this.close();
+      }
+      catch (e) {
+        this.sqlError(e);
+      }
     }
   }
 

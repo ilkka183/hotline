@@ -6,7 +6,7 @@
         <div class="col-sm-2 col-form-label col-form-label-sm">
           <div v-if="field.showDialogCaption()">
             <span :class="{ missing: isMissing(field)}">{{ field.caption }}:</span>
-            <span v-if="field.required && !field.isReadOnly" class="required-asterix"></span>
+            <span v-if="field.isRequired && !field.isReadOnly" class="required-asterix"></span>
           </div>
         </div>
         <div class="col-sm-10">
@@ -27,12 +27,12 @@
         <b-button variant="light" class="mr-2" @click="cancel">Peru</b-button>
         <b-button variant="danger" class="float-right" v-if="isEditing" @click="confirmDelete">Poista</b-button>
       </div>
-      <div class="alert alert-danger alert-dismissible fade show" v-if="missingValues">
+      <b-alert variant="danger" fade show v-if="missingValues">
         <div>Punaisella merkityt kentät puuttuvat!</div>
-      </div>
-      <div class="alert alert-danger alert-dismissible fade show" v-if="errorMessage">
+      </b-alert>
+      <b-alert variant="danger" fade show v-if="errorMessage">
         <div>{{ errorMessage }}</div>
-      </div>
+      </b-alert>
     </form>
   </div>
 </template>

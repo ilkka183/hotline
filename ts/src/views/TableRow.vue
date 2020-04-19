@@ -1,7 +1,7 @@
 <template>
-  <main class="container">
+  <b-container>
     <TableDialog :table="table" :state="state" :query="query"></TableDialog>
-  </main>
+  </b-container>
 </template>
 
 <script  lang="ts">
@@ -18,15 +18,27 @@ import { SqlTable } from '../lib/sql-dataset';
 export default class TableRow extends Vue {
   @Prop({ type: Object, required: true }) readonly table: SqlTable;
 
-  get query() {
-    return this.$route.query;
+  private state: EditState = EditState.Open;
+
+  mounted() {
+    switch (this.$route.params.state) {
+      case "add":
+        this.state = EditState.Add;
+        this.table.fixedValues = this.$route.query;
+        break;
+
+      case "edit":
+        this.state = EditState.Edit;
+        break;
+
+      case "open":
+        this.state = EditState.Open;
+        break;
+    }
   }
 
-  get state(): EditState {
-    if (Object.keys(this.query).length > 0)
-      return EditState.Edit;
-    else
-      return EditState.Add;
+  get query() {
+    return this.$route.query;
   }
 }
 </script>

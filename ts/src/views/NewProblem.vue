@@ -130,7 +130,6 @@ export default class NewProblem extends BaseVue {
     this.ready = true;
 
     this.row.UserId = 1;
-    this.row.Type = 0;
 
 //    if (includeRegistrationNumber)
 //      this.row.LicenseNumber = this.licenseNumber;

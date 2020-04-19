@@ -219,16 +219,16 @@ export abstract class SqlTable extends SqlDataset {
 
   public navigateAdd(router: any) {
     console.log(this.tableName);
-    router.push(this.tableName);
-  }
-
-  public navigateOpen(router: any, row: object) {
-    const query = this.primaryKeys(row);
-    router.push({ path: this.tableName, query });
+    router.push({ path: 'add/' + this.tableName, query: this.fixedValues });
   }
 
   public navigateEdit(router: any, row: object) {
     const query = this.primaryKeys(row);
-    router.push({ path: this.tableName, query });
+    router.push({ path: 'edit/' + this.tableName, query });
+  }
+
+  public navigateOpen(router: any, row: object) {
+    const query = this.primaryKeys(row);
+    router.push({ path: 'open/' + this.tableName, query });
   }
 }
