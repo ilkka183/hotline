@@ -14,21 +14,9 @@ export class ProblemTable extends BaseTable {
   
   constructor(database: RestDatabase, user: User, filter: ProblemFilter = {}) {
     super(database, 'Problem');
+    this.custom = 'Problems';
 
     this.user = user;
-
-    let sql =
-      'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
-      'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
-      'FROM Problem, User ' +
-      'WHERE Problem.UserId = User.Id';
-
-    if (filter.status)
-      sql += ' AND Problem.Status = ' + filter.status;
-
-    sql += ' ORDER BY Problem.Id';
-
-    this.SQL = sql;
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
@@ -91,20 +79,12 @@ export class ProblemReplyTable extends BaseTable {
   
   constructor(database: RestDatabase, user: User, problemId: number) {
     super(database, 'ProblemReply');
+    this.custom = 'ProblemReplies';
 
     this.user = user;
+
     this.fixedValues = { ProblemId: problemId };
-
     console.log(this.fixedValues);
-
-    let sql =
-      'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
-      'FROM ProblemReply, User ' +
-      'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + problemId;
-
-    sql += ' ORDER BY ProblemReply.Date';
-
-    this.SQL = sql;
 
     this.addAutoIncrementField({ name: 'Id', caption: 'Vastaus No', hideInGrid: true });
     this.addIntegerField({ name: 'ProblemId', caption: 'Vikatapaus No', primaryKey: true, hideInGrid: true, readonly: true });

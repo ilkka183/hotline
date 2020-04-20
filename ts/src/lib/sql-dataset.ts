@@ -33,13 +33,12 @@ export abstract class SqlDataset extends Dataset
 
 export abstract class SqlTable extends SqlDataset {
   private readonly name: string;
-  private sql: string;
+  private sql: string = null;
+  protected custom: string = null;
   
   constructor(database: RestDatabase, name: string) {
     super(database);
-
     this.name = name;
-    this.sql = '';
   }
 
   protected set SQL(value) {
@@ -83,59 +82,54 @@ export abstract class SqlTable extends SqlDataset {
     return row;
   }
 
-  private async getQueryRows(pageNumber = 1) {
+  private async fetchRows(url: string, pageNumber: number, separator: string) {
+    url += separator + 'limit=' + this.rowsPerPage;
+
+    if (pageNumber > 1)
+      url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
+
+    console.log('GET ' + url);
+
+    const response = await this.axios.get(url)
+    const rows = [];
+
+    for (const source of response.data.rows) {
+      const row: object = {};
+
+      for (const key in source)
+        row[key] = source[key];
+
+      rows.push(row);
+    }
+
+    return { rowCount: response.data.rowCount, rows }
+  }
+
+  private getCustomRows(pageNumber: number) {
+    const url = '/custom/' + this.custom;
+
+    return this.fetchRows(url, pageNumber, '?');
+  }
+
+  private async getQueryRows(pageNumber: number) {
     let url = '/query/rows';
     url += '?table=' + this.tableName;
     url += '&sql=' + this.sql;
-    url += '&limit=' + this.rowsPerPage;
 
-    if (pageNumber > 1)
-       url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
-
-    console.log('GET ' + url);
-
-    const response = await this.axios.get(url)
-    const rows = [];
-
-    for (const source of response.data.rows) {
-      const row: object = {};
-
-      for (const key in source) {
-        row[key] = source[key];
-      }
-
-      rows.push(row);
-    }
-
-    return { rowCount: response.data.rowCount, rows }
+    return this.fetchRows(url, pageNumber, '&');
   }
   
-  private async getTableRows(pageNumber = 1) {
-    let url = this.url + '/rows?limit=' + this.rowsPerPage;
+  private async getTableRows(pageNumber: number) {
+    let url = this.url + '/rows';
+    url += '?table=' + this.tableName;
 
-    if (pageNumber > 1)
-       url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
-
-    console.log('GET ' + url);
-
-    const response = await this.axios.get(url)
-    const rows = [];
-
-    for (const source of response.data.rows) {
-      const row: object = {};
-
-      for (const key in source) {
-        row[key] = source[key];
-      }
-
-      rows.push(row);
-    }
-
-    return { rowCount: response.data.rowCount, rows }
+    return this.fetchRows(url, pageNumber, '&');
   }
 
   public async getRows(pageNumber = 1) {
-    if (this.sql)
+    if (this.custom)
+      return this.getCustomRows(pageNumber);
+    else if (this.sql)
       return this.getQueryRows(pageNumber);
     else
       return this.getTableRows(pageNumber);

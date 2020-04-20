@@ -3,14 +3,14 @@ import Vuex from "vuex";
 import axios from "axios";
 import { RestDatabase } from '../lib/dataset';
 import jwtDecode from 'jwt-decode';
-import { User } from '../js/user'
+import { apiUrl } from '../config.json';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     database: new RestDatabase(axios.create({
-      baseURL: 'http://localhost:3000/api/',
+      baseURL: apiUrl,
       timeout: 1000
     })),
     token: null,
@@ -43,5 +43,11 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    axios: state=> {
+      return state.database.axios;
+    },
+    fullName: state=> {
+      return state.user ? state.user.firstName + ' ' + state.user.lastName : '';
+    }
   }
 });

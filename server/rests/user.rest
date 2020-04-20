@@ -1,6 +1,8 @@
-GET http://localhost:3000/api/query
-###
-GET http://localhost:3000/api/Client/1
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGdtYWlsLmNvbSIsInBob25lIjoiMDUwIDYxNjk4IiwidHlwZSI6MCwiaWF0IjoxNTg1OTA2NzU0fQ.BkPUrYebgt5fSlwC73mrj2Vxe8bIJYPgTWJ6VGwZEcs
+
+GET {{host}}/api/table/User/row?Id=1
+x-auth-token: {{token}}
 ###
 GET http://localhost:3000/api/sql
 content-type: application/json

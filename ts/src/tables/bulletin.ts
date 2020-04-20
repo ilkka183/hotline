@@ -5,8 +5,7 @@ import { BaseTable } from './base';
 export class BulletinGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
     super(database, 'BulletinGroup');
-
-    this.SQL = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
+    this.custom = 'BulletinGroups';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 80, required: true });

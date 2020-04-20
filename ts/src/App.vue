@@ -17,7 +17,7 @@
           <b-nav-item to="/about">Tietoja</b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto" v-if="$store.state.token">
-          <b-nav-item-dropdown :text="$store.state.user.firstName" right>
+          <b-nav-item-dropdown :text="$store.getters.fullName" right>
             <b-nav-item to="/account">Omat tiedot</b-nav-item>
           </b-nav-item-dropdown>
           <b-nav-item to="/"><span @click="logout">Kirjaudu ulos</span></b-nav-item>

@@ -58,9 +58,18 @@ export default class UserInfo extends BaseVue {
   private changePasswordSuccess: string = null;
   private changePasswordError: string = null;
 
-  mounted() {
-    if (this.user)
-      this.phone = this.user.phone;
+  async mounted() {
+    if (this.user) {
+      console.log(this.user);
+
+      const { data } = await this.$store.getters.axios.get('/table/User/row?Id=' + this.user.id);
+
+      if (data.length > 0) {
+        const row = data[0]; 
+
+        this.phone = row.Phone;
+      }
+    }
   }
 
   private async update(fields: object) {

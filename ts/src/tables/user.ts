@@ -6,13 +6,7 @@ import { User } from '../js/user';
 export class UserGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
     super(database, 'UserGroup');
-
-    this.SQL =
-      'SELECT Id, Name, ' +
-      'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
-      'Logo, Info, Enabled ' +
-      'FROM UserGroup ' +
-      'ORDER BY Id';
+    this.custom = 'UserGroups';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 40, required: true });
@@ -43,15 +37,7 @@ export class UserGroupTable extends BaseTable {
 export class UserTable extends BaseTable {
   constructor(database: RestDatabase) {
     super(database, 'User');
-
-    this.SQL =
-      'SELECT User.Id, User.GroupId, User.Username, User.Password, ' + 
-      'UserGroup.Name AS GroupName, User.Role, User.FirstName, User.LastName, User.Title, ' +
-      'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Email, User.Website, ' +
-      'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
-      'FROM User, UserGroup ' +
-      'WHERE User.GroupId = UserGroup.Id ' +
-      'ORDER BY User.Id';
+    this.custom = 'Users';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM UserGroup", hideInGrid: true, foreignKey: true, required: true });

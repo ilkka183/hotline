@@ -8,14 +8,9 @@ export class NoticeTable extends BaseTable {
 
   constructor(database: RestDatabase, user: User) {
     super(database, 'Notice');
+    this.custom = 'Notices';
 
     this.user = user;
-
-    this.SQL =
-      'SELECT Notice.Id, Notice.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Notice.Title, Notice.Message ' +
-      'FROM Notice, User ' +
-      'WHERE Notice.UserId = User.Id ' +
-      'ORDER BY Notice.Id';
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });

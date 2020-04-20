@@ -1,3 +1,4 @@
-@host = http://localhost:3000
+//@host = http://localhost:3000
+@host = http://suorita.com
 
-GET {{host}}/api/data/brands
+GET {{host}}/hotline/api/data/brands

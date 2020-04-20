@@ -37,7 +37,7 @@ router.post('/', (req, res) => {
 
     console.log(payload);
 
-    const token = jwt.sign(payload, process.env.hotline_jwtPrivateKey);
+    const token = jwt.sign(payload, 'ohion330' /*process.env.hotline_jwtPrivateKey*/);
     res.send(token);
   });
 });

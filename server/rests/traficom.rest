@@ -1,9 +1,10 @@
-@host = http://localhost:3000
+//@host = http://localhost:3000
+@host = http://suorita.com
 
-GET {{host}}/api/traficom/ZLP-833
+GET {{host}}/hotline/api/traficom/ZLP-833
 ###
-GET {{host}}/api/traficom/ISI-560
+GET {{host}}/hotline/api/traficom/ISI-560
 ###
-GET {{host}}/api/traficom/SIO-913
+GET {{host}}/hotline/api/traficom/SIO-913
 ###
 GET http://www.rekisterinumeroapi.com/api/reg.asmx/CheckFinland?RegistrationNumber=SIO-913&username=ilkka183

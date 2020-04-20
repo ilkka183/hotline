@@ -25,10 +25,15 @@
 */
 
 
-DROP DATABASE hotline1;
-CREATE DATABASE hotline1 CHARACTER SET utf8mb4;
-CONNECT hotline1;
+DROP DATABASE suoritac_hotline1;
+CREATE DATABASE suoritac_hotline1 CHARACTER SET utf8mb4;
+CONNECT suoritac_hotline1;
 SET NAMES 'utf8';
+
+
+DROP USER 'suoritac_root'@'localhost';
+CREATE USER 'suoritac_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
+GRANT ALL PRIVILEGES ON *.* TO 'suoritac_root'@'localhost';
 
 
 CREATE TABLE UserGroup

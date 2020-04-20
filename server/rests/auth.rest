@@ -1,10 +1,12 @@
-@host = http://localhost:3000
+//@host = http://localhost:3000
+@host = http://suorita.com
+
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGdtYWlsLmNvbSIsInBob25lIjoiMDUwIDYxNjk4IiwidHlwZSI6MCwiaWF0IjoxNTg1OTA2NzU0fQ.BkPUrYebgt5fSlwC73mrj2Vxe8bIJYPgTWJ6VGwZEcs
 
-GET {{host}}/api/auth/me
+GET {{host}}/hotline/api/auth/me
 x-auth-token: {{token}}
 ###
-POST {{host}}/api/auth
+POST {{host}}/hotline/api/auth
 content-type: application/json
 
 {

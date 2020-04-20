@@ -38,5 +38,4 @@ router.get('/rows', (req, res) => {
   });
 });
 
-
 module.exports = router;
