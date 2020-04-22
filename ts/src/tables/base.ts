@@ -10,8 +10,8 @@ export abstract class BaseTable extends SqlTable {
     'sähkö'
   ];
 
-  constructor(database: RestDatabase, name: string) {
-    super(database, name);
+  constructor(database: RestDatabase, name: string, customApi: string, filter: object = null) {
+    super(database, name, customApi, filter);
   }
   
   protected addAddressFields(emailRequired: boolean) {

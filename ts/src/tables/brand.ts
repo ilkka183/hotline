@@ -4,8 +4,7 @@ import { BaseTable } from './base';
 
 export class BrandTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'Brand');
-    this.custom = 'Brands';
+    super(database, 'Brand', 'Brands');
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 80, required: true });

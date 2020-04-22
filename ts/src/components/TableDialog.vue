@@ -13,9 +13,7 @@
           <input class="form-control form-control-sm shadow-none" v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }" :value="field.displayText(row)" readonly>
           <input class="form-control form-control-sm" v-else-if="field.dialogInputType() == 'text'" type="text" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
           <textarea class="form-control" v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :rows="field.getRows()"></textarea>
-          <select class="form-control" v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
-            <option v-for="option in field.lookupList" :key="option.value" :value="option.value">{{option.text}}</option>
-          </select>
+          <b-form-select class="form-control" v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" :options="field.lookup.options" v-model="row[field.name]" />
           <div class="form-check" v-else-if="field.dialogInputType() == 'checkbox'">
             <input class="form-check-input" type="checkbox" :ref="field.name" :id="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
             <label class="form-check-label" for="field.name">{{ field.caption }}</label>
@@ -82,7 +80,7 @@ export default class TableDialog extends Vue {
   }
 
   async mounted() {
-    await this.table.findLookupLists();
+    await this.table.fetchLookups();
     await this.getRow();
 
     const list = document.getElementsByTagName('input');

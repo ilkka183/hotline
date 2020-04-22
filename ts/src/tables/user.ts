@@ -5,8 +5,7 @@ import { User } from '../js/user';
 
 export class UserGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'UserGroup');
-    this.custom = 'UserGroups';
+    super(database, 'UserGroup', 'UserGroups');
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 40, required: true });
@@ -36,13 +35,12 @@ export class UserGroupTable extends BaseTable {
 
 export class UserTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'User');
-    this.custom = 'Users';
+    super(database, 'User', 'Users');
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
-    this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupSQL: "SELECT Id, Name AS Text FROM UserGroup", hideInGrid: true, foreignKey: true, required: true });
+    this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupApi: 'UserGroups', hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
-    this.addIntegerField({ name: 'Role', caption: 'Rooli', displayTexts: User.typeTexts, required: true });
+    this.addIntegerField({ name: 'Role', caption: 'Rooli', enumTexts: User.typeTexts, required: true });
     this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: true, required: true });
     this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: true, required: true });
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });

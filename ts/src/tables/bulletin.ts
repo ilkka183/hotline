@@ -4,8 +4,7 @@ import { BaseTable } from './base';
 
 export class BulletinGroupTable extends BaseTable {
   constructor(database: RestDatabase) {
-    super(database, 'BulletinGroup');
-    this.custom = 'BulletinGroups';
+    super(database, 'BulletinGroup', 'BulletinGroups');
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 80, required: true });

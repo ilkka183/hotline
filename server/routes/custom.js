@@ -74,26 +74,25 @@ router.get('/BulletinGroups', (req, res) => {
 });
 
 router.get('/Problems', (req, res) => {
-  const status = 0;
-
   let sql =
     'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
     'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
     'FROM Problem, User ' +
-    'WHERE Problem.UserId = User.Id ' +
-    'AND Problem.Status = ' + status + ' ' +
-    'ORDER BY Problem.Id';
+    'WHERE Problem.UserId = User.Id ';
+
+  if (req.query.status)
+    sql += 'AND Problem.Status = ' + req.query.status + ' ';
+
+  sql += 'ORDER BY Problem.Id';
 
   fetch('Problem', sql, req, res);
 });
 
 router.get('/ProblemReplies', (req, res) => {
-  const problemId = 1;
-  
   let sql =
     'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
     'FROM ProblemReply, User ' +
-    'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + problemId + ' ' +
+    'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + req.query.ProblemId + ' ' +
     'ORDER BY ProblemReply.Date';
 
   fetch('ProblemReply', sql, req, res);

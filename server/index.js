@@ -21,8 +21,8 @@ if (!process.env.hotline_jwtPrivateKey) {
 const port = 3000;
 //const port = 0;
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use('/hotline/api/auth', auth);
 app.use('/hotline/api/data', data);
 app.use('/hotline/api/lookup', lookup);
@@ -30,6 +30,11 @@ app.use('/hotline/api/custom', custom);
 app.use('/hotline/api/query', query);
 app.use('/hotline/api/table', table);
 app.use('/hotline/api/traficom', traficom);
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+  next();
+});
 
 const connection = require('./connection');
 connection.connect();

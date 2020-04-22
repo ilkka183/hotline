@@ -7,14 +7,13 @@ export class NoticeTable extends BaseTable {
   private user: User;
 
   constructor(database: RestDatabase, user: User) {
-    super(database, 'Notice');
-    this.custom = 'Notices';
+    super(database, 'Notice', 'Notices');
 
     this.user = user;
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
-    this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupSQL: "SELECT Id, CONCAT(FirstName, ' ', LastName) AS Text FROM User", hideInGrid: true, foreignKey: true, readonly: true, required: true });
+    this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupApi: 'Users', hideInGrid: true, foreignKey: true, readonly: true, required: true });
     this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
     this.addTextField({ name: 'Message', caption: 'Viesti', required: true });

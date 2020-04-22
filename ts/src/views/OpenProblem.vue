@@ -61,14 +61,14 @@ export default class OpenProblem extends BaseVue {
   async mounted() {
     const id = Number(this.$route.query.Id);
 
-    await this.table.findLookupLists();
+    await this.table.fetchLookups();
     this.row = await this.table.getRow(this.$route.query);
     this.replies = new ProblemReplyTable(this.database, this.user, id);
   }
 
   private editRow() {
     const query = this.table.primaryKeys(this.row);
-    this.$router.push({ path: this.table.tableName, query });
+    this.$router.push({ path: 'edit/' + this.table.tableName, query });
   }
 
   private sqlError(error) {

@@ -7,7 +7,6 @@ import { BulletinGroupTable } from '@/tables/bulletin';
 import { UserTable, UserGroupTable } from '@/tables/user';
 import { NoticeTable } from '@/tables/notice';
 import { ProblemTable, ProblemReplyTable } from '@/tables/problem';
-import { VehicleTable } from '@/tables/vehicle';
 import store from '@/store/index';
 import { RestDatabase } from '@/lib/dataset';
 

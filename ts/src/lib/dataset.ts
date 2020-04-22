@@ -7,6 +7,39 @@ export enum TextAlign {
 }
 
 
+class Lookup {
+  private field: Field;
+  private api: string = null;
+  private options: any[] = null;
+
+  constructor(field: Field) {
+    this.field = field;
+  }
+
+  public setApi(value: string) {
+    this.api = value;
+  }
+
+  public setOptions(value: any[]) {
+    this.options = value;
+  }
+
+  public findText(value: any): string {
+    if (this.options && (value !== null) && (value !== undefined))
+      for (const option of this.options)
+        if (option.value == value)
+          return option.text;
+
+    return null;
+  }
+
+  async fetchApiOptions() {
+    if (!this.options && this.field.dataset && this.api)
+      this.options = await this.field.dataset.fetchLookupOptions(this.api);
+  }  
+}
+
+
 interface FieldParams {
   name: string;
   caption: string;
@@ -18,7 +51,7 @@ interface FieldParams {
   foreignKey?: boolean;
   readonly?: boolean;
   required?: boolean;
-  lookupSQL?: string;
+  lookupApi?: string;
   onCellColor?: any;
 }
 
@@ -34,8 +67,7 @@ export abstract class Field {
   public foreignKey = false;
   public readonly = false;
   public required = false;
-  public lookupList: any = null;
-  public lookupSQL = '';
+  public lookup: Lookup = null;
   public onCellColor: any = null;
 
   constructor(params: FieldParams) {
@@ -54,8 +86,8 @@ export abstract class Field {
     if (params.hideInGrid)
       this.hideInGrid = params.hideInGrid;
 
-    if (params.lookupSQL)
-      this.lookupSQL = params.lookupSQL;
+    if (params.lookupApi)
+      this.createLookup().setApi(params.lookupApi);
 
     if (params.primaryKey)
       this.primaryKey = params.primaryKey;
@@ -71,6 +103,13 @@ export abstract class Field {
 
     if (params.onCellColor)
       this.onCellColor = params.onCellColor;
+  }
+
+  protected createLookup() {
+    if (!this.lookup)
+      this.lookup = new Lookup(this);
+
+    return this.lookup;
   }
 
   get database(): RestDatabase | null {
@@ -127,8 +166,15 @@ export abstract class Field {
     return row[this.name];
   }
 
-  displayText(row: object): string {
-    return row[this.name];
+  public displayText(row: object): string {
+    if (this.lookup)
+      return this.lookup.findText(row[this.name]);
+
+    return this.getDisplayText(row[this.name]);
+  }
+
+  protected getDisplayText(value: any): string {
+    return value;
   }
 
   cellColor(row: object) {
@@ -143,30 +189,10 @@ export abstract class Field {
   }
 
   dialogInputType(): string {
-    if (this.hasLookup)
+    if (this.lookup)
       return 'select';
     else
       return 'text';
-  }
-
-  get hasLookup(): boolean {
-    return this.lookupList || this.lookupSQL;
-  }
-
-  async findLookupText(value: any) {
-    if (this.lookupList && value !== null)
-      return this.lookupList[value].text;
-    else if (this.dataset && this.lookupSQL)
-      return await this.dataset.getLookupText(this.lookupSQL, value);
-
-    return undefined;
-  }
-
-  async findLookupList() {
-    if (!this.lookupList && this.dataset && this.lookupSQL)
-      this.lookupList = await this.dataset.getLookupList(this.lookupSQL);
-
-    return this.lookupList;
   }
 }
 
@@ -198,8 +224,8 @@ class BooleanField extends Field {
     return Boolean;
   }
 
-  displayText(row: object): string {
-    if (row[this.name])
+  protected getDisplayText(value: any): string {
+    if (value)
       return 'kyllä';
     else
       return 'ei';
@@ -224,9 +250,7 @@ class DateField extends Field {
     return Date;
   }
 
-  displayText(row: object): string {
-    const value = row[this.name];
-
+  protected getDisplayText(value): string {
     if (value) {
       const date = new Date(value);
       return this.toDisplayString(date);
@@ -261,36 +285,25 @@ class DateTimeField extends DateField {
 
 
 interface IntegerFieldParams extends FieldParams {
-  displayTexts?: string[];
+  enumTexts?: string[];
 }
 
 class IntegerField extends Field {
   constructor(params: IntegerFieldParams) {
     super(params);
 
-    if (params.displayTexts) {
-      const list = {};
+    if (params.enumTexts) {
+      const options = [];
 
-      for (const index in params.displayTexts)
-        list[index] = params.displayTexts[index];
+      for (const value in params.enumTexts)
+        options.push({ value, text: params.enumTexts[value] });
 
-      this.lookupList = list;
+      this.createLookup().setOptions(options);
     }
   }
 
   public getType(): any {
     return Number;
-  }
-
-  displayText(row: object): string {
-    if (this.lookupList) {
-      const key = row[this.name];
-
-      if ((key !== null) && (key !== undefined))
-        return this.lookupList[key];
-    }
-
-    return super.displayText(row);
   }
 }
 
@@ -385,7 +398,6 @@ export abstract class Dataset {
   public readonly database: RestDatabase;  
   public fields: object = {};
   public fixedValues: object = {};
-//  public model: any = null;
   public autoFocusField: Field | null = null;
 
   constructor(database: RestDatabase) {
@@ -530,13 +542,13 @@ export abstract class Dataset {
     return true;
   }
 
-  public async findLookupLists(): Promise<void> {
+  public async fetchLookups() {
     for (const field of this.fieldsAsArray)
-      await field.findLookupList();
+      if (field.lookup)
+        await field.lookup.fetchApiOptions();
   }
 
-  public async abstract getLookupText(sql: string, id: any): Promise<string>;
-  public async abstract getLookupList(sql: string): Promise<any>;
+  public async abstract fetchLookupOptions(api: string): Promise<any>;
 }
 
 

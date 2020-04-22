@@ -82,7 +82,7 @@ CREATE TABLE User
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (GroupId) REFERENCES UserGroup(Id)
+  FOREIGN KEY (GroupId) REFERENCES UserGroup(Id) ON DELETE RESTRICT
 );
 
 
@@ -92,7 +92,7 @@ CREATE TABLE UserLogin
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   IPAddress VARCHAR(40) NOT NULL,
   Data JSON,
-  FOREIGN KEY (UserId) REFERENCES User(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE RESTRICT
 );
 
 
@@ -133,7 +133,7 @@ CREATE TABLE Notice
   Message TEXT NOT NULL,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (UserId) REFERENCES User(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE RESTRICT
 );
 
 
@@ -158,7 +158,7 @@ CREATE TABLE Problem
   Status SMALLINT UNSIGNED NOT NULL DEFAULT 0, /* 0=open, 1=solved, 2=unsolved */
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (UserId) REFERENCES User(Id)
+  FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE RESTRICT
 );
 
 
@@ -173,7 +173,7 @@ CREATE TABLE ProblemAttachment
   Description TEXT,
   Data JSON,
   PRIMARY KEY (ProblemId, Id),
-  FOREIGN KEY (ProblemId) REFERENCES Problem(Id)
+  FOREIGN KEY (ProblemId) REFERENCES Problem(Id) ON DELETE RESTRICT
 );
 
 
@@ -186,8 +186,8 @@ CREATE TABLE ProblemReply
   Message TEXT NOT NULL,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
-  FOREIGN KEY (UserId) REFERENCES User(Id)
+  FOREIGN KEY (ProblemId) REFERENCES Problem(Id) ON DELETE RESTRICT,
+  FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE RESTRICT
 );
 
 
@@ -202,7 +202,7 @@ CREATE TABLE ProblemReplyAttachment
   Description TEXT,
   Data JSON,
   PRIMARY KEY (ReplyId, Id),
-  FOREIGN KEY (ReplyId) REFERENCES ProblemReply(Id)
+  FOREIGN KEY (ReplyId) REFERENCES ProblemReply(Id) ON DELETE RESTRICT
 );
 
 
@@ -213,6 +213,7 @@ INSERT INTO UserGroup(Name, Website) VALUES('Prodiags', 'http://www.prodiags.com
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'arto', 'weber', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg', 'jan.froberg@hmv-systems.fi', 'ATSJanne', 'Kawasaki', NOW() - INTERVAL 1 DAY, NULL);
 
 INSERT INTO Brand(Name) VALUES('SEAT');
 INSERT INTO Brand(Name) VALUES('Volkswagen');

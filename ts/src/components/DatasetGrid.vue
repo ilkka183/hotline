@@ -145,15 +145,15 @@ export default class DatasetGrid extends Vue {
   }
 
   private hasRowAdded(row: object) {
-    return (this.addedData != null) && (this.addedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.addedData.row, row);
+    return this.addedData && (this.addedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.addedData.row, row);
   }
 
   private hasRowEdited(row: object) {
-    return (this.editedData != null) && (this.editedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.editedData.row, row);
+    return this.editedData && (this.editedData.table == this.dataset.tableName) && this.dataset.primaryKeysEquals(this.editedData.row, row);
   }
 
   private hasFieldEdited(row: object, field: Field) {
-    return this.hasRowEdited(row) && (this.savedData.row[field.name] != row[field.name]);
+    return this.hasRowEdited(row) && this.savedData && (this.savedData.row[field.name] != row[field.name]);
   }
 
   private setPageNumber(value: number) {

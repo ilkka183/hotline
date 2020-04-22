@@ -7,42 +7,28 @@ export abstract class SqlDataset extends Dataset
     super(database);
   }
 
-  public async getLookupText(sql: string, id: any) {
-    sql += ' WHERE Id=?';
-
-    const response = await this.axios.get('/lookup/text', { params: { sql, id } });
-
-    if (response.data.length > 0)
-      return response.data[0].Text;
-
-    return undefined;
-  }
-
-  public async getLookupList(sql: string) {
-    sql += ' ORDER BY Text';
-
-    const response = await this.axios.get('/lookup/list', { params: { sql } });
-    const list = {};
+  public async fetchLookupOptions(api: string) {
+    const response = await this.axios.get('/lookup/' + api);
+    const options = [];
 
     for (const item of response.data)
-      list[item.Id] = item.Text;
+      options.push({ value: item.Id, text: item.Text });
 
-    return list;
+    return options;
   }
 }
 
+
 export abstract class SqlTable extends SqlDataset {
   private readonly name: string;
-  private sql: string = null;
-  protected custom: string = null;
+  private readonly customApi: string;
+  private readonly filter: object;
   
-  constructor(database: RestDatabase, name: string) {
+  constructor(database: RestDatabase, name: string, customApi: string, filter: object) {
     super(database);
     this.name = name;
-  }
-
-  protected set SQL(value) {
-    this.sql = value;
+    this.customApi = customApi;
+    this.filter = filter;
   }
 
   public get tableName(): string {
@@ -82,11 +68,18 @@ export abstract class SqlTable extends SqlDataset {
     return row;
   }
 
-  private async fetchRows(url: string, pageNumber: number, separator: string) {
-    url += separator + 'limit=' + this.rowsPerPage;
+  private async fetchRows(url: string, pageNumber: number) {
+    url += '?limit=' + this.rowsPerPage;
 
     if (pageNumber > 1)
       url += '&offset=' + (pageNumber - 1)*this.rowsPerPage;
+
+    for (const name in this.fixedValues)
+      url += '&' + name + '=' + this.fixedValues[name];
+
+    if (this.filter)
+      for (const name in this.filter)
+        url += '&' + name + '=' + this.filter[name];
 
     console.log('GET ' + url);
 
@@ -105,32 +98,21 @@ export abstract class SqlTable extends SqlDataset {
     return { rowCount: response.data.rowCount, rows }
   }
 
-  private getCustomRows(pageNumber: number) {
-    const url = '/custom/' + this.custom;
-
-    return this.fetchRows(url, pageNumber, '?');
-  }
-
-  private async getQueryRows(pageNumber: number) {
-    let url = '/query/rows';
-    url += '?table=' + this.tableName;
-    url += '&sql=' + this.sql;
-
-    return this.fetchRows(url, pageNumber, '&');
-  }
-  
   private async getTableRows(pageNumber: number) {
-    let url = this.url + '/rows';
-    url += '?table=' + this.tableName;
+    const url = '/table/' + this.name + '/rows';
 
-    return this.fetchRows(url, pageNumber, '&');
+    return this.fetchRows(url, pageNumber);
+  }
+
+  private getCustomRows(pageNumber: number) {
+    const url = '/custom/' + this.customApi;
+
+    return this.fetchRows(url, pageNumber);
   }
 
   public async getRows(pageNumber = 1) {
-    if (this.custom)
+    if (this.customApi)
       return this.getCustomRows(pageNumber);
-    else if (this.sql)
-      return this.getQueryRows(pageNumber);
     else
       return this.getTableRows(pageNumber);
   }
