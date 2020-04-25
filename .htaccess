@@ -1,8 +1,0 @@
-# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/suoritac/hotline"
-PassengerBaseURI "/hotline"
-PassengerNodejs "/home/suoritac/nodevenv/hotline/10/bin/node"
-PassengerAppType node
-PassengerStartupFile index.js
-# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
-Header add Access-Control-Allow-Origin *
