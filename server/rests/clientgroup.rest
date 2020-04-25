@@ -1,6 +1,12 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGlraS5maSIsInBob25lIjpudWxsLCJyb2xlIjowLCJpYXQiOjE1ODc4MTA3MTF9.S34etP_fPycmDjNA7qnX_IVY3HyjFGhnTe8bky7mOfY
+
 GET http://localhost:3000/api/ClientGroup?orderBy=Id&sortOrder=ASC
 ###
-GET http://localhost:3000/api/ClientGroup/2
+GET http://suorita.com/hotline/api/custom/UserGroups
+x-auth-token: {{token}}
+###
+GET http://suorita.com/hotline/api/table/UserGroup/row?Id=2
+x-auth-token: {{token}}
 ###
 POST http://localhost:3000/api/ClientGroup
 content-type: application/json

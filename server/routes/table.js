@@ -1,6 +1,5 @@
 const express = require('express');
 const auth = require('../middleware/auth');
-const admin = require('../middleware/admin');
 const connection = require('../connection');
 
 const router = express.Router();
@@ -30,7 +29,7 @@ router.get('/:table/row', auth, (req, res) => {
   connection.query(sql, inserts, (error, results, fields) => {
     if (error) {
       console.log(error);        
-      return res.status(400).send(error);
+      return res.status(400).send(sql);
     }
 
     res.send(results);

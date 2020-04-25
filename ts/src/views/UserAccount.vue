@@ -73,7 +73,7 @@ export default class UserInfo extends BaseVue {
   }
 
   private async update(fields: object) {
-    const url = '/table/user';
+    const url = '/table/User';
 
     const keys = {
       Id: this.user.id

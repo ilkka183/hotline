@@ -1,5 +1,7 @@
 const express = require('express');
+const winston = require('winston');
 const jwt = require('jsonwebtoken');
+const config = require('../middleware/config');
 const auth = require('../middleware/auth');
 const connection = require('../connection');
 
@@ -35,9 +37,10 @@ router.post('/', (req, res) => {
       role: row.Role
     }
 
+    winston.info(payload);
     console.log(payload);
 
-    const token = jwt.sign(payload, 'ohion330' /*process.env.hotline_jwtPrivateKey*/);
+    const token = jwt.sign(payload, config.jwtPrivateKey);
     res.send(token);
   });
 });

@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+const winston = require('winston');
 
 const auth = require('./routes/auth');
 const data = require('./routes/data');
@@ -11,6 +11,8 @@ const traficom = require('./routes/traficom');
 
 const app = express();
 
+winston.add(winston.transports.File, { filename: 'logfile.log' });
+
 /*
 if (!process.env.hotline_jwtPrivateKey) {
   console.error('FATAL ERROR: jwtPrivateKey is not defined.');
@@ -18,11 +20,20 @@ if (!process.env.hotline_jwtPrivateKey) {
 }
 */
 
-const port = 3000;
-//const port = 0;
+const server = false;
+const port = server ? 0 : 3000;
 
-app.use(cors());
 app.use(express.json());
+
+app.use(function(req, res, next) {
+  if (!server)
+    res.header("Access-Control-Allow-Origin", "*");
+
+  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+  next();
+});
+
 app.use('/hotline/api/auth', auth);
 app.use('/hotline/api/data', data);
 app.use('/hotline/api/lookup', lookup);
@@ -30,11 +41,6 @@ app.use('/hotline/api/custom', custom);
 app.use('/hotline/api/query', query);
 app.use('/hotline/api/table', table);
 app.use('/hotline/api/traficom', traficom);
-
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
-  next();
-});
 
 const connection = require('./connection');
 connection.connect();
