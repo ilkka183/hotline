@@ -53,6 +53,10 @@ export class ProblemTable extends BaseTable {
     return 'Muokkaa vikatapausta';
   }
 
+  protected getOpenCaption(): string {
+    return 'Vikatapaus';
+  }
+
   protected getDeleteCaption(): string {
     return 'Poista vikatapaus';
   }
@@ -108,6 +112,10 @@ export class ProblemReplyTable extends BaseTable {
 
   protected getEditCaption(): string {
     return 'Muokkaa vastausta';
+  }
+
+  protected getOpenCaption(): string {
+    return 'Vastaus';
   }
 
   protected getDeleteCaption(): string {

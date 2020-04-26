@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="col-sm-10">
-          <input class="form-control form-control-sm shadow-none" v-if="field.isReadOnly" :class="{ value: true, code: field.isCode }" :value="field.displayText(row)" readonly>
+          <input class="form-control form-control-sm shadow-none" v-if="field.isReadOnly || isOpening" :class="{ value: true, code: field.isCode }" :value="field.displayText(row)" readonly>
           <input class="form-control form-control-sm" v-else-if="field.dialogInputType() == 'text'" type="text" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]">
           <textarea class="form-control" v-else-if="field.dialogInputType() == 'textarea'" :ref="field.name" :autofocus="field.getAutoFocus()" v-model="row[field.name]" :rows="field.getRows()"></textarea>
           <b-form-select class="form-control" v-else-if="field.dialogInputType() == 'select'" :ref="field.name" :autofocus="field.getAutoFocus()" :options="field.lookup.options" v-model="row[field.name]" />
@@ -23,7 +23,8 @@
       <div class="mb-3">
         <b-button variant="primary" class="mr-2" @click="post">OK</b-button>
         <b-button variant="light" class="mr-2" @click="cancel">Peru</b-button>
-        <b-button variant="danger" class="float-right" v-if="isEditing" @click="confirmDelete">Poista</b-button>
+        <b-button variant="danger" class="float-right ml-2" v-if="isEditing || isOpening" @click="confirmDelete">Poista</b-button>
+        <b-button variant="success" class="float-right" v-if="isOpening" @click="startEdit">Muokkaa</b-button>
       </div>
       <b-alert variant="danger" fade show v-if="missingValues">
         <div>Punaisella merkityt kentät puuttuvat!</div>
@@ -52,22 +53,35 @@ export default class TableDialog extends Vue {
   private posted = false;
   private missingValues = false;
   private errorMessage = '';
+  private startedToEdit = false;
+
+  get currentState(): EditState {
+    if (this.startedToEdit)
+      return EditState.Edit;
+
+    return this.state;
+  }
 
   get caption(): string {
-    switch (this.state) {
+    switch (this.currentState) {
       case EditState.Add: return this.table.addCaption;
       case EditState.Edit: return this.table.editCaption;
+      case EditState.Open: return this.table.openCaption;
     }
 
     return '';
   }
 
   get isAdding(): boolean {
-    return this.state == EditState.Add;
+    return this.currentState == EditState.Add;
   }
   
   get isEditing(): boolean {
-    return this.state == EditState.Edit;
+    return this.currentState == EditState.Edit;
+  }
+  
+  get isOpening(): boolean {
+    return this.currentState == EditState.Open;
   }
   
   get fields(): Field[] {
@@ -91,13 +105,14 @@ export default class TableDialog extends Vue {
   }
 
   async getRow() {
-    switch (this.state) {
+    switch (this.currentState) {
       case EditState.Add:
         this.row = this.table.newRow();
         this.savedRow = Dataset.copyRow(this.row);
         break;
 
       case EditState.Edit:
+      case EditState.Open:
         this.row = await this.table.getRow(this.query);
         this.savedRow = Dataset.copyRow(this.row);
         break;
@@ -115,7 +130,7 @@ export default class TableDialog extends Vue {
     if (this.missingValues)
       return;
 
-    switch (this.state) {
+    switch (this.currentState) {
       case EditState.Add:
 //        console.log(JSON.stringify(this.row));
 
@@ -147,9 +162,17 @@ export default class TableDialog extends Vue {
         else
           this.back();
 
+        break;
+
+      case EditState.Open:
+          this.back();
 
         break;
     }
+  }
+
+  private startEdit() {
+    this.startedToEdit = true;
   }
 
   private async confirmDelete() {

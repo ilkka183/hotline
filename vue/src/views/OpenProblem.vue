@@ -2,13 +2,6 @@
   <b-container>
 
     <h2>Vikatapaus</h2>
-    <div class="mb-2">
-      <b-button variant="primary" class="mr-2" @click="editRow">Muokkaa</b-button>
-      <b-button variant="danger" class="float-right" @click="deleteRow">Poista</b-button>
-    </div>
-    <b-alert variant="danger" fade show v-if="errorMessage">
-      <div>{{ errorMessage }}</div>
-    </b-alert>
 
     <template v-if="row">
       <b-table-simple borderless small>
@@ -33,6 +26,12 @@
     </template>
 
     <b-button variant="primary" class="mr-2" @click="close">Sulje</b-button>
+    <b-button variant="danger" class="float-right ml-2" @click="deleteRow">Poista</b-button>
+    <b-button variant="success" class="float-right" @click="editRow">Muokkaa</b-button>
+
+    <b-alert variant="danger" class="mt-2" fade show v-if="errorMessage">
+      <div>{{ errorMessage }}</div>
+    </b-alert>
   </b-container>
 </template>
 

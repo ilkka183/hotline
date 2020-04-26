@@ -184,6 +184,10 @@ export abstract class SqlTable extends SqlDataset {
     return this.getEditCaption();
   }
 
+  public get openCaption() {
+    return this.getOpenCaption();
+  }
+
   public get deleteCaption() {
     return this.getDeleteCaption();
   }
@@ -191,6 +195,7 @@ export abstract class SqlTable extends SqlDataset {
   protected abstract getListCaption(): string;
   protected abstract getAddCaption(): string;
   protected abstract getEditCaption(): string;
+  protected abstract getOpenCaption(): string;
   protected abstract getDeleteCaption(): string;
 
   public navigateAdd(router: any) {

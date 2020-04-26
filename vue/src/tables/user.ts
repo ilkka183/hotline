@@ -27,6 +27,10 @@ export class UserGroupTable extends BaseTable {
     return 'Muokkaa käyttäjäryhmää';
   }
 
+  protected getOpenCaption(): string {
+    return 'Käyttäjäryhmä';
+  }
+
   protected getDeleteCaption(): string {
     return 'Poista käyttäjäryhmä';
   }
@@ -63,6 +67,10 @@ export class UserTable extends BaseTable {
 
   protected getEditCaption(): string {
     return 'Muokkaa käyttäjää';
+  }
+
+  protected getOpenCaption(): string {
+    return 'Käyttäjä';
   }
 
   protected getDeleteCaption(): string {

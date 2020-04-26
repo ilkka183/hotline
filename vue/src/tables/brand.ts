@@ -25,6 +25,10 @@ export class BrandTable extends BaseTable {
     return 'Muokkaa automerkkiä';
   }
 
+  protected getOpenCaption(): string {
+    return 'Automerkki';
+  }
+
   protected getDeleteCaption(): string {
     return 'Poista automerkki';
   }

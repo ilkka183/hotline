@@ -23,6 +23,10 @@ export class BulletinGroupTable extends BaseTable {
     return 'Muokkaa tiedoteryhmää';
   }
 
+  protected getOpenCaption(): string {
+    return 'Tiedoteryhmä';
+  }
+
   protected getDeleteCaption(): string {
     return 'Poista tiedoteryhmä';
   }

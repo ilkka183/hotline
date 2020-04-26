@@ -36,6 +36,10 @@ export class NoticeTable extends BaseTable {
     return 'Muokkaa ilmoitusta';
   }
 
+  protected getOpenCaption(): string {
+    return 'Ilmoitus';
+  }
+
   protected getDeleteCaption(): string {
     return 'Poista ilmoitus';
   }

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <TableDialog :table="table" :state="state" :query="query"></TableDialog>
+    <TableDialog :table="table" v-bind:state="state" :query="query"></TableDialog>
   </b-container>
 </template>
 
@@ -18,7 +18,7 @@ import { SqlTable } from '../lib/sql-dataset';
 export default class TableRow extends Vue {
   @Prop({ type: Object, required: true }) readonly table: SqlTable;
 
-  private state: EditState = EditState.Open;
+  public state: EditState = EditState.Edit;
 
   mounted() {
     switch (this.$route.params.state) {
