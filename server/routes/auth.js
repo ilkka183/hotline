@@ -1,5 +1,4 @@
 const express = require('express');
-const winston = require('winston');
 const jwt = require('jsonwebtoken');
 const config = require('../middleware/config');
 const auth = require('../middleware/auth');
@@ -37,7 +36,6 @@ router.post('/', (req, res) => {
       role: row.Role
     }
 
-    winston.info(payload);
     console.log(payload);
 
     const token = jwt.sign(payload, config.jwtPrivateKey);

@@ -2,26 +2,50 @@ const express = require('express');
 const router = express.Router();
 
 
-class Vehicle {
-  constructor(registrationNumber, description, registrationYear, carMake, carModel, fuelType, engineSize, engineCode, power, netWeight, vechileIdentificationNumber) {
-    this.registrationNumber = registrationNumber;
-    this.description = description;
-    this.registrationYear = registrationYear;
-    this.carMake = carMake;
-    this.carModel = carModel;
-    this.fuelType = fuelType;
-    this.engineSize = engineSize;
-    this.engineCode = engineCode;
-    this.power = power;
-    this.netWeight = netWeight;
-    this.vechileIdentificationNumber = vechileIdentificationNumber;
+const vehicles = [
+  {
+    registrationNumber: 'ZLP-833',
+    registrationYear: 2017,
+    carMake: 'Seat',
+    carModel: 'Leon ST',
+    fuelType: 'bensiini',
+    cylinderCount: 3,
+    engineSize: 999,
+    power: 85,
+    engineCode: 'CHZD',
+    vechileIdentificationNumber: 'VSSZZZ5FZHR046587',
+    netWeight: 1236,
+    grossWeight: 1770
+  },
+  {
+    registrationNumber: 'ISI-560',
+    registrationYear: 2005,
+    carMake: 'Ford',
+    carModel: 'Focus',
+    fuelType: 'diesel',
+    cylinderCount: 4,
+    engineSize: 1596,
+    power: 74,
+    engineCode: 'CHZD',
+    vechileIdentificationNumber: 'WF0WXXGCDW5B88909',
+    netWeight: 1277,
+    grossWeight: 1770
+  },
+  {
+    registrationNumber: 'ISI-650',
+    registrationYear: 2005,
+    carMake: 'Volkswagen',
+    carModel: 'Golf',
+    fuelType: 'bensiini',
+    cylinderCount: 4,
+    engineSize: 1329,
+    power: 77,
+    engineCode: 'HWDA',
+    vechileIdentificationNumber: 'WVWZZZ1JZ5W079439',
+    netWeight: 1329,
+    grossWeight: 1770
   }
-}
-
-
-const vehicles = [];
-vehicles.push(new Vehicle('ZLP-833', 'Seat LEON ST', 2017, 'Seat', 'LEON ST', 'bensiini',  999, 'CHZD', 85, 1236, 'VSSZZZ5FZHR046587'));
-vehicles.push(new Vehicle('ISI-560', 'Ford Focus',   2005, 'Ford', 'FOCUS',   'bensiini', 1596, 'HWDA', 74, 1277, 'WF0WXXGCDW5B88909'));
+];
 
 
 router.get('/:registrationNumber', (req, res) => {

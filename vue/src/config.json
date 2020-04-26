@@ -1,4 +1,4 @@
 {
-  "_apiUrl": "http://localhost:3000/hotline/api",
-  "apiUrl": "http://suorita.com/hotline/api"
+  "apiUrl": "http://localhost:4000/hotline/api",
+  "_apiUrl": "http://suorita.com/hotline/api"
 }

@@ -1,5 +1,4 @@
 const express = require('express');
-const winston = require('winston');
 
 const auth = require('./routes/auth');
 const data = require('./routes/data');
@@ -11,8 +10,6 @@ const traficom = require('./routes/traficom');
 
 const app = express();
 
-winston.add(winston.transports.File, { filename: 'logfile.log' });
-
 /*
 if (!process.env.hotline_jwtPrivateKey) {
   console.error('FATAL ERROR: jwtPrivateKey is not defined.');
@@ -21,7 +18,7 @@ if (!process.env.hotline_jwtPrivateKey) {
 */
 
 const server = false;
-const port = server ? 0 : 3000;
+const port = server ? 0 : 4000;
 
 app.use(express.json());
 
@@ -31,6 +28,7 @@ app.use(function(req, res, next) {
 
   res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+
   next();
 });
 

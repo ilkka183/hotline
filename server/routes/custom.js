@@ -1,5 +1,4 @@
 const express = require('express');
-const winston = require('winston');
 const connection = require('../connection');
 
 const router = express.Router();
@@ -8,7 +7,6 @@ const router = express.Router();
 function fetch(tableName, sql, req, res) {
   let countSql = 'SELECT COUNT(*) as RowCount FROM ' + tableName;
 
-  winston.info(countSql);
   console.log(countSql);
 
   connection.query(countSql, (error, results, fields) => {
@@ -27,12 +25,10 @@ function fetch(tableName, sql, req, res) {
     if (req.query.offset)
       sql += ' OFFSET ' + req.query.offset;
 
-      winston.info(sql);
       console.log(sql);
   
     connection.query(sql, (error, results, fields) => {
       if (error) {
-        winston.error(error);
         console.log(error);        
         return res.status(400).send(error);
       }
