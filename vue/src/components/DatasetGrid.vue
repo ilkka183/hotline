@@ -1,7 +1,12 @@
 <template>
   <div>
+    <h2>{{ title }}</h2>
     <b-navbar class="m-1" v-if="showNavigator">
-      <b-button variant="primary" class="mr-2" @click="addRow">Lisää uusi</b-button>
+      <b-button variant="primary" class="mr-2" v-if="showAddButton" @click="addRow">Lisää uusi</b-button>
+      <b-nav-form v-if="showSearch">
+        <b-form-input class="mr-2" v-model="searchText" />
+        <b-button variant="primary" class="mr-2" @click="search">Hae</b-button>
+      </b-nav-form>
       <b-pagination
         class="m-0 mr-2"
         v-if="pageCount > 1"
@@ -43,15 +48,20 @@ import { SqlTable } from '../lib/sql-dataset';
 
 @Component
 export default class DatasetGrid extends Vue {
+  @Prop({ type: String, required: true }) readonly title: string;
   @Prop({ type: Object, required: true }) readonly dataset: SqlTable;
   @Prop({ type: Boolean, default: true }) readonly showNavigator: boolean;
+  @Prop({ type: Boolean, default: true }) readonly showAddButton: boolean;
+  @Prop({ type: Boolean, default: false }) readonly showSearch: boolean;
   @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showEditButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showFooter: boolean;
+  @Prop({ type: String, default: null }) readonly addLink: string;
 
   private pageNumber = 1;
   private rowCount = 0;
   private rows: object[] = [];
+  private searchText = '';
 
   get pageCount(): number {
     return Math.ceil(this.rowCount/this.dataset.rowsPerPage);
@@ -83,20 +93,29 @@ export default class DatasetGrid extends Vue {
   }
 
   private async getRows() {
-    const data = await this.dataset.getRows(this.pageNumber);
+    const data = await this.dataset.getRows(this.pageNumber, this.searchText);
     this.rowCount = data.rowCount;
     this.rows = data.rows;
 
-//    console.log(data.rows);
+    console.log(data.rows);
   }
 
   private refreshRows() {
     this.getRows();
   }
 
+  private search() {
+    console.log(this.searchText);
+    this.getRows();
+  }
+
   private addRow() {
     this.dataset.database.startEditRow(this.pageNumber, null);
-    this.dataset.navigateAdd(this.$router);
+
+    if (this.addLink)
+      this.$router.push(this.addLink);
+    else
+      this.dataset.navigateAdd(this.$router);
   }
 
   private editRow(row: object) {

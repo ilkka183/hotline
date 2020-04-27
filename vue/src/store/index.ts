@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     database: new RestDatabase(axios.create({
       baseURL: apiUrl,
-      timeout: 1000
+      timeout: 10000
     })),
     token: null,
     user: null

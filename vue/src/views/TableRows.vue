@@ -1,7 +1,6 @@
 <template>
   <b-container fluid>
-    <h2>{{ caption }}</h2>
-    <DatasetGrid :dataset="table"></DatasetGrid>
+    <DatasetGrid :dataset="table" :title="caption" :showSearch="false"></DatasetGrid>
   </b-container>
 </template>
 

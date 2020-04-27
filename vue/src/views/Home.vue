@@ -4,13 +4,37 @@
       <Login />
     </b-container>
     <b-container fluid v-else>
-      <h2>Avoimet vikatapaukset</h2>
-      <router-link class="btn btn-primary mb-2" to="/new-problem">Lisää uusi</router-link>
-      <DatasetGrid :dataset="openProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
-      <h2>Viimeksi ratkaistut vikatapaukset</h2>
-      <DatasetGrid :dataset="closedProblems" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid>
-      <h2>Ilmoitukset</h2>
-      <DatasetGrid :dataset="notices" :showNavigator="false" :showOpenButton="true" :showEditButton="false" :showDeleteButton="false" :showFooter="false"></DatasetGrid> 
+      <DatasetGrid
+        title="Avoimet vikatapaukset"
+        :dataset="openProblems"
+        :showAddButton="true"
+        :showSearch="true"
+        :showOpenButton="true"
+        :showEditButton="false"
+        :showDeleteButton="false"
+        :showFooter="false"
+        addLink="/new-problem"
+      />
+      <DatasetGrid
+        title="Viimeksi ratkaistut vikatapaukset"
+        :dataset="closedProblems"
+        :showAddButton="false"
+        :showSearch="true"
+        :showOpenButton="true"
+        :showEditButton="false"
+        :showDeleteButton="false"
+        :showFooter="false"
+      />
+      <DatasetGrid
+        title="Ilmoitukset"
+        :dataset="notices"
+        :showAddButton="true"
+        :showSearch="true"
+        :showOpenButton="true"
+        :showEditButton="false"
+        :showDeleteButton="false"
+        :showFooter="false"
+      /> 
     </b-container>
   </div>
 </template>

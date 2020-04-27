@@ -68,7 +68,7 @@ export abstract class SqlTable extends SqlDataset {
     return row;
   }
 
-  private async fetchRows(url: string, pageNumber: number) {
+  private async fetchRows(url: string, pageNumber: number, searchText: string) {
     url += '?limit=' + this.rowsPerPage;
 
     if (pageNumber > 1)
@@ -80,6 +80,9 @@ export abstract class SqlTable extends SqlDataset {
     if (this.filter)
       for (const name in this.filter)
         url += '&' + name + '=' + this.filter[name];
+
+    if (searchText)
+      url += '&search=' + searchText;
 
     console.log('GET ' + url);
 
@@ -98,23 +101,23 @@ export abstract class SqlTable extends SqlDataset {
     return { rowCount: response.data.rowCount, rows }
   }
 
-  private async getTableRows(pageNumber: number) {
+  private async getTableRows(pageNumber: number, searchText: string) {
     const url = '/table/' + this.name + '/rows';
 
-    return this.fetchRows(url, pageNumber);
+    return this.fetchRows(url, pageNumber, searchText);
   }
 
-  private getCustomRows(pageNumber: number) {
+  private getCustomRows(pageNumber: number, searchText: string) {
     const url = '/custom/' + this.customApi;
 
-    return this.fetchRows(url, pageNumber);
+    return this.fetchRows(url, pageNumber, searchText);
   }
 
-  public async getRows(pageNumber = 1) {
+  public async getRows(pageNumber = 1, searchText = '') {
     if (this.customApi)
-      return this.getCustomRows(pageNumber);
+      return this.getCustomRows(pageNumber, searchText);
     else
-      return this.getTableRows(pageNumber);
+      return this.getTableRows(pageNumber, searchText);
   }
 
   public async addRow(row: object) {
@@ -199,7 +202,6 @@ export abstract class SqlTable extends SqlDataset {
   protected abstract getDeleteCaption(): string;
 
   public navigateAdd(router: any) {
-    console.log(this.tableName);
     router.push({ path: 'add/' + this.tableName, query: this.fixedValues });
   }
 

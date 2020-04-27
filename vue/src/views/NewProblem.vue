@@ -7,7 +7,7 @@
         <b-tab title="Hae rekisterinumerolla" active>
           <b-row class="mb-2">
             <b-col>
-              <b-input class="mr-2" type="text" v-model="licenseNumber" />
+              <b-form-input class="mr-2" type="text" v-model="licenseNumber" />
             </b-col>
             <b-col cols="8">
               <b-button variant="primary" class="mr-2" @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</b-button>

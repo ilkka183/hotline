@@ -49,10 +49,6 @@ h2 {
   margin-bottom: 20px !important;
 }
 
-form {
-  margin-bottom: 30px;
-}
-
 .navbar {
   margin-bottom: 20px;
 }

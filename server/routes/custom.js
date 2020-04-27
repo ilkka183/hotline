@@ -25,7 +25,7 @@ function fetch(tableName, sql, req, res) {
     if (req.query.offset)
       sql += ' OFFSET ' + req.query.offset;
 
-      console.log(sql);
+    console.log(sql);
   
     connection.query(sql, (error, results, fields) => {
       if (error) {
@@ -81,6 +81,11 @@ router.get('/Problems', (req, res) => {
     'FROM Problem, User ' +
     'WHERE Problem.UserId = User.Id ';
 
+  if (req.query.search) {
+    sql += 'AND (Problem.Title LIKE "%' + req.query.search + '%" ';
+    sql += 'OR Problem.Description LIKE "%' + req.query.search + '%") ';
+  }
+
   if (req.query.status)
     sql += 'AND Problem.Status = ' + req.query.status + ' ';
 
@@ -100,11 +105,17 @@ router.get('/ProblemReplies', (req, res) => {
 });
 
 router.get('/Notices', (req, res) => {
-  const sql =
+  let sql =
     'SELECT Notice.Id, Notice.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Notice.Title, Notice.Message ' +
     'FROM Notice, User ' +
-    'WHERE Notice.UserId = User.Id ' +
-    'ORDER BY Notice.Id';
+    'WHERE Notice.UserId = User.Id ';
+
+  if (req.query.search) {
+    sql += 'AND (Notice.Title LIKE "%' + req.query.search + '%" ';
+    sql += 'OR Notice.Message LIKE "%' + req.query.search + '%") ';
+  }
+
+  sql += 'ORDER BY Notice.Id';
 
   fetch('Notice', sql, req, res);
 });
