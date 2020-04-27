@@ -21,10 +21,10 @@
         </div>
       </div>
       <div class="mb-3">
-        <b-button variant="primary" class="mr-2" @click="post">OK</b-button>
-        <b-button variant="light" class="mr-2" @click="cancel">Peru</b-button>
-        <b-button variant="danger" class="float-right ml-2" v-if="isEditing || isOpening" @click="confirmDelete">Poista</b-button>
-        <b-button variant="success" class="float-right" v-if="isOpening" @click="startEdit">Muokkaa</b-button>
+        <b-button variant="danger" class="mr-2" v-if="isEditing || isOpening" @click="confirmDelete">Poista</b-button>
+        <b-button variant="success" class="mr-2" v-if="isOpening" @click="startEdit">Muokkaa</b-button>
+        <b-button variant="light" class="float-right ml-2" @click="cancel">Peruuta</b-button>
+        <b-button variant="primary" class="float-right ml-2" @click="post">OK</b-button>
       </div>
       <b-alert variant="danger" fade show v-if="missingValues">
         <div>Punaisella merkityt kentät puuttuvat!</div>

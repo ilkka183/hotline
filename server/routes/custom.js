@@ -82,7 +82,9 @@ router.get('/Problems', (req, res) => {
     'WHERE Problem.UserId = User.Id ';
 
   if (req.query.search) {
-    sql += 'AND (Problem.Title LIKE "%' + req.query.search + '%" ';
+    sql += 'AND (Problem.Brand LIKE "%' + req.query.search + '%" ';
+    sql += 'OR Problem.Model LIKE "%' + req.query.search + '%" ';
+    sql += 'OR Problem.Title LIKE "%' + req.query.search + '%" ';
     sql += 'OR Problem.Description LIKE "%' + req.query.search + '%") ';
   }
 

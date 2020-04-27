@@ -25,9 +25,9 @@
       <DatasetGrid :dataset="replies" :showFooter="false"></DatasetGrid>
     </template>
 
-    <b-button variant="primary" class="mr-2" @click="close">Sulje</b-button>
-    <b-button variant="danger" class="float-right ml-2" @click="deleteRow">Poista</b-button>
-    <b-button variant="success" class="float-right" @click="editRow">Muokkaa</b-button>
+    <b-button variant="danger" class="mr-2" @click="deleteRow">Poista</b-button>
+    <b-button variant="success" class="mr-2" @click="editRow">Muokkaa</b-button>
+    <b-button variant="light" class="float-right ml-2" @click="close">Sulje</b-button>
 
     <b-alert variant="danger" class="mt-2" fade show v-if="errorMessage">
       <div>{{ errorMessage }}</div>

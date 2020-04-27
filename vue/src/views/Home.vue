@@ -13,7 +13,6 @@
         :showEditButton="false"
         :showDeleteButton="false"
         :showFooter="false"
-        addLink="/new-problem"
       />
       <DatasetGrid
         title="Viimeksi ratkaistut vikatapaukset"

@@ -17,7 +17,7 @@ if (!process.env.hotline_jwtPrivateKey) {
 }
 */
 
-const server = false;
+const server = true;
 const port = server ? 0 : 4000;
 
 app.use(express.json());

@@ -13,10 +13,10 @@
     <div class="buttons mb-3">
       <b-button variant="primary" class="mr-2" :disabled="!username || !password" @click="onLogin">Kirjaudu</b-button>
       <b-button variant="secondary" class="mr-2" :disabled="!username && !password" @click="onClear">Tyhjennä</b-button>
-      <b-button variant="light" class="mr-2" @click="onFill('albert', 'weber')">Ilkka</b-button>
-      <b-button variant="light" class="mr-2" @click="onFill('opeJorma', 'weber')">Jorma</b-button>
-      <b-button variant="light" class="mr-2" @click="onFill('arto', 'weber')">Arto</b-button>
-      <b-button variant="light" class="mr-2" @click="onFill('mikko', 'weber')">Mikko</b-button>
+      <b-button variant="outline-light" class="mr-2" @click="onFill('albert', 'weber')">Ilkka</b-button>
+      <b-button variant="outline-light" class="mr-2" @click="onFill('opeJorma', 'weber')">Jorma</b-button>
+      <b-button variant="outline-light" class="mr-2" @click="onFill('arto', 'weber')">Arto</b-button>
+      <b-button variant="outline-light" class="mr-2" @click="onFill('mikko', 'weber')">Mikko</b-button>
     </div>
 
     <b-alert variant="danger" fade show v-if="errorMessage">{{ errorMessage }}</b-alert>

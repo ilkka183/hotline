@@ -12,9 +12,10 @@
             <b-col cols="8">
               <b-button variant="primary" class="mr-2" @click="findRegistrationNumber" :disabled="!licenseNumber">Hae</b-button>
               <b-button variant="primary" class="mr-2" @click="clearRegistrationNumber" :disabled="!licenseNumber">Tyhjennä</b-button>
-              <b-button variant="light" class="mr-2" @click="setRegistrationNumber('ISI-560')">Focus</b-button>
-              <b-button variant="light" class="mr-2" @click="setRegistrationNumber('ISI-650')">Golf</b-button>
-              <b-button variant="light" class="mr-2" @click="setRegistrationNumber('ZLP-833')">Leon</b-button>
+              <b-button variant="light" class="mr-2" @click="back">Peruuta</b-button>
+              <b-button variant="outline-light" class="mr-2" @click="setRegistrationNumber('ISI-560')">Focus</b-button>
+              <b-button variant="outline-light" class="mr-2" @click="setRegistrationNumber('ISI-650')">Golf</b-button>
+              <b-button variant="outline-light" class="mr-2" @click="setRegistrationNumber('ZLP-833')">Leon</b-button>
             </b-col>
           </b-row>
           <b-alert variant="danger" fade show v-if="errorMessage">{{ errorMessage }}</b-alert>
@@ -27,6 +28,7 @@
           <b-select class="mb-2" v-model="engineSize" :options="engineSizes" v-if="model !== null" />
           <b-button variant="primary" class="mr-2" :disabled="engineSize === null" @click="postSelections">Jatka</b-button>
           <b-button variant="primary" class="mr-2" @click="clearSelections">Tyhjennä</b-button>
+          <b-button variant="light" class="mr-2" @click="back">Peruuta</b-button>
         </b-tab>
         <b-tab title="Manuaalinen syöttö">
         </b-tab>

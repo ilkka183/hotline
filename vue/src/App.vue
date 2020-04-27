@@ -46,7 +46,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 h2 {
-  margin-bottom: 20px !important;
+  margin-bottom: 10px !important;
 }
 
 .navbar {

@@ -2,10 +2,11 @@
   <div>
     <h2>{{ title }}</h2>
     <b-navbar class="m-1" v-if="showNavigator">
-      <b-button variant="primary" class="mr-2" v-if="showAddButton" @click="addRow">Lisää uusi</b-button>
-      <b-nav-form v-if="showSearch">
-        <b-form-input class="mr-2" v-model="searchText" />
-        <b-button variant="primary" class="mr-2" @click="search">Hae</b-button>
+      <b-button variant="primary" class="mr-2" size="sm" v-if="showAddButton" @click="addRow">Lisää uusi</b-button>
+      <b-nav-form v-if="showSearch" @submit.stop.prevent>
+        <b-form-input size="sm" class="mr-2" v-model="searchText" @keydown.enter="search" />
+        <b-button variant="primary" size="sm" class="mr-2" @click="search">Hae</b-button>
+        <b-button variant="primary" size="sm" class="mr-2" @click="clearSearchText" :disabled="!searchText">Kaikki</b-button>
       </b-nav-form>
       <b-pagination
         class="m-0 mr-2"
@@ -56,7 +57,6 @@ export default class DatasetGrid extends Vue {
   @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showEditButton: boolean;
   @Prop({ type: Boolean, default: true }) readonly showFooter: boolean;
-  @Prop({ type: String, default: null }) readonly addLink: string;
 
   private pageNumber = 1;
   private rowCount = 0;
@@ -105,17 +105,17 @@ export default class DatasetGrid extends Vue {
   }
 
   private search() {
-    console.log(this.searchText);
+    this.getRows();
+  }
+
+  private clearSearchText() {
+    this.searchText = '';
     this.getRows();
   }
 
   private addRow() {
     this.dataset.database.startEditRow(this.pageNumber, null);
-
-    if (this.addLink)
-      this.$router.push(this.addLink);
-    else
-      this.dataset.navigateAdd(this.$router);
+    this.dataset.navigateAdd(this.$router);
   }
 
   private editRow(row: object) {

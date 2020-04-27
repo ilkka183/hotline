@@ -201,17 +201,29 @@ export abstract class SqlTable extends SqlDataset {
   protected abstract getOpenCaption(): string;
   protected abstract getDeleteCaption(): string;
 
+  protected getAddPath(): string {
+    return 'add/' + this.tableName;
+  }
+
+  protected getEditPath(): string {
+    return 'edit/' + this.tableName;
+  }
+
+  protected getOpenPath(): string {
+    return 'open/' + this.tableName;
+  }
+
   public navigateAdd(router: any) {
-    router.push({ path: 'add/' + this.tableName, query: this.fixedValues });
+    router.push({ path: this.getAddPath(), query: this.fixedValues });
   }
 
   public navigateEdit(router: any, row: object) {
     const query = this.primaryKeys(row);
-    router.push({ path: 'edit/' + this.tableName, query });
+    router.push({ path: this.getEditPath(), query });
   }
 
   public navigateOpen(router: any, row: object) {
     const query = this.primaryKeys(row);
-    router.push({ path: 'open/' + this.tableName, query });
+    router.push({ path: this.getOpenPath(), query });
   }
 }

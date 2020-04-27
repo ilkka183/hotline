@@ -70,9 +70,12 @@ export class ProblemTable extends BaseTable {
     return null;
   }
 
-  public navigateOpen(router: any, row: object) {
-    const query = this.primaryKeys(row);
-    router.push({ path: 'open-problem', query });
+  protected getAddPath(): string {
+    return 'new-problem';
+  }
+
+  protected getOpenPath(): string {
+    return 'open-problem';
   }
 }
 
