@@ -14,13 +14,12 @@ export abstract class BaseTable extends SqlTable {
     super(database, name, customApi, filter);
   }
   
-  protected addAddressFields(emailRequired: boolean) {
+  protected addAddressFields() {
     this.addStringField({ name: 'Address', caption: 'Lähiosoite', length: 80 });
     this.addStringField({ name: 'PostalCode', caption: 'Postinumero', length: 10 });
     this.addStringField({ name: 'PostOffice', caption: 'Postitoimipaikka', length: 40 });
     this.addStringField({ name: 'Country', caption: 'Maa', length: 40 });
     this.addStringField({ name: 'Phone', caption: 'Puhelin', length: 20 });
-    this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true, required: emailRequired });
     this.addStringField({ name: 'Website', caption: 'Kotisivut', hideInGrid: true, length: 80, code: true });
   }
 

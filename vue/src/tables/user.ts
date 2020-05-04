@@ -9,7 +9,9 @@ export class UserGroupTable extends BaseTable {
 
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addStringField({ name: 'Name', caption: 'Nimi', length: 40, required: true });
-    this.addAddressFields(false);
+    this.addStringField({ name: 'ContactPerson', caption: 'Yhteyshenkilö', length: 80 });
+    this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true });
+    this.addAddressFields();
     this.addImageField({ name: 'Logo', caption: 'Logo' });
     this.addInfoField();
     this.addStatusFields();
@@ -45,12 +47,12 @@ export class UserTable extends BaseTable {
     this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupApi: 'UserGroups', hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
     this.addIntegerField({ name: 'Role', caption: 'Rooli', enumTexts: User.typeTexts, required: true });
-    this.addStringField({ name: 'Username', caption: 'Käyttäjätunnus', length: 20, hideInGrid: true, required: true });
+    this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true, required: true });
     this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: true, required: true });
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });
     this.addStringField({ name: 'LastName', caption: 'Sukunimi', length: 20, required: true });
     this.addStringField({ name: 'Title', caption: 'Toimenkuva', length: 20 });
-    this.addAddressFields(true);
+    this.addAddressFields();
     this.addInfoField();
     this.addDateField({ name: 'LicenseBegin', caption: 'Alku' });
     this.addDateField({ name: 'LicenseEnd', caption: 'Loppu' });

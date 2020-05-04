@@ -43,6 +43,7 @@ CREATE TABLE UserGroup
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   Name VARCHAR(80) NOT NULL UNIQUE,
+  ContactPerson VARCHAR(80),
   Address VARCHAR(160),
   PostalCode VARCHAR(20),
   PostOffice VARCHAR(40),
@@ -65,7 +66,7 @@ CREATE TABLE User
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   GroupId BIGINT UNSIGNED  NOT NULL,
   Role SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=power-user, 2=user, 3=demo-user */
-  Username VARCHAR(20) NOT NULL UNIQUE,
+  Email VARCHAR(80) NOT NULL UNIQUE,
   Password VARCHAR(20) NOT NULL,
   FirstName VARCHAR(40) NOT NULL,
   LastName VARCHAR(40) NOT NULL,
@@ -75,7 +76,6 @@ CREATE TABLE User
   PostOffice VARCHAR(40),
   Country VARCHAR(40),
   Phone VARCHAR(20),
-  Email VARCHAR(80) NOT NULL UNIQUE,
   Website VARCHAR(80),
   Info TEXT,
   LicenseBegin DATE,
@@ -148,7 +148,8 @@ CREATE TABLE Problem
   LicenseNumber VARCHAR(7),
   Brand VARCHAR(80) NOT NULL,
   Model VARCHAR(80),
-  ModelYear SMALLINT UNSIGNED,
+  YearMin SMALLINT UNSIGNED,
+  YearMax SMALLINT UNSIGNED,
   Fuel SMALLINT UNSIGNED, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
   EngineSize SMALLINT UNSIGNED,
   EngineCode VARCHAR(10),
@@ -209,14 +210,14 @@ CREATE TABLE ProblemReplyAttachment
 );
 
 
-INSERT INTO UserGroup(Name, Website) VALUES('Juniper Code', 'http://www.junipercode.com');
-INSERT INTO UserGroup(Name, Website) VALUES('HMV-Systems', 'http://www.hmv-systems.fi');
-INSERT INTO UserGroup(Name, Website) VALUES('Prodiags', 'http://www.prodiags.com');
+INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
+INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
+INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Prodiags', NULL, 'http://www.prodiags.com');
 
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'albert', 'weber', NOW(), NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi ', 'opeJorma', 'weber', NOW() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto', 'Aalto', 'arto.aalto@prodiags.com', 'arto', 'weber', NOW() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg', 'jan.froberg@hmv-systems.fi', 'ATSJanne', 'Kawasaki', NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi', 'weber',    NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto',  'Aalto',     'arto.aalto@prodiags.com',        'weber',    NOW() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg',   'jan.froberg@hmv-systems.fi',     'Kawasaki', NOW() - INTERVAL 1 DAY, NULL);
 
 INSERT INTO Brand(Name) VALUES('SEAT');
 INSERT INTO Brand(Name) VALUES('Volkswagen');
@@ -252,19 +253,19 @@ Uusi hinta tulee voimaan lisenssin uudistuksen yhteydessä 1.10.2013 alkaen, eli
 
 
 /* Vikatapaukset */
-INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
+INSERT INTO Problem(UserId, Brand, Model, YearMin, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
   VALUES(1, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.', 'Lataa akku.', 1);
 
 INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(1, 1, 2, 'Käännä virta-avainta');
 
 
-INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(UserId, Brand, Model, YearMin, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(1, 'Volkswagen', 'Golf Variant 1.6 Comfortline', 2005, 0, 'ISI-560', 'ABC', '123', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.', 0);
 
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
 
 
-INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(UserId, Brand, Model, YearMin, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(2, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2017, 0, 'ZLP-833', 'ABC', '123', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.', 0);
 
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 1, 'Aja tarkemmin');
@@ -272,13 +273,13 @@ INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 2, 'Tarkista renk
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 3, 'Käytä huollossa');
 
 
-INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(UserId, Brand, Model, YearMin, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(2, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Kulkee huonosti', 'Auto ei kulje hyvin.', 0);
 
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(4, 1, 'Käytä huollossa');
 
 
-INSERT INTO Problem(UserId, Brand, Model, ModelYear, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
+INSERT INTO Problem(UserId, Brand, Model, YearMin, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)
   VALUES(3, 'Ford', 'Ford Focus 1.8 TDCi', 2007, 0, 'SIO-913', 'ABC', '123', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.', 0);
 
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');

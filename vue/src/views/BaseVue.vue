@@ -7,7 +7,7 @@ import { User } from '../js/user';
 @Component
 export default class BaseVue extends Vue
 {
-  protected get user(): User {
+  public get user(): User {
     return this.$store.state.user;
   }
 

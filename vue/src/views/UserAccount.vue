@@ -13,7 +13,23 @@
       </b-form-group>
 
       <b-form-group label="Rooli" label-for="role">
-        <b-form-input name="role" v-model="user.roleText" readonly />
+        <b-form-input name="role" v-model="userRoleText" readonly />
+      </b-form-group>
+
+      <b-form-group label="Lähiosoite" label-for="address">
+        <b-form-input name="address" v-model="address" />
+      </b-form-group>
+
+      <b-form-group label="Postinumero" label-for="postalCode">
+        <b-form-input name="postalCode" v-model="postalCode" />
+      </b-form-group>
+
+      <b-form-group label="Postitoimipaikka" label-for="postOffice">
+        <b-form-input name="postOffice" v-model="postOffice" />
+      </b-form-group>
+
+      <b-form-group label="Maa" label-for="country">
+        <b-form-input name="country" v-model="country" />
       </b-form-group>
 
       <b-form-group label="Puhelinnumero" label-for="phone">
@@ -51,6 +67,10 @@ import BaseVue from './BaseVue.vue';
 
 @Component
 export default class UserInfo extends BaseVue {
+  private address: string = null;
+  private postalCode: string = null;
+  private postOffice: string = null;
+  private country: string = null;
   private phone: string = null;
   private password1: string = null;
   private password2: string = null;
@@ -65,14 +85,24 @@ export default class UserInfo extends BaseVue {
       const { data } = await this.$store.getters.axios.get('/table/User/row?Id=' + this.user.id);
 
       if (data.length > 0) {
-        const row = data[0]; 
+        const row = data[0];
 
+        console.log(row);
+
+        this.address = row.Address;
+        this.postalCode = row.PostalCode;
+        this.postOffice = row.PostOffice;
+        this.country = row.Country;
         this.phone = row.Phone;
       }
     }
   }
 
-  private async update(fields: object) {
+  protected get userRoleText(): string {
+    return User.typeTexts[this.user.role];
+  }
+
+private async update(fields: object) {
     const url = '/table/User';
 
     const keys = {
@@ -90,6 +120,10 @@ export default class UserInfo extends BaseVue {
 
   private async save() {
     const fields = {
+      Address: this.address,
+      PostalCode: this.postalCode,
+      PostOffice: this.postOffice,
+      Country: this.country,
       Phone: this.phone
     }
 

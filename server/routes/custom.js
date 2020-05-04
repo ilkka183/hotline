@@ -40,7 +40,7 @@ function fetch(tableName, sql, req, res) {
 
 router.get('/UserGroups', (req, res) => {
   const sql =
-    'SELECT Id, Name, ' +
+    'SELECT Id, Name, ContactPerson,' +
     'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
     'Logo, Info, Enabled ' +
     'FROM UserGroup ' +
@@ -51,9 +51,9 @@ router.get('/UserGroups', (req, res) => {
 
 router.get('/Users', (req, res) => {
   const sql =
-    'SELECT User.Id, User.GroupId, User.Username, User.Password, ' + 
+    'SELECT User.Id, User.GroupId, User.Email, User.Password, ' + 
     'UserGroup.Name AS GroupName, User.Role, User.FirstName, User.LastName, User.Title, ' +
-    'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Email, User.Website, ' +
+    'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
     'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
     'FROM User, UserGroup ' +
     'WHERE User.GroupId = UserGroup.Id ' +
@@ -77,7 +77,7 @@ router.get('/BulletinGroups', (req, res) => {
 router.get('/Problems', (req, res) => {
   let sql =
     'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
-    'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+    'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.YearMin, Problem.YearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
     'FROM Problem, User ' +
     'WHERE Problem.UserId = User.Id ';
 

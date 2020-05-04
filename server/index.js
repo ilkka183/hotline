@@ -17,13 +17,13 @@ if (!process.env.hotline_jwtPrivateKey) {
 }
 */
 
-const server = true;
-const port = server ? 0 : 4000;
+const localhost = true;
+const port = localhost ? 4000 : 0;
 
 app.use(express.json());
 
 app.use(function(req, res, next) {
-  if (!server)
+  if (localhost)
     res.header("Access-Control-Allow-Origin", "*");
 
   res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");

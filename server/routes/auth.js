@@ -13,17 +13,17 @@ router.get('/me', auth, (req, res) => {
 
 
 router.post('/', (req, res) => {
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
 
-  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Email, Phone FROM User WHERE Username=?';
+  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
 
-  connection.query(sql, [username], (error, results, fields) => {
+  connection.query(sql, [email], (error, results, fields) => {
     if (error)
       return res.status(400).send(error);
 
     if ((results.length == 0) || (password !== results[0].Password))
-      return res.status(401).send('Invalid username or password');
+      return res.status(401).send('Invalid email or password');
 
     const row = results[0];
   

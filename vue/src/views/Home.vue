@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container v-if="$store.state.token == null">
-      <Login />
+      <Login @login="createTables" />
     </b-container>
     <b-container fluid v-else>
       <DatasetGrid
@@ -59,6 +59,10 @@ export default class Home extends BaseVue {
   private notices: NoticeTable;
 
   created() {
+    this.createTables();
+  }
+
+  private createTables() {
     this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
     this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
     this.notices = new NoticeTable(this.database, this.user);

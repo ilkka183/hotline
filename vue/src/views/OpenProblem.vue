@@ -12,7 +12,8 @@
           <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
           <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
           <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
-          <tr><td>Vuosimalli:</td><td>{{ table.fields.ModelYear.displayText(row) }}</td></tr>
+          <tr><td>Alkuvuosi:</td><td>{{ table.fields.YearMin.displayText(row) }}</td></tr>
+          <tr><td>Loppuvuosi:</td><td>{{ table.fields.YearMax.displayText(row) }}</td></tr>
           <tr><td>Käyttövoima:</td><td>{{ table.fields.Fuel.displayText(row) }}</td></tr>
           <tr><td>Tila:</td><td>{{ table.fields.Status.displayText(row) }}</td></tr>
         </b-tbody>
@@ -21,8 +22,7 @@
       <h2 class="title">{{ row.Title }}</h2>
       <p class="decription">{{ row.Description }}</p>
 
-      <h2>Vastaukset</h2>
-      <DatasetGrid :dataset="replies" :showFooter="false"></DatasetGrid>
+      <DatasetGrid title="Vastaukset" :dataset="replies" :showFooter="false"></DatasetGrid>
     </template>
 
     <b-button variant="danger" class="mr-2" @click="deleteRow">Poista</b-button>

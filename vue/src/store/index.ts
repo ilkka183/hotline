@@ -7,6 +7,8 @@ import { apiUrl } from '../config.json';
 
 Vue.use(Vuex);
 
+const localhost = true;
+
 export default new Vuex.Store({
   state: {
     database: new RestDatabase(axios.create({
