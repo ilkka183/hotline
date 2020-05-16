@@ -53,6 +53,7 @@ interface FieldParams {
   required?: boolean;
   lookupApi?: string;
   onCellColor?: any;
+  onCellText?: any;
 }
 
 export abstract class Field {
@@ -69,6 +70,7 @@ export abstract class Field {
   public required = false;
   public lookup: Lookup = null;
   public onCellColor: any = null;
+  public onCellText: any = null;
 
   constructor(params: FieldParams) {
     this.name = params.name;
@@ -103,6 +105,9 @@ export abstract class Field {
 
     if (params.onCellColor)
       this.onCellColor = params.onCellColor;
+
+    if (params.onCellText)
+      this.onCellText = params.onCellText;
   }
 
   protected createLookup() {
@@ -114,7 +119,11 @@ export abstract class Field {
 
   get database(): RestDatabase | null {
     return this.dataset?.database;
-  }  
+  }
+
+  public get showInDialog(): boolean {
+    return !this.hideInDialog && !this.onCellText;
+  }
 
   public getAutoFocus(): boolean {
     return this == this.dataset?.autoFocusField;
@@ -167,6 +176,9 @@ export abstract class Field {
   }
 
   public displayText(row: object): string {
+    if (this.onCellText)
+      return this.onCellText(row);
+
     if (this.lookup)
       return this.lookup.findText(row[this.name]);
 

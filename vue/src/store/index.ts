@@ -2,12 +2,10 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import { RestDatabase } from '../lib/dataset';
-import jwtDecode from 'jwt-decode';
 import { apiUrl } from '../config.json';
+import { User } from '@/js/user';
 
 Vue.use(Vuex);
-
-const localhost = true;
 
 export default new Vuex.Store({
   state: {
@@ -24,8 +22,7 @@ export default new Vuex.Store({
       state.token = token;
 
       if (token) {
-        const user = jwtDecode(token);
-        state.user = user;
+        state.user = new User(token);
       } else {
         state.user = null;
       }
@@ -47,9 +44,6 @@ export default new Vuex.Store({
   getters: {
     axios: state=> {
       return state.database.axios;
-    },
-    fullName: state=> {
-      return state.user ? state.user.firstName + ' ' + state.user.lastName : '';
     }
   }
 });

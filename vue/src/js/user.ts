@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode';
+
 export enum UserRole {
   Admin = 0,
   Power,
@@ -5,31 +7,65 @@ export enum UserRole {
   Demo
 }
 
-
 export class User {
-  public static readonly typeTexts: string[] = ['Pääkäyttäjä', 'Tehokäyttäjä', 'Käyttäjä', 'Demokäyttäjä'];
+  public static readonly roleTexts: string[] = [
+    'Pääkäyttäjä',
+    'Tehokäyttäjä',
+    'Käyttäjä',
+    'Demokäyttäjä'
+  ];
 
-  public token: string;
-  public id: number;
-  public role: UserRole;
-  public firstName: string;
-  public lastName: string;
-  public phone: string;
+  public data: any;
   
-  constructor(token: string, data: any) {
-    this.token = token;
-    this.id = data.id;
-    this.role = data.role;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
-    this.phone = data.phone;
+  constructor(token: string) {
+    this.data = jwtDecode(token);
   }
 
-  public get name() {
+  public get id(): number {
+    return this.data.id;
+  }
+
+  public get firstName(): string {
+    return this.data.firstName;
+  }
+
+  public get lastName(): string {
+    return this.data.lastName;
+  }
+
+  public get fullName(): string {
     return this.firstName + ' ' + this.lastName;
   }
 
-  public get roleText() {
-    return User.typeTexts[this.role];
+  public get email(): string {
+    return this.data.email;
+  }
+
+  public get phone(): string {
+    return this.data.phone;
+  }
+
+  public get role(): UserRole {
+    return this.data.role;
+  }
+
+  public get roleText(): string {
+    return User.roleTexts[this.role];
+  }
+
+  public get showSender(): boolean {
+    return this.role <= UserRole.Power;
+  }
+
+  public get hideSender(): boolean {
+    return !this.showSender;
+  }
+
+  public get showLicenseNumber(): boolean {
+    return this.role <= UserRole.Power;
+  }
+
+  public get hideLicenseNumber(): boolean {
+    return !this.showLicenseNumber;
   }
 }

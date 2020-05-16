@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <tr v-for="row in rows" v-bind:key="row.id">
-          <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(row, field)">
+          <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(field, row)">
             <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
           </td>
           <td v-if="showOpenButton"><b-button variant="primary" size="sm" @click="openRow(row)">Avaa</b-button></td>
@@ -145,19 +145,19 @@ export default class DatasetGrid extends Vue {
   }
 
   private cellText(field: Field, row: object) {
-    const value = row[field.name];
+    const text = field.displayText(row);
 
-    if (value !== undefined)
-      return field.displayText(row);
+    if (text)
+      return text;
 
     return 'undefined';
   }
 
-  private cellClasses(row: object, field: Field) {
+  private cellClasses(field: Field, row: object) {
     return {
       added: this.hasRowAdded(row),
       edited: this.hasFieldEdited(row, field),
-      undefined: row[field.name] === undefined,
+      undefined: field.displayText(row) === undefined,
       alignRight: field.alignRight,
       alignCenter: field.alignCenter
     }

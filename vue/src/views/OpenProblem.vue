@@ -8,8 +8,8 @@
         <b-tbody>
           <tr><td>No:</td><td>{{ row.Id }}</td></tr>
           <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
-          <tr><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
-          <tr><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
+          <tr v-if="user.showSender"><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
+          <tr v-if="user.showLicenseNumber"><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
           <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
           <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
           <tr><td>Alkuvuosi:</td><td>{{ table.fields.YearMin.displayText(row) }}</td></tr>
@@ -41,6 +41,7 @@ import DatasetGrid from '../components/DatasetGrid.vue';
 import { SqlTable } from '../lib/sql-dataset';
 import { ProblemTable, ProblemReplyTable } from '../tables/problem';
 import BaseVue from './BaseVue.vue';
+import { UserRole } from '../js/user'
 
 @Component({
   components: {

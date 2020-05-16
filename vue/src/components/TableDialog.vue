@@ -87,7 +87,7 @@ export default class TableDialog extends Vue {
   get fields(): Field[] {
     if (this.row != null)
       return this.table.fieldsAsArray.filter(field => {
-        return !field.hideInDialog && !(field.isReadOnly && field.isNull(this.row));
+        return field.showInDialog && !(field.isReadOnly && field.isNull(this.row));
       });
 
     return [];

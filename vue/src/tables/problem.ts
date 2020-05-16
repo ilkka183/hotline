@@ -1,5 +1,4 @@
 import { RestDatabase } from '@/lib/dataset';
-import { TextAlign } from '@/lib/dataset';
 import { BaseTable } from './base';
 import { User, UserRole } from '../js/user'
 
@@ -22,12 +21,13 @@ export class ProblemTable extends BaseTable {
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupApi: 'Users', hideInGrid: true, foreignKey: true, readonly: true, required: true });
-    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInGrid: this.user.role > UserRole.Power, hideInDialog: false });
-    this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true, hideInGrid: true });
+    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInGrid: this.user.hideSender, hideInDialog: this.user.hideSender });
+    this.addStringField({ name: 'LicenseNumber', caption: 'Rekistenumero', length: 7, code: true, hideInGrid: true, hideInDialog: user.hideSender });
     this.addStringField({ name: 'Brand', caption: 'Merkki', length: 40, required: true });
     this.addStringField({ name: 'Model', caption: 'Malli', length: 40 });
-    this.addIntegerField({ name: 'YearMin', caption: 'Alkuvuosi', align: TextAlign.Right });
-    this.addIntegerField({ name: 'YearMax', caption: 'Loppuvuosi', align: TextAlign.Right });
+    this.addIntegerField({ name: 'YearMin', caption: 'Alkuvuosi', hideInGrid: true });
+    this.addIntegerField({ name: 'YearMax', caption: 'Loppuvuosi', hideInGrid: true });
+    this.addIntegerField({ name: 'Years', caption: 'Vuosimallit', onCellText: (row: any) => row.YearMin + '-' + row.YearMax });
     this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', enumTexts: ProblemTable.FUELS });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
     this.addTextField({ name: 'Description', caption: 'Kuvaus', required: true });
@@ -98,7 +98,7 @@ export class ProblemReplyTable extends BaseTable {
     this.addIntegerField({ name: 'ProblemId', caption: 'Vikatapaus No', primaryKey: true, hideInGrid: true, readonly: true });
     this.addDateField({ name: 'Date', caption: 'Pvm', readonly: true, required: true });
     this.addIntegerField({ name: 'UserId', caption: 'Lähettäjä', lookupApi: 'Users', hideInGrid: true, foreignKey: true, readonly: true, required: true });
-    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true });
+    this.addStringField({ name: 'UserName', caption: 'Lähettäjä', hideInDialog: true, onCellText: (row) => user.showSender ? row.UserName : 'käyttäjä' });
     this.addTextField({ name: 'Message', caption: 'Viesti', required: true });
   }
 

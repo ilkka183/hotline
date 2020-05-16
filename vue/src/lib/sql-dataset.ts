@@ -35,40 +35,14 @@ export abstract class SqlTable extends SqlDataset {
     return this.name;
   }
 
-  get url(): string {
-    return '/table/' + this.name;
-  }
+  public async getRows(pageNumber = 1, searchText = '') {
+    let url: string;
 
-  async getRow(query: any) {
-    let url = this.url + '/row';
-    let params = '';
+    if (this.customApi)
+      url = '/custom/' + this.customApi;
+    else
+      url = '/table/' + this.name + '/rows';
 
-    for (const key of Object.keys(query)) {
-      if (params == '')
-        params += '?';
-      else
-        params += '&';
-
-      params += key + '=' + query[key];
-    }
-
-    url += params;
-
-    console.log('GET ' + url);
-    
-    const response = await this.axios.get(url);
-
-    const source = response.data[0];
-    const row: object = {};
-
-    for (const key in source) {
-      row[key] = source[key];
-    }
-
-    return row;
-  }
-
-  private async fetchRows(url: string, pageNumber: number, searchText: string) {
     url += '?limit=' + this.rowsPerPage;
 
     if (pageNumber > 1)
@@ -101,23 +75,37 @@ export abstract class SqlTable extends SqlDataset {
     return { rowCount: response.data.rowCount, rows }
   }
 
-  private async getTableRows(pageNumber: number, searchText: string) {
-    const url = '/table/' + this.name + '/rows';
-
-    return this.fetchRows(url, pageNumber, searchText);
+  private get url(): string {
+    return '/table/' + this.name;
   }
 
-  private getCustomRows(pageNumber: number, searchText: string) {
-    const url = '/custom/' + this.customApi;
+  async getRow(query: any) {
+    let url = this.url + '/row';
+    let params = '';
 
-    return this.fetchRows(url, pageNumber, searchText);
-  }
+    for (const key of Object.keys(query)) {
+      if (params == '')
+        params += '?';
+      else
+        params += '&';
 
-  public async getRows(pageNumber = 1, searchText = '') {
-    if (this.customApi)
-      return this.getCustomRows(pageNumber, searchText);
-    else
-      return this.getTableRows(pageNumber, searchText);
+      params += key + '=' + query[key];
+    }
+
+    url += params;
+
+    console.log('GET ' + url);
+    
+    const response = await this.axios.get(url);
+
+    const source = response.data[0];
+    const row: object = {};
+
+    for (const key in source) {
+      row[key] = source[key];
+    }
+
+    return row;
   }
 
   public async addRow(row: object) {

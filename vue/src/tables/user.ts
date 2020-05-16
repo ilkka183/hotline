@@ -46,7 +46,7 @@ export class UserTable extends BaseTable {
     this.addAutoIncrementField({ name: 'Id', caption: 'No' });
     this.addIntegerField({ name: 'GroupId', caption: 'Käyttäjäryhmä', lookupApi: 'UserGroups', hideInGrid: true, foreignKey: true, required: true });
     this.addStringField({ name: 'GroupName', caption: 'Käyttäjäryhmä', hideInDialog: true });
-    this.addIntegerField({ name: 'Role', caption: 'Rooli', enumTexts: User.typeTexts, required: true });
+    this.addIntegerField({ name: 'Role', caption: 'Rooli', enumTexts: User.roleTexts, required: true });
     this.addStringField({ name: 'Email', caption: 'Sähköposti', length: 80, code: true, required: true });
     this.addStringField({ name: 'Password', caption: 'Salasana', length: 20, hideInGrid: true, required: true });
     this.addStringField({ name: 'FirstName', caption: 'Etunimi', length: 20, required: true });

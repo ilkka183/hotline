@@ -13,7 +13,7 @@
       </b-form-group>
 
       <b-form-group label="Rooli" label-for="role">
-        <b-form-input name="role" v-model="userRoleText" readonly />
+        <b-form-input name="role" v-model="user.roleText" readonly />
       </b-form-group>
 
       <b-form-group label="Lähiosoite" label-for="address">
@@ -98,11 +98,7 @@ export default class UserInfo extends BaseVue {
     }
   }
 
-  protected get userRoleText(): string {
-    return User.typeTexts[this.user.role];
-  }
-
-private async update(fields: object) {
+  private async update(fields: object) {
     const url = '/table/User';
 
     const keys = {
