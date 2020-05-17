@@ -1,10 +1,8 @@
 <template>
   <div>
-    <b-container v-if="$store.state.token == null">
-      <Login @login="createTables" />
-    </b-container>
-    <b-container fluid v-else>
+    <b-container fluid v-if="user">
       <DatasetGrid
+        v-if="openProblems"
         title="Avoimet vikatapaukset"
         :dataset="openProblems"
         :showAddButton="true"
@@ -15,6 +13,7 @@
         :showFooter="false"
       />
       <DatasetGrid
+        v-if="closedProblems"
         title="Viimeksi ratkaistut vikatapaukset"
         :dataset="closedProblems"
         :showAddButton="false"
@@ -25,6 +24,7 @@
         :showFooter="false"
       />
       <DatasetGrid
+        v-if="notices"
         title="Ilmoitukset"
         :dataset="notices"
         :showAddButton="true"
@@ -41,7 +41,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
-import Login from '../components/Login.vue';
 import { NoticeTable } from '../tables/notice';
 import { ProblemTable } from '../tables/problem';
 import { RestDatabase } from '../lib/dataset';
@@ -49,23 +48,24 @@ import BaseVue from './BaseVue.vue';
 
 @Component({
   components: {
-    DatasetGrid,
-    Login
+    DatasetGrid
   }
 })
 export default class Home extends BaseVue {
-  private openProblems: ProblemTable;
-  private closedProblems: ProblemTable;
-  private notices: NoticeTable;
+  private openProblems: ProblemTable = null;
+  private closedProblems: ProblemTable = null;
+  private notices: NoticeTable = null;
 
-  created() {
-    this.createTables();
-  }
+  mounted() {
+    const token = localStorage.getItem('token');
 
-  private createTables() {
-    this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
-    this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
-    this.notices = new NoticeTable(this.database, this.user);
+    if (token) {
+      this.$store.dispatch('login', token);
+
+      this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
+      this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
+      this.notices = new NoticeTable(this.database, this.user);
+    }
   }
 }
 </script>

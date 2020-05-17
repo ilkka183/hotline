@@ -21,6 +21,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
+      redirect: store.state.user ? '/login' : undefined,
       component: Home
     },
     {
@@ -120,6 +121,11 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: () => import('@/views/UserAccount.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue')
     }
   ]
 });

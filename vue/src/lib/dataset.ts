@@ -487,10 +487,8 @@ export abstract class Dataset {
 
     console.log('Fixed', this.fixedValues);
 
-    for (const name in this.fixedValues) {
-      console.log('Fixed', name, this.fixedValues[name]);
+    for (const name in this.fixedValues)
       row[name] = this.fixedValues[name];
-    }
 
     this.initialize(row);
 

@@ -20,7 +20,10 @@
           <b-nav-item-dropdown :text="$store.state.user.fullName" right>
             <b-nav-item to="/account">Omat tiedot</b-nav-item>
           </b-nav-item-dropdown>
-          <b-nav-item to="/"><span @click="logout">Kirjaudu ulos</span></b-nav-item>
+          <b-nav-item to="/login"><span @click="logout">Kirjaudu ulos</span></b-nav-item>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto" v-else>
+          <b-nav-item to="/login">Kirjaudu sisään</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

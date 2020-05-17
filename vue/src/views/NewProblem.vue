@@ -127,7 +127,7 @@ export default class NewProblem extends BaseVue {
 
     this.row.Brand = this.brand;
     this.row.Model = this.model;
-    this.row.ModelYear = this.year;
+    this.row.YearMin = this.year;
     this.row.Fuel = this.fuel;
     this.row.EngineSize = this.engineSize;
     this.row.Status = 0;

@@ -26,6 +26,8 @@ export default new Vuex.Store({
       } else {
         state.user = null;
       }
+
+      console.log('user', state.user);
     }
   },
   actions: {

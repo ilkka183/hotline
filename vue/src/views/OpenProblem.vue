@@ -22,7 +22,7 @@
       <h2 class="title">{{ row.Title }}</h2>
       <p class="decription">{{ row.Description }}</p>
 
-      <DatasetGrid title="Vastaukset" :dataset="replies" :showFooter="false"></DatasetGrid>
+      <DatasetGrid title="Vastaukset" :dataset="replies" :showFooter="false" :showPagination="false"></DatasetGrid>
     </template>
 
     <b-button variant="danger" class="mr-2" @click="deleteRow">Poista</b-button>
@@ -38,6 +38,7 @@
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
+import { Field } from '../lib/dataset';
 import { SqlTable } from '../lib/sql-dataset';
 import { ProblemTable, ProblemReplyTable } from '../tables/problem';
 import BaseVue from './BaseVue.vue';
@@ -64,6 +65,18 @@ export default class OpenProblem extends BaseVue {
     await this.table.fetchLookups();
     this.row = await this.table.getRow(this.$route.query);
     this.replies = new ProblemReplyTable(this.database, this.user, id);
+  }
+
+  private get showSender(): boolean {
+    return this.user ? this.user.showSender : false;
+  }
+
+  private get showLicenseNumber(): boolean {
+    return this.user ? this.user.showLicenseNumber : false;
+  }
+
+  private get fields(): Field[] {
+    return this.replies.fieldsAsArray.filter(field => !field.hideInGrid);
   }
 
   private editRow() {

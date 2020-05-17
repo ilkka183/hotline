@@ -10,7 +10,7 @@
       </b-nav-form>
       <b-pagination
         class="m-0 mr-2"
-        v-if="pageCount > 1"
+        v-if="showPagination && pageCount > 1"
         v-model="pageNumber"
         :total-rows="rowCount"
         :per-page="dataset.rowsPerPage"
@@ -52,6 +52,7 @@ export default class DatasetGrid extends Vue {
   @Prop({ type: String, required: true }) readonly title: string;
   @Prop({ type: Object, required: true }) readonly dataset: SqlTable;
   @Prop({ type: Boolean, default: true }) readonly showNavigator: boolean;
+  @Prop({ type: Boolean, default: true }) readonly showPagination: boolean;
   @Prop({ type: Boolean, default: true }) readonly showAddButton: boolean;
   @Prop({ type: Boolean, default: false }) readonly showSearch: boolean;
   @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
@@ -147,7 +148,7 @@ export default class DatasetGrid extends Vue {
   private cellText(field: Field, row: object) {
     const text = field.displayText(row);
 
-    if (text)
+    if (text || (text === null))
       return text;
 
     return 'undefined';

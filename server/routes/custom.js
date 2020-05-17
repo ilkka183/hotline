@@ -98,7 +98,7 @@ router.get('/Problems', (req, res) => {
 
 router.get('/ProblemReplies', (req, res) => {
   let sql =
-    'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
+    'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, ProblemReply.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
     'FROM ProblemReply, User ' +
     'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + req.query.ProblemId + ' ' +
     'ORDER BY ProblemReply.Date';
