@@ -253,13 +253,22 @@ class BooleanField extends Field {
 }
 
 
-class DateField extends Field {
+export class DateField extends Field {
   constructor(params: FieldParams) {
     super(params);
   }
 
   public getType(): any {
     return Date;
+  }
+
+  public static format(value): string {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleDateString();
+    }
+
+    return null;
   }
 
   protected getDisplayText(value): string {

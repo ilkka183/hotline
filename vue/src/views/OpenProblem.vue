@@ -8,8 +8,8 @@
         <b-tbody>
           <tr><td>No:</td><td>{{ row.Id }}</td></tr>
           <tr><td>Pvm:</td><td>{{ table.fields.Date.displayText(row) }}</td></tr>
-          <tr v-if="user.showSender"><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
-          <tr v-if="user.showLicenseNumber"><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
+          <tr v-if="showSender"><td>Lähettäjä:</td><td>{{ table.fields.UserId.displayText(row) }}</td></tr>
+          <tr v-if="showLicenseNumber"><td>Rekisterinumero:</td><td>{{ table.fields.LicenseNumber.displayText(row) }}</td></tr>
           <tr><td>Merkki:</td><td>{{ row.Brand }}</td></tr>
           <tr><td>Malli:</td><td>{{ row.Model }}</td></tr>
           <tr><td>Alkuvuosi:</td><td>{{ table.fields.YearMin.displayText(row) }}</td></tr>
@@ -22,23 +22,45 @@
       <h2 class="title">{{ row.Title }}</h2>
       <p class="decription">{{ row.Description }}</p>
 
-      <DatasetGrid title="Vastaukset" :dataset="replies" :showFooter="false" :showPagination="false"></DatasetGrid>
+      <b-button variant="primary" class="mb-2" size="sm" @click="addReply">Lisää uusi vastaus</b-button>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Pvm</th>
+            <th>Lahettaja</th>
+            <th>Viesti</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="reply in replies" v-bind:key="reply.id">
+            <td>{{formatDate(reply.Date)}}</td>
+            <td>{{reply.UserName}}</td>
+            <td>{{reply.Message}}</td>
+            <td><b-button v-if="user.id == reply.UserId" variant="primary" size="sm" @click="editReply(reply)">Muokkaa</b-button></td>
+            <td><b-button v-if="user.id == reply.UserId" variant="primary" size="sm" @click="setResolved(reply)">Merkitse ratkaisuksi</b-button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <b-button v-if="user.id == row.UserId" variant="danger" class="mr-2" @click="deleteRow">Poista</b-button>
+      <b-button v-if="user.id == row.UserId" variant="success" class="mr-2" @click="editRow">Muokkaa</b-button>
+      <b-button variant="light" class="float-right ml-2" @click="close">Sulje</b-button>
+
+      <b-alert variant="danger" class="mt-2" fade show v-if="errorMessage">
+        <div>{{ errorMessage }}</div>
+      </b-alert>
+
     </template>
-
-    <b-button variant="danger" class="mr-2" @click="deleteRow">Poista</b-button>
-    <b-button variant="success" class="mr-2" @click="editRow">Muokkaa</b-button>
-    <b-button variant="light" class="float-right ml-2" @click="close">Sulje</b-button>
-
-    <b-alert variant="danger" class="mt-2" fade show v-if="errorMessage">
-      <div>{{ errorMessage }}</div>
-    </b-alert>
   </b-container>
 </template>
 
 <script  lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DatasetGrid from '../components/DatasetGrid.vue';
-import { Field } from '../lib/dataset';
+import { Field, DateField } from '../lib/dataset';
 import { SqlTable } from '../lib/sql-dataset';
 import { ProblemTable, ProblemReplyTable } from '../tables/problem';
 import BaseVue from './BaseVue.vue';
@@ -51,8 +73,8 @@ import { UserRole } from '../js/user'
 })
 export default class OpenProblem extends BaseVue {
   private table: any;
-  private replies: ProblemReplyTable;
   private row: object | null = null;
+  private replies: any[] = [];
   private errorMessage: string = null;
 
   created() {
@@ -64,7 +86,9 @@ export default class OpenProblem extends BaseVue {
 
     await this.table.fetchLookups();
     this.row = await this.table.getRow(this.$route.query);
-    this.replies = new ProblemReplyTable(this.database, this.user, id);
+
+    const response = await this.axios.get('/custom/ProblemReplies?ProblemId=2');
+    this.replies = response.data.rows;
   }
 
   private get showSender(): boolean {
@@ -75,15 +99,27 @@ export default class OpenProblem extends BaseVue {
     return this.user ? this.user.showLicenseNumber : false;
   }
 
-  private get fields(): Field[] {
-    return this.replies.fieldsAsArray.filter(field => !field.hideInGrid);
-  }
-
   private editRow() {
     const query = this.table.primaryKeys(this.row);
     this.$router.push({ path: 'edit/' + this.table.tableName, query });
   }
 
+  private addReply() {
+    this.$router.push({ path: 'add/ProblemReply?ProblemId=' + this.row['Id'] });
+  }
+
+  private editReply(reply: any) {
+    this.$router.push({ path: 'edit/ProblemReply?Id=' + reply.Id + '&ProblemId=' + reply.ProblemId });
+  }
+  
+  private setResolved(reply: any) {
+    //
+  }
+
+  private formatDate(date: any) {
+    return DateField.format(date);
+  }
+  
   private sqlError(error) {
     this.errorMessage = error.response.data.sqlMessage;
   }

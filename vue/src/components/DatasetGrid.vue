@@ -22,8 +22,8 @@
       <thead>
         <tr>
           <th class="data" v-for="(field, index) in fields" :key="index">{{field.caption}}</th>
-          <th v-if="showOpenButton"></th>
-          <th v-if="showEditButton"></th>
+          <th v-if="showOpenButtons"></th>
+          <th v-if="showEditButtons"></th>
           <th></th>
         </tr>
       </thead>
@@ -32,8 +32,8 @@
           <td class="data" v-for="(field, index) in fields" :key="index" :class="cellClasses(field, row)">
             <span :class="cellClass(field)" :style="cellStyle(field, row)">{{cellText(field, row)}}</span>
           </td>
-          <td v-if="showOpenButton"><b-button variant="primary" size="sm" @click="openRow(row)">Avaa</b-button></td>
-          <td v-if="showEditButton"><b-button variant="primary" size="sm" @click="editRow(row)">Muokkaa</b-button></td>
+          <td v-if="showOpenButtons"><b-button v-if="showEditButton(row)" variant="primary" size="sm" @click="openRow(row)">Avaa</b-button></td>
+          <td v-if="showEditButtons"><b-button v-if="showEditButton(row)" variant="primary" size="sm" @click="editRow(row)">Muokkaa</b-button></td>
           <td class="added-text" v-if="hasRowAdded(row)">lisätty</td>
           <td class="edited-text" v-else-if="hasRowEdited(row)">muokattu</td>
         </tr>
@@ -55,8 +55,10 @@ export default class DatasetGrid extends Vue {
   @Prop({ type: Boolean, default: true }) readonly showPagination: boolean;
   @Prop({ type: Boolean, default: true }) readonly showAddButton: boolean;
   @Prop({ type: Boolean, default: false }) readonly showSearch: boolean;
-  @Prop({ type: Boolean, default: false }) readonly showOpenButton: boolean;
-  @Prop({ type: Boolean, default: true }) readonly showEditButton: boolean;
+  @Prop({ type: Boolean, default: false }) readonly showOpenButtons: boolean;
+  @Prop({ type: Function, default: null }) readonly onShowOpenButton: any;
+  @Prop({ type: Boolean, default: true }) readonly showEditButtons: boolean;
+  @Prop({ type: Function, default: null }) readonly onShowEditButton: any;
   @Prop({ type: Boolean, default: true }) readonly showFooter: boolean;
 
   private pageNumber = 1;
@@ -82,6 +84,14 @@ export default class DatasetGrid extends Vue {
 
   get addedData(): EditedData | null {
     return this.dataset.database.addedData;
+  }
+
+  private showOpenButton(row: any): boolean {
+    return this.onShowOpenButton ? this.onShowOpenButton(row) : true;
+  }
+
+  private showEditButton(row: any): boolean {
+    return this.onShowEditButton ? this.onShowEditButton(row) : true;
   }
 
   mounted() {

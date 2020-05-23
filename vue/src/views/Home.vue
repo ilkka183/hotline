@@ -7,9 +7,8 @@
         :dataset="openProblems"
         :showAddButton="true"
         :showSearch="true"
-        :showOpenButton="true"
-        :showEditButton="false"
-        :showDeleteButton="false"
+        :showOpenButtons="true"
+        :showEditButtons="false"
         :showFooter="false"
       />
       <DatasetGrid
@@ -18,9 +17,8 @@
         :dataset="closedProblems"
         :showAddButton="false"
         :showSearch="true"
-        :showOpenButton="true"
-        :showEditButton="false"
-        :showDeleteButton="false"
+        :showOpenButtons="true"
+        :showEditButtons="false"
         :showFooter="false"
       />
       <DatasetGrid
@@ -29,9 +27,8 @@
         :dataset="notices"
         :showAddButton="true"
         :showSearch="true"
-        :showOpenButton="true"
-        :showEditButton="false"
-        :showDeleteButton="false"
+        :showOpenButtons="true"
+        :showEditButtons="false"
         :showFooter="false"
       /> 
     </b-container>
