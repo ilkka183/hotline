@@ -174,6 +174,7 @@ CREATE TABLE ProblemReply
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Message TEXT NOT NULL,
   Data JSON,
+  Solution BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (Id),
   FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
   FOREIGN KEY (UserId) REFERENCES User(Id)
@@ -256,7 +257,9 @@ Uusi hinta tulee voimaan lisenssin uudistuksen yhteydessä 1.10.2013 alkaen, eli
 INSERT INTO Problem(UserId, Brand, Model, YearMin, YearMax, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Solution, Status)
   VALUES(1, 'Seat', 'Leon ST 1.0 TSI Ecomotive Style', 2013, 2019, 0, 'ZLP-833', 'ABC', '123', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.', 'Lataa akku.', 1);
 
-INSERT INTO ProblemReply(ProblemId, Id, UserId, Message) VALUES(1, 1, 2, 'Käännä virta-avainta');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 1, 'Käännä virta-avainta');
+INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 2, 'Käytä huollossa');
+INSERT INTO ProblemReply(ProblemId, UserId, Message, Solution) VALUES(1, 3, 'Lisää öljyä', TRUE);
 
 
 INSERT INTO Problem(UserId, Brand, Model, YearMin, YearMax, Fuel, LicenseNumber, EngineCode, VIN, Title, Description, Status)

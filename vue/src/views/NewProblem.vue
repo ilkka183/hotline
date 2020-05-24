@@ -236,7 +236,7 @@ export default class NewProblem extends BaseVue {
         items.push({ value: null, text: 'Valitse käyttövoima' });
 
         for (const item of response.data)
-          items.push({ value: item, text: BaseTable.FUELS[item] });
+          items.push({ value: item, text: ProblemTable.fuelTexts[item] });
 
         this.fuels = items;
       });

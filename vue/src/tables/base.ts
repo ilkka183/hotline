@@ -3,13 +3,6 @@ import { SqlTable } from '@/lib/sql-dataset';
 
 
 export abstract class BaseTable extends SqlTable {
-  public static FUELS = [
-    'bensiini',
-    'diesel',
-    'kaasu',
-    'sähkö'
-  ];
-
   constructor(database: RestDatabase, name: string, customApi: string, filter: object = null) {
     super(database, name, customApi, filter);
   }

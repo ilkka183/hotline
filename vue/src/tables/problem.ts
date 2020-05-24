@@ -3,12 +3,31 @@ import { BaseTable } from './base';
 import { User, UserRole } from '../js/user'
 
 
+export enum ProblemStatus {
+  Open = 0,
+  Resolved,
+  Unresolved
+}
+
+
 export interface ProblemFilter {
   status?: number;
 }
 
 
 export class ProblemTable extends BaseTable {
+  public static readonly fuelTexts: string[] = [
+    'bensiini',
+    'diesel',
+    'kaasu',
+    'sähkö'
+  ];
+
+  public static readonly statusTexts: string[] = [
+    'avoin',
+    'ratkaistu',
+    'ratkaisematon'];
+
   private readonly user: User;
   
   constructor(database: RestDatabase, user: User, filter: ProblemFilter = {}) {
@@ -26,14 +45,14 @@ export class ProblemTable extends BaseTable {
     this.addIntegerField({ name: 'YearMin', caption: 'Alkuvuosi', hideInGrid: true });
     this.addIntegerField({ name: 'YearMax', caption: 'Loppuvuosi', hideInGrid: true });
     this.addIntegerField({ name: 'Years', caption: 'Vuosimallit', onCellText: (row: any) => row.YearMin + '-' + row.YearMax });
-    this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', enumTexts: ProblemTable.FUELS });
+    this.addIntegerField({ name: 'Fuel', caption: 'Käyttövoima', enumTexts: ProblemTable.fuelTexts });
     this.addStringField({ name: 'Title', caption: 'Otsikko', length: 80, required: true });
     this.addTextField({ name: 'Description', caption: 'Kuvaus', required: true });
 
     this.addIntegerField({
       name: 'Status',
       caption: 'Tila',
-      enumTexts: ['avoin', 'ratkaistu', 'ratkaisematon'],
+      enumTexts: ProblemTable.statusTexts,
       readonly: true,
       onCellColor: this.statusCellColor });
   }

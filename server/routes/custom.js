@@ -4,7 +4,20 @@ const connection = require('../connection');
 const router = express.Router();
 
 
-function fetch(tableName, sql, req, res) {
+function fetchRow(sql, req, res) {
+  console.log(sql);
+
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
+
+    res.send(results);
+  });
+}
+
+function fetchRows(tableName, sql, req, res) {
   let countSql = 'SELECT COUNT(*) as RowCount FROM ' + tableName;
 
   console.log(countSql);
@@ -46,7 +59,7 @@ router.get('/UserGroups', (req, res) => {
     'FROM UserGroup ' +
     'ORDER BY Id';
 
-  fetch('UserGroup', sql, req, res);
+  fetchRows('UserGroup', sql, req, res);
 });
 
 router.get('/Users', (req, res) => {
@@ -59,19 +72,30 @@ router.get('/Users', (req, res) => {
     'WHERE User.GroupId = UserGroup.Id ' +
     'ORDER BY User.Id';
 
-  fetch('User', sql, req, res);
+  fetchRows('User', sql, req, res);
 });
 
 router.get('/Brands', (req, res) => {
   const sql = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
 
-  fetch('Brand', sql, req, res);
+  fetchRows('Brand', sql, req, res);
 });
 
 router.get('/BulletinGroups', (req, res) => {
   const sql = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
 
-  fetch('BulletinGroup', sql, req, res);
+  fetchRows('BulletinGroup', sql, req, res);
+});
+
+router.get('/Problem', (req, res) => {
+  let sql =
+    'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
+    'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.YearMin, Problem.YearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+    'FROM Problem, User ' +
+    'WHERE Problem.UserId = User.Id ' + 
+    'AND Problem.Id = ' + req.query.Id;
+
+  fetchRow(sql, req, res);
 });
 
 router.get('/Problems', (req, res) => {
@@ -93,17 +117,18 @@ router.get('/Problems', (req, res) => {
 
   sql += 'ORDER BY Problem.Id';
 
-  fetch('Problem', sql, req, res);
+  fetchRows('Problem', sql, req, res);
 });
 
 router.get('/ProblemReplies', (req, res) => {
   let sql =
-    'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, ProblemReply.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ProblemReply.Message ' +
+    'SELECT ProblemReply.Id, ProblemReply.ProblemId, ProblemReply.Date, ProblemReply.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
+    'ProblemReply.Message, ProblemReply.Solution ' +
     'FROM ProblemReply, User ' +
     'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + req.query.ProblemId + ' ' +
     'ORDER BY ProblemReply.Date';
 
-  fetch('ProblemReply', sql, req, res);
+  fetchRows('ProblemReply', sql, req, res);
 });
 
 router.get('/Notices', (req, res) => {
@@ -119,7 +144,7 @@ router.get('/Notices', (req, res) => {
 
   sql += 'ORDER BY Notice.Id';
 
-  fetch('Notice', sql, req, res);
+  fetchRows('Notice', sql, req, res);
 });
 
 module.exports = router;
