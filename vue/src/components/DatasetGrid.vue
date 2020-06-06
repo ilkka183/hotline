@@ -6,7 +6,7 @@
       <b-nav-form v-if="showSearch" @submit.stop.prevent>
         <b-form-input size="sm" class="mr-2" v-model="searchText" @keydown.enter="search" />
         <b-button variant="primary" size="sm" class="mr-2" @click="search">Hae</b-button>
-        <b-button variant="primary" size="sm" class="mr-2" @click="clearSearchText" :disabled="!searchText">Kaikki</b-button>
+        <b-button variant="primary" size="sm" class="mr-2" @click="clearSearchText" :disabled="!searchText">Tyhjennä</b-button>
       </b-nav-form>
       <b-pagination
         class="m-0 mr-2"

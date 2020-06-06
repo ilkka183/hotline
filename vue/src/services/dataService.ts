@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiUrl } from '../config.json';
+import { apiUrl } from '../services/url';
 
 const apiEndpoint = apiUrl + '/data'
 

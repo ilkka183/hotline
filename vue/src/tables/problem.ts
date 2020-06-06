@@ -1,6 +1,6 @@
 import { RestDatabase } from '@/lib/dataset';
 import { BaseTable } from './base';
-import { User, UserRole } from '../js/user'
+import { User } from '../js/user'
 
 
 export enum ProblemStatus {
@@ -87,7 +87,7 @@ export class ProblemTable extends BaseTable {
     return 'Poista vikatapaus';
   }
 
-  private statusCellColor(row: object): string | null {
+  private statusCellColor(row: object): string {
     switch (row[this.tableName]) {
       case 0: return 'red';
       case 1: return 'green';

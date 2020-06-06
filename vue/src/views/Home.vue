@@ -1,67 +1,40 @@
 <template>
   <div>
     <b-container fluid v-if="user">
-      <DatasetGrid
-        v-if="openProblems"
+      <ProblemGrid
         title="Avoimet vikatapaukset"
-        :dataset="openProblems"
-        :showAddButton="true"
-        :showSearch="true"
-        :showOpenButtons="true"
-        :showEditButtons="false"
-        :showFooter="false"
+        :status="0"
       />
-      <DatasetGrid
-        v-if="closedProblems"
+      <ProblemGrid
         title="Viimeksi ratkaistut vikatapaukset"
-        :dataset="closedProblems"
+        :status="1"
         :showAddButton="false"
-        :showSearch="true"
-        :showOpenButtons="true"
-        :showEditButtons="false"
-        :showFooter="false"
       />
-      <DatasetGrid
-        v-if="notices"
-        title="Ilmoitukset"
-        :dataset="notices"
-        :showAddButton="true"
-        :showSearch="true"
-        :showOpenButtons="true"
-        :showEditButtons="false"
-        :showFooter="false"
-      /> 
     </b-container>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import DatasetGrid from '../components/DatasetGrid.vue';
-import { NoticeTable } from '../tables/notice';
-import { ProblemTable } from '../tables/problem';
-import { RestDatabase } from '../lib/dataset';
 import BaseVue from './BaseVue.vue';
+import ProblemGrid from '../components/ProblemGrid.vue';
+import { ProblemTable, ProblemStatus } from '../tables/problem';
 
 @Component({
   components: {
-    DatasetGrid
+    ProblemGrid
   }
 })
 export default class Home extends BaseVue {
-  private openProblems: ProblemTable = null;
-  private closedProblems: ProblemTable = null;
-  private notices: NoticeTable = null;
-
   mounted() {
     const token = localStorage.getItem('token');
 
     if (token) {
       this.$store.dispatch('login', token);
+    }
 
-      this.openProblems = new ProblemTable(this.database, this.user, { status: 0 });
-      this.closedProblems = new ProblemTable(this.database, this.user, { status: 1 });
-      this.notices = new NoticeTable(this.database, this.user);
+    if (!this.user) {
+      this.$router.push('login');      
     }
   }
 }

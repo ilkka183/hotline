@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import { RestDatabase } from '../lib/dataset';
-import { apiUrl } from '../config.json';
+import { apiUrl } from '../services/url';
 import { User } from '@/js/user';
 
 Vue.use(Vuex);
@@ -26,8 +26,6 @@ export default new Vuex.Store({
       } else {
         state.user = null;
       }
-
-      console.log('user', state.user);
     }
   },
   actions: {

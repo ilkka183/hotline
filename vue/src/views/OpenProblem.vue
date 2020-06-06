@@ -15,7 +15,7 @@
           <tr><td>Alkuvuosi:</td><td>{{ row.YearMin }}</td></tr>
           <tr><td>Loppuvuosi:</td><td>{{ row.YearMax }}</td></tr>
           <tr><td>Käyttövoima:</td><td>{{ fuelText }}</td></tr>
-          <tr><td>Tila:</td><td>{{ statusText }}</td></tr>
+          <tr><td>Tila:</td><td :class="statusColor(row.Status)">{{ statusText }}</td></tr>
         </b-tbody>
       </b-table-simple>
 
@@ -88,6 +88,16 @@ export default class OpenProblem extends BaseVue {
       const response = await this.axios.get('/custom/ProblemReplies?ProblemId=' + this.row.Id);
       this.replies = response.data.rows;
     }
+  }
+
+  private statusColor(status: ProblemStatus): string {
+    switch (status) {
+      case ProblemStatus.Open: return 'open';
+      case ProblemStatus.Resolved: return 'resolved';
+      case ProblemStatus.Unresolved: return 'unresolved';
+     }
+
+     return null;
   }
 
   private get visibleReplies(): any[] {
@@ -176,3 +186,18 @@ export default class OpenProblem extends BaseVue {
   }
 }
 </script>
+
+<style scoped>
+.open {
+  color: red;
+}
+
+.resolved {
+  color: green;
+}
+
+.unresolved {
+  color: gray;
+}
+</style>
+

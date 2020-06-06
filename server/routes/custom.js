@@ -17,9 +17,13 @@ function fetchRow(sql, req, res) {
   });
 }
 
-function fetchRows(tableName, sql, req, res) {
-  let countSql = 'SELECT COUNT(*) as RowCount FROM ' + tableName;
+function fetchRows(sql, req, res) {
+  const index = sql.indexOf('FROM');
 
+  if (index === -1)
+    return res.status(400).send('No FROM keyword in the SQL query!');
+
+  let countSql = 'SELECT COUNT(*) as RowCount ' + sql.substring(index, sql.length);
   console.log(countSql);
 
   connection.query(countSql, (error, results, fields) => {
@@ -59,7 +63,7 @@ router.get('/UserGroups', (req, res) => {
     'FROM UserGroup ' +
     'ORDER BY Id';
 
-  fetchRows('UserGroup', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/Users', (req, res) => {
@@ -72,19 +76,19 @@ router.get('/Users', (req, res) => {
     'WHERE User.GroupId = UserGroup.Id ' +
     'ORDER BY User.Id';
 
-  fetchRows('User', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/Brands', (req, res) => {
   const sql = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
 
-  fetchRows('Brand', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/BulletinGroups', (req, res) => {
   const sql = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
 
-  fetchRows('BulletinGroup', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/Problem', (req, res) => {
@@ -115,9 +119,9 @@ router.get('/Problems', (req, res) => {
   if (req.query.status)
     sql += 'AND Problem.Status = ' + req.query.status + ' ';
 
-  sql += 'ORDER BY Problem.Id';
+  sql += 'ORDER BY Problem.Id DESC';
 
-  fetchRows('Problem', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/ProblemReplies', (req, res) => {
@@ -128,7 +132,7 @@ router.get('/ProblemReplies', (req, res) => {
     'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + req.query.ProblemId + ' ' +
     'ORDER BY ProblemReply.Date';
 
-  fetchRows('ProblemReply', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 router.get('/Notices', (req, res) => {
@@ -144,7 +148,7 @@ router.get('/Notices', (req, res) => {
 
   sql += 'ORDER BY Notice.Id';
 
-  fetchRows('Notice', sql, req, res);
+  fetchRows(sql, req, res);
 });
 
 module.exports = router;
