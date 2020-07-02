@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Counter from './components/Counter';
+import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Counter />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
