@@ -1,12 +1,10 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import NavBar from './NavBar';
-
 import Movies from './views/Movies';
 import Customers from './views/Customers';
 import Rentals from './views/Rentals';
 import NotFound from './views/NotFound';
-
 import LoginForm from './forms/LoginForm';
 import MovieForm from './forms/MovieForm';
 
