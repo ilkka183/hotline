@@ -1,0 +1,25 @@
+@host = http://localhost:4000
+
+GET {{host}}/hotline/api/UserGroups
+###
+GET {{host}}/hotline/api/UserGroup/1
+###
+POST {{host}}/hotline/api/UserGroup
+content-type: application/json
+
+{
+    "name": "K-Kaara Oys ja",
+    "phone": "050 61698",
+    "email": "ilkka.salmenius@gmail.com",
+    "enabled": true
+}
+###
+PUT {{host}}/hotline/api/UserGroup/1
+content-type: application/json
+
+{
+    "country": "Sweden",
+    "enabled": true
+}
+###
+DELETE {{host}}/hotline/api/UserGroup/4

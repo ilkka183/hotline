@@ -8,6 +8,9 @@ const query = require('./routes/query');
 const table = require('./routes/table');
 const traficom = require('./routes/traficom');
 
+const usergroup = require('./routes/usergroup');
+const user = require('./routes/user');
+
 const app = express();
 
 /*
@@ -39,6 +42,9 @@ app.use('/hotline/api/custom', custom);
 app.use('/hotline/api/query', query);
 app.use('/hotline/api/table', table);
 app.use('/hotline/api/traficom', traficom);
+
+app.use('/hotline/api', usergroup);
+app.use('/hotline/api', user);
 
 const connection = require('./connection');
 connection.connect();

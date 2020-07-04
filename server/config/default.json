@@ -1,0 +1,6 @@
+{
+  "jwtPrivateKey": "ohion330",
+  "requiresAuth": false,
+  "db": "mongodb://localhost/vidly",
+  "port": "3900"
+}

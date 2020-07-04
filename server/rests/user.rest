@@ -1,32 +1,28 @@
-@host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGdtYWlsLmNvbSIsInBob25lIjoiMDUwIDYxNjk4IiwidHlwZSI6MCwiaWF0IjoxNTg1OTA2NzU0fQ.BkPUrYebgt5fSlwC73mrj2Vxe8bIJYPgTWJ6VGwZEcs
+@host = http://localhost:4000
 
-GET {{host}}/api/table/User/row?Id=1
-x-auth-token: {{token}}
+GET {{host}}/hotline/api/Users
 ###
-GET http://localhost:3000/api/sql
+GET {{host}}/hotline/api/User/5
+###
+POST {{host}}/hotline/api/User
 content-type: application/json
 
 {
-    "sql": "SELECT CONCAT(FirstName, ' ', LastName) AS Name FROM Client WHERE Id = 1"
+    "groupId": 2,
+    "role": 1,
+    "firstName": "Matti",
+    "lastName": "Meikäläinen",
+    "email": "matti.maikalainen@gmail.com",
+    "password": "huuhaa",
+    "enabled": true
 }
 ###
-POST http://localhost:3000/api/Client
+PUT {{host}}/hotline/api/User/5
 content-type: application/json
 
 {
-    "firstName": "Ella",
-    "lastName": "Salmenius",
-    "phone": "050 61698",
-    "email": "ilkka.salmenius@gmail.com"
+    "password": "helppo",
+    "enabled": false
 }
 ###
-PUT http://localhost:3000/api/Client/1
-content-type: application/json
-
-{
-    "firstName": "Jaska",
-    "email": "jaakko.salmenius@iki.fi"
-}
-###
-DELETE http://localhost:3000/api/Client/1
+DELETE {{host}}/hotline/api/User/5

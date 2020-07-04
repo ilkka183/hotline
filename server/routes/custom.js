@@ -1,94 +1,19 @@
 const express = require('express');
-const connection = require('../connection');
+const { getRow, getRows} = require('./utils');
 
 const router = express.Router();
 
 
-function fetchRow(sql, req, res) {
-  console.log(sql);
-
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
-
-    res.send(results);
-  });
-}
-
-function fetchRows(sql, req, res) {
-  const index = sql.indexOf('FROM');
-
-  if (index === -1)
-    return res.status(400).send('No FROM keyword in the SQL query!');
-
-  let countSql = 'SELECT COUNT(*) as RowCount ' + sql.substring(index, sql.length);
-  console.log(countSql);
-
-  connection.query(countSql, (error, results, fields) => {
-    if (error)
-      return res.status(400).send(error);
-
-    const rowCount = results[0].RowCount;
-
-    let limit = 10;
-
-    if (req.query.limit)
-      limit = req.query.limit;
-
-    sql += ' LIMIT ' + limit;
-
-    if (req.query.offset)
-      sql += ' OFFSET ' + req.query.offset;
-
-    console.log(sql);
-  
-    connection.query(sql, (error, results, fields) => {
-      if (error) {
-        console.log(error);        
-        return res.status(400).send(error);
-      }
-  
-      res.send({ rowCount, rows: results });
-    });
-  });
-}
-
-router.get('/UserGroups', (req, res) => {
-  const sql =
-    'SELECT Id, Name, ContactPerson,' +
-    'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
-    'Logo, Info, Enabled ' +
-    'FROM UserGroup ' +
-    'ORDER BY Id';
-
-  fetchRows(sql, req, res);
-});
-
-router.get('/Users', (req, res) => {
-  const sql =
-    'SELECT User.Id, User.GroupId, User.Email, User.Password, ' + 
-    'UserGroup.Name AS GroupName, User.Role, User.FirstName, User.LastName, User.Title, ' +
-    'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
-    'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
-    'FROM User, UserGroup ' +
-    'WHERE User.GroupId = UserGroup.Id ' +
-    'ORDER BY User.Id';
-
-  fetchRows(sql, req, res);
-});
-
 router.get('/Brands', (req, res) => {
   const sql = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
 
-  fetchRows(sql, req, res);
+  getRows(sql, req, res);
 });
 
 router.get('/BulletinGroups', (req, res) => {
   const sql = 'SELECT Id, Name, Enabled FROM BulletinGroup ORDER BY Id';
 
-  fetchRows(sql, req, res);
+  getRows(sql, req, res);
 });
 
 router.get('/Problem', (req, res) => {
@@ -99,7 +24,7 @@ router.get('/Problem', (req, res) => {
     'WHERE Problem.UserId = User.Id ' + 
     'AND Problem.Id = ' + req.query.Id;
 
-  fetchRow(sql, req, res);
+    getRow(sql, req, res);
 });
 
 router.get('/Problems', (req, res) => {
@@ -121,7 +46,7 @@ router.get('/Problems', (req, res) => {
 
   sql += 'ORDER BY Problem.Id DESC';
 
-  fetchRows(sql, req, res);
+  getRows(sql, req, res);
 });
 
 router.get('/ProblemReplies', (req, res) => {
@@ -132,7 +57,7 @@ router.get('/ProblemReplies', (req, res) => {
     'WHERE ProblemReply.UserId = User.Id AND ProblemReply.ProblemId = ' + req.query.ProblemId + ' ' +
     'ORDER BY ProblemReply.Date';
 
-  fetchRows(sql, req, res);
+  getRows(sql, req, res);
 });
 
 router.get('/Notices', (req, res) => {
@@ -148,7 +73,7 @@ router.get('/Notices', (req, res) => {
 
   sql += 'ORDER BY Notice.Id';
 
-  fetchRows(sql, req, res);
+  getRows(sql, req, res);
 });
 
 module.exports = router;
