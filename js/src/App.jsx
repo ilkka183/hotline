@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import NavBar from './NavBar';
-import Movies from './views/Movies';
+import Movies from './views/Movies/Movies';
+import MovieForm from './views/Movies/MovieForm';
 import Customers from './views/Customers';
 import Rentals from './views/Rentals';
 import NotFound from './views/NotFound';
-import LoginForm from './forms/LoginForm';
-import RegisterForm from './forms/RegisterForm';
-import MovieForm from './forms/MovieForm';
+import LoginForm from './views/LoginForm';
+import RegisterForm from './views/RegisterForm';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default class App extends Component {

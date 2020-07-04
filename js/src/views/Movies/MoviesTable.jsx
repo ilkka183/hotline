@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Like from '../components/common/Like';
-import Table from '../components/common/Table';
+import Like from '../../components/common/Like';
+import Table from '../../components/common/Table';
 
 export default function MoviesTable({ movies, sortColumn, onDelete, onLike, onSort }) {
-
   const columns = [
     { path: 'Title', label: 'Title', content: movie => <Link to={`/movies/${movie.Id}`}>{movie.Title}</Link> },
     { path: 'GenreName', label: 'Genre' },

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import ListGroup from '../components/common/ListGroup';
-import Pagination from '../components/common/Pagination';
-import SearchBox from '../components/common/SearchBox';
+import ListGroup from '../../components/common/ListGroup';
+import Pagination from '../../components/common/Pagination';
+import SearchBox from '../../components/common/SearchBox';
 import MoviesTable from './MoviesTable';
-import { getGenres } from '../services/genreService';
-import { getMovies, deleteMovie } from '../services/movieService';
-import { paginate } from '../utils/paginate';
+import { getGenres } from '../../services/genreService';
+import { getMovies, deleteMovie } from '../../services/movieService';
+import { paginate } from '../../utils/paginate';
 
 export default class Movies extends Component {
   state = {

@@ -49,7 +49,6 @@ app.use(apiPath + 'traficom', traficom);
 
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
-
 app.use(apiPath + 'Genres', genre);
 app.use(apiPath + 'Movies', movie);
 
