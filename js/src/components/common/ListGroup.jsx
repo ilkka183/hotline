@@ -1,8 +1,8 @@
 import React from 'react';
 
 ListGroup.defaultProps = {
-  valueProperty: '_id',
-  textProperty: 'name'
+  valueProperty: 'Id',
+  textProperty: 'Name'
 }
 
 export default function ListGroup({ items, selectedItem, valueProperty, textProperty, onItemSelect }) {

@@ -13,10 +13,10 @@ export default function Select({ name, label, options, value, error, onChange })
       >
         {options.map(option => (
           <option
-            key={option._id}
-            value={option._id}
+            key={option.Id}
+            value={option.Id}
           >
-            {option.name}
+            {option.Name}
           </option>
         ))}
       </select>

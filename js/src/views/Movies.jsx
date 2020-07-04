@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 import ListGroup from '../components/common/ListGroup';
 import Pagination from '../components/common/Pagination';
 import SearchBox from '../components/common/SearchBox';
 import MoviesTable from './MoviesTable';
-import { getGenres } from '../services/fakeGenreService';
-import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/genreService';
+import { getMovies } from '../services/movieService';
 import { paginate } from '../utils/paginate';
 
 export default class Movies extends Component {
@@ -23,17 +23,23 @@ export default class Movies extends Component {
     }
   }
 
-  componentDidMount() {
-    const genres = [{ _id: null, name: 'All Genres' }, ...getGenres()];
+  async componentDidMount() {
+    const response1 = await getGenres();
+    const genres = response1.data.rows;
+
+    const response2 = await getMovies();
+    const movies = response2.data.rows;
+
+    const all = { Id: null, Name: 'All Genres' };
 
     this.setState({
-      genres,
-      movies: getMovies()
+      genres: [all, ...genres],
+      movies
     });
   }
 
   handleDelete = movie => {
-    const movies = this.state.movies.filter(m => m._id !== movie._id);
+    const movies = this.state.movies.filter(m => m.Id !== movie.Id);
     this.setState({ movies });
   }
 
@@ -69,9 +75,9 @@ export default class Movies extends Component {
     let filteredMovies = allMovies;
 
     if (searchQuery)
-      filteredMovies = allMovies.filter(m => m.title.toLowerCase().startsWith(searchQuery.toLowerCase()));
-    else if (selectedGenre && selectedGenre._id)
-      filteredMovies = allMovies.filter(m => m.genre._id === selectedGenre._id);
+      filteredMovies = allMovies.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
+    else if (selectedGenre && selectedGenre.Id)
+      filteredMovies = allMovies.filter(m => m.GenreId === selectedGenre.Id);
 
     const sortedMovies = _.orderBy(filteredMovies, [sortColumn.path], [sortColumn.order]);
     const movies = paginate(sortedMovies, currentPage, pageSize);

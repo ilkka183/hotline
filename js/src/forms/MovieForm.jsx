@@ -1,54 +1,44 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import Form from '../components/common/Form';
-import { getGenres } from '../services/fakeGenreService';
-import { getMovie, saveMovie } from '../services/fakeMovieService';
+import { getGenres } from '../services/genreService';
+import { getMovie, saveMovie } from '../services/movieService';
 
 export default class MovieForm extends Form {
   state = {
     data: {
-      title: '',
-      genreId: '',
-      numberInStock: '',
-      dailyRentalRate: ''
+      Title: '',
+      GenreId: '',
+      NumberInStock: '',
+      DailyRentalRate: ''
     },
     genres: [],
     errors: {}
   }
 
   schema = {
-    _id: Joi.string(),
-    title: Joi.string().required(),
-    genreId: Joi.string().required(),
-    numberInStock: Joi.number().required().min(0).max(100),
-    dailyRentalRate: Joi.number().required().min(0).max(10)
+    Id: Joi.string(),
+    Title: Joi.string().required(),
+    GenreId: Joi.string().required(),
+    NumberInStock: Joi.number().required().min(0).max(100),
+    DailyRentalRate: Joi.number().required().min(0).max(10)
   }
 
-  componentDidMount() {
-    const genres = getGenres();
-    this.setState({ genres });
+  async componentDidMount() {
+    const response1 = await getGenres();
+    this.setState({ genres: response1.data.rows });
 
     const movieId = this.props.match.params.id;
 
     if (movieId === 'new')
       return;
 
-    const movie = getMovie(movieId);
+    const response2 = await getMovie(movieId);
 
-    if (!movie)
+    if (response2.data.length === 0)
       return this.props.history.replace('/not-found');
 
-    this.setState({ data: this.mapToViewModel(movie) });
-  }
-
-  mapToViewModel(movie) {
-    return {
-      _id: movie._id,
-      title: movie.title,
-      genreId: movie.genre._id,
-      numberInStock: movie.numberInStock,
-      dailyRentalRate: movie.dailyRentalRate,
-    }
+    this.setState({ data: response2.data[0] });
   }
 
   doSubmit() {
@@ -62,10 +52,10 @@ export default class MovieForm extends Form {
       <div>
         {this.renderHeader('Movie - ' + this.props.match.params.id)}
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput('title', 'Title', 'text', true)}
-          {this.renderSelect('genreId', 'Genre', this.state.genres)}
-          {this.renderInput('numberInStock', 'Number in Stock', 'number')}
-          {this.renderInput('dailyRentalRate', 'Rate')}
+          {this.renderInput('Title', 'Title', 'text', true)}
+          {this.renderSelect('GenreId', 'Genre', this.state.genres)}
+          {this.renderInput('NumberInStock', 'Number in Stock', 'number')}
+          {this.renderInput('DailyRentalRate', 'Rate')}
           {this.renderButton('Save')}
         </form>
       </div>

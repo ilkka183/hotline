@@ -11,13 +11,13 @@ export default function TableBody({ columns, items }) {
   }
 
   function createCellKey(item, column) {
-    return item._id + (column.path || column.key);
+    return item.Id + (column.path || column.key);
   }
 
   return (
     <tbody>
       { items.map(item => (
-        <tr key={item._id}>
+        <tr key={item.Id}>
           {columns.map(column => (<td key={createCellKey(item, column)}>{renderCell(item, column)}</td>))}
         </tr>)) }
     </tbody>

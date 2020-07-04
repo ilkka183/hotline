@@ -10,6 +10,8 @@ const traficom = require('./routes/traficom');
 
 const usergroup = require('./routes/usergroup');
 const user = require('./routes/user');
+const genre = require('./routes/genre');
+const movie = require('./routes/movie');
 
 const app = express();
 
@@ -45,6 +47,8 @@ app.use('/hotline/api/traficom', traficom);
 
 app.use('/hotline/api', usergroup);
 app.use('/hotline/api', user);
+app.use('/hotline/api', genre);
+app.use('/hotline/api', movie);
 
 const connection = require('./connection');
 connection.connect();

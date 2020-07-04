@@ -6,12 +6,12 @@ import Table from '../components/common/Table';
 export default function MoviesTable({ movies, sortColumn, onDelete, onLike, onSort }) {
 
   const columns = [
-    { path: 'title', label: 'Title', content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link> },
-    { path: 'genre.name', label: 'Genre' },
-    { path: 'numberInStock', label: 'Stock' },
-    { path: 'dailyRentalRate', label: 'Rate' },
-    { key: 'like', content: movie => <Like liked={movie.liked} onClick={() => onLike(movie)} /> },
-    { key: 'delete', content: movie => <button className="btn btn-danger btn-sm" onClick={() => onDelete(movie)}>Delete</button> }
+    { path: 'Title', label: 'Title', content: movie => <Link to={`/movies/${movie.Id}`}>{movie.Title}</Link> },
+    { path: 'GenreName', label: 'Genre' },
+    { path: 'NumberInStock', label: 'Stock' },
+    { path: 'DailyRentalRate', label: 'Rate' },
+    { key: 'Like', content: movie => <Like liked={movie.liked} onClick={() => onLike(movie)} /> },
+    { key: 'Delete', content: movie => <button className="btn btn-danger btn-sm" onClick={() => onDelete(movie)}>Delete</button> }
   ]
 
   return (

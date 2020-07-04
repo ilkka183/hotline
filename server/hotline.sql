@@ -39,6 +39,27 @@ GRANT ALL PRIVILEGES ON *.* TO 'suoritac_root'@'localhost';
 SET default_storage_engine=INNODB;
 
 
+CREATE TABLE Genre
+(
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  Name VARCHAR(80) NOT NULL UNIQUE,
+  PRIMARY KEY (Id)
+);
+
+
+CREATE TABLE Movie
+(
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  GenreId BIGINT UNSIGNED  NOT NULL,
+  Title VARCHAR(80) NOT NULL UNIQUE,
+  NumberInStock INTEGER UNSIGNED NOT NULL,
+  DailyRentalRate DECIMAL NOT NULL,
+  Liked BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (GenreId) REFERENCES Genre(Id)
+);
+
+
 CREATE TABLE UserGroup
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
@@ -209,6 +230,21 @@ CREATE TABLE ProblemReplyAttachment
   PRIMARY KEY (ReplyId, Id),
   FOREIGN KEY (ReplyId) REFERENCES ProblemReply(Id)
 );
+
+
+INSERT INTO Genre(Name) VALUES('Action');
+INSERT INTO Genre(Name) VALUES('Comedy');
+INSERT INTO Genre(Name) VALUES('Thriller');
+
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate, Liked) VALUES('Terminator', 1, 6, 2.5, TRUE);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Die Hard', 1, 5, 2.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Get out', 1, 8, 3.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Trip to Italy', 2, 7, 3.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Airplane', 2, 7, 3.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Wedding Crashers', 2, 7, 3.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Gone Girl', 3, 7, 4.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('The Sixth Sense', 3, 4, 3.5);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('The Avengers', 3, 7, 3.5);
 
 
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
