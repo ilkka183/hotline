@@ -1,6 +1,8 @@
 import http from '../services/httpService';
-import config from '../config.json';
+import { apiUrl } from '../config.json';
+
+const apiEndpoint = apiUrl + '/Genres';
 
 export function getGenres() {
-  return http.get(config.apiEndpoint + '/Genres');
+  return http.get(apiEndpoint);
 }

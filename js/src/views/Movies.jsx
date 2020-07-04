@@ -6,7 +6,7 @@ import Pagination from '../components/common/Pagination';
 import SearchBox from '../components/common/SearchBox';
 import MoviesTable from './MoviesTable';
 import { getGenres } from '../services/genreService';
-import { getMovies } from '../services/movieService';
+import { getMovies, deleteMovie } from '../services/movieService';
 import { paginate } from '../utils/paginate';
 
 export default class Movies extends Component {
@@ -38,7 +38,9 @@ export default class Movies extends Component {
     });
   }
 
-  handleDelete = movie => {
+  handleDelete = async movie => {
+    await deleteMovie(movie.Id);
+
     const movies = this.state.movies.filter(m => m.Id !== movie.Id);
     this.setState({ movies });
   }

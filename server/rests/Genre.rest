@@ -1,28 +1,21 @@
-@host = http://localhost:4000
+@endPoint = http://localhost:4000/hotline/api/Genres
 
-GET {{host}}/hotline/api/Genres
+GET {{endPoint}}
 ###
-GET {{host}}/hotline/api/Genre/1
+GET {{endPoint}}/1
 ###
-POST {{host}}/hotline/api/Genre
+POST {{endPoint}}
 content-type: application/json
 
 {
-    "groupId": 2,
-    "role": 1,
-    "firstName": "Matti",
-    "lastName": "Meikäläinen",
-    "email": "matti.maikalainen@gmail.com",
-    "password": "huuhaa",
-    "enabled": true
+    "name": "Document"
 }
 ###
-PUT {{host}}/hotline/api/Genre/1
+PUT {{endPoint}}/4
 content-type: application/json
 
 {
-    "password": "helppo",
-    "enabled": false
+    "name": "Document"
 }
 ###
-DELETE {{host}}/hotline/api/Genre/3
+DELETE {{endPoint}}/7

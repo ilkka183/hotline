@@ -14,10 +14,10 @@ const sql =
   'FROM User, UserGroup ' +
   'WHERE User.GroupId = UserGroup.Id'
 
-router.get('/Users', (req, res) => { getRows(sql + ' ORDER BY User.Id', req, res) });
-router.get('/User/:Id', (req, res) => { getRow(sql + ' AND User.Id = ' + req.params.Id, req, res) });
-router.post('/User', auth, (req, res) => { postRow(table, req, res) });
-router.put('/User/:Id', auth, (req, res) => { putRow(table, req, res, { Id: req.params.Id }) });
-router.delete('/User/:Id', auth, (req, res) => { deleteRow(table, req, res, { Id: req.params.Id }) });
+router.get('', (req, res) => { getRows(sql + ' ORDER BY User.Id', req, res) });
+router.get('/:Id', (req, res) => { getRow(sql + ' AND User.Id = ' + req.params.Id, req, res) });
+router.post('', auth, (req, res) => { postRow(table, req, res) });
+router.put('/:Id', auth, (req, res) => { putRow(table, req, res, { Id: req.params.Id }) });
+router.delete('/:Id', auth, (req, res) => { deleteRow(table, req, res, { Id: req.params.Id }) });
 
 module.exports = router;

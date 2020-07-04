@@ -10,7 +10,13 @@ function getRow(sql, req, res) {
       return res.status(400).send(error);
     }
 
-    res.send(results);
+    if (results.length === 0) {
+      const message = 'Item not found';
+      console.log(message);
+      return res.status(404).send(message);
+    }
+
+    res.send(results[0]);
   });
 }
 
@@ -47,7 +53,7 @@ function getRows(sql, req, res) {
         console.log(error);        
         return res.status(400).send(error);
       }
-  
+
       res.send({ rowCount, rows: results });
     });
   });
@@ -97,8 +103,7 @@ function postRow(tableName, req, res) {
       return res.status(400).send(error);
     }
 
-    res.status(201);
-    res.send(results);
+    res.status(201).send(results);
   });
 }
 
@@ -144,6 +149,12 @@ function putRow(tableName, req, res, keys) {
       return res.status(400).send(error);
     }
 
+    if (results.affectedRows === 0) {
+      const message = 'Item not found';
+      console.log(message);
+      return res.status(404).send(message);
+    }
+
     res.send(results);
   });
 }
@@ -175,6 +186,12 @@ function deleteRow(tableName, req, res, keys) {
     if (error) {
       console.log(error);        
       return res.status(400).send(error);
+    }
+
+    if (results.affectedRows === 0) {
+      const message = 'Item not found';
+      console.log(message);
+      return res.status(404).send(message);
     }
 
     res.send(results);

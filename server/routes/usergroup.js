@@ -12,10 +12,10 @@ const sql =
   'Logo, Info, Enabled ' +
   'FROM UserGroup';
 
-router.get('/UserGroups', (req, res) => { getRows(sql + ' ORDER BY Id', req, res) });
-router.get('/UserGroup/:Id', (req, res) => { getRow(sql + ' WHERE Id = ' + req.params.Id, req, res) });
-router.post('/UserGroup', auth, (req, res) => { postRow(table, req, res) });
-router.put('/UserGroup/:Id', auth, (req, res) => { putRow(table, req, res, { Id: req.params.Id }) });
-router.delete('/UserGroup/:Id', auth, (req, res) => { deleteRow(table, req, res, { Id: req.params.Id }) });
+router.get('', (req, res) => { getRows(sql + ' ORDER BY Id', req, res) });
+router.get('/:Id', (req, res) => { getRow(sql + ' WHERE Id = ' + req.params.Id, req, res) });
+router.post('', auth, (req, res) => { postRow(table, req, res) });
+router.put('/:Id', auth, (req, res) => { putRow(table, req, res, { Id: req.params.Id }) });
+router.delete('/:Id', auth, (req, res) => { deleteRow(table, req, res, { Id: req.params.Id }) });
 
 module.exports = router;

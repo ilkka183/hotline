@@ -1,3 +1,3 @@
 {
-  "apiEndpoint": "http://localhost:4000/hotline/api"
+  "apiUrl": "http://localhost:4000/hotline/api"
 }

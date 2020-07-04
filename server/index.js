@@ -37,18 +37,21 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/hotline/api/auth', auth);
-app.use('/hotline/api/data', data);
-app.use('/hotline/api/lookup', lookup);
-app.use('/hotline/api/custom', custom);
-app.use('/hotline/api/query', query);
-app.use('/hotline/api/table', table);
-app.use('/hotline/api/traficom', traficom);
+const apiPath = '/hotline/api/';
 
-app.use('/hotline/api', usergroup);
-app.use('/hotline/api', user);
-app.use('/hotline/api', genre);
-app.use('/hotline/api', movie);
+app.use(apiPath + 'auth', auth);
+app.use(apiPath + 'data', data);
+app.use(apiPath + 'lookup', lookup);
+app.use(apiPath + 'custom', custom);
+app.use(apiPath + 'query', query);
+app.use(apiPath + 'table', table);
+app.use(apiPath + 'traficom', traficom);
+
+app.use(apiPath + 'UserGroups', usergroup);
+app.use(apiPath + 'Users', user);
+
+app.use(apiPath + 'Genres', genre);
+app.use(apiPath + 'Movies', movie);
 
 const connection = require('./connection');
 connection.connect();

@@ -33,12 +33,8 @@ export default class MovieForm extends Form {
     if (movieId === 'new')
       return;
 
-    const response2 = await getMovie(movieId);
-
-    if (response2.data.length === 0)
-      return this.props.history.replace('/not-found');
-
-    this.setState({ data: response2.data[0] });
+    const { data } = await getMovie(movieId);
+    this.setState({ data });
   }
 
   doSubmit() {
