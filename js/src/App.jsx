@@ -6,6 +6,7 @@ import Customers from './views/Customers';
 import Rentals from './views/Rentals';
 import NotFound from './views/NotFound';
 import LoginForm from './forms/LoginForm';
+import RegisterForm from './forms/RegisterForm';
 import MovieForm from './forms/MovieForm';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
       <NavBar />
       <main className="container">
         <Switch>
+          <Route path="/register" component={RegisterForm} />
           <Route path="/login" component={LoginForm} />
           <Route path="/movies/:id" component={MovieForm} />
           <Route path="/movies" component={Movies} />

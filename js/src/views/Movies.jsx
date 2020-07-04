@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 import ListGroup from '../components/common/ListGroup';
 import Pagination from '../components/common/Pagination';
+import SearchBox from '../components/common/SearchBox';
 import MoviesTable from './MoviesTable';
 import { getGenres } from '../services/fakeGenreService';
 import { getMovies } from '../services/fakeMovieService';
@@ -11,6 +13,7 @@ export default class Movies extends Component {
   state = {
     genres: [],
     movies: [],
+    searchQuery: '',
     selectedGenre: null,
     currentPage: 1,
     pageSize: 4,
@@ -52,22 +55,26 @@ export default class Movies extends Component {
   }
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: '', currentPage: 1 });
+  }
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   }
 
   getPagedData() {
+    const { searchQuery, selectedGenre, sortColumn, currentPage, pageSize } = this.state;
+
     const allMovies = this.state.movies;
+    let filteredMovies = allMovies;
 
-    const filteredMovies = this.state.selectedGenre && this.state.selectedGenre._id
-      ? allMovies.filter(m => m.genre._id === this.state.selectedGenre._id)
-      : allMovies;
+    if (searchQuery)
+      filteredMovies = allMovies.filter(m => m.title.toLowerCase().startsWith(searchQuery.toLowerCase()));
+    else if (selectedGenre && selectedGenre._id)
+      filteredMovies = allMovies.filter(m => m.genre._id === selectedGenre._id);
 
-    const sortedMovies = _.orderBy(filteredMovies, [this.state.sortColumn.path], [this.state.sortColumn.order]);
-
-    const movies = paginate(
-      sortedMovies,
-      this.state.currentPage,
-      this.state.pageSize);
+    const sortedMovies = _.orderBy(filteredMovies, [sortColumn.path], [sortColumn.order]);
+    const movies = paginate(sortedMovies, currentPage, pageSize);
 
     return {
       totalCount: filteredMovies.length,
@@ -91,7 +98,9 @@ export default class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link className="btn btn-primary" style={{ marginBottom: 20 }} to="/movies/new">New Movie</Link>
           <p>Showing {totalCount} movies tn the database.</p>
+          <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
           <Pagination
             itemsCount={totalCount}
             pageSize={this.state.pageSize}
