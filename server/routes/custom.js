@@ -4,6 +4,30 @@ const { getRow, getRows} = require('./utils');
 const router = express.Router();
 
 
+router.get('/UserGroups', (req, res) => {
+  const sql = 
+    'SELECT Id, Name, ContactPerson,' +
+    'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
+    'Logo, Info, Enabled ' +
+    'FROM UserGroup ' +
+    'ORDER BY Id';
+
+  getRows(sql, req, res);
+});
+
+router.get('/Users', (req, res) => {
+  const sql =
+    'SELECT User.Id, User.GroupId, UserGroup.Name AS GroupName, User.Email, User.Password, ' + 
+    'User.Role, User.FirstName, User.LastName, User.Title, ' +
+    'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
+    'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
+    'FROM User, UserGroup ' +
+    'WHERE User.GroupId = UserGroup.Id ' +
+    'ORDER BY User.Id';
+
+  getRows(sql, req, res);
+});
+
 router.get('/Brands', (req, res) => {
   const sql = 'SELECT Id, Name, Logo, Info, Enabled FROM Brand ORDER BY Id';
 

@@ -12,7 +12,7 @@ const sql =
   'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
   'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
   'FROM User, UserGroup ' +
-  'WHERE User.GroupId = UserGroup.Id'
+  'WHERE User.GroupId = UserGroup.Id';
 
 router.get('', (req, res) => { getRows(sql + ' ORDER BY User.Id', req, res) });
 router.get('/:Id', (req, res) => { getRow(sql + ' AND User.Id = ' + req.params.Id, req, res) });

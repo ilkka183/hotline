@@ -1,15 +1,26 @@
-//@host = http://localhost:3000
-@host = http://suorita.com
+@endPoint = http://localhost:4000/hotline/api/auth
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGlraS5maSIsInBob25lIjpudWxsLCJyb2xlIjowLCJpYXQiOjE1OTM5Mjg5MDB9.cApmJflTTbPYWHoo737xDA-xBe46dWuiFwrHkfwlASk
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSWxra2EiLCJsYXN0TmFtZSI6IlNhbG1lbml1cyIsImVtYWlsIjoiaWxra2Euc2FsbWVuaXVzQGlraS5maSIsInBob25lIjpudWxsLCJyb2xlIjowLCJpYXQiOjE1ODc4MTA4MjZ9.33CN2p9h_132kxfnBrMeVtBRRUch1yPR6fn5yXM2qgI
-
-GET {{host}}/hotline/api/auth/me
+GET {{endPoint}}/me
 x-auth-token: {{token}}
 ###
-POST {{host}}/hotline/api/auth
+POST {{endPoint}}/login
 content-type: application/json
 
 {
-  "username": "albert",
+  "email": "ilkka.salmenius@iki.fi",
   "password": "weber"
+}
+###
+POST {{endPoint}}/register
+content-type: application/json
+
+{
+  "groupId": 2,
+  "role": 1,
+  "firstName": "Matti",
+  "lastName": "Meikäläinen",
+  "email": "matti.maikalainen@gmail.com",
+  "password": "huuhaa",
+  "enabled": true
 }

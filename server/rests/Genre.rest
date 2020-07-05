@@ -8,14 +8,14 @@ POST {{endPoint}}
 content-type: application/json
 
 {
-    "name": "Document"
+    "Name": "Document"
 }
 ###
-PUT {{endPoint}}/4
+PUT {{endPoint}}/13
 content-type: application/json
 
 {
-    "name": "Document"
+    "Name": "Documents"
 }
 ###
-DELETE {{endPoint}}/7
+DELETE {{endPoint}}/14

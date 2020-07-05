@@ -1,10 +1,10 @@
-@host = http://localhost:4000
+@endPoint = http://localhost:4000/hotline/api/Users
 
-GET {{host}}/hotline/api/Users
+GET {{endPoint}}
 ###
-GET {{host}}/hotline/api/User/5
+GET {{endPoint}}/5
 ###
-POST {{host}}/hotline/api/User
+POST {{endPoint}}
 content-type: application/json
 
 {
@@ -17,7 +17,7 @@ content-type: application/json
     "enabled": true
 }
 ###
-PUT {{host}}/hotline/api/User/5
+PUT {{endPoint}}/5
 content-type: application/json
 
 {
@@ -25,4 +25,4 @@ content-type: application/json
     "enabled": false
 }
 ###
-DELETE {{host}}/hotline/api/User/5
+DELETE {{endPoint}}/18

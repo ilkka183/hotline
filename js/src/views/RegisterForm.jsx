@@ -1,26 +1,49 @@
 import React from 'react';
 import Joi from 'joi-browser';
 import Form from '../components/common/Form';
+import auth from '../services/authService';
 
 export default class RegisterForm extends Form {
   state = {
     data: {
-      username: '',
+      email: '',
       password: '',
-      name: ''
+      firstName: '',
+      lastName: ''
     },
     errors: {}
   }
 
   schema = {
-    username: Joi.string().required().email(),
+    email: Joi.string().required().email(),
     password: Joi.string().required().min(5),
-    name: Joi.string().required()
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required()
   }
 
-  doSubmit() {
-    // Call the server
-    console.log('Submitted');
+  async doSubmit() {
+    try {
+      const data = {
+        GroupId: 1,
+        Role: 2,
+        FirstName: this.state.data.firstName,
+        LastName: this.state.data.lastName,
+        Email: this.state.data.email,
+        Password: this.state.data.password,
+        Enabled: true
+      }
+
+      await auth.register(data);
+      window.location = '/';
+    }
+    catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        errors.email = ex.response.data.sqlMessage;
+
+        this.setState({ errors });
+      }
+    }
   }
 
   render() {
@@ -28,9 +51,10 @@ export default class RegisterForm extends Form {
       <div>
         {this.renderHeader('Register')}
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput('username', 'Username', 'text', true)}
+        {this.renderInput('email', 'Email', 'text', true)}
           {this.renderInput('password', 'Password', 'password')}
-          {this.renderInput('name', 'Name')}
+          {this.renderInput('firstName', 'First Name')}
+          {this.renderInput('lastName', 'Last Name')}
           {this.renderButton('Register')}
         </form>
       </div>

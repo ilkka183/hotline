@@ -1,6 +1,13 @@
 const connection = require('../connection');
 
 
+function sendNotFound(res) {
+  const message = 'Item not found';
+  console.log(message);
+  return res.status(404).send(message);
+}
+
+
 function getRow(sql, req, res) {
   console.log(sql);
 
@@ -10,13 +17,12 @@ function getRow(sql, req, res) {
       return res.status(400).send(error);
     }
 
-    if (results.length === 0) {
-      const message = 'Item not found';
-      console.log(message);
-      return res.status(404).send(message);
-    }
+    if (results.length === 0)
+      return sendNotFound(res);
 
-    res.send(results[0]);
+    const response = results[0];
+
+    res.send(response);
   });
 }
 
@@ -54,7 +60,12 @@ function getRows(sql, req, res) {
         return res.status(400).send(error);
       }
 
-      res.send({ rowCount, rows: results });
+      const response = {
+        rowCount,
+        rows: results
+      }
+
+      res.send(response);
     });
   });
 }
@@ -103,7 +114,12 @@ function postRow(tableName, req, res) {
       return res.status(400).send(error);
     }
 
-    res.status(201).send(results);
+    const response = {
+      Id: results.insertId,
+      ...req.body
+    }
+
+    res.status(201).send(response);
   });
 }
 
@@ -149,13 +165,12 @@ function putRow(tableName, req, res, keys) {
       return res.status(400).send(error);
     }
 
-    if (results.affectedRows === 0) {
-      const message = 'Item not found';
-      console.log(message);
-      return res.status(404).send(message);
-    }
+    if (results.affectedRows === 0)
+      return sendNotFound(res);
 
-    res.send(results);
+    const response = { ...req.body }
+
+    res.send(response);
   });
 }
 
@@ -188,13 +203,10 @@ function deleteRow(tableName, req, res, keys) {
       return res.status(400).send(error);
     }
 
-    if (results.affectedRows === 0) {
-      const message = 'Item not found';
-      console.log(message);
-      return res.status(404).send(message);
-    }
+    if (results.affectedRows === 0)
+      return sendNotFound(res);
 
-    res.send(results);
+    res.send('Success');
   });
 }
 

@@ -7,12 +7,18 @@ const connection = require('../connection');
 const router = express.Router();
 
 
+function generateToken(payload) {
+  console.log(payload);
+  return jwt.sign(payload, config.jwtPrivateKey);
+}
+
+
 router.get('/me', auth, (req, res) => {
   res.send(req.user);
 });
 
 
-router.post('/', (req, res) => {
+router.post('/login', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -23,7 +29,7 @@ router.post('/', (req, res) => {
       return res.status(400).send(error);
 
     if ((results.length == 0) || (password !== results[0].Password))
-      return res.status(401).send('Invalid email or password');
+      return res.status(401).send('Invalid email or password.');
 
     const row = results[0];
   
@@ -36,10 +42,35 @@ router.post('/', (req, res) => {
       role: row.Role
     }
 
-    console.log(payload);
+    const token = generateToken(payload);
 
-    const token = jwt.sign(payload, config.jwtPrivateKey);
     res.send(token);
+  });
+});
+
+
+router.post('/register', (req, res) => {
+  let sql = 'INSERT INTO User (GroupId, Role, FirstName, LastName, Email, Password, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const values = [];
+
+  for (const column in req.body) 
+    values.push(req.body[column]);
+
+  connection.query(sql, values, (error, results, fields) => {
+    if (error)
+      return res.status(400).send(error);
+
+    const payload = {
+      id: results.insertId,
+      ...req.body
+    }
+
+    const token = generateToken(payload);
+
+    res
+      .header('x-auth-token', token)
+      .header('access-control-expose-headers', 'x-auth-token')
+      .send(token);
   });
 });
 
