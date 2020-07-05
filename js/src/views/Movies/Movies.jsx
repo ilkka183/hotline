@@ -8,6 +8,7 @@ import MoviesTable from './MoviesTable';
 import { getGenres } from '../../services/genreService';
 import { getMovies, deleteMovie } from '../../services/movieService';
 import { paginate } from '../../utils/paginate';
+import auth from '../../services/authService';
 
 export default class Movies extends Component {
   state = {
@@ -91,6 +92,8 @@ export default class Movies extends Component {
   }
 
   render() {
+    const user = auth.getCurrentUser();
+
     if (this.state.movies.length === 0)
       return <p>There are no movies in the database.</p>
 
@@ -106,7 +109,7 @@ export default class Movies extends Component {
           />
         </div>
         <div className="col">
-          <Link className="btn btn-primary" style={{ marginBottom: 20 }} to="/movies/new">New Movie</Link>
+          {user && <Link className="btn btn-primary" style={{ marginBottom: 20 }} to="/movies/new">New Movie</Link>}
           <p>Showing {totalCount} movies tn the database.</p>
           <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
           <Pagination
