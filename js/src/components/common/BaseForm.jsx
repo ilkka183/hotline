@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button'
 import Joi from 'joi-browser';
-import Input from './Input';
-import Select from './Select';
+import MyInput from './MyInput';
+import MySelect from './MySelect';
 
-export default class Form extends Component {
+export default class BaseForm extends Component {
   state = {
     data: {},
     errors: {}
@@ -66,7 +67,7 @@ export default class Form extends Component {
     const { data, errors } = this.state;
 
     return (
-      <Input
+      <MyInput
         type={type}
         name={name}
         label={label}
@@ -82,7 +83,7 @@ export default class Form extends Component {
     const { data, errors } = this.state;
 
     return (
-      <Select
+      <MySelect
         name={name}
         label={label}
         options={options}
@@ -94,6 +95,6 @@ export default class Form extends Component {
   }
 
   renderButton(label) {
-    return <button className="btn btn-primary" disabled={this.validate()}>{label}</button>
-  }
+    return <Button variant="primary" disabled={this.validate()}>{label}</Button>
+   }
 }

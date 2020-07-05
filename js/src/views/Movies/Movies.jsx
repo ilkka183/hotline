@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import _ from 'lodash';
-import ListGroup from '../../components/common/ListGroup';
-import Pagination from '../../components/common/Pagination';
+import MyListGroup from '../../components/common/MyListGroup';
+import MyPagination from '../../components/common/MyPagination';
+import LinkButton from '../../components/common/LinkButton';
 import SearchBox from '../../components/common/SearchBox';
 import MoviesTable from './MoviesTable';
 import { getGenres } from '../../services/genreService';
@@ -100,33 +103,35 @@ export default class Movies extends Component {
     const { totalCount, movies } = this.getPagedData();
 
     return (
-      <div className="row">
-        <div className="col-3">
-          <ListGroup
-            items={this.state.genres}
-            selectedItem={this.state.selectedGenre}
-            onItemSelect={this.handleGenreSelect}
-          />
-        </div>
-        <div className="col">
-          {user && <Link className="btn btn-primary" style={{ marginBottom: 20 }} to="/movies/new">New Movie</Link>}
-          <p>Showing {totalCount} movies tn the database.</p>
-          <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
-          <Pagination
-            itemsCount={totalCount}
-            pageSize={this.state.pageSize}
-            currentPage={this.state.currentPage}
-            onPageChange={this.handlePageChange}
-          />
-          <MoviesTable
-            movies={movies}
-            sortColumn={this.state.sortColumn}
-            onDelete={this.handleDelete}
-            onLike={this.handleLike}
-            onSort={this.handleSort}
-          />
-        </div>
-      </div>
+      <Container>
+        <Row>
+          <Col sm={3}>
+            <MyListGroup
+              items={this.state.genres}
+              selectedItem={this.state.selectedGenre}
+              onItemSelect={this.handleGenreSelect}
+            />
+          </Col>
+          <Col>
+            {user && <LinkButton style={{ marginBottom: 20 }} to="/movies/new">New Movie</LinkButton>}
+            <p>Showing {totalCount} movies tn the database.</p>
+            <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
+            <MyPagination
+              itemsCount={totalCount}
+              pageSize={this.state.pageSize}
+              currentPage={this.state.currentPage}
+              onPageChange={this.handlePageChange}
+            />
+            <MoviesTable
+              movies={movies}
+              sortColumn={this.state.sortColumn}
+              onDelete={this.handleDelete}
+              onLike={this.handleLike}
+              onSort={this.handleSort}
+            />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function TableHeader({ columns, sortColumn, onSort }) {
+export default function MyTableHeader({ columns, sortColumn, onSort }) {
 
   function raiseSort(path) {
     const newSortColumn = {...sortColumn}

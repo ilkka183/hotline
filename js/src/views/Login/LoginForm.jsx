@@ -1,10 +1,11 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import Form from 'react-bootstrap/Form'
 import Joi from 'joi-browser';
-import Form from '../components/common/Form';
-import auth from '../services/authService';
+import BaseForm from '../../components/common/BaseForm';
+import auth from '../../services/authService';
 
-export default class LoginForm extends Form {
+export default class LoginForm extends BaseForm {
   state = {
     data: {
       email: '',
@@ -41,14 +42,14 @@ export default class LoginForm extends Form {
       return <Redirect to="/" />
 
     return (
-      <div>
+      <>
         {this.renderHeader('Login')}
-        <form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
           {this.renderInput('email', 'Email', 'text', true)}
           {this.renderInput('password', 'Password', 'password')}
           {this.renderButton('Login')}
-        </form>
-      </div>
+        </Form>
+      </>
     );
   }
 }

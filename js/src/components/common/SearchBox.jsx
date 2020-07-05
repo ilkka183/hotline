@@ -1,14 +1,17 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form'
 
 export default function SearchBox({ value, onChange }) {
   return (
-    <input
-      className="form-control my-3"
-      type="text"
-      name="query"
-      placeholder="Search..."
-      value={value}
-      onChange={e => onChange(e.currentTarget.value)}
-    />
+    <Form>
+      <Form.Group>
+        <Form.Control
+          type="text"
+          placeholder="Search..."
+          value={value}
+          onChange={e => onChange(e.currentTarget.value)}
+        />
+      </Form.Group>
+    </Form>
   );
 }

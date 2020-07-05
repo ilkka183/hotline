@@ -1,9 +1,10 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form'
 import Joi from 'joi-browser';
-import Form from '../components/common/Form';
-import auth from '../services/authService';
+import BaseForm from '../../components/common/BaseForm';
+import auth from '../../services/authService';
 
-export default class RegisterForm extends Form {
+export default class RegisterForm extends BaseForm {
   state = {
     data: {
       email: '',
@@ -48,16 +49,16 @@ export default class RegisterForm extends Form {
 
   render() {
     return (
-      <div>
+      <>
         {this.renderHeader('Register')}
-        <form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
         {this.renderInput('email', 'Email', 'text', true)}
           {this.renderInput('password', 'Password', 'password')}
           {this.renderInput('firstName', 'First Name')}
           {this.renderInput('lastName', 'Last Name')}
           {this.renderButton('Register')}
-        </form>
-      </div>
+        </Form>
+      </>
     );
   }
 }

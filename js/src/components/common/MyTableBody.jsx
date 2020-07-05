@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-export default function TableBody({ columns, items }) {
+export default function MyTableBody({ columns, items }) {
 
   function renderCell(item, column) {
     if (column.content)

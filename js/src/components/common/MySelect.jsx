@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Select({ name, label, options, value, error, onChange }) {
+export default function MySelect({ name, label, options, value, error, onChange }) {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>

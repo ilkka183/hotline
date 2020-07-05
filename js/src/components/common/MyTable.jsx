@@ -1,16 +1,16 @@
 import React from 'react';
-import TableHeader from './TableHeader';
-import TableBody from './TableBody';
+import MyTableHeader from './MyTableHeader';
+import MyTableBody from './MyTableBody';
 
-export default function Table({ columns, items, sortColumn, onSort }) {
+export default function MyTable({ columns, items, sortColumn, onSort }) {
   return (
     <table className="table">
-      <TableHeader
+      <MyTableHeader
         columns={columns}
         sortColumn={sortColumn}
         onSort={onSort}
       />
-      <TableBody
+      <MyTableBody
         columns={columns}
         items={items}
       />

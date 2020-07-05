@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Input({ name, label, type, autoFocus, value, error, onChange }) {
+export default function MyInput({ name, label, type, autoFocus, value, error, onChange }) {
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>

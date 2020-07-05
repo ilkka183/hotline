@@ -1,10 +1,11 @@
 import React from 'react';
 import Joi from 'joi-browser';
-import Form from '../../components/common/Form';
+import Form from 'react-bootstrap/Form'
+import BaseForm from '../../components/common/BaseForm';
 import { getGenres } from '../../services/genreService';
 import { getMovie, saveMovie } from '../../services/movieService';
 
-export default class MovieForm extends Form {
+export default class MovieForm extends BaseForm {
   state = {
     data: {
       Title: '',
@@ -67,16 +68,16 @@ export default class MovieForm extends Form {
 
   render() {
     return (
-      <div>
+      <>
         {this.renderHeader('Movie - ' + this.movieId)}
-        <form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
           {this.renderInput('Title', 'Title', 'text', true)}
           {this.renderSelect('GenreId', 'Genre', this.state.genres)}
           {this.renderInput('NumberInStock', 'Number in Stock', 'number')}
           {this.renderInput('DailyRentalRate', 'Rate')}
           {this.renderButton('Save')}
-        </form>
-      </div>
+        </Form>
+      </>
     );
   }
 }
