@@ -35,6 +35,8 @@ export default class BaseForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
+    console.log('Submit');
+
     const errors = this.validate();
     this.setState({ errors: errors || {} });
 
@@ -94,7 +96,7 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderButton(label) {
-    return <Button variant="primary" disabled={this.validate()}>{label}</Button>
+  renderSubmitButton(label) {
+    return <Button variant="primary" type="submit" disabled={this.validate()}>{label}</Button>
    }
 }

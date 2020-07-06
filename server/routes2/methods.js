@@ -20,53 +20,21 @@ function getRow(sql, req, res) {
     if (results.length === 0)
       return sendNotFound(res);
 
-    const response = results[0];
-
-    res.send(response);
+    res.send(results[0]);
   });
 }
 
 
 function getRows(sql, req, res) {
-  const index = sql.indexOf('FROM');
+  console.log(sql);
 
-  if (index === -1)
-    return res.status(400).send('No FROM keyword in the SQL query!');
-
-  let countSql = 'SELECT COUNT(*) as RowCount ' + sql.substring(index, sql.length);
-  console.log(countSql);
-
-  connection.query(countSql, (error, results, fields) => {
-    if (error)
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
       return res.status(400).send(error);
+    }
 
-    const rowCount = results[0].RowCount;
-
-    let limit = 10;
-
-    if (req.query.limit)
-      limit = req.query.limit;
-
-    sql += ' LIMIT ' + limit;
-
-    if (req.query.offset)
-      sql += ' OFFSET ' + req.query.offset;
-
-    console.log(sql);
-  
-    connection.query(sql, (error, results, fields) => {
-      if (error) {
-        console.log(error);        
-        return res.status(400).send(error);
-      }
-
-      const response = {
-        rowCount,
-        rows: results
-      }
-
-      res.send(response);
-    });
+    res.send(results);
   });
 }
 

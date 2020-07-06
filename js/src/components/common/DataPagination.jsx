@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pagination from 'react-bootstrap/Pagination'
 
-MyPagination.propTypes = {
+DataPagination.propTypes = {
   itemsCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired
 }
 
-export default function MyPagination({ itemsCount, pageSize, currentPage, onPageChange }) {
+export default function DataPagination({ itemsCount, pageSize, currentPage, onPageChange }) {
   const pagesCount = Math.ceil(itemsCount/pageSize);
 
   if (pagesCount <= 1)

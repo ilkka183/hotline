@@ -56,7 +56,7 @@ export default class RegisterForm extends BaseForm {
           {this.renderInput('password', 'Password', 'password')}
           {this.renderInput('firstName', 'First Name')}
           {this.renderInput('lastName', 'Last Name')}
-          {this.renderButton('Register')}
+          {this.renderSubmitButton('Register')}
         </Form>
       </>
     );

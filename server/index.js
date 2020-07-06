@@ -8,10 +8,10 @@ const query = require('./routes/query');
 const table = require('./routes/table');
 const traficom = require('./routes/traficom');
 
-const usergroup = require('./routes/usergroup');
-const user = require('./routes/user');
-const genre = require('./routes/genre');
-const movie = require('./routes/movie');
+const usergroup = require('./routes2/usergroup');
+const user = require('./routes2/user');
+const genre = require('./routes2/genre');
+const movie = require('./routes2/movie');
 
 const app = express();
 

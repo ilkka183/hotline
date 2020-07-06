@@ -1,7 +1,71 @@
 const express = require('express');
-const { getRow, getRows} = require('./utils');
+const connection = require('../connection');
 
 const router = express.Router();
+
+
+function getRow(sql, req, res) {
+  console.log(sql);
+
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
+
+    if (results.length === 0) {
+      const message = 'Item not found';
+      console.log(message);
+      return res.status(404).send(message);
+    }
+
+    res.send(results);
+  });
+}
+
+
+function getRows(sql, req, res) {
+  const index = sql.indexOf('FROM');
+
+  if (index === -1)
+    return res.status(400).send('No FROM keyword in the SQL query!');
+
+  let countSql = 'SELECT COUNT(*) as RowCount ' + sql.substring(index, sql.length);
+  console.log(countSql);
+
+  connection.query(countSql, (error, results, fields) => {
+    if (error)
+      return res.status(400).send(error);
+
+    const rowCount = results[0].RowCount;
+
+    let limit = 10;
+
+    if (req.query.limit)
+      limit = req.query.limit;
+
+    sql += ' LIMIT ' + limit;
+
+    if (req.query.offset)
+      sql += ' OFFSET ' + req.query.offset;
+
+    console.log(sql);
+  
+    connection.query(sql, (error, results, fields) => {
+      if (error) {
+        console.log(error);        
+        return res.status(400).send(error);
+      }
+
+      const response = {
+        rowCount,
+        rows: results
+      }
+
+      res.send(response);
+    });
+  });
+}
 
 
 router.get('/UserGroups', (req, res) => {

@@ -30,8 +30,8 @@ export default class MovieForm extends BaseForm {
   }
 
   async populateGenres() {
-    const { data } = await getGenres();
-    this.setState({ genres: data.rows });
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
   }
 
   async populateMovie() {
@@ -75,7 +75,7 @@ export default class MovieForm extends BaseForm {
           {this.renderSelect('GenreId', 'Genre', this.state.genres)}
           {this.renderInput('NumberInStock', 'Number in Stock', 'number')}
           {this.renderInput('DailyRentalRate', 'Rate')}
-          {this.renderButton('Save')}
+          {this.renderSubmitButton('Save')}
         </Form>
       </>
     );

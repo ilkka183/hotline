@@ -47,7 +47,7 @@ export default class LoginForm extends BaseForm {
         <Form onSubmit={this.handleSubmit}>
           {this.renderInput('email', 'Email', 'text', true)}
           {this.renderInput('password', 'Password', 'password')}
-          {this.renderButton('Login')}
+          {this.renderSubmitButton('Login')}
         </Form>
       </>
     );

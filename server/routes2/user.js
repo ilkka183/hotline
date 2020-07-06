@@ -1,6 +1,7 @@
 const express = require('express');
+const http = require('./methods');
 const auth = require('../middleware/auth');
-const { getRows, getRow, postRow, putRow, deleteRow } = require('./utils');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -14,10 +15,10 @@ const sql =
   'FROM User, UserGroup ' +
   'WHERE User.GroupId = UserGroup.Id';
 
-router.get('', (req, res) => { getRows(sql + ' ORDER BY User.Id', req, res) });
-router.get('/:Id', (req, res) => { getRow(sql + ' AND User.Id = ' + req.params.Id, req, res) });
-router.post('', auth, (req, res) => { postRow(table, req, res) });
-router.put('/:Id', auth, (req, res) => { putRow(table, req, res, { Id: req.params.Id }) });
-router.delete('/:Id', auth, (req, res) => { deleteRow(table, req, res, { Id: req.params.Id }) });
+router.get('', (req, res) => { http.getRows(sql + ' ORDER BY User.Id', req, res) });
+router.get('/:Id', (req, res) => { http.getRow(sql + ' AND User.Id = ' + req.params.Id, req, res) });
+router.post('', auth, (req, res) => { http.postRow(table, req, res) });
+router.put('/:Id', auth, (req, res) => { http.putRow(table, req, res, { Id: req.params.Id }) });
+router.delete('/:Id', [auth, admin], (req, res) => { http.deleteRow(table, req, res, { Id: req.params.Id }) });
 
 module.exports = router;
