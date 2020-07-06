@@ -4,14 +4,14 @@ import { ToastContainer } from 'react-toastify';
 import Container from 'react-bootstrap/Container'
 import NavBar from './NavBar';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import Movies from './views/Movies/Movies';
-import MovieForm from './views/Movies/MovieForm';
+import Movies from './views/Movies';
+import MovieForm from './views/MovieForm';
 import Customers from './views/Customers';
 import Rentals from './views/Rentals';
 import NotFound from './views/NotFound';
-import RegisterForm from './views/Login/RegisterForm';
-import LoginForm from './views/Login/LoginForm';
-import Logout from './views/Login/Logout';
+import RegisterForm from './views/RegisterForm';
+import LoginForm from './views/LoginForm';
+import Logout from './views/Logout';
 import auth from './services/authService';
 import 'react-toastify/dist/ReactToastify.css';
 

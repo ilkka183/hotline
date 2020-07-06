@@ -2,8 +2,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Form from 'react-bootstrap/Form'
 import Joi from 'joi-browser';
-import BaseForm from '../../components/common/BaseForm';
-import auth from '../../services/authService';
+import BaseForm from '../components/BaseForm';
+import auth from '../services/authService';
 
 export default class LoginForm extends BaseForm {
   state = {

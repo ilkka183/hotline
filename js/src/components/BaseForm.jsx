@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import Joi from 'joi-browser';
-import MyInput from './MyInput';
-import MySelect from './MySelect';
+import MyInput from './common/MyInput';
+import MySelect from './common/MySelect';
 
 export default class BaseForm extends Component {
   state = {
@@ -34,8 +34,6 @@ export default class BaseForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    console.log('Submit');
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
