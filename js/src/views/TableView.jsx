@@ -20,7 +20,7 @@ export default function TableView({ schema }) {
           <DataTable
             columns={schema.fields}
             http={http}
-            apiEndpoint={apiUrl + '/' + schema.restName}
+            apiEndpoint={apiUrl + '/' + schema.pluralName}
           />
         </Col>
       </Row>

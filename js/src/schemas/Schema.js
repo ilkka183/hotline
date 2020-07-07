@@ -21,16 +21,19 @@ export class Field {
         this.lookup = [];
       }
 
+      if (options.primaryKey)
+        this.primaryKey = options.primaryKey;
+
       if (options.required)
         this.required = options.required;
 
-      if (options.visibleInForm)
+      if (options.hasOwnProperty('visibleInForm'))
         this.visibleInForm = options.visibleInForm;
 
-      if (options.min)
+      if (options.hasOwnProperty('min'))
         this.min = options.min;
 
-      if (options.max)
+      if (options.hasOwnProperty('max'))
         this.max = options.max;
     }
   }
@@ -53,6 +56,16 @@ export class Schema {
 
     for (let field of this.fields)
       data[field.name] = '';
+
+    return data;
+  }
+
+  mapFormData(row) {
+    const data = {}
+
+    for (let field of this.fields)
+      if (field.primaryKey || field.visibleInForm)
+        data[field.name] = row[field.name];
 
     return data;
   }

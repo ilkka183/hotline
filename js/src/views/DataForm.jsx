@@ -10,7 +10,11 @@ export default class DataForm extends BaseForm {
   }
 
   get apiEndpoint() {
-    return apiUrl + '/' + this.getRestName();
+    return apiUrl + '/' + this.schema.pluralName;
+  }
+
+  apiEndpointOf(id) {
+    return this.apiEndpoint + '/' + id;
   }
 
   itemToData(item) {
@@ -19,10 +23,8 @@ export default class DataForm extends BaseForm {
 
   async populateData(id) {
     try {
-      const { data: item } = await http.get(this.apiEndpoint + '/' + id);
-      console.log('item', item);
-      const data = this.itemToData(item);
-      console.log('data', data);
+      const { data: item } = await http.get(this.apiEndpointOf(id));
+      const data = this.schema.mapFormData(item)
 
       this.setState({ data });
     }  catch (ex) {
@@ -36,8 +38,6 @@ export default class DataForm extends BaseForm {
       if (field.lookupFunc) {
         const { data } = await field.lookupFunc();
         field.lookup = data;
-
-        console.log(data);
       }
   }
 
@@ -51,17 +51,18 @@ export default class DataForm extends BaseForm {
   async doSubmit() {
     const { data } = this.state;
 
-    console.log(data);
-
     if (data.Id)
-      await http.put(this.apiEndpoint + '/' + data.Id, data);
+      await http.put(this.apiEndpointOf(data.Id), data);
     else
       await http.post(this.apiEndpoint, data);
 
-    this.props.history.push('/' + this.getRestName());
+    this.props.history.push('/' + this.schema.pluralName);
   }
 
   renderField(field) {
+    if (!field.visibleInForm)
+      return null;
+
     if (field.lookup)
       return this.renderSelect(field.name, field.title, field.lookup);
     else
@@ -71,7 +72,7 @@ export default class DataForm extends BaseForm {
   render() {
     return (
       <>
-        {this.renderHeader(this.getTitle() + ' - ' + this.dataId)}
+        {this.renderHeader(this.schema.singleTitle + ' - ' + this.dataId)}
         <Form onSubmit={this.handleSubmit}>
           {this.schema.fields.map(field => this.renderField(field))}
           {this.renderSubmitButton('Save')}
