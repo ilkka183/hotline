@@ -1,6 +1,6 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import BaseForm from '../components/BaseForm';
+import BaseForm from './BaseForm';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
@@ -20,7 +20,9 @@ export default class DataForm extends BaseForm {
   async populateData(id) {
     try {
       const { data: item } = await http.get(this.apiEndpoint + '/' + id);
+      console.log('item', item);
       const data = this.itemToData(item);
+      console.log('data', data);
 
       this.setState({ data });
     }  catch (ex) {
@@ -29,8 +31,18 @@ export default class DataForm extends BaseForm {
     }
   }
 
+  async populateLookups() {
+    for (let field of this.schema.fields)
+      if (field.lookupFunc) {
+        const { data } = await field.lookupFunc();
+        field.lookup = data;
+
+        console.log(data);
+      }
+  }
+
   async componentDidMount() {
-    this.populateOthers();
+    this.populateLookups();
 
     if (this.dataId !== 'new')
       await this.populateData(this.dataId);
@@ -38,6 +50,8 @@ export default class DataForm extends BaseForm {
 
   async doSubmit() {
     const { data } = this.state;
+
+    console.log(data);
 
     if (data.Id)
       await http.put(this.apiEndpoint + '/' + data.Id, data);
@@ -47,12 +61,19 @@ export default class DataForm extends BaseForm {
     this.props.history.push('/' + this.getRestName());
   }
 
+  renderField(field) {
+    if (field.lookup)
+      return this.renderSelect(field.name, field.title, field.lookup);
+    else
+      return this.renderInput(field.name, field.title);
+  }
+
   render() {
     return (
       <>
-        {this.renderHeader('Movie - ' + this.dataId)}
+        {this.renderHeader(this.getTitle() + ' - ' + this.dataId)}
         <Form onSubmit={this.handleSubmit}>
-          {this.renderControls()}
+          {this.schema.fields.map(field => this.renderField(field))}
           {this.renderSubmitButton('Save')}
         </Form>
       </>

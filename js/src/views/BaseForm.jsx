@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
-import Joi from 'joi-browser';
-import MyInput from './common/MyInput';
-import MySelect from './common/MySelect';
+import MyInput from '../components/common/MyInput';
+import MySelect from '../components/common/MySelect';
 
 export default class BaseForm extends Component {
   state = {
@@ -11,7 +10,7 @@ export default class BaseForm extends Component {
   }
 
   validate() {
-    const { error } = Joi.validate(this.state.data, this.schema, { abortEarly: false });
+/*    const { error } = Joi.validate(this.state.data, this.schema, { abortEarly: false });
 
     if (!error)
       return null;
@@ -21,15 +20,17 @@ export default class BaseForm extends Component {
     for (let item of error.details)
       errors[item.path[0]] = item.message;
 
-    return errors;
+    return errors; */
+    return null;
   }
 
   validateProperty({ name, value }) {
-    const obj = { [name]: value }
+/*    const obj = { [name]: value }
     const schema = { [name]: this.schema[name] }
     const { error } = Joi.validate(obj, schema);
 
-    return error ? error.details[0].message : null;
+    return error ? error.details[0].message : null; */
+    return null;
   }
 
   handleSubmit = e => {
@@ -68,8 +69,9 @@ export default class BaseForm extends Component {
 
     return (
       <MyInput
-        type={type}
+        key={name}
         name={name}
+        type={type}
         label={label}
         value={data[name]}
         error={errors[name]}
@@ -84,6 +86,7 @@ export default class BaseForm extends Component {
 
     return (
       <MySelect
+        key={name}
         name={name}
         label={label}
         options={options}

@@ -1,25 +1,28 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import Joi from 'joi-browser';
-import BaseForm from '../components/BaseForm';
+import BaseForm from './BaseForm';
+import { Schema } from '../schemas/Schema';
 import auth from '../services/authService';
 
-export default class RegisterForm extends BaseForm {
-  state = {
-    data: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: ''
-    },
-    errors: {}
-  }
 
-  schema = {
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(5),
-    firstName: Joi.string().required(),
-    lastName: Joi.string().required()
+class RegisterSchema extends Schema {
+  constructor() {
+    super();
+
+    this.addField('email', 'text', { email: true, required: true });
+    this.addField('password', 'text', { min: 5, required: true });
+    this.addField('firstName', 'text', { required: true });
+    this.addField('lastName', 'text', { required: true });
+  }
+}
+
+
+export default class RegisterForm extends BaseForm {
+  schema = new RegisterSchema()
+
+  state = {
+    data: this.schema.initFormData(),
+    errors: {}
   }
 
   async doSubmit() {

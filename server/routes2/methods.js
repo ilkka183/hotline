@@ -8,7 +8,18 @@ function sendNotFound(res) {
 }
 
 
-function getRow(sql, req, res) {
+function getFields(req, acceptedFields) {
+  const output = {};
+
+  for (const name in req.body)
+    if (acceptedFields.indexOf(name) !== -1)
+      output[name] = req.body[name];
+
+  return output;
+}
+
+
+function getRow(sql, res) {
   console.log(sql);
 
   connection.query(sql, (error, results, fields) => {
@@ -25,7 +36,7 @@ function getRow(sql, req, res) {
 }
 
 
-function getRows(sql, req, res) {
+function getRows(sql, res) {
   console.log(sql);
 
   connection.query(sql, (error, results, fields) => {
@@ -39,7 +50,7 @@ function getRows(sql, req, res) {
 }
 
 
-function postRow(tableName, req, res) {
+function postRow(tableName, fields, res) {
   let sql = 'INSERT INTO ' + tableName + ' (';
 
   const columns = [];
@@ -47,9 +58,9 @@ function postRow(tableName, req, res) {
 
   let index = 0;
 
-  for (const column in req.body) {
+  for (const column in fields) {
     columns.push(column);
-    values.push(req.body[column]);
+    values.push(fields[column]);
 
     if (index > 0)
       sql += ', ';
@@ -61,7 +72,7 @@ function postRow(tableName, req, res) {
   sql += ') VALUES (';
   index = 0;
 
-  for (const column in req.body) {
+  for (const column in fields) {
     if (index > 0)
       sql += ', ';
 
@@ -84,7 +95,7 @@ function postRow(tableName, req, res) {
 
     const response = {
       Id: results.insertId,
-      ...req.body
+      ...fields
     }
 
     res.status(201).send(response);
@@ -92,15 +103,15 @@ function postRow(tableName, req, res) {
 }
 
 
-function putRow(tableName, req, res, keys) {
+function putRow(tableName, fields, keys, res) {
   let sql = 'UPDATE ' + tableName + ' SET ';
 
   const inserts = [];
   let index = 0;
 
-  for (const name in req.body) {
+  for (const name in fields) {
     inserts.push(name);
-    inserts.push(req.body[name]);
+    inserts.push(fields[name]);
 
     if (index > 0)
       sql += ', ';
@@ -136,14 +147,14 @@ function putRow(tableName, req, res, keys) {
     if (results.affectedRows === 0)
       return sendNotFound(res);
 
-    const response = { ...req.body }
+    const response = { ...fields }
 
     res.send(response);
   });
 }
 
 
-function deleteRow(tableName, req, res, keys) {
+function deleteRow(tableName, keys, res) {
   let sql = 'DELETE FROM ' + tableName;
 
   const inserts = [];
@@ -180,6 +191,7 @@ function deleteRow(tableName, req, res, keys) {
 
 
 module.exports = {
+  getFields,
   getRow,
   getRows,
   postRow,
