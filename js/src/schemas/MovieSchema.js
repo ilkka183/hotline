@@ -11,7 +11,7 @@ export default class MovieSchema extends Schema {
     this.addField('GenreName', 'Genre', 'text', { visibleInForm: false });
     this.addField('NumberInStock', 'Stock', 'number', { required: true, min: 0, max: 100 });
     this.addField('DailyRentalRate', 'Rate', 'number', { required: true, min: 0, max: 10 });
-    this.addField('Enabled', 'Enabled', 'boolean', { required: true });
+    this.addField('Enabled', 'Enabled', 'boolean', { required: true, defaultValue: true });
   }
 
   get singularTitle() {

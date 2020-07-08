@@ -14,7 +14,7 @@ export default class UserGroupSchema extends Schema {
     this.addField('Phone',         'Puhelin',          'phone');
     this.addField('Email',         'Sähköposti',       'email');
     this.addField('Website',       'Nettisivut',       'text');
-    this.addField('Enabled',       'Voimassa',         'boolean', { required: true });
+    this.addField('Enabled',       'Voimassa',         'boolean', { required: true, defaultValue: true });
   }
 
   get singularTitle() {

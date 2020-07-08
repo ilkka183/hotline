@@ -13,6 +13,7 @@ import NotFound from './views/NotFound';
 import RegisterForm from './forms/RegisterForm';
 import LoginForm from './forms/LoginForm';
 import Logout from './views/Logout';
+import Profile from './views/Profile';
 import auth from './services/authService';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -35,6 +36,7 @@ export default class App extends Component {
           <Route path="/register" component={RegisterForm} />
           <Route path="/login" component={LoginForm} />
           <Route path="/logout" component={Logout} />
+          <Route path="/profile" component={Profile} />
           <ProtectedRoute path="/movies/:id" component={MovieForm} />
           <Route path="/movies" component={Movies} />
           <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} />

@@ -26,6 +26,9 @@ export default class DataTable extends Component {
   }
 
   handleDelete = async item => {
+    if (!window.confirm('Poista tietue?'))
+      return;
+
     const { http, apiEndpoint } = this.props;
     await http.delete(apiEndpoint + '/' + item.Id);
 

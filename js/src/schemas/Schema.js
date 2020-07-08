@@ -7,6 +7,11 @@ export class Field {
     this.visibleInTable = true;
     this.visibleInForm = true;
 
+    if (type === 'boolean')
+      this.default = false;
+    else
+      this.default = '';
+
     if (options) {
       if (options.link)
         this.link = options.link;
@@ -25,9 +30,11 @@ export class Field {
       if (options.editLink)
         this.editLink = options.editLink;
 
-      if (options.hasOwnProperty('visibleInTable')) {
+      if (options.defaultValue)
+        this.defaultValue = options.defaultValue;
+
+      if (options.hasOwnProperty('visibleInTable'))
         this.visibleInTable = options.visibleInTable;
-      }
 
       if (options.hasOwnProperty('visibleInForm'))
         this.visibleInForm = options.visibleInForm;
@@ -38,13 +45,6 @@ export class Field {
       if (options.hasOwnProperty('max'))
         this.max = options.max;
     }
-  }
-
-  get defaultValue() {
-    if (this.type === 'boolean')
-      return false;
-
-    return '';
   }
 }
 

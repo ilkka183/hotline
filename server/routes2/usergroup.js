@@ -11,12 +11,13 @@ const sql =
   'SELECT Id, Name, ContactPerson,' +
   'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
   'Logo, Info, Enabled ' +
-  'FROM UserGroup';
+  'FROM UserGroup ' +
+  'ORDER BY Id';
 
-router.get('', (req, res) => { http.getRows(sql + ' ORDER BY Id', res) });
-router.get('/:Id', (req, res) => { http.getRow(sql + ' WHERE Id = ' + req.params.Id, res) });
-router.post('', [auth, power], (req, res) => { http.postRow(table, req, res) });
-router.put('/:Id', [auth, power], (req, res) => { http.putRow(table, req, res, { Id: req.params.Id }) });
-router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(table, res, { Id: req.params.Id }) });
+router.get('', (req, res) => { http.getRows(req, res, sql) });
+router.get('/:Id', (req, res) => { http.getRow(req, res, 'SELECT * FROM UserGroup WHERE Id = ' + req.params.Id) });
+router.post('', [auth, power], (req, res) => { http.postRow(req, res, table) });
+router.put('/:Id', [auth, power], (req, res) => { http.putRow(req, res, table, { Id: req.params.Id }) });
+router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
 module.exports = router;

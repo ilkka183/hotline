@@ -8,17 +8,6 @@ function sendNotFound(res) {
 }
 
 
-function getFields(req, acceptedFields) {
-  const output = {};
-
-  for (const name in req.body)
-    if (acceptedFields.indexOf(name) !== -1)
-      output[name] = req.body[name];
-
-  return output;
-}
-
-
 function getRow(req, res, sql) {
   console.log(sql);
 
@@ -191,7 +180,6 @@ function deleteRow(req, res, tableName, keys) {
 
 
 module.exports = {
-  getFields,
   getRow,
   getRows,
   postRow,
