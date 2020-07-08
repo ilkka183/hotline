@@ -89,30 +89,55 @@ export default class DataTable extends Component {
     return null;
   }
 
+  formatBoolean(value) {
+    return value ? 'kyllä' : 'ei';
+  }
+
+  formatDate(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleDateString();
+    }
+    
+    return null;
+  }
+
   renderCell(item, column) {
     if (column.content)
       return column.content(item);
 
+    if (column.editLink && this.props.editable)
+      return <Link to={'/' + this.props.schema.pluralName + '/' + item.Id}>{item[column.name]}</Link>
+
     if (column.link)
       return <Link to={column.link(item)}>{item[column.name]}</Link>
 
-    return item[column.name];
+    let value = item[column.name];
+
+    switch (column.type) {
+      case 'boolean': return this.formatBoolean(value);
+      case 'date': return this.formatDate(value);
+      default: return value;
+    }
   }
 
   renderDeleteButton(item) {
-    return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Delete</Button>;
+    return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
   }
 
   render() {
+    const { deletable } = this.props;
     const { totalCount, items } = this.getPagedData(this.state.data);
     
     if (this.state.data.length === 0)
       return <p>There are no items in the database.</p>
 
+    const columns = this.props.schema.fields.filter(column => column.visibleInTable);
+
     return (
       <>
         <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
-        <p>Showing {totalCount} items on the database.</p>
+        <p>Näytetään {totalCount} tietuetta tietokannasta.</p>
         <DataPagination
           itemsCount={totalCount}
           pageSize={this.state.pageSize}
@@ -122,7 +147,7 @@ export default class DataTable extends Component {
         <table className="table">
           <thead>
             <tr>
-              {this.props.columns.map(column => (
+              {columns.map(column => (
                 <th
                   className="clickable"
                   key={column.name}
@@ -131,14 +156,14 @@ export default class DataTable extends Component {
                   {column.title} {this.renderSortIcon(column)}
                 </th>
               ))}
-              <th></th>
+              {deletable && <th></th>}
             </tr>
           </thead>
           <tbody>
             { items.map(item => (
               <tr key={item.Id}>
-                {this.props.columns.map(column => (<td key={item.Id + column.name}>{this.renderCell(item, column)}</td>))}
-                <td>{this.renderDeleteButton(item)}</td>
+                {columns.map(column => (<td key={item.Id + column.name}>{this.renderCell(item, column)}</td>))}
+                {deletable && <td>{this.renderDeleteButton(item)}</td>}
               </tr>)) }
           </tbody>
         </table>

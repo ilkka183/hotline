@@ -19,7 +19,7 @@ function getFields(req, acceptedFields) {
 }
 
 
-function getRow(sql, res) {
+function getRow(req, res, sql) {
   console.log(sql);
 
   connection.query(sql, (error, results, fields) => {
@@ -36,7 +36,7 @@ function getRow(sql, res) {
 }
 
 
-function getRows(sql, res) {
+function getRows(req, res, sql) {
   console.log(sql);
 
   connection.query(sql, (error, results, fields) => {
@@ -50,7 +50,7 @@ function getRows(sql, res) {
 }
 
 
-function postRow(tableName, fields, res) {
+function postRow(req, res, tableName) {
   let sql = 'INSERT INTO ' + tableName + ' (';
 
   const columns = [];
@@ -58,9 +58,9 @@ function postRow(tableName, fields, res) {
 
   let index = 0;
 
-  for (const column in fields) {
+  for (const column in req.body) {
     columns.push(column);
-    values.push(fields[column]);
+    values.push(req.body[column]);
 
     if (index > 0)
       sql += ', ';
@@ -72,7 +72,7 @@ function postRow(tableName, fields, res) {
   sql += ') VALUES (';
   index = 0;
 
-  for (const column in fields) {
+  for (const column in req.body) {
     if (index > 0)
       sql += ', ';
 
@@ -89,7 +89,7 @@ function postRow(tableName, fields, res) {
 
   connection.query(sql, inserts, (error, results, fields) => {
     if (error) {
-      console.log(error);        
+      console.log(error);
       return res.status(400).send(error);
     }
 
@@ -103,15 +103,15 @@ function postRow(tableName, fields, res) {
 }
 
 
-function putRow(tableName, fields, keys, res) {
+function putRow(req, res, tableName, keys) {
   let sql = 'UPDATE ' + tableName + ' SET ';
 
   const inserts = [];
   let index = 0;
 
-  for (const name in fields) {
+  for (const name in req.body) {
     inserts.push(name);
-    inserts.push(fields[name]);
+    inserts.push(req.body[name]);
 
     if (index > 0)
       sql += ', ';
@@ -140,7 +140,7 @@ function putRow(tableName, fields, keys, res) {
 
   connection.query(sql, inserts, (error, results, fields) => {
     if (error) {
-      console.log(error);        
+      console.log(error);
       return res.status(400).send(error);
     }
 
@@ -154,7 +154,7 @@ function putRow(tableName, fields, keys, res) {
 }
 
 
-function deleteRow(tableName, keys, res) {
+function deleteRow(req, res, tableName, keys) {
   let sql = 'DELETE FROM ' + tableName;
 
   const inserts = [];

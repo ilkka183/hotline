@@ -54,7 +54,7 @@ CREATE TABLE Movie
   Title VARCHAR(80) NOT NULL UNIQUE,
   NumberInStock INTEGER UNSIGNED NOT NULL,
   DailyRentalRate DECIMAL(2,1) NOT NULL,
-  Liked BOOLEAN NOT NULL DEFAULT FALSE,
+  Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   PRIMARY KEY (Id),
   FOREIGN KEY (GenreId) REFERENCES Genre(Id)
 );
@@ -236,7 +236,7 @@ INSERT INTO Genre(Name) VALUES('Action');
 INSERT INTO Genre(Name) VALUES('Comedy');
 INSERT INTO Genre(Name) VALUES('Thriller');
 
-INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate, Liked) VALUES('Terminator', 1, 6, 2.5, TRUE);
+INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Terminator', 1, 6, 2.5);
 INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Die Hard', 1, 5, 2.5);
 INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Get out', 1, 8, 3.5);
 INSERT INTO Movie(Title, GenreId, NumberInStock, DailyRentalRate) VALUES('Trip to Italy', 2, 7, 3.5);

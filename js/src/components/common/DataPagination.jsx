@@ -29,7 +29,7 @@ export default function DataPagination({ itemsCount, pageSize, currentPage, onPa
 
   return (
     <Pagination>
-      <Pagination.Prev onClick={changePage(currentPage - 1)}>Previous</Pagination.Prev>
+      <Pagination.Prev onClick={changePage(currentPage - 1)}>Edellinen</Pagination.Prev>
       {pages.map(page => (
         <Pagination.Item
           key={page}
@@ -39,7 +39,7 @@ export default function DataPagination({ itemsCount, pageSize, currentPage, onPa
           {page}
         </Pagination.Item>
       ))}
-      <Pagination.Next onClick={changePage(currentPage + 1)}>Next</Pagination.Next>
+      <Pagination.Next onClick={changePage(currentPage + 1)}>Seuraava</Pagination.Next>
     </Pagination>
   );
 }

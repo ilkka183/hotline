@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
-import MyInput from '../components/common/MyInput';
-import MySelect from '../components/common/MySelect';
+import MyInput from '../components/form/MyInput';
+import MySelect from '../components/form/MySelect';
+import MyCheck from '../components/form/MyCheck';
 
 export default class BaseForm extends Component {
   state = {
@@ -9,19 +10,19 @@ export default class BaseForm extends Component {
     errors: {}
   }
 
+  // must be less or equal to 100
+  // must be larger than or equal to 0
+
   validate() {
-/*    const { error } = Joi.validate(this.state.data, this.schema, { abortEarly: false });
-
-    if (!error)
-      return null;
-
     const errors = {}
 
-    for (let item of error.details)
-      errors[item.path[0]] = item.message;
+    for (const field of this.schema.fields)
+      if (field.visibleInForm && field.required && field.type !== 'boolean' && !this.state.data[field.name]) {
+        errors[field.name] = field.title + ' is not allowed to be empty';
+        break;
+      }
 
-    return errors; */
-    return null;
+    return Object.keys(errors).length === 0 ? null : errors;
   }
 
   validateProperty({ name, value }) {
@@ -55,12 +56,16 @@ export default class BaseForm extends Component {
       delete errors[input.name];
 
     const data = {...this.state.data}
-    data[input.name] = input.value;
+
+    if (input.type === 'checkbox')
+      data[input.name] = input.checked;
+    else
+      data[input.name] = input.value;
 
     this.setState({ data, errors });
   }
 
-  renderHeader(text) {
+  renderTitle(text) {
     return <h1>{text}</h1>
   }
 
@@ -97,7 +102,30 @@ export default class BaseForm extends Component {
     );
   }
 
+  renderCheck(name, label) {
+    const { data, errors } = this.state;
+
+    return (
+      <MyCheck
+        key={name}
+        name={name}
+        label={label}
+        value={data[name]}
+        error={errors[name]}
+        onChange={this.handleChange}
+      />
+    );
+  }
+
   renderSubmitButton(label) {
-    return <Button variant="primary" type="submit" disabled={this.validate()}>{label}</Button>
-   }
+    return (
+      <Button
+        variant="primary"
+        type="submit"
+        disabled={this.validate() && false}
+      >
+        {label}
+      </Button>
+    );
+  }
 }

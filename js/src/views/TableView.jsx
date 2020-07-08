@@ -10,17 +10,21 @@ import { apiUrl } from '../config.json';
 
 export default function TableView({ schema }) {
   const user = auth.getCurrentUser();
+  const editable = user !== null;
+  const deletable = (user !== null) && (user.role <= 1);
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
           <h1>{schema.pluralTitle}</h1>
-          {user && <LinkButton style={{ marginBottom: 20 }} to={`/${schema.restName}/new`}>New Item</LinkButton>}
+          {editable && <LinkButton style={{ marginBottom: 20 }} to={`/${schema.pluralName}/new`}>Uusi tietue</LinkButton>}
           <DataTable
-            columns={schema.fields}
+            schema={schema}
             http={http}
             apiEndpoint={apiUrl + '/' + schema.pluralName}
+            editable={editable}
+            deletable={deletable}
           />
         </Col>
       </Row>

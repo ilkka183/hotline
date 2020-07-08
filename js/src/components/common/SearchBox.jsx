@@ -7,7 +7,7 @@ export default function SearchBox({ value, onChange }) {
       <Form.Group>
         <Form.Control
           type="text"
-          placeholder="Search..."
+          placeholder="Etsi..."
           value={value}
           onChange={e => onChange(e.currentTarget.value)}
         />

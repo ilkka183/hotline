@@ -10,20 +10,20 @@ export default function NavBar({ user }) {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <div className="navbar-nav">
-          <NavLink className="nav-item nav-link" to="/">Home</NavLink>
+          <NavLink className="nav-item nav-link" to="/">Koti</NavLink>
           <NavLink className="nav-item nav-link" to="/movies">Movies</NavLink>
-          <NavLink className="nav-item nav-link" to="/customers">Customers</NavLink>
-          <NavLink className="nav-item nav-link" to="/rentals">Rentals</NavLink>
+          <NavLink className="nav-item nav-link" to="/usergroups">Käyttäjäryhmät</NavLink>
+          <NavLink className="nav-item nav-link" to="/users">Käyttäjät</NavLink>
           {!user &&
             <>
-              <NavLink className="nav-item nav-link" to="/login">Login</NavLink>
-              <NavLink className="nav-item nav-link" to="/register">Register</NavLink>
+              <NavLink className="nav-item nav-link" to="/login">Kirjaudu</NavLink>
+              <NavLink className="nav-item nav-link" to="/register">Rekisteröidy</NavLink>
             </>
           }
           {user &&
             <>
               <NavLink className="nav-item nav-link" to="/profile">{user.firstName}</NavLink>
-              <NavLink className="nav-item nav-link" to="/logout">Logout</NavLink>
+              <NavLink className="nav-item nav-link" to="/logout">Kirjaudu ulos</NavLink>
             </>
           }
         </div>

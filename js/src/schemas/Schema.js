@@ -1,18 +1,13 @@
 export class Field {
-  constructor(name, type, options) {
+  constructor(name, title, type, options) {
     this.name = name;
-    this.title = name;
+    this.title = title;
     this.type = type;
+    this.editLink = false;
+    this.visibleInTable = true;
     this.visibleInForm = true;
 
-    // is not allowed to be empty
-    // must be less or equal to 100
-    // must be larger than or equal to 0
-
     if (options) {
-      if (options.title)
-        this.title = options.title;
-
       if (options.link)
         this.link = options.link;
 
@@ -27,6 +22,13 @@ export class Field {
       if (options.required)
         this.required = options.required;
 
+      if (options.editLink)
+        this.editLink = options.editLink;
+
+      if (options.hasOwnProperty('visibleInTable')) {
+        this.visibleInTable = options.visibleInTable;
+      }
+
       if (options.hasOwnProperty('visibleInForm'))
         this.visibleInForm = options.visibleInForm;
 
@@ -36,6 +38,13 @@ export class Field {
       if (options.hasOwnProperty('max'))
         this.max = options.max;
     }
+  }
+
+  get defaultValue() {
+    if (this.type === 'boolean')
+      return false;
+
+    return '';
   }
 }
 
@@ -47,15 +56,16 @@ export class Schema {
     this.fields = [];
   }
 
-  addField(name, title, options) {
-    this.fields.push(new Field(name, title, options));
+  addField(name, title, type, options) {
+    this.fields.push(new Field(name, title, type, options));
   }
 
   initFormData() {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = '';
+      if (field.visibleInForm)
+        data[field.name] = field.defaultValue;
 
     return data;
   }
@@ -64,8 +74,10 @@ export class Schema {
     const data = {}
 
     for (let field of this.fields)
-      if (field.primaryKey || field.visibleInForm)
-        data[field.name] = row[field.name];
+      if (field.primaryKey || field.visibleInForm) {
+        const value = row[field.name];
+        data[field.name] = value ? value : '';
+      }
 
     return data;
   }

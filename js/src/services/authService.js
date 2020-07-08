@@ -5,8 +5,13 @@ import { apiUrl } from '../config.json';
 const apiEndpoint = apiUrl + '/auth';
 const tokenKey = 'token';
 
-http.setJwt(getJwt());
+const jwt = getJwt();
+http.setJwt(jwt);
 
+
+export function getJwt() {
+  return localStorage.getItem(tokenKey);
+}
 
 export function getCurrentUser() {
   try {
@@ -15,10 +20,6 @@ export function getCurrentUser() {
   } catch (ex) {
     return null;
   }
-}
-
-export function getJwt() {
-  return localStorage.getItem(tokenKey);
 }
 
 export async function register(user) {

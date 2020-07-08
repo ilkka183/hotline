@@ -6,13 +6,13 @@ const power = require('../middleware/power');
 const router = express.Router();
 
 const table = 'Genre';
-const fields = ['Id', 'Name'];
-const sql = 'SELECT Id, Name FROM Genre';
 
-router.get('', (req, res) => { http.getRows(sql + ' ORDER BY Id', res) });
-router.get('/:Id', (req, res) => { http.getRow(sql + ' WHERE Id = ' + req.params.Id, res) });
-router.post('', auth, (req, res) => { http.postRow(table, http.getFields(req, fields), res) });
-router.put('/:Id', auth, (req, res) => { http.putRow(table, http.getFields(req, fields), { Id: req.params.Id }, res) });
-router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(table, { Id: req.params.Id }, res) });
+const sql = 'SELECT Id, Name FROM Genre ORDER BY Id';
+
+router.get('', (req, res) => { http.getRows(req, res, sql) });
+router.get('/:Id', (req, res) => { http.getRow(req, res, 'SELECT * FROM Genre WHERE Id = ' + req.params.Id) });
+router.post('', auth, (req, res) => { http.postRow(req, res, table) });
+router.put('/:Id', auth, (req, res) => { http.putRow(req, res, table, { Id: req.params.Id }) });
+router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
 module.exports = router;

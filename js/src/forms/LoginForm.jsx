@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import BaseForm from './BaseForm';
 import { Schema } from '../schemas/Schema';
@@ -47,14 +48,14 @@ export default class LoginForm extends BaseForm {
       return <Redirect to="/" />
 
     return (
-      <>
-        {this.renderHeader('Login')}
+      <Container>
+        {this.renderTitle('Kirjaudu')}
         <Form onSubmit={this.handleSubmit}>
-          {this.renderInput('email', 'Email', 'text', true)}
-          {this.renderInput('password', 'Password', 'password')}
-          {this.renderSubmitButton('Login')}
+          {this.renderInput('email', 'Sähköposti', 'text', true)}
+          {this.renderInput('password', 'Salasana', 'password')}
+          {this.renderSubmitButton('Kirjaudu')}
         </Form>
-      </>
+      </Container>
     );
   }
 }

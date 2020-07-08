@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import BaseForm from './BaseForm';
 import { Schema } from '../schemas/Schema';
@@ -52,16 +53,16 @@ export default class RegisterForm extends BaseForm {
 
   render() {
     return (
-      <>
-        {this.renderHeader('Register')}
+      <Container>
+        {this.renderTitle('Rekisteröidy')}
         <Form onSubmit={this.handleSubmit}>
-        {this.renderInput('email', 'Email', 'text', true)}
-          {this.renderInput('password', 'Password', 'password')}
-          {this.renderInput('firstName', 'First Name')}
-          {this.renderInput('lastName', 'Last Name')}
-          {this.renderSubmitButton('Register')}
+        {this.renderInput('email', 'Sähköposti', 'text', true)}
+          {this.renderInput('password', 'Salasana', 'password')}
+          {this.renderInput('firstName', 'Etunimi')}
+          {this.renderInput('lastName', 'Sukunimi')}
+          {this.renderSubmitButton('Rekisteröidy')}
         </Form>
-      </>
+      </Container>
     );
   }
 }

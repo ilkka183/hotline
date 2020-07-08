@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import BaseForm from './BaseForm';
 import http from '../services/httpService';
@@ -21,6 +22,16 @@ export default class DataForm extends BaseForm {
     return item;
   }
 
+  async populateLookups() {
+    for (const field of this.schema.fields)
+      if (field.lookupFunc) {
+        const { data: lookup } = await field.lookupFunc();
+        field.lookup = lookup;
+
+        this.setState({ lookup });
+      }
+  }
+
   async populateData(id) {
     try {
       const { data: item } = await http.get(this.apiEndpointOf(id));
@@ -33,14 +44,6 @@ export default class DataForm extends BaseForm {
     }
   }
 
-  async populateLookups() {
-    for (let field of this.schema.fields)
-      if (field.lookupFunc) {
-        const { data } = await field.lookupFunc();
-        field.lookup = data;
-      }
-  }
-
   async componentDidMount() {
     this.populateLookups();
 
@@ -50,6 +53,8 @@ export default class DataForm extends BaseForm {
 
   async doSubmit() {
     const { data } = this.state;
+
+    console.log(data);
 
     if (data.Id)
       await http.put(this.apiEndpointOf(data.Id), data);
@@ -63,21 +68,32 @@ export default class DataForm extends BaseForm {
     if (!field.visibleInForm)
       return null;
 
+    let title = field.title;
+
+    if (!field.required)
+      title += ' - optional';
+
     if (field.lookup)
-      return this.renderSelect(field.name, field.title, field.lookup);
+      return this.renderSelect(field.name, title, field.lookup);
+    else if (field.type === "boolean")
+      return this.renderCheck(field.name, field.title);
     else
-      return this.renderInput(field.name, field.title);
+      return this.renderInput(field.name, title);
+  }
+
+  formatTitle() {
+    return this.schema.singularTitle + ' - ' + (this.dataId === 'new' ? 'uusi' : this.dataId);
   }
 
   render() {
     return (
-      <>
-        {this.renderHeader(this.schema.singleTitle + ' - ' + this.dataId)}
+      <Container>
+        {this.renderTitle(this.formatTitle())}
         <Form onSubmit={this.handleSubmit}>
           {this.schema.fields.map(field => this.renderField(field))}
-          {this.renderSubmitButton('Save')}
+          {this.renderSubmitButton('Tallenna')}
         </Form>
-      </>
+      </Container>
     );
   }
 }
