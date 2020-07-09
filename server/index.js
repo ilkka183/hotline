@@ -8,8 +8,11 @@ const query = require('./routes/query');
 const table = require('./routes/table');
 const traficom = require('./routes/traficom');
 
+const brand = require('./routes2/brand');
+const problem = require('./routes2/problem');
 const usergroup = require('./routes2/usergroup');
 const user = require('./routes2/user');
+
 const genre = require('./routes2/genre');
 const movie = require('./routes2/movie');
 
@@ -47,8 +50,11 @@ app.use(apiPath + 'query', query);
 app.use(apiPath + 'table', table);
 app.use(apiPath + 'traficom', traficom);
 
+app.use(apiPath + 'Brands', brand);
+app.use(apiPath + 'Problems', problem);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
+
 app.use(apiPath + 'Genres', genre);
 app.use(apiPath + 'Movies', movie);
 

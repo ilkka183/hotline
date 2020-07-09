@@ -18,10 +18,6 @@ export default class DataForm extends BaseForm {
     return this.apiEndpoint + '/' + id;
   }
 
-  itemToData(item) {
-    return item;
-  }
-
   async populateLookups() {
     for (const field of this.schema.fields)
       if (field.lookupFunc) {
@@ -35,9 +31,10 @@ export default class DataForm extends BaseForm {
   async populateData(id) {
     try {
       const { data: item } = await http.get(this.apiEndpointOf(id));
+      const savedData = this.schema.mapFormData(item)
       const data = this.schema.mapFormData(item)
 
-      this.setState({ data });
+      this.setState({ savedData, data });
     }  catch (ex) {
       if (ex.response && ex.response.status === 404)
         this.props.history.replace('/not-found');
@@ -54,12 +51,29 @@ export default class DataForm extends BaseForm {
   async doSubmit() {
     const { data } = this.state;
 
-    console.log(data);
+    if (data.Id) {
+      // PUT
+      const { savedData } = this.state;
 
-    if (data.Id)
-      await http.put(this.apiEndpointOf(data.Id), data);
-    else
+      const modifiedFields = {};
+      let modified = false;
+      
+      for (const field in data)
+        if (data[field] !== savedData[field]) {
+          modifiedFields[field] = data[field];
+          modified = true;
+        }
+
+      if (modified) {
+        console.log('put', modifiedFields);
+        await http.put(this.apiEndpointOf(data.Id), modifiedFields);
+      }
+    }
+    else {
+      // POST
+      console.log('post', data);
       await http.post(this.apiEndpoint, data);
+    }
 
     this.props.history.push('/' + this.schema.pluralName);
   }

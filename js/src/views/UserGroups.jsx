@@ -6,6 +6,6 @@ export default class UserGroups extends Component {
   schema = new UserGroupSchema();
 
   render() {
-    return  <TableView schema={this.schema} />
+    return <TableView schema={this.schema} />
   }
 }

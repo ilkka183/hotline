@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TableView from './TableView';
-import MovieSchema from '../schemas/MovieSchema';
+import ProblemSchema from '../schemas/ProblemSchema';
 
-export default class Movies extends Component {
-  schema = new MovieSchema();
+export default class Problems extends Component {
+  schema = new ProblemSchema();
 
   render() {
     return <TableView schema={this.schema} />

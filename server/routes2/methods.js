@@ -8,6 +8,11 @@ function sendNotFound(res) {
 }
 
 
+function sql(table, id) {
+  return 'SELECT * FROM ' + table + ' WHERE Id = ' + id;
+}
+
+
 function getRow(req, res, sql) {
   console.log(sql);
 
@@ -180,6 +185,7 @@ function deleteRow(req, res, tableName, keys) {
 
 
 module.exports = {
+  sql,
   getRow,
   getRows,
   postRow,

@@ -6,6 +6,6 @@ export default class Users extends Component {
   schema = new UserSchema();
 
   render() {
-    return  <TableView schema={this.schema} />
+    return <TableView schema={this.schema} />
   }
 }

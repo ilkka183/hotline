@@ -65,7 +65,7 @@ export class Schema {
 
     for (let field of this.fields)
       if (field.visibleInForm)
-        data[field.name] = field.defaultValue;
+        data[field.name] = field.defaultValue ? field.defaultValue : '';
 
     return data;
   }

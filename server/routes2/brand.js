@@ -5,16 +5,12 @@ const power = require('../middleware/power');
 
 const router = express.Router();
 
-const table = 'User';
+const table = 'Brand';
 
-const sql =
-  'SELECT User.Id, User.GroupId, UserGroup.Name AS GroupName, User.Role, User.Email, User.Password, ' + 
-  'User.FirstName, User.LastName, User.Title, ' +
-  'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
-  'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
-  'FROM User, UserGroup ' +
-  'WHERE User.GroupId = UserGroup.Id ' +
-  'ORDER BY User.Id';
+const sql = 
+  'SELECT Id, Name, Enabled ' +
+  'FROM Brand ' +
+  'ORDER BY Id';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });
 router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });

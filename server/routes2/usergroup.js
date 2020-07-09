@@ -15,7 +15,7 @@ const sql =
   'ORDER BY Id';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });
-router.get('/:Id', (req, res) => { http.getRow(req, res, 'SELECT * FROM UserGroup WHERE Id = ' + req.params.Id) });
+router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });
 router.post('', [auth, power], (req, res) => { http.postRow(req, res, table) });
 router.put('/:Id', [auth, power], (req, res) => { http.putRow(req, res, table, { Id: req.params.Id }) });
 router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(req, res, table, { Id: req.params.Id }) });

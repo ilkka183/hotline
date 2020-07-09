@@ -1,4 +1,4 @@
-import DataForm from '../forms/DataForm';
+import DataForm from './DataForm';
 import UserSchema from '../schemas/UserSchema';
 
 export default class UserForm extends DataForm {
