@@ -19,13 +19,32 @@ export default class DataForm extends BaseForm {
   }
 
   async populateLookups() {
-    for (const field of this.schema.fields)
-      if (field.lookupFunc) {
-        const { data: lookup } = await field.lookupFunc();
+    for (const field of this.schema.fields) {
+      const nullItem = { Id: null, Name: '' };
+
+      if (field.lookup) {
+        const lookup = [nullItem, ...field.lookup];
+
+        this.setState({ lookup });
+      }
+      else if (field.lookupFunc) {
+        const { data } = await field.lookupFunc();
+        const lookup = [nullItem, ...data];
         field.lookup = lookup;
 
         this.setState({ lookup });
       }
+      else if (field.enums) {
+        const lookup = [nullItem];
+
+        for (const index in field.enums)
+          lookup.push({ Id: index, Name: field.enums[index] });
+
+        field.lookup = lookup;
+
+        this.setState({ lookup });
+      }
+    }
   }
 
   async populateData(id) {

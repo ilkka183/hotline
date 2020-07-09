@@ -135,6 +135,9 @@ export default class DataTable extends Component {
 
     let value = item[column.name];
 
+    if (column.enums)
+      return column.enums[value];
+
     switch (column.type) {
       case 'boolean': return this.formatBoolean(value);
       case 'date': return this.formatDate(value);
@@ -161,13 +164,14 @@ export default class DataTable extends Component {
     return (
       <>
         <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
-        <p>Näytetään {totalCount} tietuetta tietokannasta.</p>
-        <DataPagination
-          itemsCount={totalCount}
-          pageSize={this.state.pageSize}
-          currentPage={this.state.currentPage}
-          onPageChange={this.handlePageChange}
-        />
+        <div>
+          <DataPagination
+            itemsCount={totalCount}
+            pageSize={this.state.pageSize}
+            currentPage={this.state.currentPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
         <table className="table">
           <thead>
             <tr>

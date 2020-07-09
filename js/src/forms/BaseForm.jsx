@@ -12,28 +12,24 @@ export default class BaseForm extends Component {
     errors: {}
   }
 
-  // must be less or equal to 100
-  // must be larger than or equal to 0
-
   validate() {
     const errors = {}
 
-    for (const field of this.schema.fields)
-      if (field.visibleInForm && field.required && field.type !== 'boolean' && !this.state.data[field.name]) {
-        errors[field.name] = field.title + ' is not allowed to be empty';
+    for (const field of this.schema.fields) {
+      const error = field.validate(this.state.data[field.name]);
+
+      if (error) {
+        errors[field.name] = error;
         break;
       }
+    }
 
     return Object.keys(errors).length === 0 ? null : errors;
   }
 
   validateProperty({ name, value }) {
-/*    const obj = { [name]: value }
-    const schema = { [name]: this.schema[name] }
-    const { error } = Joi.validate(obj, schema);
-
-    return error ? error.details[0].message : null; */
-    return null;
+    const field = this.schema.findField(name);
+    return field && field.validate(value);
   }
 
   handleSubmit = e => {

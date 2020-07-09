@@ -8,7 +8,7 @@ const router = express.Router();
 const table = 'Problem';
 
 const sql = 
-  'SELECT Id, Title, Status ' +
+  'SELECT Id, Date, LicenseNumber, Brand, Model, Fuel, EngineSize, Title, Status ' +
   'FROM Problem ' +
   'ORDER BY Id';
 

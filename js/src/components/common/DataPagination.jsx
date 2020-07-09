@@ -40,6 +40,7 @@ export default function DataPagination({ itemsCount, pageSize, currentPage, onPa
         </Pagination.Item>
       ))}
       <Pagination.Next onClick={changePage(currentPage + 1)}>Seuraava</Pagination.Next>
+      <span>{itemsCount} tietuetta</span>
     </Pagination>
   );
 }

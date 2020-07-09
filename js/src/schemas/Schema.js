@@ -17,10 +17,14 @@ export class Field {
       if (options.link)
         this.link = options.link;
 
-      if (options.lookupFunc) {
+      if (options.lookupFunc)
         this.lookupFunc = options.lookupFunc;
-        this.lookup = [];
-      }
+
+      if (options.lookup)
+        this.lookup = options.lookup;
+
+      if (options.enums)
+        this.enums = options.enums;
 
       if (options.primaryKey)
         this.primaryKey = options.primaryKey;
@@ -49,6 +53,23 @@ export class Field {
       if (options.hasOwnProperty('max'))
         this.max = options.max;
     }
+  }
+
+  validate(value) {
+    if (this.visibleInForm) {
+      if (this.required && this.type !== 'boolean' && !value)
+        return this.title + ' is not allowed to be empty';
+
+      if (value) {
+        if (this.min !== undefined && value < this.min)
+          return this.title + ' must be larger than or equal to ' + this.min;
+
+        if (this.max !== undefined && value > this.max)
+          return this.title + ' must be less or equal to ' + this.max;
+      }
+    }
+
+    return null;
   }
 
   date_JsonToData(value) {
@@ -104,6 +125,14 @@ export class Schema {
 
   get pluralName() {
     throw new Error('You have to implement the get pluralName() property!');
+  }
+
+  findField(name) {
+    for (const field of this.fields)
+      if (field.name === name)
+        return field;
+
+    return null;
   }
 
   addField(name, title, type, options) {
