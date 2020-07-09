@@ -31,8 +31,8 @@ export default class DataForm extends BaseForm {
   async populateData(id) {
     try {
       const { data: item } = await http.get(this.apiEndpointOf(id));
-      const savedData = this.schema.mapFormData(item)
-      const data = this.schema.mapFormData(item)
+      const savedData = this.schema.jsonToData(item)
+      const data = this.schema.jsonToData(item)
 
       this.setState({ savedData, data });
     }  catch (ex) {
@@ -58,11 +58,12 @@ export default class DataForm extends BaseForm {
       const modifiedFields = {};
       let modified = false;
       
-      for (const field in data)
-        if (data[field] !== savedData[field]) {
-          modifiedFields[field] = data[field];
+      for (let field of this.schema.fields) {
+        if (data[field.name] && data[field.name] !== savedData[field.name]) {
+          modifiedFields[field.name] = field.dataToJson(data[field.name]);
           modified = true;
         }
+      }
 
       if (modified) {
         console.log('put', modifiedFields);
@@ -89,10 +90,17 @@ export default class DataForm extends BaseForm {
 
     if (field.lookup)
       return this.renderSelect(field.name, title, field.lookup);
-    else if (field.type === "boolean")
-      return this.renderCheck(field.name, field.title);
-    else
-      return this.renderInput(field.name, title);
+
+    switch (field.type) {
+      case 'boolean': return this.renderCheck(field.name, field.title);
+      case 'textarea': return this.renderTextarea(field.name, field.title, 5);
+
+      default:
+        if (field.readonly)
+          return this.renderPlainText(field.name, title);
+        else
+          return this.renderInput(field.name, title);
+      }
   }
 
   formatTitle() {

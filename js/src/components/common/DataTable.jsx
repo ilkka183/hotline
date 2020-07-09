@@ -105,6 +105,24 @@ export default class DataTable extends Component {
     return null;
   }
 
+  formatTime(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleTimeString();
+    }
+    
+    return null;
+  }
+
+  formatDateTime(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleString();
+    }
+    
+    return null;
+  }
+
   renderCell(item, column) {
     if (column.content)
       return column.content(item);
@@ -120,6 +138,9 @@ export default class DataTable extends Component {
     switch (column.type) {
       case 'boolean': return this.formatBoolean(value);
       case 'date': return this.formatDate(value);
+      case 'datetime': return this.formatDateTime(value);
+      case 'time': return this.formatTime(value);
+      
       default: return value;
     }
   }

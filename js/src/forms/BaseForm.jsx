@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
-import MyInput from '../components/form/MyInput';
-import MySelect from '../components/form/MySelect';
 import MyCheck from '../components/form/MyCheck';
+import MyInput from '../components/form/MyInput';
+import MyPlainText from '../components/form/MyPlainText';
+import MySelect from '../components/form/MySelect';
+import MyTextArea from '../components/form/MyTextArea';
 
 export default class BaseForm extends Component {
   state = {
@@ -69,6 +71,21 @@ export default class BaseForm extends Component {
     return <h1>{text}</h1>
   }
 
+  renderPlainText(name, label) {
+    const { data, errors } = this.state;
+
+    return (
+      <MyPlainText
+        key={name}
+        name={name}
+        label={label}
+        value={data[name]}
+        error={errors[name]}
+        onChange={this.handleChange}
+      />
+    );
+  }
+
   renderInput(name, label, type = 'text', autoFocus = false) {
     const { data, errors } = this.state;
 
@@ -82,6 +99,22 @@ export default class BaseForm extends Component {
         error={errors[name]}
         onChange={this.handleChange}
         autoFocus={autoFocus}
+      />
+    );
+  }
+
+  renderTextarea(name, label, rows) {
+    const { data, errors } = this.state;
+
+    return (
+      <MyTextArea
+        key={name}
+        name={name}
+        label={label}
+        rows={rows}
+        value={data[name]}
+        error={errors[name]}
+        onChange={this.handleChange}
       />
     );
   }

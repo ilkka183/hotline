@@ -25,8 +25,9 @@ function getRow(req, res, sql) {
     if (results.length === 0)
       return sendNotFound(res);
 
-    res.send(results[0]);
-  });
+      console.log(results[0]);
+      res.send(results[0]);
+    });
 }
 
 

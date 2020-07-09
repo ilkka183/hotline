@@ -18,7 +18,8 @@ export default class UserSchema extends Schema {
     this.addField('Website',       'Nettisivut',       'text');
     this.addField('LicenseBegin',  'Lisenssi alku',    'date');
     this.addField('LicenseEnd',    'Lisenssi loppu',   'date');
-    this.addField('Enabled',       'Voimassa',         'boolean', { required: true, defaultValue: true });
+    this.addEnabled();
+    this.addTimestamps();
   }
 
   get singularTitle() {
