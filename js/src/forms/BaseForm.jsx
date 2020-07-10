@@ -64,7 +64,7 @@ export default class BaseForm extends Component {
   }
 
   renderTitle(text) {
-    return <h1>{text}</h1>
+    return <h2>{text}</h2>
   }
 
   renderPlainText(name, label) {

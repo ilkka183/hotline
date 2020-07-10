@@ -23,7 +23,7 @@ export default class Home extends Component {
     return (
       <Row>
         <Col>
-          <h1>Avoimet vikatapaukset</h1>
+          <h2>Avoimet vikatapaukset</h2>
           {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Uusi vikatapaus</LinkButton>}
           <DataTable
             schema={this.schema}

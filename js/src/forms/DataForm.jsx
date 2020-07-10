@@ -93,7 +93,7 @@ export default class DataForm extends BaseForm {
       await http.post(this.apiEndpoint, data);
     }
 
-    this.props.history.push('/' + this.schema.pluralName);
+    this.props.history.goBack();
   }
 
   renderField(field) {

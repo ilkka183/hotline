@@ -6,7 +6,7 @@ export default class Profile extends Component {
     const user = auth.getCurrentUser();
 
     return (
-      <h1>Profiili - {user.firstName}</h1>
+      <h2>Profiili - {user.firstName}</h2>
     );
   }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
 import Button from 'react-bootstrap/Button'
 import DataPagination from './DataPagination';
 import SearchBox from './SearchBox';
@@ -141,6 +140,22 @@ export default class DataTable extends Component {
     return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
   }
 
+  sortItems(items, sortColumn) {
+    items.sort((a, b) => {
+      let result = 0;
+
+      if (a[sortColumn.name] > b[sortColumn.name])
+        result = 1;
+      else if (a[sortColumn.name] < b[sortColumn.name])
+        result = -1;
+
+      if (sortColumn.order === 'desc')
+        result = -result;
+
+      return result;
+    });
+  }
+
   render() {
     const { data, searchQuery, sortColumn, currentPage, pageSize } = this.state;
 
@@ -149,12 +164,12 @@ export default class DataTable extends Component {
     if (searchQuery)
       filteredItems = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
 
-    const sortedItems = _.orderBy(filteredItems, [sortColumn.name], [sortColumn.order]);
+    this.sortItems(filteredItems, sortColumn);
 
     const showSearchBox = this.props.showSearchBox === undefined || this.props.showSearchBox;
     const paginate = this.props.paginate === undefined || this.props.paginate;
     
-    const items = paginate ? paginateItems(sortedItems, currentPage, pageSize) : sortedItems;
+    const items = paginate ? paginateItems(filteredItems, currentPage, pageSize) : filteredItems;
 
     if (this.state.data.length === 0)
       return <p>There are no items in the database.</p>

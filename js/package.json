@@ -10,7 +10,6 @@
     "bootstrap": "^4.5.0",
     "font-awesome": "^4.7.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.15",
     "prop-types": "^15.6.2",
     "query-string": "^6.1.0",
     "react": "^16.13.1",

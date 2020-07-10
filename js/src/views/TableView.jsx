@@ -19,7 +19,7 @@ export default function TableView({ schema }) {
   return (
     <Row>
       <Col>
-        <h1>{schema.pluralTitle}</h1>
+        <h2>{schema.pluralTitle}</h2>
         {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Uusi tietue</LinkButton>}
         <DataTable
           schema={schema}
