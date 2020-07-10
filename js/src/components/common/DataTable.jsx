@@ -4,7 +4,7 @@ import _ from 'lodash';
 import Button from 'react-bootstrap/Button'
 import DataPagination from './DataPagination';
 import SearchBox from './SearchBox';
-import { paginate } from '../../utils/paginate';
+import { paginateItems } from '../../utils/paginate';
 
 export default class DataTable extends Component {
   state = {
@@ -62,23 +62,6 @@ export default class DataTable extends Component {
     this.handleSort(newSortColumn);
   }
 
-  getPagedData(data) {
-    const { searchQuery, sortColumn, currentPage, pageSize } = this.state;
-
-    let filteredItems = data;
-
-    if (searchQuery)
-      filteredItems = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
-
-    const sortedItems = _.orderBy(filteredItems, [sortColumn.name], [sortColumn.order]);
-    const items = paginate(sortedItems, currentPage, pageSize);
-
-    return {
-      totalCount: filteredItems.length,
-      items
-    }
-  }
-
   renderSortIcon(column) {
     if (column.name === this.state.sortColumn.name)
     {
@@ -123,16 +106,7 @@ export default class DataTable extends Component {
     return null;
   }
 
-  renderCell(item, column) {
-    if (column.content)
-      return column.content(item);
-
-    if (column.editLink && this.props.editable)
-      return <Link to={'/' + this.props.schema.pluralName + '/' + item.Id}>{item[column.name]}</Link>
-
-    if (column.link)
-      return <Link to={column.link(item)}>{item[column.name]}</Link>
-
+  formatValue(item, column) {
     let value = item[column.name];
 
     if (column.enums)
@@ -140,12 +114,27 @@ export default class DataTable extends Component {
 
     switch (column.type) {
       case 'boolean': return this.formatBoolean(value);
-      case 'date': return this.formatDate(value);
-      case 'datetime': return this.formatDateTime(value);
+      case 'date': return this.formatDate(value, column);
+      case 'datetime': return column.displayFormat === 'date' ? this.formatDate(value, column) : this.formatDateTime(value);
       case 'time': return this.formatTime(value);
       
       default: return value;
     }
+  }
+
+  renderCell(item, column) {
+    if (column.content)
+      return column.content(item);
+
+    const text = this.formatValue(item, column);
+
+    if (column.editLink && this.props.editable)
+      return <Link to={'/' + this.props.schema.pluralName + '/' + item.Id}>{text}</Link>
+
+    if (column.link)
+      return <Link to={column.link(item)}>{text}</Link>
+
+    return text;
   }
 
   renderDeleteButton(item) {
@@ -153,25 +142,37 @@ export default class DataTable extends Component {
   }
 
   render() {
-    const { deletable } = this.props;
-    const { totalCount, items } = this.getPagedData(this.state.data);
+    const { data, searchQuery, sortColumn, currentPage, pageSize } = this.state;
+
+    let filteredItems = data;
+
+    if (searchQuery)
+      filteredItems = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
+
+    const sortedItems = _.orderBy(filteredItems, [sortColumn.name], [sortColumn.order]);
+
+    const showSearchBox = this.props.showSearchBox === undefined || this.props.showSearchBox;
+    const paginate = this.props.paginate === undefined || this.props.paginate;
     
+    const items = paginate ? paginateItems(sortedItems, currentPage, pageSize) : sortedItems;
+
     if (this.state.data.length === 0)
       return <p>There are no items in the database.</p>
 
+    const { deletable } = this.props;
     const columns = this.props.schema.fields.filter(column => column.visibleInTable);
 
     return (
       <>
-        <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
-        <div>
+        {showSearchBox && <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />}
+        {paginate && <div>
           <DataPagination
-            itemsCount={totalCount}
+            itemsCount={filteredItems.length}
             pageSize={this.state.pageSize}
             currentPage={this.state.currentPage}
             onPageChange={this.handlePageChange}
           />
-        </div>
+        </div>}
         <table className="table">
           <thead>
             <tr>

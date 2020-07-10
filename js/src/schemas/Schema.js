@@ -20,9 +20,6 @@ export class Field {
       if (options.lookupFunc)
         this.lookupFunc = options.lookupFunc;
 
-      if (options.lookup)
-        this.lookup = options.lookup;
-
       if (options.enums)
         this.enums = options.enums;
 
@@ -34,6 +31,9 @@ export class Field {
 
       if (options.readonly)
         this.readonly = options.readonly;
+
+      if (options.displayFormat)
+        this.displayFormat = options.displayFormat;
 
       if (options.editLink)
         this.editLink = options.editLink;
@@ -57,7 +57,7 @@ export class Field {
 
   validate(value) {
     if (this.visibleInForm) {
-      if (this.required && this.type !== 'boolean' && !value)
+      if (this.required && this.type !== 'boolean' && value === '')
         return this.title + ' is not allowed to be empty';
 
       if (value) {
@@ -87,7 +87,7 @@ export class Field {
   }
 
   jsonToData(value) {
-    if (!value)
+    if (value === null)
       return '';
 
     switch (this.type) {
@@ -97,7 +97,7 @@ export class Field {
   }
 
   dataToJson(value) {
-    if (!value)
+    if (value === '')
       return null;
 
     switch (this.type) {
@@ -160,7 +160,6 @@ export class Schema {
 
   jsonToData(row) {
     const data = {}
-    console.log(row);
 
     for (let field of this.fields)
       if (field.primaryKey || field.visibleInForm)

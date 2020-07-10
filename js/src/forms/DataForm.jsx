@@ -22,12 +22,7 @@ export default class DataForm extends BaseForm {
     for (const field of this.schema.fields) {
       const nullItem = { Id: null, Name: '' };
 
-      if (field.lookup) {
-        const lookup = [nullItem, ...field.lookup];
-
-        this.setState({ lookup });
-      }
-      else if (field.lookupFunc) {
+      if (field.lookupFunc) {
         const { data } = await field.lookupFunc();
         const lookup = [nullItem, ...data];
         field.lookup = lookup;
@@ -52,6 +47,9 @@ export default class DataForm extends BaseForm {
       const { data: item } = await http.get(this.apiEndpointOf(id));
       const savedData = this.schema.jsonToData(item)
       const data = this.schema.jsonToData(item)
+
+      console.log(item);
+      console.log(data);
 
       this.setState({ savedData, data });
     }  catch (ex) {
@@ -78,7 +76,7 @@ export default class DataForm extends BaseForm {
       let modified = false;
       
       for (let field of this.schema.fields) {
-        if (data[field.name] && data[field.name] !== savedData[field.name]) {
+        if (data[field.name] !== '' && data[field.name] !== savedData[field.name]) {
           modifiedFields[field.name] = field.dataToJson(data[field.name]);
           modified = true;
         }

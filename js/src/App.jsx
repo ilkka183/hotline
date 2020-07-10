@@ -7,6 +7,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 
 import About from './views/About';
 import Brands from './views/Brands';
+import Home from './views/Home';
 import Logout from './views/Logout';
 import Movies from './views/Movies';
 import NotFound from './views/NotFound';
@@ -43,6 +44,7 @@ export default class App extends Component {
         <AppNavbar user={user} />
         <Container fluid>
           <Switch>
+            <Route path="/home" component={Home} />
             <ProtectedRoute path="/movies/:id" component={MovieForm} />
             <Route path="/movies" component={Movies} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
@@ -59,7 +61,7 @@ export default class App extends Component {
             <Route path="/logout" component={Logout} />
             <Route path="/profile" component={Profile} />
             <Route path="/not-found" component={NotFound} />
-            <Redirect from="/" exact to="/movies" />
+            <Redirect from="/" exact to="/home" />
             <Redirect to="/not-found" />
           </Switch>
         </Container>

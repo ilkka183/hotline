@@ -12,11 +12,15 @@ export default function TableView({ schema }) {
   const editable = user !== null;
   const deletable = (user !== null) && (user.role <= 1);
 
+  const buttonStyle = {
+    marginBottom: 20
+  }
+
   return (
     <Row>
       <Col>
         <h1>{schema.pluralTitle}</h1>
-        {editable && <LinkButton style={{ marginBottom: 20 }} to={`/${schema.pluralName}/new`}>Uusi tietue</LinkButton>}
+        {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Uusi tietue</LinkButton>}
         <DataTable
           schema={schema}
           http={http}

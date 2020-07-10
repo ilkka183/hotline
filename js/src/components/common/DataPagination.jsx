@@ -27,6 +27,12 @@ export default function DataPagination({ itemsCount, pageSize, currentPage, onPa
     return () => onPageChange(page);
   }
 
+  const itemsCountStyle = {
+    marginLeft: 10,
+    display: 'flex',
+    alignItems: 'center'
+  }
+
   return (
     <Pagination>
       <Pagination.Prev onClick={changePage(currentPage - 1)}>Edellinen</Pagination.Prev>
@@ -40,7 +46,7 @@ export default function DataPagination({ itemsCount, pageSize, currentPage, onPa
         </Pagination.Item>
       ))}
       <Pagination.Next onClick={changePage(currentPage + 1)}>Seuraava</Pagination.Next>
-      <span>{itemsCount} tietuetta</span>
+      <div style={itemsCountStyle}>{itemsCount} riviä</div>
     </Pagination>
   );
 }
