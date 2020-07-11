@@ -25,7 +25,7 @@ export default class DataTable extends Component {
   }
 
   handleDelete = async item => {
-    if (!window.confirm('Poista tietue?'))
+    if (!window.confirm('Poista rivi?'))
       return;
 
     const { http, apiEndpoint } = this.props;
@@ -197,7 +197,7 @@ export default class DataTable extends Component {
                   key={column.name}
                   onClick={() => this.setSorColumn(column.name)}
                 >
-                  {column.title} {this.renderSortIcon(column)}
+                  {column.label} {this.renderSortIcon(column)}
                 </th>
               ))}
               {deletable && <th></th>}

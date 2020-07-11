@@ -22,8 +22,8 @@ export default class DataForm extends BaseForm {
     for (const field of this.schema.fields) {
       const nullItem = { Id: null, Name: '' };
 
-      if (field.lookupFunc) {
-        const { data } = await field.lookupFunc();
+      if (field.lookupUrl) {
+        const { data } = await http.get(apiUrl + '/' + field.lookupUrl);
         const lookup = [nullItem, ...data];
         field.lookup = lookup;
 
@@ -47,9 +47,6 @@ export default class DataForm extends BaseForm {
       const { data: item } = await http.get(this.apiEndpointOf(id));
       const savedData = this.schema.jsonToData(item)
       const data = this.schema.jsonToData(item)
-
-      console.log(item);
-      console.log(data);
 
       this.setState({ savedData, data });
     }  catch (ex) {
@@ -100,23 +97,27 @@ export default class DataForm extends BaseForm {
     if (!field.visibleInForm)
       return null;
 
-    let title = field.title;
+    const value = this.state.data[field.name];
 
-    if (!field.required)
-      title += ' - optional';
+    if (field.readonly && !value)
+      return null;
+
+    if (field.required) {
+      // TODO: bold label
+    }
 
     if (field.lookup)
-      return this.renderSelect(field.name, title, field.lookup);
+      return this.renderSelect(field.name, field.label, field.lookup);
 
     switch (field.type) {
-      case 'boolean': return this.renderCheck(field.name, field.title);
-      case 'textarea': return this.renderTextarea(field.name, field.title, 5);
+      case 'boolean': return this.renderCheck(field.name, field.label);
+      case 'textarea': return this.renderTextarea(field.name, field.label, 5);
 
       default:
         if (field.readonly)
-          return this.renderPlainText(field.name, title);
+          return this.renderPlainText(field.name, field.label);
         else
-          return this.renderInput(field.name, title);
+          return this.renderInput(field.name, field.label);
       }
   }
 

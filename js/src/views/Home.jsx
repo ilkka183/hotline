@@ -23,17 +23,21 @@ export default class Home extends Component {
     return (
       <Row>
         <Col>
-          <h2>Avoimet vikatapaukset</h2>
-          {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Uusi vikatapaus</LinkButton>}
-          <DataTable
-            schema={this.schema}
-            showSearchBox={false}
-            paginate={false}
-            http={http}
-            apiEndpoint={apiUrl + '/' + this.schema.pluralName}
-            editable={editable}
-            deletable={deletable}
-          />
+          {this.user &&
+            <>
+              <h2>Avoimet vikatapaukset</h2>
+              {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Uusi vikatapaus</LinkButton>}
+              <DataTable
+                schema={this.schema}
+                showSearchBox={false}
+                paginate={false}
+                http={http}
+                apiEndpoint={apiUrl + '/' + this.schema.pluralName}
+                editable={editable}
+                deletable={deletable}
+              />
+            </>
+          }
         </Col>
       </Row>
     );

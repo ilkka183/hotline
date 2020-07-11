@@ -1,19 +1,23 @@
 import React from 'react';
+import Alert from 'react-bootstrap/Alert'
+import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
 
-export default function MyInput({ name, label, type, autoFocus, value, error, onChange }) {
+export default function MyInput({ autoFocus, error, label, name, type, value, onChange }) {
   return (
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
-      <input
-        className="form-control"
-        id={name}
-        name={name}
-        type={type}
-        autoFocus={autoFocus}
-        value={value}
-        onChange={onChange}
-      />
-      {error && <div className="alert alert-danger">{error}</div>}
-    </div>
+    <Form.Group as={Row} controlId={name}>
+      <Form.Label column sm="2">{label}:</Form.Label>
+      <Col sm="10">
+        <Form.Control
+          type={type}
+          name={name}
+          value={value}
+          autoFocus={autoFocus}
+          onChange={onChange}
+        />
+        {error && <Alert variant="danger">{error}</Alert>}
+      </Col>
+    </Form.Group>
   );
 }

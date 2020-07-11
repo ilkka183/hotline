@@ -46,20 +46,20 @@ export default class App extends Component {
           <Switch>
             <Route path="/home" component={Home} />
             <ProtectedRoute path="/movies/:id" component={MovieForm} />
-            <Route path="/movies" component={Movies} />
+            <ProtectedRoute path="/movies" component={Movies} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
-            <Route path="/problems" component={Problems} />
+            <ProtectedRoute path="/problems" component={Problems} />
             <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} />
-            <Route path="/usergroups" component={UserGroups} />
+            <ProtectedRoute path="/usergroups" component={UserGroups} />
             <ProtectedRoute path="/users/:id" component={UserForm} />
-            <Route path="/users" component={Users} />
+            <ProtectedRoute path="/users" component={Users} />
             <ProtectedRoute path="/brands/:id" component={BrandForm} />
-            <Route path="/brands" component={Brands} />
-            <Route path="/about" component={About} />
+            <ProtectedRoute path="/brands" component={Brands} />
+            <ProtectedRoute path="/about" component={About} />
+            <ProtectedRoute path="/profile" component={Profile} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
-            <Route path="/profile" component={Profile} />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/home" />
             <Redirect to="/not-found" />

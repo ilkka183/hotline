@@ -8,12 +8,12 @@ import auth from '../services/authService';
 
 class RegisterSchema extends Schema {
   constructor() {
-    super();
+    super('Register');
 
-    this.addField('email', 'text', { email: true, required: true });
-    this.addField('password', 'text', { min: 5, required: true });
-    this.addField('firstName', 'text', { required: true });
-    this.addField('lastName', 'text', { required: true });
+    this.addField('email',     'Sähköposti', 'text', { email: true, required: true });
+    this.addField('password',  'Salasana',   'text', { min: 5, required: true });
+    this.addField('firstName', 'Etunimi',    'text', { required: true });
+    this.addField('lastName',  'Sukunimi',   'text', { required: true });
   }
 }
 

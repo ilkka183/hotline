@@ -12,30 +12,28 @@ export default function AppNavbar({ user }) {
       <Link className="navbar-brand" to="/">Hotline</Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">      
-        <Nav className="mr-auto">
-          <NavItemLink to="/">Koti</NavItemLink>
-          <NavItemLink to="/movies">Movies</NavItemLink>
-          <NavItemLink to="/problems">Vikatapaukset</NavItemLink>
-          <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
-          <NavItemLink to="/users">Käyttäjät</NavItemLink>
-          <NavItemLink to="/brands">Automerkit</NavItemLink>
-          <NavDropdown title="Asetukset" id="basic-nav-dropdown">
-            <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
-            <NavItemLink to="/users">Käyttäjät</NavItemLink>
-            <NavItemLink to="/brands">Automerkit</NavItemLink>
-          </NavDropdown>          
-          <NavItemLink to="/about">Tietoja</NavItemLink>
-        </Nav>
+        {user &&
+          <Nav className="mr-auto">
+            <NavItemLink to="/">Koti</NavItemLink>
+            <NavItemLink to="/movies">Movies</NavItemLink>
+            <NavItemLink to="/problems">Vikatapaukset</NavItemLink>
+            <NavDropdown title="Asetukset" id="basic-nav-dropdown">
+              <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
+              <NavItemLink to="/users">Käyttäjät</NavItemLink>
+              <NavItemLink to="/brands">Automerkit</NavItemLink>
+            </NavDropdown>          
+            <NavItemLink to="/about">Tietoja</NavItemLink>
+          </Nav>
+        }
         <Nav className="ml-auto">
           {!user &&
             <>
               <NavItemLink to="/login">Kirjaudu</NavItemLink>
-              <NavItemLink to="/register">Rekisteröidy</NavItemLink>
             </>
           }
           {user &&
             <>
-              <NavItemLink to="/profile">{user.firstName}</NavItemLink>
+              <NavItemLink to="/profile">{user.firstName} {user.lastName}</NavItemLink>
               <NavItemLink to="/logout">Kirjaudu ulos</NavItemLink>
             </>
           }

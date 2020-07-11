@@ -1,7 +1,7 @@
 export class Field {
-  constructor(name, title, type, options) {
+  constructor(name, label, type, options) {
     this.name = name;
-    this.title = title;
+    this.label = label;
     this.type = type;
     this.editLink = false;
     this.visibleInTable = true;
@@ -17,8 +17,8 @@ export class Field {
       if (options.link)
         this.link = options.link;
 
-      if (options.lookupFunc)
-        this.lookupFunc = options.lookupFunc;
+      if (options.lookupUrl)
+        this.lookupUrl = options.lookupUrl;
 
       if (options.enums)
         this.enums = options.enums;
@@ -58,14 +58,14 @@ export class Field {
   validate(value) {
     if (this.visibleInForm) {
       if (this.required && this.type !== 'boolean' && value === '')
-        return this.title + ' is not allowed to be empty';
+        return this.label + ' is not allowed to be empty';
 
       if (value) {
         if (this.min !== undefined && value < this.min)
-          return this.title + ' must be larger than or equal to ' + this.min;
+          return this.label + ' must be larger than or equal to ' + this.min;
 
         if (this.max !== undefined && value > this.max)
-          return this.title + ' must be less or equal to ' + this.max;
+          return this.label + ' must be less or equal to ' + this.max;
       }
     }
 
@@ -75,6 +75,11 @@ export class Field {
   date_JsonToData(value) {
     const date = new Date(value);
     return date.toLocaleDateString();
+  }
+
+  datetime_JsonToData(value) {
+    const date = new Date(value);
+    return date.toLocaleString();
   }
 
   date_DataToJson(value) {
@@ -92,6 +97,7 @@ export class Field {
 
     switch (this.type) {
       case 'date': return this.date_JsonToData(value);
+      case 'datetime': return this.datetime_JsonToData(value);
       default: return value;
     }
   }
@@ -135,8 +141,8 @@ export class Schema {
     return null;
   }
 
-  addField(name, title, type, options) {
-    this.fields.push(new Field(name, title, type, options));
+  addField(name, label, type, options) {
+    this.fields.push(new Field(name, label, type, options));
   }
 
   addEnabled() {
