@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import auth from '../services/authService';
+import ChangePasswordForm from '../forms/ChangePasswordForm';
+import ProfileForm from '../forms/ProfileForm';
 
 export default class Profile extends Component {
   render() { 
-    const user = auth.getCurrentUser();
-
     return (
-      <h2>Profiili - {user.firstName}</h2>
+      <>
+        <ProfileForm />
+        <br />
+        <ChangePasswordForm />
+      </>
     );
   }
 }

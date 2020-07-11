@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 
-export default function MyInput({ autoFocus, error, label, name, type, value, onChange }) {
+export default function MyInput({ error, label, name, readonly, type, value, onChange }) {
   return (
     <Form.Group as={Row} controlId={name}>
       <Form.Label column sm="2">{label}:</Form.Label>
@@ -12,8 +12,8 @@ export default function MyInput({ autoFocus, error, label, name, type, value, on
         <Form.Control
           type={type}
           name={name}
+          readOnly={readonly}
           value={value}
-          autoFocus={autoFocus}
           onChange={onChange}
         />
         {error && <Alert variant="danger">{error}</Alert>}

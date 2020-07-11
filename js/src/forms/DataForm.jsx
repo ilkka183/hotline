@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import BaseForm from './BaseForm';
@@ -49,7 +50,8 @@ export default class DataForm extends BaseForm {
       const data = this.schema.jsonToData(item)
 
       this.setState({ savedData, data });
-    }  catch (ex) {
+    }
+    catch (ex) {
       if (ex.response && ex.response.status === 404)
         this.props.history.replace('/not-found');
     }
@@ -80,14 +82,24 @@ export default class DataForm extends BaseForm {
       }
 
       if (modified) {
-        console.log('put', modifiedFields);
-        await http.put(this.apiEndpointOf(data.Id), modifiedFields);
+        try {
+          console.log('put', modifiedFields);
+          await http.put(this.apiEndpointOf(data.Id), modifiedFields);
+        }
+        catch (ex) {
+          toast.error(ex.response.data.sqlMessage);
+        }
       }
     }
     else {
       // POST
-      console.log('post', data);
-      await http.post(this.apiEndpoint, data);
+      try {
+        console.log('post', data);
+        await http.post(this.apiEndpoint, data);
+      }
+      catch (ex) {
+        toast.error(ex.response.data.sqlMessage);
+      }
     }
 
     this.props.history.goBack();
@@ -99,7 +111,7 @@ export default class DataForm extends BaseForm {
 
     const value = this.state.data[field.name];
 
-    if (field.readonly && !value)
+    if ((field.readonly || (field.type === 'datetime')) && value === null)
       return null;
 
     if (field.required) {
@@ -107,17 +119,14 @@ export default class DataForm extends BaseForm {
     }
 
     if (field.lookup)
-      return this.renderSelect(field.name, field.label, field.lookup);
+      return this.renderSelect(field.name, field.label, field.lookup, field.readonly);
 
     switch (field.type) {
       case 'boolean': return this.renderCheck(field.name, field.label);
+      case 'datetime': return this.renderPlainText(field.name, field.label);
+      case 'plaintext': return this.renderPlainText(field.name, field.label);
       case 'textarea': return this.renderTextarea(field.name, field.label, 5);
-
-      default:
-        if (field.readonly)
-          return this.renderPlainText(field.name, field.label);
-        else
-          return this.renderInput(field.name, field.label);
+      default: return this.renderInput(field.name, field.label, field.type, field.readonly);
       }
   }
 

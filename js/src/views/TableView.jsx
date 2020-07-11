@@ -20,7 +20,7 @@ export default function TableView({ schema }) {
     <Row>
       <Col>
         <h2>{schema.pluralTitle}</h2>
-        {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Uusi tietue</LinkButton>}
+        {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Lisää uusi</LinkButton>}
         <DataTable
           schema={schema}
           http={http}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
 import DataPagination from './DataPagination';
 import SearchBox from './SearchBox';
@@ -29,11 +30,17 @@ export default class DataTable extends Component {
       return;
 
     const { http, apiEndpoint } = this.props;
-    await http.delete(apiEndpoint + '/' + item.Id);
 
-    const data = this.state.data.filter(m => m.Id !== item.Id);
+    try {
+      await http.delete(apiEndpoint + '/' + item.Id);
 
-    this.setState({ data });
+      const data = this.state.data.filter(m => m.Id !== item.Id);
+  
+      this.setState({ data });
+    }
+    catch (ex) {
+      toast.error(ex.response.data.sqlMessage);
+    }
   }
 
   handleSearch = query => {

@@ -19,27 +19,42 @@ export default class Home extends Component {
     const buttonStyle = {
       marginBottom: 20
     }
+
+    if (!this.user)
+      return null;
   
     return (
-      <Row>
-        <Col>
-          {this.user &&
-            <>
-              <h2>Avoimet vikatapaukset</h2>
-              {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Uusi vikatapaus</LinkButton>}
-              <DataTable
-                schema={this.schema}
-                showSearchBox={false}
-                paginate={false}
-                http={http}
-                apiEndpoint={apiUrl + '/' + this.schema.pluralName}
-                editable={editable}
-                deletable={deletable}
-              />
-            </>
-          }
-        </Col>
-      </Row>
+      <>
+        <Row>
+          <Col>
+            <h2>Avoimet vikatapaukset</h2>
+            {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Lisää uusi</LinkButton>}
+            <DataTable
+              schema={this.schema}
+              showSearchBox={false}
+              paginate={false}
+              http={http}
+              apiEndpoint={apiUrl + '/' + this.schema.pluralName}
+              editable={editable}
+              deletable={deletable}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h2>Viimeksi ratkaistut vikatapaukset</h2>
+            <DataTable
+              schema={this.schema}
+              showSearchBox={false}
+              paginate={false}
+              http={http}
+              apiEndpoint={apiUrl + '/' + this.schema.pluralName}
+              editable={editable}
+              deletable={deletable}
+            />
+          </Col>
+        </Row>
+      </>
     );
   }
 }

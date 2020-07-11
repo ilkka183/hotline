@@ -82,7 +82,7 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderInput(name, label, type = 'text', autoFocus = false) {
+  renderInput(name, label, type = 'text', readonly = false) {
     const { data, errors } = this.state;
 
     return (
@@ -94,7 +94,7 @@ export default class BaseForm extends Component {
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
-        autoFocus={autoFocus}
+        readonly={readonly}
       />
     );
   }
@@ -115,7 +115,7 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderSelect(name, label, options) {
+  renderSelect(name, label, options, readonly) {
     const { data, errors } = this.state;
 
     return (
@@ -124,6 +124,7 @@ export default class BaseForm extends Component {
         name={name}
         label={label}
         options={options}
+        readonly={readonly}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}

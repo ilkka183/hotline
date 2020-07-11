@@ -106,8 +106,8 @@ router.get('/BulletinGroups', (req, res) => {
 
 router.get('/Problem', (req, res) => {
   let sql =
-    'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
-    'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.YearMin, Problem.YearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+    'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, Problem.Brand, ' +
+    'Problem.Model, Problem.ModelYear, Problem.ModelYearMin, Problem.ModelYearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
     'FROM Problem, User ' +
     'WHERE Problem.UserId = User.Id ' + 
     'AND Problem.Id = ' + req.query.Id;
@@ -117,8 +117,8 @@ router.get('/Problem', (req, res) => {
 
 router.get('/Problems', (req, res) => {
   let sql =
-    'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, ' +
-    'Problem.LicenseNumber, Problem.Brand, Problem.Model, Problem.YearMin, Problem.YearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
+    'SELECT Problem.Id, Problem.Date, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, Problem.Brand, ' +
+    'Problem.Model, Problem.ModelYear, Problem.ModelYearMin, Problem.ModelYearMax, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
     'FROM Problem, User ' +
     'WHERE Problem.UserId = User.Id ';
 

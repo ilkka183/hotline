@@ -8,9 +8,11 @@ const router = express.Router();
 const table = 'Problem';
 
 const sql = 
-  'SELECT Id, Date, LicenseNumber, Brand, Model, ModelYear, Fuel, EngineSize, Title, Status ' +
-  'FROM Problem ' +
-  'ORDER BY Id';
+  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, Problem.Brand, ' +
+  'Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.EngineSize, Problem.Title, Problem.Description, Problem.Status ' +
+  'FROM Problem, User ' +
+  'WHERE Problem.UserId = User.Id ';
+  'ORDER BY Problem.Id';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });
 router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });
