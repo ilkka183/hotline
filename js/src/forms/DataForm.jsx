@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import BaseForm from './BaseForm';
+import { Schema } from '../schemas/Schema';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
@@ -21,21 +22,15 @@ export default class DataForm extends BaseForm {
 
   async populateLookups() {
     for (const field of this.schema.fields) {
-      const nullItem = { Id: null, Name: '' };
-
       if (field.lookupUrl) {
         const { data } = await http.get(apiUrl + '/' + field.lookupUrl);
-        const lookup = [nullItem, ...data];
+        const lookup = [{ Id: null, Name: '' }, ...data];
         field.lookup = lookup;
 
         this.setState({ lookup });
       }
       else if (field.enums) {
-        const lookup = [nullItem];
-
-        for (const index in field.enums)
-          lookup.push({ Id: index, Name: field.enums[index] });
-
+        const lookup = Schema.enumsToLookup(field.enums);
         field.lookup = lookup;
 
         this.setState({ lookup });
@@ -125,7 +120,7 @@ export default class DataForm extends BaseForm {
       case 'boolean': return this.renderCheck(field.name, field.label);
       case 'datetime': return this.renderPlainText(field.name, field.label);
       case 'plaintext': return this.renderPlainText(field.name, field.label);
-      case 'textarea': return this.renderTextarea(field.name, field.label, 5);
+      case 'textarea': return this.renderTextArea(field.name, field.label, 5);
       default: return this.renderInput(field.name, field.label, field.type, field.readonly);
       }
   }

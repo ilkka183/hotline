@@ -38,6 +38,8 @@ export default class BaseForm extends Component {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
 
+    console.log(errors);
+
     if (errors)
       return;
 
@@ -99,7 +101,7 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderTextarea(name, label, rows) {
+  renderTextArea(name, label, rows) {
     const { data, errors } = this.state;
 
     return (

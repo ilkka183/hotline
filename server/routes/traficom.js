@@ -18,7 +18,7 @@ const vehicles = [
     grossWeight: 1770
   },
   {
-    registrationNumber: 'ISI-560',
+    registrationNumber: 'ISI-561',
     registrationYear: 2005,
     carMake: 'Ford',
     carModel: 'Focus',
@@ -32,17 +32,17 @@ const vehicles = [
     grossWeight: 1770
   },
   {
-    registrationNumber: 'ISI-650',
-    registrationYear: 2005,
-    carMake: 'Volkswagen',
-    carModel: 'Golf',
-    fuelType: 'bensiini',
+    registrationNumber: 'SIO-913',
+    registrationYear: 1999,
+    carMake: 'Ford',
+    carModel: 'Focus',
+    fuelType: 'diesel',
     cylinderCount: 4,
-    engineSize: 1329,
-    power: 77,
+    engineSize: 1769,
+    power: 66,
     engineCode: 'HWDA',
     vechileIdentificationNumber: 'WVWZZZ1JZ5W079439',
-    netWeight: 1329,
+    netWeight: 1415,
     grossWeight: 1770
   }
 ];

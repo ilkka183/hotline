@@ -11,7 +11,7 @@ export default function FieldSelect({ name, placeholder, value, values, onChange
       onChange={onChange}
     >
       <option value={''}>{placeholder}</option>
-      {values.map(item => <option key={item} value={name}>{item}</option>)}
+      {values.map(item => <option key={item} value={item}>{item}</option>)}
     </Form.Control>
   );
 }

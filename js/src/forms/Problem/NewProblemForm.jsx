@@ -2,10 +2,31 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
-import LicenseNumberForm from './LicenseNumber'
-import SelectVehicleForm from './SelectVehicle'
+import RegistrationNumber from './RegistrationNumber'
+import SelectData from './SelectData'
+import EditData from './EditData'
 
 export default class NewProblemForm extends Component {
+  state = {
+    registrationNumber: '',
+    brand: '',
+    model: ''
+  }
+  
+  handleRegistrationNumber = (data) => {
+    console.log(data);
+
+    const state = {
+      registrationNumber: data.registrationNumber,
+      brand: data.carMake,
+      model: data.carModel
+    }
+
+    this.setState(state);
+
+    console.log(this.state);
+  }
+
   handleSubmit = e => {
     e.preventDefault();
 
@@ -24,8 +45,9 @@ export default class NewProblemForm extends Component {
           <Tab eventKey="contact" title="Manuaalinen syöttö">
           </Tab>
         </Tabs>
-        <LicenseNumberForm />
-        <SelectVehicleForm />
+        <RegistrationNumber onFound={this.handleRegistrationNumber} />
+        <SelectData />
+        <EditData data={this.state}/>
       </Container>
     );
   }

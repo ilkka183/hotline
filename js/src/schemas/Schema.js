@@ -173,4 +173,13 @@ export class Schema {
 
     return data;
   }
+
+  static enumsToLookup(enums) {
+    const lookup = [{ Id: null, Name: '' }];
+
+    for (const index in enums)
+      lookup.push({ Id: index, Name: enums[index] });
+
+    return lookup;
+  }
 }

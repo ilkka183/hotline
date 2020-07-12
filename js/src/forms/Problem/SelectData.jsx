@@ -61,6 +61,7 @@ export default class SelectVehicleForm extends Component {
 
   models() {
     switch (this.state.brand) {
+      case 'Ford': return ['Ka', 'Fiesta', 'Focus', 'Mondeo'];
       case 'Seat': return ['Mii', 'Ibiza', 'Leon', 'Ateca'];
       default: return ['Tuntematon malli'];
     }

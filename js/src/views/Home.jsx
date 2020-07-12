@@ -28,7 +28,7 @@ export default class Home extends Component {
         <Row>
           <Col>
             <h2>Avoimet vikatapaukset</h2>
-            {editable && <LinkButton style={buttonStyle} to={`/problems/new`}>Lisää uusi</LinkButton>}
+            {editable && <LinkButton style={buttonStyle} to={`/problems/create`}>Lisää uusi</LinkButton>}
             <DataTable
               schema={this.schema}
               showSearchBox={false}

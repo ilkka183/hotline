@@ -1,28 +1,33 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import http from '../../services/httpService';
+import { apiUrl } from '../../config.json';
 
 export default class LicenseNumberForm extends Component {
   state = {
-    licenseNumber: ''
+    registrationNumber: ''
   }
 
   handleChange = ({ currentTarget: input }) => {
-    this.setState({ licenseNumber: input.value });
+    this.setState({ registrationNumber: input.value });
   }
 
   handleClear = () => {
-    this.setState({ licenseNumber: '' });
+    this.setState({ registrationNumber: '' });
   }
 
-  handleFill = (licenseNumber) => {
-    this.setState({ licenseNumber });
+  handleFill = (registrationNumber) => {
+    this.setState({ registrationNumber });
   }
 
-  handleSubmit = e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(this.state.licenseNumber);
+    const { registrationNumber } = this.state;
+    const { data } = await http.get(apiUrl + '/traficom/' + registrationNumber);
+
+    this.props.onFound(data);
   }
 
   render() { 
@@ -31,7 +36,7 @@ export default class LicenseNumberForm extends Component {
         <Form.Control
           className="mb-2 mr-sm-2"
           placeholder="Rekisterinumero"
-          value={this.state.licenseNumber}
+          value={this.state.registrationNumber}
           onChange={this.handleChange}
  
         />          
