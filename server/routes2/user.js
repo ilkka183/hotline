@@ -9,7 +9,7 @@ const table = 'User';
 
 const sql =
   'SELECT User.Id, User.GroupId, UserGroup.Name AS GroupName, User.Role, User.Email, User.Password, ' + 
-  'User.FirstName, User.LastName, User.Title, ' +
+  'User.FirstName, User.LastName, CONCAT(User.FirstName, " ", User.LastName) AS Name, User.Title, ' +
   'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Website, ' +
   'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
   'FROM User, UserGroup ' +

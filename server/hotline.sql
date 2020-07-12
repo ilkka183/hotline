@@ -170,8 +170,9 @@ CREATE TABLE Problem
   Brand VARCHAR(80) NOT NULL,
   Model VARCHAR(80),
   ModelYear SMALLINT UNSIGNED,
-  ModelYearMin SMALLINT UNSIGNED,
-  ModelYearMax SMALLINT UNSIGNED,
+  ModelBeginYear SMALLINT UNSIGNED,
+  ModelEndYear SMALLINT UNSIGNED,
+  RegistrationYear SMALLINT UNSIGNED,
   Fuel SMALLINT UNSIGNED, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
   EngineSize SMALLINT UNSIGNED,
   EngineCode VARCHAR(10),

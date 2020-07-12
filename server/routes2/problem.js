@@ -8,8 +8,8 @@ const router = express.Router();
 const table = 'Problem';
 
 const sql = 
-  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, Problem.Brand, ' +
-  'Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.EngineSize, Problem.Title, Problem.Description, Problem.Status ' +
+  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.Brand, ' +
+  'Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
   'FROM Problem, User ' +
   'WHERE Problem.UserId = User.Id ';
   'ORDER BY Problem.Id';
