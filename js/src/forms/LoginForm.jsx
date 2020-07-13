@@ -25,6 +25,10 @@ export default class LoginForm extends BaseForm {
     errors: {}
   }
 
+  get asRow() {
+    return false;
+  }
+
   async doSubmit() {
     try {
       const { email, password } = this.state.data;
@@ -49,7 +53,7 @@ export default class LoginForm extends BaseForm {
       <Container>
         {this.renderTitle('Kirjaudu')}
         <Form onSubmit={this.handleSubmit}>
-          {this.renderInput('email', 'Sähköposti', 'text', true)}
+          {this.renderInput('email', 'Sähköposti', 'text', false, true)}
           {this.renderInput('password', 'Salasana', 'password')}
           {this.renderSubmitButton('Kirjaudu')}
         </Form>

@@ -55,6 +55,10 @@ export class Field {
     }
   }
 
+  get isLookup() {
+    return this.lookupUrl || this.enums;
+  }
+
   validate(value) {
     if (this.visibleInForm) {
       if (this.required && this.type !== 'boolean' && value === '')
@@ -72,20 +76,13 @@ export class Field {
     return null;
   }
 
-  static date_JsonToData(value) {
-    if (!value)
-      return null;
-
+  date_JsonToData(value) {
     const date = new Date(value);
     return date.toLocaleDateString();
   }
 
-  static datetime_JsonToData(value) {
-    if (!value)
-      return null;
-
-    const date = new Date(value);
-    return date.toLocaleString();
+  datetime_JsonToData(value) {
+    return DateTimeField.toString(value);
   }
 
   date_DataToJson(value) {
@@ -116,6 +113,18 @@ export class Field {
       case 'date': return this.date_DataToJson(value);
       default: return value;
     }
+  }
+}
+
+
+export class DateTimeField extends Field {
+  static toString(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleString();
+    }
+
+    return null;
   }
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import MyCheck from '../components/form/MyCheck';
 import MyInput from '../components/form/MyInput';
+import MyLookupText from '../components/form/MyLookupText';
 import MyPlainText from '../components/form/MyPlainText';
 import MySelect from '../components/form/MySelect';
 import MyTextArea from '../components/form/MyTextArea';
@@ -38,8 +39,6 @@ export default class BaseForm extends Component {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
 
-    console.log(errors);
-
     if (errors)
       return;
 
@@ -69,34 +68,56 @@ export default class BaseForm extends Component {
     return <h2>{text}</h2>
   }
 
+  get asRow() {
+    return true;
+  }
+
   renderPlainText(name, label) {
     const { data, errors } = this.state;
 
     return (
       <MyPlainText
+        asRow={this.asRow}
         key={name}
         name={name}
         label={label}
         value={data[name]}
         error={errors[name]}
-        onChange={this.handleChange}
       />
     );
   }
 
-  renderInput(name, label, type = 'text', readonly = false) {
+  renderLookupText(name, label, options) {
+    const { data, errors } = this.state;
+
+    return (
+      <MyLookupText
+        asRow={this.asRow}
+        key={name}
+        name={name}
+        label={label}
+        options={options}
+        value={data[name]}
+        error={errors[name]}
+      />
+    );
+  }
+
+  renderInput(name, label, type = 'text', readonly = false, autofocus = false) {
     const { data, errors } = this.state;
 
     return (
       <MyInput
+        asRow={this.asRow}
         key={name}
         name={name}
         type={type}
         label={label}
+        readonly={readonly}
+        autofocus={autofocus}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
-        readonly={readonly}
       />
     );
   }
@@ -106,6 +127,7 @@ export default class BaseForm extends Component {
 
     return (
       <MyTextArea
+        asRow={this.asRow}
         key={name}
         name={name}
         label={label}
@@ -117,16 +139,16 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderSelect(name, label, options, readonly) {
+  renderSelect(name, label, options) {
     const { data, errors } = this.state;
 
     return (
       <MySelect
+        asRow={this.asRow}
         key={name}
         name={name}
         label={label}
         options={options}
-        readonly={readonly}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
@@ -139,6 +161,7 @@ export default class BaseForm extends Component {
 
     return (
       <MyCheck
+        asRow={this.asRow}
         key={name}
         name={name}
         label={label}

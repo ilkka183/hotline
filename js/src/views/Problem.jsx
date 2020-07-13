@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import ProblemReplies from './ProblemReplies'
-import { Field } from '../schemas/Schema';
+import { DateTimeField } from '../schemas/Schema';
 import http from '../services/httpService';
 import { FUELS, STATUSES } from '../schemas/ProblemSchema';
 import { apiUrl } from '../config.json';
@@ -33,7 +33,7 @@ export default class Problem extends Component {
         <Table size="sm" borderless>
           <tbody>
             <tr><td>No</td><td>{problem.Id}</td></tr>
-            <tr><td>Pvm</td><td>{Field.datetime_JsonToData(problem.Date)}</td></tr>
+            <tr><td>Pvm</td><td>{DateTimeField.toString(problem.Date)}</td></tr>
             <tr><td>Lähettäjä</td><td>{problem.UserName}</td></tr>
             <tr><td>Rekisterinumero</td><td>{problem.LicenseNumber}</td></tr>
             <tr><td>Merkki</td><td>{problem.Brand}</td></tr>
@@ -43,7 +43,7 @@ export default class Problem extends Component {
             <tr><td>Tila</td><td>{STATUSES[problem.Status]}</td></tr>
           </tbody>
         </Table>
-        <h2>{problem.Title}</h2>
+        <h4>{problem.Title}</h4>
         <div>{problem.Description}</div>
         <br />
         {problem.Id && <ProblemReplies problemId={problem.Id}/>}

@@ -26,6 +26,10 @@ export default class RegisterForm extends BaseForm {
     errors: {}
   }
 
+  get asRow() {
+    return false;
+  }
+
   async doSubmit() {
     try {
       const data = {

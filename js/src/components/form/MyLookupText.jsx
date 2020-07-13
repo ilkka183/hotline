@@ -4,26 +4,28 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 
-export default function MySelect({ asRow, error, label, name, options, value, onChange }) {
-  
+export default function MyLookupText({ asRow, error, name, label, options, value }) {
+
+  function lookupText(id) {
+    if (options) {
+      for (let item of options)
+        if (item.Id === id)
+          return item.Name;
+    }
+
+    return null;
+  }
+
+  const text = lookupText(value);
+
   function renderControl() {
     return (
       <>
         <Form.Control
-          as="select"
+          readOnly
           name={name}
-          value={value}
-          onChange={onChange}
-        >
-          {options.map(option => (
-            <option
-              key={option.Id}
-              value={option.Id}
-            >
-              {option.Name}
-            </option>
-          ))}
-        </Form.Control>
+          defaultValue={text}
+        />
         {error && <Alert variant="danger">{error}</Alert>}
       </>
     );

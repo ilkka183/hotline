@@ -4,7 +4,7 @@ export default class UserGroupSchema extends Schema {
   constructor() {
     super('UserGroup');
 
-    this.addField('Id',            'No',               'number',  { primaryKey: true, required: true, visibleInTable: false, visibleInForm: false });
+    this.addField('Id',            'No',               'number',  { primaryKey: true, required: true, readonly: true, visibleInTable: false });
     this.addField('Name',          'Nimi',             'text',    { required: true, editLink: true });
     this.addField('ContactPerson', 'Yhteyshenkilö',    'text');
     this.addField('Address',       'Osoite',           'text');

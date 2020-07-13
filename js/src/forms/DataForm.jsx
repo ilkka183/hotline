@@ -41,6 +41,7 @@ export default class DataForm extends BaseForm {
   async populateData(id) {
     try {
       const { data: item } = await http.get(this.apiEndpointOf(id));
+
       const savedData = this.schema.jsonToData(item)
       const data = this.schema.jsonToData(item)
 
@@ -106,33 +107,43 @@ export default class DataForm extends BaseForm {
 
     const value = this.state.data[field.name];
 
-    if ((field.readonly || (field.type === 'datetime')) && value === null)
+    if ((field.readonly || (field.type === 'datetime')) && !value)
       return null;
 
-    if (field.required) {
-      // TODO: bold label
-    }
+    let label = field.label;
+    
+    if (field.required)
+      label += ' *';
 
-    if (field.lookup)
-      return this.renderSelect(field.name, field.label, field.lookup, field.readonly);
+    if (field.lookup) {
+      if (field.readonly)
+        return this.renderLookupText(field.name, label, field.lookup);
+      else
+        return this.renderSelect(field.name, label, field.lookup);
+    }
 
     switch (field.type) {
       case 'boolean': return this.renderCheck(field.name, field.label);
-      case 'datetime': return this.renderPlainText(field.name, field.label);
-      case 'plaintext': return this.renderPlainText(field.name, field.label);
-      case 'textarea': return this.renderTextArea(field.name, field.label, 5);
-      default: return this.renderInput(field.name, field.label, field.type, field.readonly);
+      case 'datetime': return this.renderPlainText(field.name, label);
+      case 'plaintext': return this.renderPlainText(field.name, label);
+      case 'textarea': return this.renderTextArea(field.name, label, 5);
+      default: return this.renderInput(field.name, label, field.type, field.readonly);
       }
   }
 
-  formatTitle() {
-    return this.schema.singularTitle + ' - ' + (this.dataId === 'new' ? 'uusi' : this.dataId);
+  get title() {
+    let title = this.schema.singularTitle;
+
+    if (this.dataId === 'new')
+      title += ' - ' + 'uusi';
+
+    return title;
   }
 
   render() {
     return (
       <Container>
-        {this.renderTitle(this.formatTitle())}
+        {this.renderTitle(this.title)}
         <Form onSubmit={this.handleSubmit}>
           {this.schema.fields.map(field => this.renderField(field))}
           {this.renderSubmitButton('Tallenna')}
