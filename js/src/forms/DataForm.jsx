@@ -45,6 +45,9 @@ export default class DataForm extends BaseForm {
       const savedData = this.schema.jsonToData(item)
       const data = this.schema.jsonToData(item)
 
+      console.log(item);
+      console.log(data);
+
       this.setState({ savedData, data });
     }
     catch (ex) {
@@ -67,20 +70,19 @@ export default class DataForm extends BaseForm {
       // PUT
       const { savedData } = this.state;
 
-      const modifiedFields = {};
-      let modified = false;
+      const row = {};
       
       for (let field of this.schema.fields) {
-        if (data[field.name] !== '' && data[field.name] !== savedData[field.name]) {
-          modifiedFields[field.name] = field.dataToJson(data[field.name]);
-          modified = true;
-        }
+        const value = data[field.name];
+
+        if (value !== '' && value !== savedData[field.name])
+          row[field.name] = field.dataToJson(value);
       }
 
-      if (modified) {
+      if (Object.keys(row).length > 0) {
         try {
-          console.log('put', modifiedFields);
-          await http.put(this.apiEndpointOf(data.Id), modifiedFields);
+          console.log('put', row);
+          await http.put(this.apiEndpointOf(data.Id), row);
         }
         catch (ex) {
           toast.error(ex.response.data.sqlMessage);
@@ -90,8 +92,17 @@ export default class DataForm extends BaseForm {
     else {
       // POST
       try {
-        console.log('post', data);
-        await http.post(this.apiEndpoint, data);
+        const row = {};
+        
+        for (let field of this.schema.fields) {
+          const value = data[field.name];
+
+          if (field.hasFormControl(value))
+            row[field.name] = field.dataToJson(value);
+        }
+
+        console.log('post', row);
+        await http.post(this.apiEndpoint, row);
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
@@ -102,40 +113,26 @@ export default class DataForm extends BaseForm {
   }
 
   renderField(field) {
-    if (!field.visibleInForm)
-      return null;
-
     const value = this.state.data[field.name];
 
-    if ((field.readonly || (field.type === 'datetime')) && !value)
+    if (!field.hasFormControl(value))
       return null;
 
-    let label = field.label;
-    
-    if (field.required)
-      label += ' *';
-
-    if (field.lookup) {
-      if (field.readonly)
-        return this.renderLookupText(field.name, label, field.lookup);
-      else
-        return this.renderSelect(field.name, label, field.lookup);
-    }
+    if (field.lookup)
+      return this.renderSelect(field);
 
     switch (field.type) {
-      case 'boolean': return this.renderCheck(field.name, field.label);
-      case 'datetime': return this.renderPlainText(field.name, label);
-      case 'plaintext': return this.renderPlainText(field.name, label);
-      case 'textarea': return this.renderTextArea(field.name, label, 5);
-      default: return this.renderInput(field.name, label, field.type, field.readonly);
-      }
+      case 'boolean': return this.renderCheck(field);
+      case 'textarea': return this.renderTextArea(field);
+      default: return this.renderInput(field);
+    }
   }
 
   get title() {
     let title = this.schema.singularTitle;
 
     if (this.dataId === 'new')
-      title += ' - ' + 'uusi';
+      title += ' - uusi';
 
     return title;
   }

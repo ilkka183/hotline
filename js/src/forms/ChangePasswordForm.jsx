@@ -10,8 +10,9 @@ class ChangePasswordSchema extends Schema {
   constructor() {
     super('ChangePassword');
     
-    this.addField('password1', 'Salasana',           'text', { min: 5, required: true });
-    this.addField('password2', 'Salasana uudestaan', 'text', { min: 5, required: true });
+    this.password  = this.addField('password',  'Nykyinen salasana',       'text', { min: 5, required: true });
+    this.password1 = this.addField('password1', 'Uusi salasana',           'text', { min: 5, required: true });
+    this.password2 = this.addField('password2', 'Uusi salasana uudestaan', 'text', { min: 5, required: true });
   }
 }
 
@@ -44,8 +45,9 @@ export default class ChangePasswordForm extends BaseForm {
       <Container>
         {this.renderTitle('Vaihda salasana')}
         <Form onSubmit={this.handleSubmit}>
-          {this.renderInput('password1', 'Salasana', 'password')}
-          {this.renderInput('password2', 'Salasana uudestaan', 'password')}
+          {this.renderInput(this.schema.password)}
+          {this.renderInput(this.schema.password1)}
+          {this.renderInput(this.schema.password2)}
           {this.renderSubmitButton('Vaihda salasana')}
         </Form>
       </Container>

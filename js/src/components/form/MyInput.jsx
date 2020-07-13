@@ -1,42 +1,20 @@
 import React from 'react';
-import Alert from 'react-bootstrap/Alert'
-import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import Row from 'react-bootstrap/Row'
+import MyControl from './MyControl'
 
-export default function MyInput({ asRow, autofocus, error, label, name, readonly, type, value, onChange }) {
-  
-  function renderControl() {
+export default class MyInput extends MyControl {
+  renderControl() {
+    const { autofocus, disabled, name, type, value, onChange } = this.props;
+
     return (
-      <>
-        <Form.Control
-          type={type}
-          name={name}
-          readOnly={readonly}
-          autoFocus={autofocus}
-          value={value}
-          onChange={onChange}
-        />
-        {error && <Alert variant="danger">{error}</Alert>}
-      </>
+      <Form.Control
+        type={type}
+        name={name}
+        disabled={disabled}
+        autoFocus={autofocus}
+        value={value}
+        onChange={onChange}
+      />
     );
   }
-
-  if (asRow) {
-    return (
-      <Form.Group as={Row} controlId={name}>
-        <Form.Label column sm="2">{label}</Form.Label>
-        <Col sm="10">
-          {renderControl()}
-        </Col>
-      </Form.Group>
-    );
-  }
-
-  return (
-    <Form.Group controlId={name}>
-      <Form.Label>{label}</Form.Label>
-      {renderControl()}
-    </Form.Group>
-  );
 }

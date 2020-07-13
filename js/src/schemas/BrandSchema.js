@@ -4,9 +4,9 @@ export default class BrandSchema extends Schema {
   constructor() {
     super('Brand');
 
-    this.addField('Id',   'No',   'number', { primaryKey: true, required: true, readonly: true, visibleInTable: false });
-    this.addField('Name', 'Nimi', 'text',   { required: true, editLink: true });
-    this.addField('Info', 'Info', 'textarea');
+    this.addField('Id',   'No',   'number',   { primaryKey: true, required: true, readonly: true, visibleInTable: false });
+    this.addField('Name', 'Nimi', 'text',     { required: true, editLink: true });
+    this.addField('Info', 'Info', 'textarea', { rows: 5 });
     this.addEnabled();
     this.addTimestamps();
   }

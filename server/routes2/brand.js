@@ -8,7 +8,7 @@ const router = express.Router();
 const table = 'Brand';
 
 const sql = 
-  'SELECT Id, Name, Enabled, CreatedAt, UpdatedAt ' +
+  'SELECT Id, Name, Info, Enabled, CreatedAt, UpdatedAt ' +
   'FROM Brand ' +
   'ORDER BY Id';
 

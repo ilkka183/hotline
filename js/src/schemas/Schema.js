@@ -14,6 +14,9 @@ export class Field {
       this.default = '';
 
     if (options) {
+      if (options.rows)
+        this.rows = options.rows;
+
       if (options.link)
         this.link = options.link;
 
@@ -76,9 +79,12 @@ export class Field {
     return null;
   }
 
+  hasFormControl(value) {
+    return this.visibleInForm && (!this.readonly || value);
+  }
+
   date_JsonToData(value) {
-    const date = new Date(value);
-    return date.toLocaleDateString();
+    return value.substring(0, 10);
   }
 
   datetime_JsonToData(value) {
@@ -157,7 +163,9 @@ export class Schema {
   }
 
   addField(name, label, type, options) {
-    this.fields.push(new Field(name, label, type, options));
+    const field = new Field(name, label, type, options);
+    this.fields.push(field);
+    return field;
   }
 
   addEnabled() {

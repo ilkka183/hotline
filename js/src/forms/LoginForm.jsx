@@ -11,8 +11,8 @@ class LoginSchema extends Schema {
   constructor() {
     super('Login');
     
-    this.addField('email',    'Sähköposti', 'text', { email: true, required: true });
-    this.addField('password', 'Salasana',   'text', { min: 5, required: true });
+    this.email    = this.addField('email',    'Sähköposti', 'text', { email: true, required: true });
+    this.password = this.addField('password', 'Salasana',   'text', { min: 5, required: true });
   }
 }
 
@@ -53,8 +53,8 @@ export default class LoginForm extends BaseForm {
       <Container>
         {this.renderTitle('Kirjaudu')}
         <Form onSubmit={this.handleSubmit}>
-          {this.renderInput('email', 'Sähköposti', 'text', false, true)}
-          {this.renderInput('password', 'Salasana', 'password')}
+          {this.renderInput(this.schema.email, true)}
+          {this.renderInput(this.schema.password)}
           {this.renderSubmitButton('Kirjaudu')}
         </Form>
       </Container>

@@ -1,41 +1,19 @@
 import React from 'react';
-import Alert from 'react-bootstrap/Alert'
-import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
-import Row from 'react-bootstrap/Row'
+import MyControl from './MyControl'
 
-export default function MyTextArea({ asRow, error, label, name, rows, value, onChange }) {
+export default class MyTextArea extends MyControl {
+  renderControl() {
+    const { name, rows, value, onChange } = this.props;
 
-  function renderControl() {
     return (
-      <>
-        <Form.Control
-          as="textarea"
-          name={name}
-          rows={rows}
-          value={value}
-          onChange={onChange}
-        />
-        {error && <Alert variant="danger">{error}</Alert>}
-      </>
+      <Form.Control
+        as="textarea"
+        name={name}
+        rows={rows}
+        value={value}
+        onChange={onChange}
+      />
     );
   }
-
-  if (asRow) {
-    return (
-      <Form.Group as={Row} controlId={name}>
-        <Form.Label column sm="2">{label}</Form.Label>
-        <Col sm="10">
-          {renderControl()}
-        </Col>
-      </Form.Group>
-    );
-  }
-
-  return (
-    <Form.Group controlId={name}>
-      <Form.Label>{label}</Form.Label>
-      {renderControl()}
-    </Form.Group>
-  );
 }

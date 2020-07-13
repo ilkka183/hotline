@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import MyCheck from '../components/form/MyCheck';
 import MyInput from '../components/form/MyInput';
-import MyLookupText from '../components/form/MyLookupText';
-import MyPlainText from '../components/form/MyPlainText';
 import MySelect from '../components/form/MySelect';
 import MyTextArea from '../components/form/MyTextArea';
 
@@ -17,7 +15,12 @@ export default class BaseForm extends Component {
     const errors = {}
 
     for (const field of this.schema.fields) {
-      const error = field.validate(this.state.data[field.name]);
+      const value = this.state.data[field.name];
+
+      if (!field.hasFormControl(value))
+        continue;
+
+      const error = field.validate(value);
 
       if (error) {
         errors[field.name] = error;
@@ -72,38 +75,8 @@ export default class BaseForm extends Component {
     return true;
   }
 
-  renderPlainText(name, label) {
-    const { data, errors } = this.state;
-
-    return (
-      <MyPlainText
-        asRow={this.asRow}
-        key={name}
-        name={name}
-        label={label}
-        value={data[name]}
-        error={errors[name]}
-      />
-    );
-  }
-
-  renderLookupText(name, label, options) {
-    const { data, errors } = this.state;
-
-    return (
-      <MyLookupText
-        asRow={this.asRow}
-        key={name}
-        name={name}
-        label={label}
-        options={options}
-        value={data[name]}
-        error={errors[name]}
-      />
-    );
-  }
-
-  renderInput(name, label, type = 'text', readonly = false, autofocus = false) {
+  renderInput(field, autofocus = false) {
+    const { name, label, readonly, required, type } = field;
     const { data, errors } = this.state;
 
     return (
@@ -113,7 +86,8 @@ export default class BaseForm extends Component {
         name={name}
         type={type}
         label={label}
-        readonly={readonly}
+        required={required}
+        disabled={readonly}
         autofocus={autofocus}
         value={data[name]}
         error={errors[name]}
@@ -122,7 +96,8 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderTextArea(name, label, rows) {
+  renderTextArea(field) {
+    const { name, label, required, rows } = field;
     const { data, errors } = this.state;
 
     return (
@@ -131,6 +106,7 @@ export default class BaseForm extends Component {
         key={name}
         name={name}
         label={label}
+        required={required}
         rows={rows}
         value={data[name]}
         error={errors[name]}
@@ -139,7 +115,8 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderSelect(name, label, options) {
+  renderSelect(field) {
+    const { name, label, lookup, readonly, required } = field;
     const { data, errors } = this.state;
 
     return (
@@ -148,7 +125,9 @@ export default class BaseForm extends Component {
         key={name}
         name={name}
         label={label}
-        options={options}
+        required={required}
+        options={lookup}
+        disabled={readonly}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
@@ -156,7 +135,8 @@ export default class BaseForm extends Component {
     );
   }
 
-  renderCheck(name, label) {
+  renderCheck(field) {
+    const { name, label } = field;
     const { data, errors } = this.state;
 
     return (
