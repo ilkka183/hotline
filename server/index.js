@@ -10,6 +10,7 @@ const traficom = require('./routes/traficom');
 
 const brand = require('./routes2/brand');
 const problem = require('./routes2/problem');
+const problemreply = require('./routes2/problemreply');
 const usergroup = require('./routes2/usergroup');
 const user = require('./routes2/user');
 
@@ -52,6 +53,7 @@ app.use(apiPath + 'traficom', traficom);
 
 app.use(apiPath + 'Brands', brand);
 app.use(apiPath + 'Problems', problem);
+app.use(apiPath + 'ProblemReplies', problemreply);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
 

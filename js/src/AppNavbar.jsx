@@ -15,7 +15,6 @@ export default function AppNavbar({ user }) {
         {user &&
           <Nav className="mr-auto">
             <NavItemLink to="/">Koti</NavItemLink>
-{/*            <NavItemLink to="/movies">Movies</NavItemLink> */}
             <NavItemLink to="/problems">Vikatapaukset</NavItemLink>
             <NavDropdown title="Asetukset" id="basic-nav-dropdown">
               <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>

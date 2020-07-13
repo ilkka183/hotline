@@ -7,7 +7,7 @@ import auth from '../services/authService';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
-export default function TableView({ schema }) {
+export default function TableView({ schema, showSearchBox, paginate }) {
   const user = auth.getCurrentUser();
   const editable = user !== null;
   const deletable = (user !== null) && (user.role <= 1);
@@ -25,6 +25,8 @@ export default function TableView({ schema }) {
           schema={schema}
           http={http}
           apiEndpoint={apiUrl + '/' + schema.pluralName}
+          showSearchBox={showSearchBox}
+          paginate={paginate}
           editable={editable}
           deletable={deletable}
         />

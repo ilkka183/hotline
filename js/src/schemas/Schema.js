@@ -72,12 +72,18 @@ export class Field {
     return null;
   }
 
-  date_JsonToData(value) {
+  static date_JsonToData(value) {
+    if (!value)
+      return null;
+
     const date = new Date(value);
     return date.toLocaleDateString();
   }
 
-  datetime_JsonToData(value) {
+  static datetime_JsonToData(value) {
+    if (!value)
+      return null;
+
     const date = new Date(value);
     return date.toLocaleString();
   }

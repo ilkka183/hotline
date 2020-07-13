@@ -12,6 +12,7 @@ import Logout from './views/Logout';
 import Movies from './views/Movies';
 import NotFound from './views/NotFound';
 import Problems from './views/Problems';
+import Problem from './views/Problem';
 import Profile from './views/Profile';
 import UserGroups from './views/UserGroups';
 import Users from './views/Users';
@@ -21,6 +22,7 @@ import LoginForm from './forms/LoginForm';
 import MovieForm from './forms/MovieForm';
 import NewProblemForm from './forms/Problem/NewProblemForm';
 import ProblemForm from './forms/ProblemForm';
+import ProblemReplyForm from './forms/ProblemReplyForm';
 import RegisterForm from './forms/RegisterForm';
 import UserForm from './forms/UserForm';
 import UserGroupForm from './forms/UserGroupForm';
@@ -48,9 +50,11 @@ export default class App extends Component {
             <Route path="/home" component={Home} />
             <ProtectedRoute path="/movies/:id" component={MovieForm} />
             <ProtectedRoute path="/movies" component={Movies} />
+            <ProtectedRoute path="/problem/:id" component={Problem} />
             <ProtectedRoute path="/problems/create" component={NewProblemForm} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
             <ProtectedRoute path="/problems" component={Problems} />
+            <ProtectedRoute path="/problemreplies/:id" component={ProblemReplyForm} />
             <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} />
             <ProtectedRoute path="/usergroups" component={UserGroups} />
             <ProtectedRoute path="/users/:id" component={UserForm} />
