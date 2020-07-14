@@ -22,6 +22,8 @@ export default class Home extends Component {
 
     if (!this.user)
       return null;
+
+    const apiEndpoint = apiUrl + '/' + this.schema.pluralName;
   
     return (
       <>
@@ -33,8 +35,8 @@ export default class Home extends Component {
               schema={this.schema}
               showSearchBox={false}
               paginate={false}
-              http={http}
-              apiEndpoint={apiUrl + '/' + this.schema.pluralName}
+              getItems={async () => await http.get(apiEndpoint)}
+              deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
               editable={editable}
               deletable={deletable}
             />
@@ -47,8 +49,8 @@ export default class Home extends Component {
               schema={this.schema}
               showSearchBox={false}
               paginate={false}
-              http={http}
-              apiEndpoint={apiUrl + '/' + this.schema.pluralName}
+              getItems={async () => await http.get(apiEndpoint)}
+              deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
               editable={editable}
               deletable={deletable}
             />

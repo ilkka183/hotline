@@ -14,7 +14,7 @@ export default class MySelect extends MyControl {
         value={value}
         onChange={onChange}
       >
-        {options.map(option => (
+        {options && options.map(option => (
           <option
             key={option.Id}
             value={option.Id}

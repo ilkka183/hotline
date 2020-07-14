@@ -19,8 +19,7 @@ export default class DataTable extends Component {
   }
 
   async componentDidMount() {
-    const { http, apiEndpoint } = this.props;
-    const { data } = await http.get(apiEndpoint);
+    const { data } = await this.props.getItems();
 
     this.setState({ data });
   }
@@ -29,10 +28,8 @@ export default class DataTable extends Component {
     if (!window.confirm('Poista rivi?'))
       return;
 
-    const { http, apiEndpoint } = this.props;
-
     try {
-      await http.delete(apiEndpoint + '/' + item.Id);
+      await this.props.deleteItem(item);
 
       const data = this.state.data.filter(m => m.Id !== item.Id);
   
@@ -179,7 +176,7 @@ export default class DataTable extends Component {
     const items = paginate ? paginateItems(filteredItems, currentPage, pageSize) : filteredItems;
 
     if (this.state.data.length === 0)
-      return <p>There are no items in the database.</p>
+      return <p>Tietokannassa ei ole yhtään riviä.</p>
 
     const { deletable } = this.props;
     const columns = this.props.schema.fields.filter(column => column.visibleInTable);

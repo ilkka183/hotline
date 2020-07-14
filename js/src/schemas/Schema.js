@@ -41,8 +41,11 @@ export class Field {
       if (options.editLink)
         this.editLink = options.editLink;
 
-      if (options.defaultValue)
-        this.defaultValue = options.defaultValue;
+      if (options.getDefaultValue)
+        this.getDefaultValue = options.getDefaultValue;
+
+      if (options.excludeInForm)
+        this.excludeInForm = options.excludeInForm;
 
       if (options.hasOwnProperty('visibleInTable'))
         this.visibleInTable = options.visibleInTable;
@@ -60,6 +63,17 @@ export class Field {
 
   get isLookup() {
     return this.lookupUrl || this.enums;
+  }
+
+  get defaultValue() {
+    if (this.getDefaultValue) {
+      console.log(this.name, this.getDefaultValue);
+      const value = this.getDefaultValue();
+      console.log(this.name, value);
+      return value;
+    }
+
+    return '';
   }
 
   validate(value) {
@@ -162,6 +176,15 @@ export class Schema {
     return null;
   }
 
+  fieldByName(name) {
+    const field = this.findField(name);
+
+    if (field === null)
+      throw new Error(`Field ${name} not found`);
+
+   return field;
+  }
+
   addField(name, label, type, options) {
     const field = new Field(name, label, type, options);
     this.fields.push(field);
@@ -169,7 +192,7 @@ export class Schema {
   }
 
   addEnabled() {
-    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, defaultValue: true });
+    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
 
   addTimestamps() {
@@ -181,8 +204,8 @@ export class Schema {
     const data = {}
 
     for (let field of this.fields)
-      if (field.visibleInForm)
-        data[field.name] = field.defaultValue ? field.defaultValue : '';
+      if (!field.excludeInForm)
+        data[field.name] = field.defaultValue;
 
     return data;
   }
@@ -191,7 +214,7 @@ export class Schema {
     const data = {}
 
     for (let field of this.fields)
-      if (field.primaryKey || field.visibleInForm)
+      if (field.primaryKey || !field.excludeInForm)
         data[field.name] = field.jsonToData(row[field.name]);
 
     return data;

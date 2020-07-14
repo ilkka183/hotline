@@ -16,6 +16,8 @@ export default function TableView({ schema, showSearchBox, paginate }) {
     marginBottom: 20
   }
 
+  const apiEndpoint = apiUrl + '/' + schema.pluralName;
+
   return (
     <Row>
       <Col>
@@ -23,8 +25,8 @@ export default function TableView({ schema, showSearchBox, paginate }) {
         {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Lisää uusi</LinkButton>}
         <DataTable
           schema={schema}
-          http={http}
-          apiEndpoint={apiUrl + '/' + schema.pluralName}
+          getItems={async () => await http.get(apiEndpoint)}
+          deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
           showSearchBox={showSearchBox}
           paginate={paginate}
           editable={editable}

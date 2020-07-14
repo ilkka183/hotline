@@ -9,21 +9,22 @@ export default class Replies extends Component {
   schema = new ProblemReplySchema();
 
   render() {
-    const editable = true;
-    const apiEndpoint = apiUrl + '/problemreplies/problem/' + this.props.problemId;
-
     const buttonStyle = {
       marginBottom: 20
     }
 
+    const editable = true;
+    const apiEndpoint = apiUrl + '/problemreplies';
+    const { problemId } = this.props;
+    
     return (
       <>
         <h2>Vastaukset</h2>
-        {editable && <LinkButton style={buttonStyle} to={`/problemreplies/new`}>Lisää uusi</LinkButton>}
+        {editable && <LinkButton style={buttonStyle} to={'/problemreplies/new?ProblemId=' + problemId}>Lisää uusi</LinkButton>}
         <DataTable
           schema={this.schema}
-          http={http}
-          apiEndpoint={apiEndpoint}
+          getItems={async () => await http.get(apiEndpoint + '?ProblemId=' + problemId)}
+          deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
           showSearchBox={false}
           paginate={false}
           editable={editable}

@@ -75,7 +75,7 @@ export default class DataForm extends BaseForm {
       for (let field of this.schema.fields) {
         const value = data[field.name];
 
-        if (value !== '' && value !== savedData[field.name])
+        if (value !== savedData[field.name])
           row[field.name] = field.dataToJson(value);
       }
 
@@ -97,7 +97,9 @@ export default class DataForm extends BaseForm {
         for (let field of this.schema.fields) {
           const value = data[field.name];
 
-          if (field.hasFormControl(value))
+//          if (field.hasFormControl(value))
+
+          if (!field.excludeInForm && value)
             row[field.name] = field.dataToJson(value);
         }
 
@@ -113,12 +115,15 @@ export default class DataForm extends BaseForm {
   }
 
   renderField(field) {
-    const value = this.state.data[field.name];
+//    const value = this.state.data[field.name];
 
-    if (!field.hasFormControl(value))
+    if (field.excludeInForm)
       return null;
 
-    if (field.lookup)
+//    if (!field.hasFormControl(value))
+//      return null;
+
+    if (field.isLookup)
       return this.renderSelect(field);
 
     switch (field.type) {

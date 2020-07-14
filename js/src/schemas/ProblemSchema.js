@@ -7,15 +7,15 @@ export default class ProblemSchema extends Schema {
   constructor() {
     super('Problem');
 
-    this.addField('Id',               'No',                 'number',   { primaryKey: true, required: true, visibleInTable: false, visibleInForm: false });
-    this.addField('Date',             'Pvm',                'datetime', { required: true, readonly: true, displayFormat: 'date' });
+    this.addField('Id',               'No',                 'number',   { primaryKey: true, required: true, readonly: true, visibleInTable: false });
+    this.addField('Date',             'Pvm',                'datetime', { required: true, readonly: true, displayFormat: 'date', editLink: true });
     this.addField('UserId',           'Lähettäjä',          'number',   { required: true, visibleInTable: false, lookupUrl: 'Users' });
-    this.addField('UserName',         'Lähettäjä',          'text',     { visibleInForm: false });
+    this.addField('UserName',         'Lähettäjä',          'text',     { visibleInTable: false, visibleInForm: false });
     this.addField('Brand',            'Merkki',             'text',     { required: true });
     this.addField('Model',            'Malli',              'text');
     this.addField('ModelYear',        'Vuosimalli',         'number');
-    this.addField('ModelBeginYear',   'Aloitusvuosi',       'number',   { visibleInTable: false });
-    this.addField('ModelEndYear',     'Lopetusvuosi',       'number',   { visibleInTable: false });
+    this.addField('ModelBeginYear',   'Vuodesta',           'number',   { visibleInTable: false });
+    this.addField('ModelEndYear',     'Vuoteen',            'number',   { visibleInTable: false });
     this.addField('RegistrationYear', 'Rekisteröintivuosi', 'number',   { visibleInTable: false });
     this.addField('Fuel',             'Käyttövoima',        'number',   { enums: FUELS });
     this.addField('Title',            'Otsikko',            'text',     { required: true, link: item => '/problem/' + item.Id });
