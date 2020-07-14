@@ -1,6 +1,6 @@
-import DataForm from './DataForm';
-import { Schema } from '../schemas/Schema';
-import auth from '../services/authService';
+import DataForm from '../DataForm';
+import { Schema } from '../../schemas/Schema';
+import auth from '../../services/authService';
 
 
 class ProfileSchema extends Schema {

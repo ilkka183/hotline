@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import DataTable from '../components/common/DataTable';
-import LinkButton from '../components/common/LinkButton';
-import { TableSchema } from '../schemas/Schemas';
-import http from '../services/httpService';
-import { apiUrl } from '../config.json';
+import DataTable from '../../components/common/DataTable';
+import LinkButton from '../../components/common/LinkButton';
+import { TableSchema } from '../../schemas/Schemas';
+import http from '../../services/httpService';
+import { apiUrl } from '../../config.json';
 
 
 class ProblemRepliesSchema extends TableSchema {

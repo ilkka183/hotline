@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import TableView from './TableView';
-import { TableSchema, USER_ROLES } from '../schemas/Schemas';
+import TableView from '../TableView';
+import { TableSchema, USER_ROLES } from '../../schemas/Schemas';
 
 
 class UsersSchema extends TableSchema {

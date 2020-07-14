@@ -1,6 +1,6 @@
-import DataForm from './DataForm';
-import { FormSchema } from '../schemas/Schemas';
-import { FUELS, STATUSES } from '../schemas/ProblemsSchema';
+import DataForm from '../DataForm';
+import { FormSchema } from '../../schemas/Schemas';
+import { FUELS, STATUSES } from '../../schemas/ProblemsSchema';
 
 
 class ProblemSchema extends FormSchema {

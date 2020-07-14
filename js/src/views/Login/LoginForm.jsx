@@ -2,9 +2,9 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import BaseForm from './BaseForm';
-import { Schema } from '../schemas/Schema';
-import auth from '../services/authService';
+import BaseForm from '../BaseForm';
+import { Schema } from '../../schemas/Schema';
+import auth from '../../services/authService';
 
 
 class LoginSchema extends Schema {

@@ -1,5 +1,5 @@
-import DataForm from './DataForm';
-import { FormSchema } from '../schemas/Schemas';
+import DataForm from '../DataForm';
+import { FormSchema } from '../../schemas/Schemas';
 
 
 class BrandSchema extends FormSchema {

@@ -1,9 +1,9 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import BaseForm from './BaseForm';
-import { Schema } from '../schemas/Schema';
-import auth from '../services/authService';
+import BaseForm from '../BaseForm';
+import { Schema } from '../../schemas/Schema';
+import auth from '../../services/authService';
 
 
 class RegisterSchema extends Schema {

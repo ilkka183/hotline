@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import TableView from './TableView';
-import { TableSchema } from '../schemas/Schemas';
+import TableView from '../TableView';
+import { TableSchema } from '../../schemas/Schemas';
 
 
 class BrandsSchema extends TableSchema {

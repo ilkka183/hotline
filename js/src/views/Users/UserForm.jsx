@@ -1,5 +1,5 @@
-import DataForm from './DataForm';
-import { FormSchema, USER_ROLES } from '../schemas/Schemas';
+import DataForm from '../DataForm';
+import { FormSchema, USER_ROLES } from '../../schemas/Schemas';
 
 
 class UserSchema extends FormSchema {

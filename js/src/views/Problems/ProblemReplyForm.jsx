@@ -1,7 +1,7 @@
-import DataForm from './DataForm';
-import { FormSchema } from '../schemas/Schemas';
+import DataForm from '../DataForm';
+import { FormSchema } from '../../schemas/Schemas';
 import queryString from 'query-string';
-import auth from '../services/authService';
+import auth from '../../services/authService';
 
 
 class ProblemReplySchema extends FormSchema {

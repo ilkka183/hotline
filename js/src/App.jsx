@@ -5,25 +5,30 @@ import Container from 'react-bootstrap/Container'
 import AppNavbar from './AppNavbar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
-import About from './views/About';
-import Brands from './views/Brands';
 import Home from './views/Home';
-import Logout from './views/Logout';
-import NotFound from './views/NotFound';
-import Problems from './views/Problems';
-import Problem from './views/Problem';
-import Profile from './views/Profile';
-import UserGroups from './views/UserGroups';
-import Users from './views/Users';
+import About from './views/About';
+import NotFound from './views/Problems/NotFound';
 
-import BrandForm from './forms/BrandForm';
-import LoginForm from './forms/LoginForm';
-import NewProblemForm from './forms/Problem/NewProblemForm';
-import ProblemForm from './forms/ProblemForm';
-import ProblemReplyForm from './forms/ProblemReplyForm';
-import RegisterForm from './forms/RegisterForm';
-import UserForm from './forms/UserForm';
-import UserGroupForm from './forms/UserGroupForm';
+import Brands from './views/Brands/Brands';
+import BrandForm from './views/Brands/BrandForm';
+
+import UserGroups from './views/UserGroups/UserGroups';
+import UserGroupForm from './views/UserGroups/UserGroupForm';
+
+import Users from './views/Users/Users';
+import UserForm from './views/Users/UserForm';
+
+import Problems from './views/Problems/Problems';
+import Problem from './views/Problems/Problem';
+import ProblemForm from './views/Problems/ProblemForm';
+import ProblemReplyForm from './views/Problems/ProblemReplyForm';
+import NewProblemForm from './views/Problems/NewProblemForm';
+
+import Profile from './views/Profile/Profile';
+
+import LoginForm from './views/Login/LoginForm';
+import RegisterForm from './views/Login/RegisterForm';
+import Logout from './views/Login/Logout';
 
 import auth from './services/authService';
 import 'react-toastify/dist/ReactToastify.css';
