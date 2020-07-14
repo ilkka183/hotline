@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
 import { FUELS } from '../../schemas/ProblemsSchema';
 
+
 export default class SelectVehicleForm extends Component {
   state = {
     brand: '',

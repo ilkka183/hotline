@@ -1,14 +1,14 @@
 import DataForm from './DataForm';
-import { BaseSchema } from '../schemas/BaseSchema';
+import { FormSchema } from '../schemas/Schemas';
 import { FUELS, STATUSES } from '../schemas/ProblemsSchema';
 
 
-class ProblemSchema extends BaseSchema {
+class ProblemSchema extends FormSchema {
   constructor() {
     super('problems', 'Vikatapaukset');
 
-    this.addField('Id',               'No',                 'number',   { required: true, readonly: true, primaryKey: true, visible: false });
-    this.addField('Date',             'Pvm',                'datetime', { required: true, readonly: true, displayFormat: 'date' });
+    this.addId();
+    this.addField('Date',             'Pvm',                'datetime', { required: true, readonly: true });
     this.addField('UserId',           'Lähettäjä',          'number',   { required: true, lookupUrl: 'Users' });
     this.addField('Brand',            'Merkki',             'text',     { required: true });
     this.addField('Model',            'Malli',              'text');

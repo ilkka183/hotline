@@ -10,11 +10,14 @@ import { apiUrl } from '../../config.json';
 
 class ProblemSchema extends Schema {
   constructor() {
-    super('Problem');
+    super('problems', 'Vikatapaus');
     
-    this.addField('brand',       'Merkki',  'text', { required: true });
-    this.addField('title',       'Otsikko', 'text', { required: true });
-    this.addField('description', 'Kuvaus',  'text', { required: true });
+    this.brand       = this.addField('brand',       'Merkki',      'text',     { required: true });
+    this.model       = this.addField('model',       'Malli',       'text');
+    this.modelYear   = this.addField('modelYear',   'Vuosimalli',  'number');
+    this.fuel        = this.addField('fuel',        'Käyttövoima', 'number',   { enums: FUELS });
+    this.title       = this.addField('title',       'Otsikko',     'text',     { required: true });
+    this.description = this.addField('description', 'Kuvaus',      'textarea', { required: true, rows: 10 });
   }
 }
 
@@ -23,7 +26,7 @@ export default class ProblemForm extends BaseForm {
   schema = new ProblemSchema()
 
   state = {
-    data: this.schema.initFormData(),
+    data: this.schema.emptyData(),
     errors: {}
   }
 
@@ -39,16 +42,14 @@ export default class ProblemForm extends BaseForm {
 }
 
   render() {
-    const fuels = Schema.enumsToLookup(FUELS);
-
     return (
       <Form onSubmit={this.handleSubmit}>
-        {this.renderInput('brand', 'Merkki')}
-        {this.renderInput('model', 'Malli')}
-        {this.renderInput('modelYear', 'Mallivuosi')}
-        {this.renderSelect('fuel', 'Käyttövoima', fuels)}
-        {this.renderInput('title', 'Otsikko')}
-        {this.renderTextArea('description', 'Kuvaus', 10)}
+        {this.renderInput(this.schema.brand)}
+        {this.renderInput(this.schema.model)}
+        {this.renderInput(this.schema.modelYear)}
+        {this.renderSelect(this.schema.fuel)}
+        {this.renderInput(this.schema.title)}
+        {this.renderTextArea(this.schema.description)}
         {this.renderSubmitButton('Tallenna')}
       </Form>
     );

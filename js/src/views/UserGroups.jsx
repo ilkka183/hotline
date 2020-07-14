@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TableView from './TableView';
-import { BaseSchema } from '../schemas/BaseSchema';
+import { TableSchema } from '../schemas/Schemas';
 
 
-class UserGroupSchema extends BaseSchema {
+class UserGroupsSchema extends TableSchema {
   constructor() {
     super('usergroups', 'Käyttäjäryhmät');
 
@@ -23,7 +23,7 @@ class UserGroupSchema extends BaseSchema {
 
 
 export default class UserGroups extends Component {
-  schema = new UserGroupSchema();
+  schema = new UserGroupsSchema();
 
   render() {
     return <TableView schema={this.schema} />

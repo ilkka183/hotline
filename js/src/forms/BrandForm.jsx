@@ -1,12 +1,12 @@
 import DataForm from './DataForm';
-import { BaseSchema } from '../schemas/BaseSchema';
+import { FormSchema } from '../schemas/Schemas';
 
 
-class BrandSchema extends BaseSchema {
+class BrandSchema extends FormSchema {
   constructor() {
     super('brands', 'Automerkki');
 
-    this.addField('Id',   'No',   'number',   { required: true, readonly: true, primaryKey: true, visible: false });
+    this.addId();
     this.addField('Name', 'Nimi', 'text',     { required: true });
     this.addField('Info', 'Info', 'textarea', { rows: 5 });
     this.addEnabled();

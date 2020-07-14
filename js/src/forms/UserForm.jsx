@@ -1,12 +1,12 @@
 import DataForm from './DataForm';
-import { BaseSchema, USER_ROLES } from '../schemas/BaseSchema';
+import { FormSchema, USER_ROLES } from '../schemas/Schemas';
 
 
-class UserSchema extends BaseSchema {
+class UserSchema extends FormSchema {
   constructor() {
     super('users', 'Käyttäjä');
 
-    this.addField('Id',           'No',               'number', { required: true, readonly: true, primaryKey: true, visible: false });
+    this.addId();
     this.addField('FirstName',    'Etunimi',          'text',   { required: true });
     this.addField('LastName',     'Sukunimi',         'text',   { required: true });
     this.addField('Role',         'Rooli',            'number', { required: true, enums: USER_ROLES });

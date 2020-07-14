@@ -1,13 +1,13 @@
 import DataForm from './DataForm';
-import { BaseSchema } from '../schemas/BaseSchema';
+import { FormSchema } from '../schemas/Schemas';
 
 
-class UserGroupSchema extends BaseSchema {
+class UserGroupSchema extends FormSchema {
   constructor() {
     super('usergroups', 'Käyttäjäryhmä');
 
-    this.addField('Id',            'No',               'number', { required: true, readonly: true, primaryKey: true, visible: false });
-    this.addField('Name',          'Nimi',             'text',   { required: true, editLink: true });
+    this.addId();
+    this.addField('Name',          'Nimi',             'text',   { required: true });
     this.addField('ContactPerson', 'Yhteyshenkilö',    'text');
     this.addField('Address',       'Osoite',           'text');
     this.addField('PostalCode',    'Postinumero',      'text');

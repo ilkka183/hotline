@@ -168,15 +168,6 @@ export class Schema {
     return field;
   }
 
-  addEnabled() {
-    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
-  }
-
-  addTimestamps() {
-    this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true, visibleInTable: false });
-    this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true, visibleInTable: false });
-  }
-
   emptyData() {
     const data = {}
 
