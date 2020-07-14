@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table'
 import ProblemReplies from './ProblemReplies'
 import { DateTimeField } from '../schemas/Schema';
 import http from '../services/httpService';
-import { FUELS, STATUSES } from '../schemas/ProblemSchema';
+import { FUELS, STATUSES } from '../schemas/ProblemsSchema';
 import { apiUrl } from '../config.json';
 
 export default class Problem extends Component {

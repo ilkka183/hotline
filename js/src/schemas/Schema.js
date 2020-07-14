@@ -4,8 +4,7 @@ export class Field {
     this.label = label;
     this.type = type;
     this.editLink = false;
-    this.visibleInTable = true;
-    this.visibleInForm = true;
+    this.visible = true;
     this.readonly = false;
 
     if (type === 'boolean')
@@ -14,49 +13,43 @@ export class Field {
       this.default = '';
 
     if (options) {
-      if (options.rows)
-        this.rows = options.rows;
-
-      if (options.link)
+      if (options.link !== undefined)
         this.link = options.link;
 
-      if (options.lookupUrl)
-        this.lookupUrl = options.lookupUrl;
-
-      if (options.enums)
-        this.enums = options.enums;
-
-      if (options.primaryKey)
-        this.primaryKey = options.primaryKey;
-
-      if (options.required)
-        this.required = options.required;
-
-      if (options.readonly)
-        this.readonly = options.readonly;
-
-      if (options.displayFormat)
-        this.displayFormat = options.displayFormat;
-
-      if (options.editLink)
+      if (options.editLink !== undefined)
         this.editLink = options.editLink;
 
-      if (options.getDefaultValue)
+      if (options.lookupUrl !== undefined)
+        this.lookupUrl = options.lookupUrl;
+
+      if (options.enums !== undefined)
+        this.enums = options.enums;
+
+      if (options.primaryKey !== undefined)
+        this.primaryKey = options.primaryKey;
+
+      if (options.required !== undefined)
+        this.required = options.required;
+
+      if (options.readonly !== undefined)
+        this.readonly = options.readonly;
+
+      if (options.displayFormat !== undefined)
+        this.displayFormat = options.displayFormat;
+
+      if (options.rows !== undefined)
+        this.rows = options.rows;
+
+      if (options.getDefaultValue !== undefined)
         this.getDefaultValue = options.getDefaultValue;
 
-      if (options.excludeInForm)
-        this.excludeInForm = options.excludeInForm;
+      if (options.visible !== undefined)
+        this.visible = options.visible;
 
-      if (options.hasOwnProperty('visibleInTable'))
-        this.visibleInTable = options.visibleInTable;
-
-      if (options.hasOwnProperty('visibleInForm'))
-        this.visibleInForm = options.visibleInForm;
-
-      if (options.hasOwnProperty('min'))
+      if (options.min !== undefined)
         this.min = options.min;
 
-      if (options.hasOwnProperty('max'))
+      if (options.max !== undefined)
         this.max = options.max;
     }
   }
@@ -66,18 +59,14 @@ export class Field {
   }
 
   get defaultValue() {
-    if (this.getDefaultValue) {
-      console.log(this.name, this.getDefaultValue);
-      const value = this.getDefaultValue();
-      console.log(this.name, value);
-      return value;
-    }
+    if (this.getDefaultValue)
+      return this.getDefaultValue();
 
     return '';
   }
 
   validate(value) {
-    if (this.visibleInForm) {
+    if (this.visible) {
       if (this.required && this.type !== 'boolean' && value === '')
         return this.label + ' is not allowed to be empty';
 
@@ -94,7 +83,7 @@ export class Field {
   }
 
   hasFormControl(value) {
-    return this.visibleInForm && (!this.readonly || value);
+    return this.visible && (!this.readonly || value);
   }
 
   date_JsonToData(value) {
@@ -150,22 +139,10 @@ export class DateTimeField extends Field {
 
 
 export class Schema {
-  constructor(name) {
-    this.name = name;
-    
+  constructor(api, title) {
+    this.api = api;
+    this.title = title;
     this.fields = [];
-  }
-
-  get singularTitle() {
-    throw new Error('You have to implement the get singularTitle() property!');
-  }
-
-  get pluralTitle() {
-    throw new Error('You have to implement the get pluralTitle() property!');
-  }
-
-  get pluralName() {
-    throw new Error('You have to implement the get pluralName() property!');
   }
 
   findField(name) {
@@ -200,12 +177,20 @@ export class Schema {
     this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true, visibleInTable: false });
   }
 
-  initFormData() {
+  emptyData() {
     const data = {}
 
     for (let field of this.fields)
-      if (!field.excludeInForm)
-        data[field.name] = field.defaultValue;
+      data[field.name] = '';
+
+    return data;
+  }
+
+  defaultData() {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = field.defaultValue;
 
     return data;
   }
@@ -214,8 +199,7 @@ export class Schema {
     const data = {}
 
     for (let field of this.fields)
-      if (field.primaryKey || !field.excludeInForm)
-        data[field.name] = field.jsonToData(row[field.name]);
+      data[field.name] = field.jsonToData(row[field.name]);
 
     return data;
   }

@@ -21,7 +21,7 @@ export default class LoginForm extends BaseForm {
   schema = new LoginSchema()
 
   state = {
-    data: this.schema.initFormData(),
+    data: this.schema.emptyFormData(),
     errors: {}
   }
 

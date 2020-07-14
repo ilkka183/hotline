@@ -33,7 +33,7 @@ export default class ProfileForm extends DataForm {
   schema = new ProfileSchema()
 
   state = {
-    data: this.schema.initFormData(),
+    data: this.schema.emptyFormData(),
     errors: {}
   }
 

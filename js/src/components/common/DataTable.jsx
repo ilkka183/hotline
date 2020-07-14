@@ -132,7 +132,7 @@ export default class DataTable extends Component {
     const text = this.formatValue(item, column);
 
     if (column.editLink && this.props.editable)
-      return <Link to={'/' + this.props.schema.pluralName + '/' + item.Id}>{text}</Link>
+      return <Link to={'/' + this.props.schema.api + '/' + item.Id}>{text}</Link>
 
     if (column.link)
       return <Link to={column.link(item)}>{text}</Link>
@@ -179,7 +179,7 @@ export default class DataTable extends Component {
       return <p>Tietokannassa ei ole yhtään riviä.</p>
 
     const { deletable } = this.props;
-    const columns = this.props.schema.fields.filter(column => column.visibleInTable);
+    const columns = this.props.schema.fields.filter(column => column.visible);
 
     return (
       <>

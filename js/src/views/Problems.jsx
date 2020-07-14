@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import TableView from './TableView';
-import ProblemSchema from '../schemas/ProblemSchema';
+import { ProblemsSchema } from '../schemas/ProblemsSchema';
+
 
 export default class Problems extends Component {
-  schema = new ProblemSchema();
+  schema = new ProblemsSchema();
 
   render() {
     return <TableView schema={this.schema} />

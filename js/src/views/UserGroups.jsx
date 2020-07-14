@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 import TableView from './TableView';
-import UserGroupSchema from '../schemas/UserGroupSchema';
+import { BaseSchema } from '../schemas/BaseSchema';
+
+
+class UserGroupSchema extends BaseSchema {
+  constructor() {
+    super('usergroups', 'Käyttäjäryhmät');
+
+    this.addField('Id',            'No',               'number', { visible: false });
+    this.addField('Name',          'Nimi',             'text',   { editLink: true });
+    this.addField('ContactPerson', 'Yhteyshenkilö',    'text');
+    this.addField('Address',       'Osoite',           'text');
+    this.addField('PostalCode',    'Postinumero',      'text');
+    this.addField('PostOffice',    'Postitoimipaikka', 'text');
+    this.addField('Country',       'Maa',              'text');
+    this.addField('Phone',         'Puhelin',          'phone');
+    this.addField('Email',         'Sähköposti',       'email');
+    this.addField('Website',       'Nettisivut',       'text');
+    this.addEnabled();
+  }
+}
+
 
 export default class UserGroups extends Component {
   schema = new UserGroupSchema();

@@ -21,7 +21,7 @@ export default class ChangePasswordForm extends BaseForm {
   schema = new ChangePasswordSchema()
 
   state = {
-    data: this.schema.initFormData(),
+    data: this.schema.emptyFormData(),
     errors: {}
   }
 

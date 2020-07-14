@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import Form from 'react-bootstrap/Form'
 import BaseForm from '../BaseForm';
 import { Schema } from '../../schemas/Schema';
-import { FUELS } from '../../schemas/ProblemSchema';
+import { FUELS } from '../../schemas/ProblemsSchema';
 import http from '../../services/httpService';
 import { apiUrl } from '../../config.json';
 

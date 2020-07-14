@@ -13,7 +13,7 @@ export default class DataForm extends BaseForm {
   }
 
   get apiEndpoint() {
-    return apiUrl + '/' + this.schema.pluralName;
+    return apiUrl + '/' + this.schema.api;
   }
 
   apiEndpointOf(id) {
@@ -38,15 +38,15 @@ export default class DataForm extends BaseForm {
     }
   }
 
-  async populateData(id) {
+  async loadData() {
     try {
-      const { data: item } = await http.get(this.apiEndpointOf(id));
+      const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
 
       const savedData = this.schema.jsonToData(item)
       const data = this.schema.jsonToData(item)
 
-      console.log(item);
-      console.log(data);
+      console.log('json', item);
+      console.log('data', data);
 
       this.setState({ savedData, data });
     }
@@ -56,11 +56,20 @@ export default class DataForm extends BaseForm {
     }
   }
 
+  setDefaultData() {
+    const data = this.schema.defaultData();
+    console.log('new', data);
+
+    this.setState({ data });
+  }
+
   async componentDidMount() {
     this.populateLookups();
 
-    if (this.dataId !== 'new')
-      await this.populateData(this.dataId);
+    if (this.dataId === 'new')
+      this.setDefaultData()
+    else
+      await this.loadData();
   }
 
   async doSubmit() {
@@ -97,9 +106,7 @@ export default class DataForm extends BaseForm {
         for (let field of this.schema.fields) {
           const value = data[field.name];
 
-//          if (field.hasFormControl(value))
-
-          if (!field.excludeInForm && value)
+          if (value)
             row[field.name] = field.dataToJson(value);
         }
 
@@ -117,7 +124,7 @@ export default class DataForm extends BaseForm {
   renderField(field) {
 //    const value = this.state.data[field.name];
 
-    if (field.excludeInForm)
+    if (!field.visible)
       return null;
 
 //    if (!field.hasFormControl(value))
@@ -134,7 +141,7 @@ export default class DataForm extends BaseForm {
   }
 
   get title() {
-    let title = this.schema.singularTitle;
+    let title = this.schema.title;
 
     if (this.dataId === 'new')
       title += ' - uusi';

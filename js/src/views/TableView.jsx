@@ -16,13 +16,12 @@ export default function TableView({ schema, showSearchBox, paginate }) {
     marginBottom: 20
   }
 
-  const apiEndpoint = apiUrl + '/' + schema.pluralName;
-
+  const apiEndpoint = apiUrl + '/' + schema.api;
   return (
     <Row>
       <Col>
-        <h2>{schema.pluralTitle}</h2>
-        {editable && <LinkButton style={buttonStyle} to={`/${schema.pluralName}/new`}>Lisää uusi</LinkButton>}
+        <h2>{schema.title}</h2>
+        {editable && <LinkButton style={buttonStyle} to={`/${schema.api}/new`}>Lisää uusi</LinkButton>}
         <DataTable
           schema={schema}
           getItems={async () => await http.get(apiEndpoint)}

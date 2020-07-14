@@ -3,14 +3,15 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import DataTable from '../components/common/DataTable';
 import LinkButton from '../components/common/LinkButton';
-import ProblemSchema from '../schemas/ProblemSchema';
+import { ProblemsSchema } from '../schemas/ProblemsSchema';
 import auth from '../services/authService';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
+
 export default class Home extends Component {
   user = auth.getCurrentUser();
-  schema = new ProblemSchema();
+  schema = new ProblemsSchema();
 
   render() { 
     const editable = this.user !== null;
@@ -23,7 +24,7 @@ export default class Home extends Component {
     if (!this.user)
       return null;
 
-    const apiEndpoint = apiUrl + '/' + this.schema.pluralName;
+    const apiEndpoint = apiUrl + '/' + this.schema.api;
   
     return (
       <>

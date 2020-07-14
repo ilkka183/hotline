@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import DataTable from '../components/common/DataTable';
 import LinkButton from '../components/common/LinkButton';
-import ProblemReplySchema from '../schemas/ProblemReplySchema';
+import { BaseSchema } from '../schemas/BaseSchema';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
+
+
+class ProblemReplySchema extends BaseSchema {
+  constructor(props) {
+    super('problemreplies', 'Vastaus');
+
+    this.addField('Id',        'No',         'number',   { visible: false });
+    this.addField('ProblemId', 'Vikatapaus', 'number',   { visible: false });
+    this.addField('Date',      'Pvm',        'datetime', { displayFormat: 'date' });
+    this.addField('UserName',  'Lähettäjä',  'text',     { visibleInForm: false });
+    this.addField('Message',   'Viesti',     'textarea', { editLink: true, rows: 5 });
+    this.addField('Solution',  'Ratkaisu',   'boolean');
+  }
+}
+
 
 export default class Replies extends Component {
   schema = new ProblemReplySchema();

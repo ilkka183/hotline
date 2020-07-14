@@ -22,7 +22,7 @@ export default class RegisterForm extends BaseForm {
   schema = new RegisterSchema()
 
   state = {
-    data: this.schema.initFormData(),
+    data: this.schema.emptyFormData(),
     errors: {}
   }
 
