@@ -10,7 +10,11 @@ export default class BrandsTable extends BaseTable {
     this.addEnabled();
   }
 
-  get api() {
+  getTitle() {
+    return 'Automerkit';
+  }
+
+  getApiName() {
     return 'brands';
   }
 }

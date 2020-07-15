@@ -25,11 +25,11 @@ export default class UserGroupForm extends BaseForm {
     this.state.data = this.emptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Käyttäjäryhmä';
   }
 
-  get api() {
+  getApiName() {
     return 'usergroups';
   }
 }

@@ -26,7 +26,11 @@ export default class UsersTable extends BaseTable {
     this.addEnabled();
   }
 
-  get api() {
+  getTitle() {
+    return 'Käyttäjät';
+  }
+
+  getApiName() {
     return 'users';
   }
 }

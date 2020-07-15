@@ -4,12 +4,16 @@ const SHOW_IDS = true;
 
 export default class BaseForm extends DataForm {
   get formattedTitle() {
-    let title = this.title;
+    let title = this.getTitle();
 
     if (this.dataId === 'new')
       title += ' - uusi';
 
     return title;
+  }
+
+  getApiName() {
+    throw new Error('You have to implement the method getApiName!');
   }
 
   addId(visible = SHOW_IDS) {

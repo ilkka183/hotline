@@ -205,7 +205,7 @@ export default class BaseForm extends FieldsComponent {
   }
 
   get formattedTitle() {
-    return this.title;
+    return this.getTitle();
   }
 
   get buttonLabel() {

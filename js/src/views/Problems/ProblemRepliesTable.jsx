@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import http from '../../services/httpService';
 
 export default class ProblemRepliessTable extends BaseTable {
   constructor() {
@@ -12,7 +13,19 @@ export default class ProblemRepliessTable extends BaseTable {
     this.addField('Solution',  'Ratkaisu',   'boolean');
   }
 
-  get api() {
+  getTitle() {
+    return 'Vastaukset';
+  }
+
+  getApiName() {
     return 'problemreplies';
+  }
+
+  async getItems() {
+    return await http.get(this.apiEndpoint + '?ProblemId=' + this.props.problemId);
+  }
+
+  async deleteItem(item) {
+    return await http.delete(this.apiEndpoint + '/' + item.Id);
   }
 }

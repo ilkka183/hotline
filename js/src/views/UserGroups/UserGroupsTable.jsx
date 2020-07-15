@@ -17,7 +17,11 @@ export default class UserGroupsTable extends BaseTable {
     this.addEnabled();
   }
 
-  get api() {
+  getTitle() {
+    return 'Käyttäjäryhmät';
+  }
+
+  getApiName() {
     return 'usergroups';
   }
 }

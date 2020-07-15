@@ -19,7 +19,11 @@ export default class ProblemsTable extends BaseTable {
     this.addField('Status',      'Tila',        'number',   { enums: STATUSES });
   }
 
-  get api() {
+  getTitle() {
+    return 'Vikatapaukset';
+  }
+
+  getApiName() {
     return 'problems';
   }
 }

@@ -32,11 +32,11 @@ export default class UserForm extends BaseForm {
     this.state.data = this.emptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Käyttäjä';
   }
 
-  get api() {
+  getApiName() {
     return 'users';
   }
 }

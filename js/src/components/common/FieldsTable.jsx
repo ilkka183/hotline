@@ -21,6 +21,10 @@ export default class DataTable extends FieldsComponent {
     }
   }
 
+  getApiName() {
+    throw new Error('You have to implement the method getApiName!');
+  }
+
   canEdit(item) {
     return true;
   }
@@ -29,8 +33,16 @@ export default class DataTable extends FieldsComponent {
     return true;
   }
 
+  getItems() {
+    throw new Error('You have to implement the method getItems!');
+  }
+
+  deleteItem() {
+    throw new Error('You have to implement the method deleteItem!');
+  }
+
   async componentDidMount() {
-    const { data } = await this.props.getItems();
+    const { data } = await this.getItems();
 
     this.setState({ data });
   }
@@ -40,7 +52,7 @@ export default class DataTable extends FieldsComponent {
       return;
 
     try {
-      await this.props.deleteItem(item);
+      await this.deleteItem(item);
 
       const data = this.state.data.filter(m => m.Id !== item.Id);
   
@@ -94,7 +106,7 @@ export default class DataTable extends FieldsComponent {
     const { editable } = this.props;
 
     if (column.editLink && editable && this.canEdit(item))
-      return <Link to={'/' + this.api + '/' + item.Id}>{text}</Link>
+      return <Link to={'/' + this.getApiName() + '/' + item.Id}>{text}</Link>
 
     if (column.link)
       return <Link to={column.link(item)}>{text}</Link>
@@ -142,7 +154,7 @@ export default class DataTable extends FieldsComponent {
     if (newLink)
       return newLink;
 
-    return `/${this.api}/new`;
+    return `/${this.getApiName()}/new`;
   }
 
   get newButtonStyle() {
@@ -152,7 +164,7 @@ export default class DataTable extends FieldsComponent {
   }
 
   render() {
-    const { title, editable, deletable, showSearchBox, paginate } = this.props;
+    const { editable, deletable, showSearchBox, paginate } = this.props;
     const { data, currentPage, pageSize } = this.state;
 
     if (data.length === 0)
@@ -164,7 +176,7 @@ export default class DataTable extends FieldsComponent {
 
     return (
       <>
-        <h2>{title}</h2>
+        <h2>{this.getTitle()}</h2>
         {editable && <LinkButton style={this.newButtonStyle} to={this.newButtonLink}>Lisää uusi</LinkButton>}
         {showSearchBox && <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />}
         {paginate && <div>
@@ -205,5 +217,7 @@ export default class DataTable extends FieldsComponent {
 
 DataTable.defaultProps = {
   showSearchBox: true,
-  paginate: true
+  paginate: true,
+  editable: true,
+  deletable: true
 }

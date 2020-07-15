@@ -18,11 +18,11 @@ export default class BrandForm extends BaseForm {
     this.state.data = this.emptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Automerkki';
   }
 
-  get api() {
+  getApiName() {
     return 'brands';
   }
 }

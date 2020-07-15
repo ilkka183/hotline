@@ -28,7 +28,7 @@ export default class DataForm extends FieldsForm {
   }
 
   get apiEndpoint() {
-    return apiUrl + '/' + this.api;
+    return apiUrl + '/' + this.getApiName();
   }
 
   apiEndpointOf(id) {

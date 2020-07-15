@@ -9,17 +9,17 @@ import Home from './views/Home';
 import About from './views/About';
 import NotFound from './views/Problems/NotFound';
 
-import Brands from './views/Brands/Brands';
+import BrandsTable from './views/Brands/BrandsTable';
 import BrandForm from './views/Brands/BrandForm';
 
-import UserGroups from './views/UserGroups/UserGroups';
+import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UserGroupForm from './views/UserGroups/UserGroupForm';
 
-import Users from './views/Users/Users';
+import UsersTable from './views/Users/UsersTable';
 import UserForm from './views/Users/UserForm';
 import { POWER_ROLE } from './views/Users/UsersTable';
 
-import Problems from './views/Problems/Problems';
+import ProblemsTable from './views/Problems/ProblemsTable';
 import Problem from './views/Problems/Problem';
 import ProblemForm from './views/Problems/ProblemForm';
 import ProblemReplyForm from './views/Problems/ProblemReplyForm';
@@ -55,14 +55,14 @@ export default class App extends Component {
             <ProtectedRoute path="/problem/:id" component={Problem} />
             <ProtectedRoute path="/problems/create" component={NewProblemForm} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
-            <ProtectedRoute path="/problems" component={Problems} />
+            <ProtectedRoute path="/problems" component={ProblemsTable} />
             <ProtectedRoute path="/problemreplies/:id" component={ProblemReplyForm} />
             <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/usergroups" component={UserGroups} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/users/:id" component={UserForm} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/users" component={Users} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/users" component={UsersTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/brands/:id" component={BrandForm} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/brands" component={Brands} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/brands" component={BrandsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={Profile} />
             <Route path="/register" component={RegisterForm} />

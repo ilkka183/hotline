@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
-import ProblemReplies from './ProblemReplies'
+import ProblemRepliesTable from './ProblemRepliesTable'
 import { DateTimeField } from '../../components/common/Fields';
 import http from '../../services/httpService';
 import { FUELS, STATUSES } from './ProblemsTable';
@@ -46,7 +46,7 @@ export default class Problem extends Component {
         <h4>{problem.Title}</h4>
         <div>{problem.Description}</div>
         <br />
-        {problem.Id && <ProblemReplies problemId={problem.Id}/>}
+        {problem.Id && <ProblemRepliesTable problemId={problem.Id}/>}
       </Container>
     );
   }
