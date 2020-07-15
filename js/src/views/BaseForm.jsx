@@ -3,6 +3,15 @@ import DataForm from './DataForm';
 const SHOW_IDS = true;
 
 export default class BaseForm extends DataForm {
+  get formattedTitle() {
+    let title = this.title;
+
+    if (this.dataId === 'new')
+      title += ' - uusi';
+
+    return title;
+  }
+
   addId(visible = SHOW_IDS) {
     this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
   }

@@ -1,30 +1,9 @@
-import React from 'react';
 import { toast } from 'react-toastify';
-import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
 import FieldsForm from '../components/common/FieldsForm';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
 export default class DataForm extends FieldsForm {
-  emptyData() {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = '';
-
-    return data;
-  }
-
-  defaultData() {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = field.defaultValue;
-
-    return data;
-  }
-
   jsonToData(row) {
     const data = {}
 
@@ -159,48 +138,5 @@ export default class DataForm extends FieldsForm {
     }
 
     this.afterSubmit();
-  }
-
-  renderField(field) {
-    const value = this.state.data[field.name];
-
-    if (!field.visible)
-      return null;
-
-    if (field.readonly && !value)
-      return null;
-
-//    if (!field.hasFormControl(value))
-//      return null;
-
-    if (field.isLookup)
-      return this.renderSelect(field);
-
-    switch (field.type) {
-      case 'boolean': return this.renderCheck(field);
-      case 'textarea': return this.renderTextArea(field);
-      default: return this.renderInput(field);
-    }
-  }
-
-  get currentTitle() {
-    let title = this.title;
-
-    if (this.dataId === 'new')
-      title += ' - uusi';
-
-    return title;
-  }
-
-  render() {
-    return (
-      <Container>
-        {this.renderTitle(this.currentTitle)}
-        <Form onSubmit={this.handleSubmit}>
-          {this.fields.map(field => this.renderField(field))}
-          {this.renderSubmitButton('Tallenna')}
-        </Form>
-      </Container>
-    );
   }
 }

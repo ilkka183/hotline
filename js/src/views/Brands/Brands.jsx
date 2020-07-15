@@ -12,8 +12,6 @@ export default class Brands extends Component {
         title="Automerkit"
         getItems={async () => await http.get(apiEndpoint)}
         deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
-        showSearchBox={true}
-        paginate={true}
         editable={true}
         deletable={true}
       />

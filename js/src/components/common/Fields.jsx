@@ -67,6 +67,51 @@ export class Field {
     return '';
   }
 
+  formatBoolean(value) {
+    return value ? 'kyllä' : 'ei';
+  }
+
+  formatDate(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleDateString();
+    }
+    
+    return null;
+  }
+
+  formatTime(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleTimeString();
+    }
+    
+    return null;
+  }
+
+  formatDateTime(value) {
+    if (value) {
+      const date = new Date(value);
+      return date.toLocaleString();
+    }
+    
+    return null;
+  }
+
+  formatValue(value) {
+    if (this.enums)
+      return this.enums[value];
+
+    switch (this.type) {
+      case 'boolean': return this.formatBoolean(value);
+      case 'date': return this.formatDate(value);
+      case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
+      case 'time': return this.formatTime(value);
+      
+      default: return value;
+    }
+  }
+
   validate(value) {
     if (this.visible) {
       if (this.required && this.type !== 'boolean' && value === '')

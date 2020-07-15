@@ -21,7 +21,15 @@ export default class ProfileForm extends BaseForm {
     this.addField('Country',    'Maa',              'text');
     this.addField('Phone',      'Puhelin',          'phone');
 
-    this.state.data = this.schema.emptyData();
+    this.state.data = this.emptyData();
+  }
+
+  get title() {
+    return 'Omat tiedot';
+  }
+
+  get api() {
+    return 'users';
   }
 
   get dataId() {

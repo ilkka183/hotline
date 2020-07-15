@@ -1,5 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
 import FieldsComponent from './Fields';
 import MyCheck from '../form/MyCheck';
 import MyInput from '../form/MyInput';
@@ -12,14 +14,29 @@ export default class BaseForm extends FieldsComponent {
     errors: {}
   }
 
+  emptyData() {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = '';
+
+    return data;
+  }
+
+  defaultData() {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = field.defaultValue;
+
+    return data;
+  }
+
   validate() {
     const errors = {}
 
     for (const field of this.fields) {
       const value = this.state.data[field.name];
-
-      if (!field.hasFormControl(value))
-        continue;
 
       const error = field.validate(value);
 
@@ -37,6 +54,9 @@ export default class BaseForm extends FieldsComponent {
     return field && field.validate(value);
   }
 
+  doSubmit() {
+  }
+  
   handleSubmit = e => {
     e.preventDefault();
 
@@ -68,12 +88,12 @@ export default class BaseForm extends FieldsComponent {
     this.setState({ data, errors });
   }
 
-  renderTitle(text) {
-    return <h2>{text}</h2>
-  }
-
   get asRow() {
     return true;
+  }
+
+  renderTitle(text) {
+    return <h2>{text}</h2>
   }
 
   renderInput(field, autofocus = false) {
@@ -162,6 +182,45 @@ export default class BaseForm extends FieldsComponent {
       >
         {label}
       </Button>
+    );
+  }
+
+  renderField(field) {
+    const value = this.state.data[field.name];
+
+    if (!field.visible)
+      return null;
+
+    if (field.readonly && !value)
+      return null;
+
+    if (field.isLookup)
+      return this.renderSelect(field);
+
+    switch (field.type) {
+      case 'boolean': return this.renderCheck(field);
+      case 'textarea': return this.renderTextArea(field);
+      default: return this.renderInput(field);
+    }
+  }
+
+  get formattedTitle() {
+    return this.title;
+  }
+
+  get buttonLabel() {
+    return 'Tallenna';
+  }
+
+  render() {
+    return (
+      <Container>
+        {this.renderTitle(this.formattedTitle)}
+        <Form onSubmit={this.handleSubmit}>
+          {this.fields.map(field => this.renderField(field))}
+          {this.renderSubmitButton(this.buttonLabel)}
+        </Form>
+      </Container>
     );
   }
 }

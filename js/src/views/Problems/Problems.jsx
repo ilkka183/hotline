@@ -12,8 +12,6 @@ export default class Problems extends Component {
         title="Vikatapaukset"
         getItems={async () => await http.get(apiEndpoint)}
         deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
-        showSearchBox={false}
-        paginate={false}
         editable={true}
         deletable={true}
       />

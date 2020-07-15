@@ -1,6 +1,3 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
 import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
@@ -18,7 +15,15 @@ export default class RegisterForm extends FieldsForm {
     this.addField('firstName', 'Etunimi',    'text', { required: true });
     this.addField('lastName',  'Sukunimi',   'text', { required: true });
 
-    this.state.data = this.schema.emptyData();
+    this.state.data = this.emptyData();
+  }
+
+  get title() {
+    return 'Rekisteröidy';
+  }
+
+  get buttonLabel() {
+    return 'Rekisteröidy';
   }
 
   get asRow() {
@@ -48,20 +53,5 @@ export default class RegisterForm extends FieldsForm {
         this.setState({ errors });
       }
     }
-  }
-
-  render() {
-    return (
-      <Container>
-        {this.renderTitle('Rekisteröidy')}
-        <Form onSubmit={this.handleSubmit}>
-        {this.renderInput('email', 'Sähköposti', 'text', true)}
-          {this.renderInput('password', 'Salasana', 'password')}
-          {this.renderInput('firstName', 'Etunimi')}
-          {this.renderInput('lastName', 'Sukunimi')}
-          {this.renderSubmitButton('Rekisteröidy')}
-        </Form>
-      </Container>
-    );
   }
 }

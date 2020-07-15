@@ -1,7 +1,3 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import Container from 'react-bootstrap/Container'
-import Form from 'react-bootstrap/Form'
 import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
@@ -14,10 +10,18 @@ export default class LoginForm extends FieldsForm {
   constructor() {
     super();
     
-    this.email    = this.addField('email',    'Sähköposti', 'text', { email: true, required: true });
-    this.password = this.addField('password', 'Salasana',   'text', { min: 5, required: true });
+    this.addField('email',    'Sähköposti', 'text',     { email: true, required: true });
+    this.addField('password', 'Salasana',   'password', { min: 5, required: true });
 
-    this.state.data = this.schema.emptyData();
+    this.state.data = this.emptyData();
+  }
+
+  get title() {
+    return 'Kirjaudu';
+  }
+
+  get buttonLabel() {
+    return 'Kirjaudu';
   }
 
   get asRow() {
@@ -38,21 +42,5 @@ export default class LoginForm extends FieldsForm {
         this.setState({ errors });
       }
     }
-  }
-
-  render() {
-    if (auth.getCurrentUser())
-      return <Redirect to="/" />
-
-    return (
-      <Container>
-        {this.renderTitle('Kirjaudu')}
-        <Form onSubmit={this.handleSubmit}>
-          {this.renderInput(this.schema.email, true)}
-          {this.renderInput(this.schema.password)}
-          {this.renderSubmitButton('Kirjaudu')}
-        </Form>
-      </Container>
-    );
   }
 }

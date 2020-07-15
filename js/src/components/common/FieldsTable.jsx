@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
 import FieldsComponent from './Fields';
+import SortIcon from './SortIcon';
 import DataPagination from './DataPagination';
 import SearchBox from './SearchBox';
 import LinkButton from './LinkButton';
@@ -18,6 +19,14 @@ export default class DataTable extends FieldsComponent {
       name: '',
       order: 'asc'
     }
+  }
+
+  canEdit(item) {
+    return true;
+  }
+
+  canDelete(item) {
+    return true;
   }
 
   async componentDidMount() {
@@ -68,78 +77,19 @@ export default class DataTable extends FieldsComponent {
   }
 
   renderSortIcon(column) {
-    if (column.name === this.state.sortColumn.name)
-    {
-      if (this.state.sortColumn.order === 'asc')
-        return <i className="fa fa-sort-asc" />;
+    const { name, order } = this.state.sortColumn;
 
-      if (this.state.sortColumn.order === 'desc')
-        return <i className="fa fa-sort-desc" />;
-    }
+    if (column.name === name)
+      return <SortIcon order={order} />
 
     return null;
-  }
-
-  formatBoolean(value) {
-    return value ? 'kyllä' : 'ei';
-  }
-
-  formatDate(value) {
-    if (value) {
-      const date = new Date(value);
-      return date.toLocaleDateString();
-    }
-    
-    return null;
-  }
-
-  formatTime(value) {
-    if (value) {
-      const date = new Date(value);
-      return date.toLocaleTimeString();
-    }
-    
-    return null;
-  }
-
-  formatDateTime(value) {
-    if (value) {
-      const date = new Date(value);
-      return date.toLocaleString();
-    }
-    
-    return null;
-  }
-
-  formatValue(item, column) {
-    let value = item[column.name];
-
-    if (column.enums)
-      return column.enums[value];
-
-    switch (column.type) {
-      case 'boolean': return this.formatBoolean(value);
-      case 'date': return this.formatDate(value, column);
-      case 'datetime': return column.displayFormat === 'date' ? this.formatDate(value, column) : this.formatDateTime(value);
-      case 'time': return this.formatTime(value);
-      
-      default: return value;
-    }
-  }
-
-  canEdit(item) {
-    return true;
-  }
-
-  canDelete(item) {
-    return true;
   }
 
   renderCell(item, column) {
     if (column.content)
       return column.content(item);
 
-    const text = this.formatValue(item, column);
+    const text = column.formatValue(item[column.name]);
 
     const { editable } = this.props;
 
@@ -159,56 +109,63 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
-  sortItems(items, sortColumn) {
-    items.sort((a, b) => {
-      let result = 0;
+  getFilteredItems() {
+    const { data, searchQuery, sortColumn } = this.state;
 
-      if (a[sortColumn.name] > b[sortColumn.name])
-        result = 1;
-      else if (a[sortColumn.name] < b[sortColumn.name])
-        result = -1;
+    let items = data;
 
-      if (sortColumn.order === 'desc')
-        result = -result;
+    if (searchQuery)
+      items = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
 
-      return result;
-    });
+    if (sortColumn.name) {
+      items.sort((a, b) => {
+        let result = 0;
+  
+        if (a[sortColumn.name] > b[sortColumn.name])
+          result = 1;
+        else if (a[sortColumn.name] < b[sortColumn.name])
+          result = -1;
+  
+        if (sortColumn.order === 'desc')
+          result = -result;
+  
+        return result;
+      });
+    }
+
+    return items;
+  }
+
+  get newButtonLink() {
+    const { newLink } = this.props;
+
+    if (newLink)
+      return newLink;
+
+    return `/${this.api}/new`;
+  }
+
+  get newButtonStyle() {
+    return {
+      marginBottom: 20
+    }
   }
 
   render() {
-    const buttonStyle = {
-      marginBottom: 20
-    }
-  
-    const { data, searchQuery, sortColumn, currentPage, pageSize } = this.state;
+    const { title, editable, deletable, showSearchBox, paginate } = this.props;
+    const { data, currentPage, pageSize } = this.state;
 
-    let filteredItems = data;
-
-    if (searchQuery)
-      filteredItems = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
-
-    this.sortItems(filteredItems, sortColumn);
-
-    const showSearchBox = this.props.showSearchBox === undefined || this.props.showSearchBox;
-    const paginate = this.props.paginate === undefined || this.props.paginate;
-    
-    const items = paginate ? paginateItems(filteredItems, currentPage, pageSize) : filteredItems;
-
-    if (this.state.data.length === 0)
+    if (data.length === 0)
       return <p>Tietokannassa ei ole yhtään riviä.</p>
 
-    const { title, newLink, editable, deletable } = this.props;
+    const filteredItems = this.getFilteredItems();
+    const items = paginate ? paginateItems(filteredItems, currentPage, pageSize) : filteredItems;
     const columns = this.fields.filter(column => column.visible);
-
-    let newButtonLink = `/${this.api}/new`;
-
-    if (newLink)
-      newButtonLink = newLink;
 
     return (
       <>
         <h2>{title}</h2>
-        {editable && <LinkButton style={buttonStyle} to={newButtonLink}>Lisää uusi</LinkButton>}
+        {editable && <LinkButton style={this.newButtonStyle} to={this.newButtonLink}>Lisää uusi</LinkButton>}
         {showSearchBox && <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />}
         {paginate && <div>
           <DataPagination
@@ -244,4 +201,9 @@ export default class DataTable extends FieldsComponent {
       </>
     );
   }
+}
+
+DataTable.defaultProps = {
+  showSearchBox: true,
+  paginate: true
 }
