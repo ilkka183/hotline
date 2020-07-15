@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import ProblemReplies from './ProblemReplies'
-import { DateTimeField } from '../../schemas/Schema';
+import { DateTimeField } from '../../components/common/Fields';
 import http from '../../services/httpService';
-import { FUELS, STATUSES } from '../../schemas/ProblemsSchema';
+import { FUELS, STATUSES } from './ProblemsTable';
 import { apiUrl } from '../../config.json';
 
 export default class Problem extends Component {

@@ -1,10 +1,14 @@
 import DataForm from '../DataForm';
-import { FormSchema, USER_ROLES } from '../../schemas/Schemas';
+import { USER_ROLES } from './UsersTable';
 
+export default class UserForm extends DataForm {
+  state = {
+    data: {},
+    errors: {}
+  }
 
-class UserSchema extends FormSchema {
   constructor() {
-    super('users', 'Käyttäjä');
+    super();
 
     this.addId();
     this.addField('FirstName',    'Etunimi',          'text',   { required: true });
@@ -24,15 +28,15 @@ class UserSchema extends FormSchema {
     this.addField('LicenseEnd',   'Lisenssi loppu',   'date');
     this.addEnabled();
     this.addTimestamps();
+
+    this.state.data = this.emptyData();
   }
-}
 
+  get title() {
+    return 'Käyttäjä';
+  }
 
-export default class UserForm extends DataForm {
-  schema = new UserSchema();
-
-  state = {
-    data: this.schema.emptyData(),
-    errors: {}
+  get api() {
+    return 'users';
   }
 }

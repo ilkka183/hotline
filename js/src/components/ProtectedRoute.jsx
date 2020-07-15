@@ -1,16 +1,18 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import auth from '../../services/authService';
+import auth from '../services/authService';
 
-export default function ProtectedRoute({ path, component: Component, render, ...rest }) {
+export default function ProtectedRoute({ path, component: Component, render, requiredRole, ...rest }) {
+  const user = auth.getCurrentUser();
+
   return (
     <Route
       path={path}
       {...rest}
       render={props => {
-        if (!auth.getCurrentUser())
+        if (!user || (requiredRole && user.role > requiredRole))
           return <Redirect to={{
-            pathname: '/login',
+            pathname: '/not-found',
             state: { from: props.location }
           }} />
 

@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button'
-import MyCheck from '../components/form/MyCheck';
-import MyInput from '../components/form/MyInput';
-import MySelect from '../components/form/MySelect';
-import MyTextArea from '../components/form/MyTextArea';
+import FieldsComponent from './Fields';
+import MyCheck from '../form/MyCheck';
+import MyInput from '../form/MyInput';
+import MySelect from '../form/MySelect';
+import MyTextArea from '../form/MyTextArea';
 
-export default class BaseForm extends Component {
+export default class BaseForm extends FieldsComponent {
   state = {
     data: {},
     errors: {}
@@ -14,7 +15,7 @@ export default class BaseForm extends Component {
   validate() {
     const errors = {}
 
-    for (const field of this.schema.fields) {
+    for (const field of this.fields) {
       const value = this.state.data[field.name];
 
       if (!field.hasFormControl(value))
@@ -32,7 +33,7 @@ export default class BaseForm extends Component {
   }
 
   validateProperty({ name, value }) {
-    const field = this.schema.findField(name);
+    const field = this.findField(name);
     return field && field.validate(value);
   }
 

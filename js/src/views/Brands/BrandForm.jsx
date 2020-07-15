@@ -1,25 +1,28 @@
 import DataForm from '../DataForm';
-import { FormSchema } from '../../schemas/Schemas';
 
+export default class BrandForm extends DataForm {
+  state = {
+    data: {},
+    errors: {}
+  }
 
-class BrandSchema extends FormSchema {
   constructor() {
-    super('brands', 'Automerkki');
+    super();
 
     this.addId();
     this.addField('Name', 'Nimi', 'text',     { required: true });
     this.addField('Info', 'Info', 'textarea', { rows: 5 });
     this.addEnabled();
     this.addTimestamps();
+    
+    this.state.data = this.emptyData();
   }
-}
 
+  get title() {
+    return 'Automerkki';
+  }
 
-export default class BrandForm extends DataForm {
-  schema = new BrandSchema();
-
-  state = {
-    data: this.schema.emptyData(),
-    errors: {}
+  get api() {
+    return 'brands';
   }
 }

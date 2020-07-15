@@ -2,18 +2,69 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import BaseForm from './BaseForm';
-import { Schema } from '../schemas/Schema';
+import FieldsForm from '../components/common/FieldsForm';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
-export default class DataForm extends BaseForm {
+const SHOW_IDS = true;
+
+export default class DataForm extends FieldsForm {
+  addId(visible = SHOW_IDS) {
+    this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
+  }
+
+  addEnabled() {
+    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
+  }
+
+  addTimestamps() {
+    this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true, visibleInTable: false });
+    this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true, visibleInTable: false });
+  }  
+
+  emptyData() {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = '';
+
+    return data;
+  }
+
+  defaultData() {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = field.defaultValue;
+
+    return data;
+  }
+
+  jsonToData(row) {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = field.jsonToData(row[field.name]);
+
+    return data;
+  }
+
+  enumsToLookup(enums) {
+    const lookup = [{ Id: null, Name: '' }];
+
+    for (const index in enums)
+      lookup.push({ Id: index, Name: enums[index] });
+
+    return lookup;
+  }
+
+
   get dataId() {
     return this.props.match.params.id;
   }
 
   get apiEndpoint() {
-    return apiUrl + '/' + this.schema.api;
+    return apiUrl + '/' + this.api;
   }
 
   apiEndpointOf(id) {
@@ -21,7 +72,7 @@ export default class DataForm extends BaseForm {
   }
 
   async populateLookups() {
-    for (const field of this.schema.fields) {
+    for (const field of this.fields) {
       if (field.lookupUrl) {
         const { data } = await http.get(apiUrl + '/' + field.lookupUrl);
         const lookup = [{ Id: null, Name: '' }, ...data];
@@ -30,7 +81,7 @@ export default class DataForm extends BaseForm {
         this.setState({ lookup });
       }
       else if (field.enums) {
-        const lookup = Schema.enumsToLookup(field.enums);
+        const lookup = this.enumsToLookup(field.enums);
         field.lookup = lookup;
 
         this.setState({ lookup });
@@ -42,8 +93,8 @@ export default class DataForm extends BaseForm {
     try {
       const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
 
-      const savedData = this.schema.jsonToData(item)
-      const data = this.schema.jsonToData(item)
+      const savedData = this.jsonToData(item)
+      const data = this.jsonToData(item)
 
       console.log('json', item);
       console.log('data', data);
@@ -57,7 +108,7 @@ export default class DataForm extends BaseForm {
   }
 
   setDefaultData() {
-    const data = this.schema.defaultData();
+    const data = this.defaultData();
     console.log('new', data);
 
     this.setState({ data });
@@ -72,6 +123,10 @@ export default class DataForm extends BaseForm {
       await this.loadData();
   }
 
+  afterSubmit() {
+    this.props.history.goBack();
+  }
+
   async doSubmit() {
     const { data } = this.state;
 
@@ -81,7 +136,7 @@ export default class DataForm extends BaseForm {
 
       const row = {};
       
-      for (let field of this.schema.fields) {
+      for (let field of this.fields) {
         const value = data[field.name];
 
         if (value !== savedData[field.name])
@@ -103,7 +158,7 @@ export default class DataForm extends BaseForm {
       try {
         const row = {};
         
-        for (let field of this.schema.fields) {
+        for (let field of this.fields) {
           const value = data[field.name];
 
           if (value)
@@ -118,13 +173,16 @@ export default class DataForm extends BaseForm {
       }
     }
 
-    this.props.history.goBack();
+    this.afterSubmit();
   }
 
   renderField(field) {
-//    const value = this.state.data[field.name];
+    const value = this.state.data[field.name];
 
     if (!field.visible)
+      return null;
+
+    if (field.readonly && !value)
       return null;
 
 //    if (!field.hasFormControl(value))
@@ -140,8 +198,8 @@ export default class DataForm extends BaseForm {
     }
   }
 
-  get title() {
-    let title = this.schema.title;
+  get currentTitle() {
+    let title = this.title;
 
     if (this.dataId === 'new')
       title += ' - uusi';
@@ -152,9 +210,9 @@ export default class DataForm extends BaseForm {
   render() {
     return (
       <Container>
-        {this.renderTitle(this.title)}
+        {this.renderTitle(this.currentTitle)}
         <Form onSubmit={this.handleSubmit}>
-          {this.schema.fields.map(field => this.renderField(field))}
+          {this.fields.map(field => this.renderField(field))}
           {this.renderSubmitButton('Tallenna')}
         </Form>
       </Container>

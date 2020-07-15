@@ -2,27 +2,22 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import BaseForm from '../BaseForm';
-import { Schema } from '../../schemas/Schema';
+import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
+export default class LoginForm extends FieldsForm {
+  state = {
+    data: {},
+    errors: {}
+  }
 
-class LoginSchema extends Schema {
   constructor() {
-    super('Login');
+    super();
     
     this.email    = this.addField('email',    'Sähköposti', 'text', { email: true, required: true });
     this.password = this.addField('password', 'Salasana',   'text', { min: 5, required: true });
-  }
-}
 
-
-export default class LoginForm extends BaseForm {
-  schema = new LoginSchema()
-
-  state = {
-    data: this.schema.emptyFormData(),
-    errors: {}
+    this.state.data = this.schema.emptyData();
   }
 
   get asRow() {

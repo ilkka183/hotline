@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
+import FieldsComponent from './Fields';
 import DataPagination from './DataPagination';
 import SearchBox from './SearchBox';
+import LinkButton from './LinkButton';
 import { paginateItems } from '../../utils/paginate';
 
-export default class DataTable extends Component {
+export default class DataTable extends FieldsComponent {
   state = {
     data: [],
     searchQuery: '',
@@ -125,14 +127,24 @@ export default class DataTable extends Component {
     }
   }
 
+  canEdit(item) {
+    return true;
+  }
+
+  canDelete(item) {
+    return true;
+  }
+
   renderCell(item, column) {
     if (column.content)
       return column.content(item);
 
     const text = this.formatValue(item, column);
 
-    if (column.editLink && this.props.editable)
-      return <Link to={'/' + this.props.schema.api + '/' + item.Id}>{text}</Link>
+    const { editable } = this.props;
+
+    if (column.editLink && editable && this.canEdit(item))
+      return <Link to={'/' + this.api + '/' + item.Id}>{text}</Link>
 
     if (column.link)
       return <Link to={column.link(item)}>{text}</Link>
@@ -141,7 +153,10 @@ export default class DataTable extends Component {
   }
 
   renderDeleteButton(item) {
-    return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
+    if (this.canDelete(item))
+      return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
+
+    return null;
   }
 
   sortItems(items, sortColumn) {
@@ -161,6 +176,10 @@ export default class DataTable extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginBottom: 20
+    }
+  
     const { data, searchQuery, sortColumn, currentPage, pageSize } = this.state;
 
     let filteredItems = data;
@@ -178,11 +197,18 @@ export default class DataTable extends Component {
     if (this.state.data.length === 0)
       return <p>Tietokannassa ei ole yhtään riviä.</p>
 
-    const { deletable } = this.props;
-    const columns = this.props.schema.fields.filter(column => column.visible);
+    const { title, newLink, editable, deletable } = this.props;
+    const columns = this.fields.filter(column => column.visible);
+
+    let newButtonLink = `/${this.api}/new`;
+
+    if (newLink)
+      newButtonLink = newLink;
 
     return (
       <>
+        <h2>{title}</h2>
+        {editable && <LinkButton style={buttonStyle} to={newButtonLink}>Lisää uusi</LinkButton>}
         {showSearchBox && <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />}
         {paginate && <div>
           <DataPagination
@@ -211,7 +237,7 @@ export default class DataTable extends Component {
             { items.map(item => (
               <tr key={item.Id}>
                 {columns.map(column => (<td key={item.Id + column.name}>{this.renderCell(item, column)}</td>))}
-                {deletable && <td>{this.renderDeleteButton(item)}</td>}
+                {deletable &&<td>{this.renderDeleteButton(item)}</td>}
               </tr>)) }
           </tbody>
         </table>

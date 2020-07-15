@@ -1,13 +1,16 @@
 import DataForm from '../DataForm';
-import { Schema } from '../../schemas/Schema';
 import auth from '../../services/authService';
 
+export default class ProfileForm extends DataForm {
+  state = {
+    data: {},
+    errors: {}
+  }
 
-class ProfileSchema extends Schema {
   constructor() {
-    super('ChangePassword');
+    super();
     
-    this.addField('Id',         'No',               'number', { primaryKey: true, required: true, visibleInForm: false });
+    this.addId();
     this.addField('FirstName',  'Etunimi',          'text',   { required: true, readonly: true });
     this.addField('LastName',   'Sukunimi',         'text',   { required: true, readonly: true });
     this.addField('Role',       'Rooli',            'number', { readonly: true, enums: ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'] });
@@ -17,27 +20,15 @@ class ProfileSchema extends Schema {
     this.addField('PostOffice', 'Postitoimipaikka', 'text');
     this.addField('Country',    'Maa',              'text');
     this.addField('Phone',      'Puhelin',          'phone');
-  }
 
-  get singularTitle() {
-    return 'Omat tiedot';
-  }
-
-  get pluralName() {
-    return 'users';
-  }
-}
-
-
-export default class ProfileForm extends DataForm {
-  schema = new ProfileSchema()
-
-  state = {
-    data: this.schema.emptyFormData(),
-    errors: {}
+    this.state.data = this.schema.emptyData();
   }
 
   get dataId() {
     return auth.getCurrentUser().id;
+  }
+
+  afterSubmit() {
+    // do nothing
   }
 }

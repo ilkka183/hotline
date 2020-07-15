@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import TableView from '../TableView';
-import { ProblemsSchema } from '../../schemas/ProblemsSchema';
-
+import ProblemsTable from './ProblemsTable';
+import http from '../../services/httpService';
+import { apiUrl } from '../../config.json';
 
 export default class Problems extends Component {
-  schema = new ProblemsSchema();
-
   render() {
-    return <TableView schema={this.schema} />
+    const apiEndpoint = apiUrl + '/problems';
+
+    return (
+      <ProblemsTable
+        title="Vikatapaukset"
+        getItems={async () => await http.get(apiEndpoint)}
+        deleteItem={async item => await http.delete(apiEndpoint + '/' + item.Id)}
+        showSearchBox={false}
+        paginate={false}
+        editable={true}
+        deletable={true}
+      />
+    );
   }
 }

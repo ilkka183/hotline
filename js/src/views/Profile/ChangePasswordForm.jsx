@@ -1,28 +1,23 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import BaseForm from '../BaseForm';
-import { Schema } from '../../schemas/Schema';
+import FieldsForm from '../../components/common/FieldsForm';
 //import auth from '../services/authService';
 
+export default class ChangePasswordForm extends FieldsForm {
+  state = {
+    data: {},
+    errors: {}
+  }
 
-class ChangePasswordSchema extends Schema {
   constructor() {
-    super('ChangePassword');
+    super();
     
     this.password  = this.addField('password',  'Nykyinen salasana',       'text', { min: 5, required: true });
     this.password1 = this.addField('password1', 'Uusi salasana',           'text', { min: 5, required: true });
     this.password2 = this.addField('password2', 'Uusi salasana uudestaan', 'text', { min: 5, required: true });
-  }
-}
 
-
-export default class ChangePasswordForm extends BaseForm {
-  schema = new ChangePasswordSchema()
-
-  state = {
-    data: this.schema.emptyFormData(),
-    errors: {}
+    this.state.data = this.schema.emptyData();
   }
 
   async doSubmit() {

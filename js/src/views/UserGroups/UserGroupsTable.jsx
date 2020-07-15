@@ -1,16 +1,11 @@
-import DataForm from '../DataForm';
+import BaseTable from '../BaseTable';
 
-export default class UserGroupForm extends DataForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
+export default class UserGroupsTable extends BaseTable {
   constructor() {
     super();
 
     this.addId();
-    this.addField('Name',          'Nimi',             'text',   { required: true });
+    this.addName();
     this.addField('ContactPerson', 'Yhteyshenkilö',    'text');
     this.addField('Address',       'Osoite',           'text');
     this.addField('PostalCode',    'Postinumero',      'text');
@@ -20,13 +15,6 @@ export default class UserGroupForm extends DataForm {
     this.addField('Email',         'Sähköposti',       'email');
     this.addField('Website',       'Nettisivut',       'text');
     this.addEnabled();
-    this.addTimestamps();
-
-    this.state.data = this.emptyData();
-  }
-
-  get title() {
-    return 'Käyttäjäryhmä';
   }
 
   get api() {

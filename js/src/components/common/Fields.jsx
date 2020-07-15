@@ -1,3 +1,5 @@
+import { Component } from 'react';
+
 export class Field {
   constructor(name, label, type, options) {
     this.name = name;
@@ -68,14 +70,14 @@ export class Field {
   validate(value) {
     if (this.visible) {
       if (this.required && this.type !== 'boolean' && value === '')
-        return this.label + ' is not allowed to be empty';
+        return this.label + ' ei voi olla tyhjä';
 
       if (value) {
         if (this.min !== undefined && value < this.min)
-          return this.label + ' must be larger than or equal to ' + this.min;
+          return this.label + ' pitää olla suurempi tai saman suuruinen kuin ' + this.min;
 
         if (this.max !== undefined && value > this.max)
-          return this.label + ' must be less or equal to ' + this.max;
+          return this.label + ' pitää olla pienempi tai saman suuruinen kuin ' + this.max;
       }
     }
 
@@ -138,12 +140,8 @@ export class DateTimeField extends Field {
 }
 
 
-export class Schema {
-  constructor(api, title) {
-    this.api = api;
-    this.title = title;
-    this.fields = [];
-  }
+export default class FieldsComponent extends Component {
+  fields = [];
 
   findField(name) {
     for (const field of this.fields)
@@ -166,41 +164,5 @@ export class Schema {
     const field = new Field(name, label, type, options);
     this.fields.push(field);
     return field;
-  }
-
-  emptyData() {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = '';
-
-    return data;
-  }
-
-  defaultData() {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = field.defaultValue;
-
-    return data;
-  }
-
-  jsonToData(row) {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = field.jsonToData(row[field.name]);
-
-    return data;
-  }
-
-  static enumsToLookup(enums) {
-    const lookup = [{ Id: null, Name: '' }];
-
-    for (const index in enums)
-      lookup.push({ Id: index, Name: enums[index] });
-
-    return lookup;
   }
 }
