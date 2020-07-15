@@ -1,7 +1,7 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 import { FUELS, STATUSES } from './ProblemsTable';
 
-export default class ProblemForm extends DataForm {
+export default class ProblemForm extends BaseForm {
   state = {
     data: {},
     errors: {}

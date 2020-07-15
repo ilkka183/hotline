@@ -1,7 +1,7 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 import auth from '../../services/authService';
 
-export default class ProfileForm extends DataForm {
+export default class ProfileForm extends BaseForm {
   state = {
     data: {},
     errors: {}

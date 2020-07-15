@@ -1,7 +1,7 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 import { USER_ROLES } from './UsersTable';
 
-export default class UserForm extends DataForm {
+export default class UserForm extends BaseForm {
   state = {
     data: {},
     errors: {}

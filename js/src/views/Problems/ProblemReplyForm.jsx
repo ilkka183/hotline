@@ -1,8 +1,8 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 import queryString from 'query-string';
 import auth from '../../services/authService';
 
-export default class ProblemReplyForm extends DataForm {
+export default class ProblemReplyForm extends BaseForm {
   state = {
     data: {},
     errors: {}

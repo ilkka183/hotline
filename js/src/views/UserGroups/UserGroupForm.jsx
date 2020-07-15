@@ -1,6 +1,6 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 
-export default class UserGroupForm extends DataForm {
+export default class UserGroupForm extends BaseForm {
   state = {
     data: {},
     errors: {}

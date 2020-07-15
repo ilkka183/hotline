@@ -1,6 +1,6 @@
-import DataForm from '../DataForm';
+import BaseForm from '../BaseForm';
 
-export default class BrandForm extends DataForm {
+export default class BrandForm extends BaseForm {
   state = {
     data: {},
     errors: {}

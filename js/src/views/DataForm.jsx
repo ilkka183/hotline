@@ -6,22 +6,7 @@ import FieldsForm from '../components/common/FieldsForm';
 import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
-const SHOW_IDS = true;
-
 export default class DataForm extends FieldsForm {
-  addId(visible = SHOW_IDS) {
-    this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
-  }
-
-  addEnabled() {
-    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
-  }
-
-  addTimestamps() {
-    this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true, visibleInTable: false });
-    this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true, visibleInTable: false });
-  }  
-
   emptyData() {
     const data = {}
 
