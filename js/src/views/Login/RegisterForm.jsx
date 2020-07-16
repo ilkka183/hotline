@@ -15,18 +15,18 @@ export default class RegisterForm extends FieldsForm {
     this.addField('firstName', 'Etunimi',    'text', { required: true });
     this.addField('lastName',  'Sukunimi',   'text', { required: true });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Rekisteröidy';
   }
 
-  get buttonLabel() {
+  getButtonLabel() {
     return 'Rekisteröidy';
   }
 
-  get asRow() {
+  getAsRow() {
     return false;
   }
 

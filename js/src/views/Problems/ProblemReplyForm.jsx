@@ -18,7 +18,7 @@ export default class ProblemReplyForm extends BaseForm {
     this.addField('Message',   'Viesti',     'textarea', { required: true, rows: 5 });
     this.addField('Solution',  'Ratkaisu',   'boolean',  { required: true, getDefaultValue: () => false });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
   get title() {

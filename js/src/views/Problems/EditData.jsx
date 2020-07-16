@@ -17,14 +17,14 @@ export default class ProblemForm extends DataForm {
     this.addField('title',       'Otsikko',     'text',     { required: true });
     this.addField('description', 'Kuvaus',      'textarea', { required: true, rows: 10 });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Vikatapaus';
   }
 
-  get api() {
+  getApiName() {
     return 'problems';
   }
 }

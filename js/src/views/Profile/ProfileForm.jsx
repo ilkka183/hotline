@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import BaseForm from '../BaseForm';
 import auth from '../../services/authService';
 
@@ -21,14 +22,14 @@ export default class ProfileForm extends BaseForm {
     this.addField('Country',    'Maa',              'text');
     this.addField('Phone',      'Puhelin',          'phone');
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Omat tiedot';
   }
 
-  get api() {
+  getApiName() {
     return 'users';
   }
 
@@ -37,6 +38,6 @@ export default class ProfileForm extends BaseForm {
   }
 
   afterSubmit() {
-    // do nothing
+    toast.success('Omat tiedot talletettu');
   }
 }

@@ -149,11 +149,6 @@ export default class DataTable extends FieldsComponent {
   }
 
   get newButtonLink() {
-    const { newLink } = this.props;
-
-    if (newLink)
-      return newLink;
-
     return `/${this.getApiName()}/new`;
   }
 

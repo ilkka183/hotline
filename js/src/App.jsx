@@ -25,7 +25,8 @@ import ProblemForm from './views/Problems/ProblemForm';
 import ProblemReplyForm from './views/Problems/ProblemReplyForm';
 import NewProblemForm from './views/Problems/NewProblemForm';
 
-import Profile from './views/Profile/Profile';
+import ProfileForm from './views/Profile/ProfileForm';
+import ChangePasswordForm from './views/Profile/ChangePasswordForm';
 
 import LoginForm from './views/Login/LoginForm';
 import RegisterForm from './views/Login/RegisterForm';
@@ -53,7 +54,7 @@ export default class App extends Component {
           <Switch>
             <Route path="/home" component={Home} />
             <ProtectedRoute path="/problem/:id" component={Problem} />
-            <ProtectedRoute path="/problems/create" component={NewProblemForm} />
+            <ProtectedRoute path="/problems/new" component={NewProblemForm} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
             <ProtectedRoute path="/problems" component={ProblemsTable} />
             <ProtectedRoute path="/problemreplies/:id" component={ProblemReplyForm} />
@@ -64,7 +65,8 @@ export default class App extends Component {
             <ProtectedRoute path="/brands/:id" component={BrandForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/brands" component={BrandsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
-            <ProtectedRoute path="/profile" component={Profile} />
+            <ProtectedRoute path="/profile" component={ProfileForm} />
+            <ProtectedRoute path="/changepassword" component={ChangePasswordForm} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />

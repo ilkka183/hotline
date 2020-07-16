@@ -49,6 +49,32 @@ router.post('/login', (req, res) => {
 });
 
 
+router.post('/changepassword', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const newPassword = req.body.newPassword;
+
+  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
+
+  connection.query(sql, [email], (error, results, fields) => {
+    if (error)
+      return res.status(400).send(error);
+
+    if ((results.length == 0) || (password !== results[0].Password))
+      return res.status(401).send('Invalid password.');
+
+    const sql = 'UPDATE User SET Password=? WHERE Email=?';
+
+    connection.query(sql, [newPassword, email], (error, results, fields) => {
+      if (error)
+        return res.status(400).send(error);
+
+      res.send('OK');
+    });
+  });
+});
+
+
 router.post('/register', (req, res) => {
   let sql = 'INSERT INTO User (GroupId, Role, FirstName, LastName, Email, Password, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const values = [];

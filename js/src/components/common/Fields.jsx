@@ -53,7 +53,14 @@ export class Field {
 
       if (options.max !== undefined)
         this.max = options.max;
+
+      if (options.minLength !== undefined)
+        this.minLength = options.minLength;
     }
+  }
+
+  get isString() {
+    return this.type === 'text' || this.type === 'password';
   }
 
   get isLookup() {
@@ -123,6 +130,9 @@ export class Field {
 
         if (this.max !== undefined && value > this.max)
           return this.label + ' pitää olla pienempi tai saman suuruinen kuin ' + this.max;
+
+        if (this.minLength !== undefined && this.isString && value.length < this.minLength)
+          return this.label + ' pituus pitää olla vähintään ' + this.minLength + ' merkkiä';
       }
     }
 
@@ -207,6 +217,8 @@ export default class FieldsComponent extends Component {
 
   addField(name, label, type, options) {
     const field = new Field(name, label, type, options);
+    field.index = this.fields.length;
+    
     this.fields.push(field);
     return field;
   }

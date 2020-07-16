@@ -13,18 +13,18 @@ export default class LoginForm extends FieldsForm {
     this.addField('email',    'Sähköposti', 'text',     { email: true, required: true });
     this.addField('password', 'Salasana',   'password', { min: 5, required: true });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Kirjaudu';
   }
 
-  get buttonLabel() {
+  getButtonLabel() {
     return 'Kirjaudu';
   }
 
-  get asRow() {
+  getAsRow() {
     return false;
   }
 

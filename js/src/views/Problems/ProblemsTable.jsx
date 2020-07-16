@@ -20,10 +20,22 @@ export default class ProblemsTable extends BaseTable {
   }
 
   getTitle() {
+    if (this.props.title)
+      return this.props.title;
+
     return 'Vikatapaukset';
   }
 
   getApiName() {
     return 'problems';
+  }
+
+  getItemsEndpoint(path) {
+    let url = path;
+
+    if (this.props.status !== undefined)
+      url += '?Status=' + this.props.status;
+
+    return url;
   }
 }

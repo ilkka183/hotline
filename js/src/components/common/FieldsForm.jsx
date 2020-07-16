@@ -1,4 +1,5 @@
 import React from 'react';
+import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
@@ -9,12 +10,14 @@ import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
 export default class BaseForm extends FieldsComponent {
+//  autofocusSet = false;
+
   state = {
     data: {},
     errors: {}
   }
 
-  emptyData() {
+  getEmptyData() {
     const data = {}
 
     for (let field of this.fields)
@@ -23,11 +26,20 @@ export default class BaseForm extends FieldsComponent {
     return data;
   }
 
-  defaultData() {
+  getDefaultData() {
     const data = {}
 
     for (let field of this.fields)
       data[field.name] = field.defaultValue;
+
+    return data;
+  }
+
+  jsonToData(row) {
+    const data = {}
+
+    for (let field of this.fields)
+      data[field.name] = field.jsonToData(row[field.name]);
 
     return data;
   }
@@ -49,7 +61,7 @@ export default class BaseForm extends FieldsComponent {
     return Object.keys(errors).length === 0 ? null : errors;
   }
 
-  validateProperty({ name, value }) {
+  validateField({ name, value }) {
     const field = this.findField(name);
     return field && field.validate(value);
   }
@@ -71,7 +83,7 @@ export default class BaseForm extends FieldsComponent {
 
   handleChange = ({ currentTarget: input }) => {
     const errors = {...this.state.errors}
-    const errorMessage = this.validateProperty(input);
+    const errorMessage = this.validateField(input);
 
     if (errorMessage)
       errors[input.name] = errorMessage;
@@ -88,12 +100,8 @@ export default class BaseForm extends FieldsComponent {
     this.setState({ data, errors });
   }
 
-  get asRow() {
+  getAsRow() {
     return true;
-  }
-
-  renderTitle(text) {
-    return <h2>{text}</h2>
   }
 
   renderInput(field, autofocus = false) {
@@ -102,7 +110,7 @@ export default class BaseForm extends FieldsComponent {
 
     return (
       <MyInput
-        asRow={this.asRow}
+        asRow={this.getAsRow()}
         key={name}
         name={name}
         type={type}
@@ -123,7 +131,7 @@ export default class BaseForm extends FieldsComponent {
 
     return (
       <MyTextArea
-        asRow={this.asRow}
+        asRow={this.getAsRow()}
         key={name}
         name={name}
         label={label}
@@ -142,7 +150,7 @@ export default class BaseForm extends FieldsComponent {
 
     return (
       <MySelect
-        asRow={this.asRow}
+        asRow={this.getAsRow()}
         key={name}
         name={name}
         label={label}
@@ -162,7 +170,7 @@ export default class BaseForm extends FieldsComponent {
 
     return (
       <MyCheck
-        asRow={this.asRow}
+        asRow={this.getAsRow()}
         key={name}
         name={name}
         label={label}
@@ -178,11 +186,23 @@ export default class BaseForm extends FieldsComponent {
       <Button
         variant="primary"
         type="submit"
-        disabled={this.validate() && false}
+        disabled={this.validate()}
       >
         {label}
       </Button>
     );
+  }
+
+  get formattedTitle() {
+    return this.getTitle();
+  }
+
+  getTitle() {
+    return null;
+  }
+
+  getButtonLabel() {
+    return 'Tallenna';
   }
 
   renderField(field) {
@@ -200,25 +220,31 @@ export default class BaseForm extends FieldsComponent {
     switch (field.type) {
       case 'boolean': return this.renderCheck(field);
       case 'textarea': return this.renderTextArea(field);
-      default: return this.renderInput(field);
+
+      default:
+        let autofocus = false;
+
+        if (!field.readonly && !this.autofocusSet) {
+          autofocus = true;
+          this.autofocusSet = true;
+        }
+
+        return this.renderInput(field, autofocus);
     }
   }
 
-  get formattedTitle() {
-    return this.getTitle();
-  }
-
-  get buttonLabel() {
-    return 'Tallenna';
-  }
-
   render() {
+    const { successText, errorText } = this.state;
+    this.autofocusSet = false;
+
     return (
       <Container>
-        {this.renderTitle(this.formattedTitle)}
+        <h2>{this.formattedTitle}</h2>
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
-          {this.renderSubmitButton(this.buttonLabel)}
+          {this.renderSubmitButton(this.getButtonLabel())}
+          {successText && <Alert variant="success">{successText}</Alert>}
+          {errorText && <Alert variant="danger">{errorText}</Alert>}
         </Form>
       </Container>
     );

@@ -4,27 +4,24 @@ import http from '../services/httpService';
 import { apiUrl } from '../config.json';
 
 export default class DataForm extends FieldsForm {
-  jsonToData(row) {
-    const data = {}
-
-    for (let field of this.fields)
-      data[field.name] = field.jsonToData(row[field.name]);
-
-    return data;
-  }
-
-  enumsToLookup(enums) {
-    const lookup = [{ Id: null, Name: '' }];
-
-    for (const index in enums)
-      lookup.push({ Id: index, Name: enums[index] });
-
-    return lookup;
-  }
-
-
   get dataId() {
-    return this.props.match.params.id;
+    if (this.props.match && this.props.match.params.id !== 'new')
+      return this.props.match.params.id;
+
+    return undefined;
+  }
+
+  get formattedTitle() {
+    let title = this.getTitle();
+
+    if (!this.dataId)
+      title += ' - uusi';
+
+    return title;
+  }
+
+  getApiName() {
+    throw new Error('You have to implement the method getApiName!');
   }
 
   get apiEndpoint() {
@@ -36,59 +33,57 @@ export default class DataForm extends FieldsForm {
   }
 
   async populateLookups() {
+    const setLookup = (field, data) => {
+      const lookup = [{ Id: null, Name: '' }, ...data];
+      field.lookup = lookup;
+  
+      this.setState({ lookup });
+    }
+    
     for (const field of this.fields) {
       if (field.lookupUrl) {
         const { data } = await http.get(apiUrl + '/' + field.lookupUrl);
-        const lookup = [{ Id: null, Name: '' }, ...data];
-        field.lookup = lookup;
 
-        this.setState({ lookup });
+        setLookup(field, data);
       }
       else if (field.enums) {
-        const lookup = this.enumsToLookup(field.enums);
-        field.lookup = lookup;
+        const data = [];
 
-        this.setState({ lookup });
+        for (const Id in field.enums)
+          data.push({ Id, Name: field.enums[Id] });
+
+        setLookup(field, data);
       }
     }
   }
 
-  async loadData() {
-    try {
-      const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
-
-      const savedData = this.jsonToData(item)
-      const data = this.jsonToData(item)
-
-      console.log('json', item);
-      console.log('data', data);
-
-      this.setState({ savedData, data });
+  async populateData() {
+    if (this.dataId) {
+      // Load data
+      try {
+        const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
+  
+        const savedData = this.jsonToData(item)
+        const data = this.jsonToData(item)
+  
+        this.setState({ savedData, data });
+      }
+      catch (ex) {
+        if (ex.response && ex.response.status === 404)
+          this.props.history.replace('/not-found');
+      }
     }
-    catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        this.props.history.replace('/not-found');
+    else {
+      // Set new data
+      const data = this.getDefaultData();
+  
+      this.setState({ data });
     }
-  }
-
-  setDefaultData() {
-    const data = this.defaultData();
-    console.log('new', data);
-
-    this.setState({ data });
   }
 
   async componentDidMount() {
     this.populateLookups();
-
-    if (this.dataId === 'new')
-      this.setDefaultData()
-    else
-      await this.loadData();
-  }
-
-  afterSubmit() {
-    this.props.history.goBack();
+    this.populateData();
   }
 
   async doSubmit() {
@@ -111,11 +106,14 @@ export default class DataForm extends FieldsForm {
         try {
           console.log('put', row);
           await http.put(this.apiEndpointOf(data.Id), row);
+          this.afterSubmit();
         }
         catch (ex) {
           toast.error(ex.response.data.sqlMessage);
         }
       }
+      else
+        this.afterSubmit();
     }
     else {
       // POST
@@ -131,12 +129,14 @@ export default class DataForm extends FieldsForm {
 
         console.log('post', row);
         await http.post(this.apiEndpoint, row);
+        this.afterSubmit();
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
       }
     }
+  }
 
-    this.afterSubmit();
+  afterSubmit() {
   }
 }

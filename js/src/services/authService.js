@@ -32,6 +32,10 @@ export async function login(email, password) {
   localStorage.setItem(tokenKey, jwt);
 }
 
+export async function changePassword(email, password, newPassword) {
+  await http.post(apiEndpoint + '/changepassword', { email, password, newPassword });
+}
+
 export function logout() {
   localStorage.removeItem(tokenKey);
 }
@@ -42,5 +46,6 @@ export default {
   getJwt,
   register,
   login,
+  changePassword,
   logout
 }

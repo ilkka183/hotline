@@ -15,7 +15,7 @@ export default class BrandForm extends BaseForm {
     this.addEnabled();
     this.addTimestamps();
     
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
   getTitle() {

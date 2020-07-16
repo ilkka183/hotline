@@ -1,4 +1,6 @@
+import { toast } from 'react-toastify';
 import FieldsForm from '../../components/common/FieldsForm';
+import auth from '../../services/authService';
 
 export default class ChangePasswordForm extends FieldsForm {
   state = {
@@ -9,21 +11,45 @@ export default class ChangePasswordForm extends FieldsForm {
   constructor() {
     super();
     
-    this.addField('password',  'Nykyinen salasana',       'text', { min: 5, required: true });
-    this.addField('password1', 'Uusi salasana',           'text', { min: 5, required: true });
-    this.addField('password2', 'Uusi salasana uudestaan', 'text', { min: 5, required: true });
+    this.addField('password',     'Nykyinen salasana',       'password', { minLength: 5, required: true });
+    this.addField('newPassword1', 'Uusi salasana',           'password', { minLength: 5, required: true });
+    this.addField('newPassword2', 'Uusi salasana uudestaan', 'password', { minLength: 5, required: true });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Vaihda salasana';
   }
 
-  get buttonLabel() {
+  getButtonLabel() {
     return 'Vaihda salasana';
   }
 
   async doSubmit() {
+    try {
+      const { password, newPassword1, newPassword2 } = this.state.data;
+      const user = auth.getCurrentUser();
+
+      if (newPassword1 === newPassword2) {
+        await auth.changePassword(user.email, password, newPassword1);
+        toast.success('Salasana vaihdettu');
+      }
+      else {
+        const errors = { ...this.state.errors };
+        errors.newPassword1 = 'Salasanat eivät täsmää';
+        errors.newPassword2 = 'Salasanat eivät täsmää';
+
+        this.setState({ errors });
+      }
+    }
+    catch (ex) {
+      if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {
+        const errors = { ...this.state.errors };
+        errors.password = ex.response.data;
+
+        this.setState({ errors });
+      }
+    }
   }
 }

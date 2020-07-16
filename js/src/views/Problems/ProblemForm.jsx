@@ -24,14 +24,14 @@ export default class ProblemForm extends BaseForm {
     this.addField('Description',      'Kuvaus',             'textarea', { required: true });
     this.addField('Status',           'Tila',               'number',   { required: true, getDefaultValue: () => 0, enums: STATUSES });
 
-    this.state.data = this.emptyData();
+    this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Vikatapsus';
   }
 
-  get api() {
+  getApiName() {
     return 'problems';
   }
 }

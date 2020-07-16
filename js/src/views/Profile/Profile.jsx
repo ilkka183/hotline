@@ -6,7 +6,7 @@ export default class Profile extends Component {
   render() { 
     return (
       <>
-        <ProfileForm />
+        <ProfileForm dataId={user.id} autoBack={false} />
         <br />
         <ChangePasswordForm />
       </>

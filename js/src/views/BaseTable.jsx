@@ -5,16 +5,28 @@ import http from '../services/httpService';
 const SHOW_IDS = true;
 
 export default class BaseTable extends FieldsTable {
-  get apiEndpoint() {
+  get apiPath() {
     return apiUrl + '/' + this.getApiName();
   }
 
+  getItemsEndpoint(path) {
+    return path;
+  }
+
+  deleteItemEndpoint(path, item) {
+    return path + '/' + item.Id;
+  }
+
   async getItems() {
-    return await http.get(this.apiEndpoint);
+    const endpoint = this.getItemsEndpoint(this.apiPath);
+    
+    return await http.get(endpoint);
   }
 
   async deleteItem(item) {
-    await http.delete(this.apiEndpoint + '/' + item.Id)    
+    const endpoint = this.deleteItemEndpoint(this.apiPath, item);
+
+    await http.delete(endpoint);
   }
 
   addId(visible = SHOW_IDS) {

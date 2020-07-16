@@ -1,5 +1,4 @@
 import BaseTable from '../BaseTable';
-import http from '../../services/httpService';
 
 export default class ProblemRepliessTable extends BaseTable {
   constructor() {
@@ -21,11 +20,11 @@ export default class ProblemRepliessTable extends BaseTable {
     return 'problemreplies';
   }
 
-  async getItems() {
-    return await http.get(this.apiEndpoint + '?ProblemId=' + this.props.problemId);
+  getItemsEndpoint(path) {
+    return path + '?ProblemId=' + this.props.problemId;
   }
 
-  async deleteItem(item) {
-    return await http.delete(this.apiEndpoint + '/' + item.Id);
+  deleteItemEndpoint(path, item) {
+    return path + '/' + item.Id;
   }
 }
