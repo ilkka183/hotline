@@ -10,6 +10,7 @@ export default class ProblemForm extends DataForm {
   constructor() {
     super();
     
+    this.addField('userId',      'Käyttäjä',    'number',   { required: true, readonly: true, visible: false });
     this.addField('brand',       'Merkki',      'text',     { required: true });
     this.addField('model',       'Malli',       'text');
     this.addField('modelYear',   'Vuosimalli',  'number');
@@ -26,5 +27,9 @@ export default class ProblemForm extends DataForm {
 
   getApiName() {
     return 'problems';
+  }
+
+  afterSubmit() {
+    this.props.onSubmit();
   }
 }

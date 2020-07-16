@@ -46,7 +46,11 @@ export default class Problem extends Component {
         <h4>{problem.Title}</h4>
         <div>{problem.Description}</div>
         <br />
-        {problem.Id && <ProblemRepliesTable problemId={problem.Id}/>}
+        {problem.Id &&
+          <ProblemRepliesTable
+            problemId={problem.Id}
+            showSearchBox={false}
+          />}
       </Container>
     );
   }

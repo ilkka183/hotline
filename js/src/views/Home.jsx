@@ -8,8 +8,10 @@ import auth from '../services/authService';
 export default class Home extends Component {
   render() { 
     const user = auth.getCurrentUser();
-    const editable = user !== null;
-    const deletable = (user !== null) && (user.role <= 1);
+
+    const creatable = true;
+    const editable = true;
+    const deletable = user && user.role <= 1;
 
     if (!user)
       return null;
@@ -23,6 +25,7 @@ export default class Home extends Component {
               status={0}
               showSearchBox={false}
               paginate={false}
+              creatable={creatable}
               editable={editable}
               deletable={deletable}
             />
@@ -35,6 +38,7 @@ export default class Home extends Component {
               status={1}
               showSearchBox={false}
               paginate={false}
+              creatable={false}
               editable={editable}
               deletable={deletable}
             />

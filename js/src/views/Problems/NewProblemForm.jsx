@@ -5,31 +5,53 @@ import Tabs from 'react-bootstrap/Tabs'
 import RegistrationNumber from './RegistrationNumber'
 import SelectData from './SelectData'
 import EditData from './EditData'
+import auth from '../../services/authService';
+
+function getFuel(text) {
+  switch (text) {
+    case 'bensiini': return 0;
+    case 'diesel': return 1;
+    default: return 0;
+  }
+}
 
 export default class NewProblemForm extends Component {
   state = {
     registrationNumber: '',
-    brand: '',
-    model: ''
+    data: null
   }
-  
-  handleRegistrationNumber = (data) => {
-    console.log(data);
 
-    const state = {
-      registrationNumber: data.registrationNumber,
-      brand: data.carMake,
-      model: data.carModel
+  handleRegistrationNumberSearch = (info) => {
+    this.setState({ data: null });
+
+    console.log(info);
+
+    const data = {
+      userId: auth.getCurrentUser().id,
+      brand: info.carMake,
+      model: info.carModel,
+      modelYear: info.registrationYear,
+      registrationNumber: info.registrationNumber,
+      fuel: getFuel(info.fuelType),
+      power: info.power,
+      cylinderCount: info.cylinderCount,
+      engineCode: info.engineCode,
+      engineSize: info.engineSize,
+      vin: info.vechileIdentificationNumber,
+      netWeight: info.netWeight,
+      grossWeight: info.grossWeight
     }
 
-    this.setState(state);
+    this.setState({ data });
 
-    console.log(this.state);
+    console.log(data);
+  }
+
+  handleRegistrationNumberClear = () => {
+    this.setState({ data: null });
   }
 
   handleSubmit = e => {
-    e.preventDefault();
-
     this.props.history.goBack();
   }
 
@@ -39,15 +61,15 @@ export default class NewProblemForm extends Component {
         <h2>Lisää uusi vikatapaus</h2>
         <Tabs className="mb-2" variant="pills" defaultActiveKey="home" id="uncontrolled-tab-example">
           <Tab eventKey="home" title="Hae rekisterinumerolla">
+            <RegistrationNumber onSearch={this.handleRegistrationNumberSearch} onClear={this.handleRegistrationNumberClear} />
           </Tab>
           <Tab eventKey="profile" title="Ohjattu syöttö">
+            <SelectData />
           </Tab>
           <Tab eventKey="contact" title="Manuaalinen syöttö">
           </Tab>
         </Tabs>
-        <RegistrationNumber onFound={this.handleRegistrationNumber} />
-        <SelectData />
-        <EditData data={this.state}/>
+        {this.state.data && <EditData data={this.state.data} onSubmit={this.handleSubmit}/>}
       </Container>
     );
   }

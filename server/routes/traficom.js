@@ -20,9 +20,9 @@ const vehicles = [
   {
     registrationNumber: 'ISI-561',
     registrationYear: 2005,
-    carMake: 'Ford',
-    carModel: 'Focus',
-    fuelType: 'diesel',
+    carMake: 'VW',
+    carModel: 'Golf',
+    fuelType: 'bensiini',
     cylinderCount: 4,
     engineSize: 1596,
     power: 74,

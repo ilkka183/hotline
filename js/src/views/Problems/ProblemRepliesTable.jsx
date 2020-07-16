@@ -20,6 +20,10 @@ export default class ProblemRepliessTable extends BaseTable {
     return 'problemreplies';
   }
 
+  getNewButtonLink() {
+    return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
+  }
+
   getItemsEndpoint(path) {
     return path + '?ProblemId=' + this.props.problemId;
   }

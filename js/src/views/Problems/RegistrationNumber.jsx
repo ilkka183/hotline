@@ -15,6 +15,8 @@ export default class LicenseNumberForm extends Component {
 
   handleClear = () => {
     this.setState({ registrationNumber: '' });
+
+    this.props.onClear();
   }
 
   handleFill = (registrationNumber) => {
@@ -27,7 +29,7 @@ export default class LicenseNumberForm extends Component {
     const { registrationNumber } = this.state;
     const { data } = await http.get(apiUrl + '/traficom/' + registrationNumber);
 
-    this.props.onFound(data);
+    this.props.onSearch(data);
   }
 
   render() { 

@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
-import FieldsComponent from './Fields';
-import SortIcon from './SortIcon';
 import DataPagination from './DataPagination';
-import SearchBox from './SearchBox';
+import FieldsComponent from './Fields';
 import LinkButton from './LinkButton';
-import { paginateItems } from '../../utils/paginate';
+import SearchBox from './SearchBox';
+import SortIcon from './SortIcon';
 
 export default class DataTable extends FieldsComponent {
   state = {
@@ -39,6 +38,10 @@ export default class DataTable extends FieldsComponent {
 
   deleteItem() {
     throw new Error('You have to implement the method deleteItem!');
+  }
+
+  getNewButtonLink() {
+    return `/${this.getApiName()}/new`;
   }
 
   async componentDidMount() {
@@ -88,40 +91,7 @@ export default class DataTable extends FieldsComponent {
     this.handleSort(newSortColumn);
   }
 
-  renderSortIcon(column) {
-    const { name, order } = this.state.sortColumn;
-
-    if (column.name === name)
-      return <SortIcon order={order} />
-
-    return null;
-  }
-
-  renderCell(item, column) {
-    if (column.content)
-      return column.content(item);
-
-    const text = column.formatValue(item[column.name]);
-
-    const { editable } = this.props;
-
-    if (column.editLink && editable && this.canEdit(item))
-      return <Link to={'/' + this.getApiName() + '/' + item.Id}>{text}</Link>
-
-    if (column.link)
-      return <Link to={column.link(item)}>{text}</Link>
-
-    return text;
-  }
-
-  renderDeleteButton(item) {
-    if (this.canDelete(item))
-      return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
-
-    return null;
-  }
-
-  getFilteredItems() {
+  getFilteredRows() {
     const { data, searchQuery, sortColumn } = this.state;
 
     let items = data;
@@ -148,61 +118,120 @@ export default class DataTable extends FieldsComponent {
     return items;
   }
 
-  get newButtonLink() {
-    return `/${this.getApiName()}/new`;
-  }
+  paginateRows(items, pageNumber, pageSize) {
+    const startIndex = (pageNumber - 1)*pageSize;
+    const slice = [];
+  
+    for (let i = 0; i < pageSize; i++) {
+      const index = startIndex + i;
+  
+      if (index >= items.length)
+        break;
+  
+      const item =  items[index];
+      slice.push(item);
+    }
+  
+    return slice;
+  }  
 
-  get newButtonStyle() {
-    return {
+  renderNewButton() {
+    const style = {
       marginBottom: 20
     }
+  
+    return <LinkButton style={style} to={this.getNewButtonLink()}>Lisää uusi</LinkButton>
+  }
+
+  renderSearchBox() {
+    return <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
+  }
+
+  renderPagination(filteredItems) {
+    return (
+      <div>
+        <DataPagination
+          itemsCount={filteredItems.length}
+          pageSize={this.state.pageSize}
+          currentPage={this.state.currentPage}
+          onPageChange={this.handlePageChange}
+        />
+      </div>
+    );
+  }
+
+  renderSortIcon(column) {
+    const { name, order } = this.state.sortColumn;
+
+    if (column.name === name)
+      return <SortIcon order={order} />
+
+    return null;
+  }
+
+  renderColumn(column) {
+    return (
+      <th
+        className="clickable"
+        key={column.name}
+        onClick={() => this.setSorColumn(column.name)}
+      >
+        {column.label} {this.renderSortIcon(column)}
+      </th>
+    );
+  }
+
+  renderCell(row, column) {
+    if (column.content)
+      return column.content(row);
+
+    const text = column.formatValue(row[column.name]);
+
+    const { editable } = this.props;
+
+    if (column.editLink && editable && this.canEdit(row))
+      return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
+
+    if (column.link)
+      return <Link to={column.link(row)}>{text}</Link>
+
+    return text;
+  }
+
+  renderDeleteButton(item) {
+    if (this.canDelete(item))
+      return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
+
+    return null;
   }
 
   render() {
-    const { editable, deletable, showSearchBox, paginate } = this.props;
-    const { data, currentPage, pageSize } = this.state;
+    const { creatable, deletable, showSearchBox, paginate } = this.props;
+    const { currentPage, pageSize } = this.state;
 
-    if (data.length === 0)
-      return <p>Tietokannassa ei ole yhtään riviä.</p>
-
-    const filteredItems = this.getFilteredItems();
-    const items = paginate ? paginateItems(filteredItems, currentPage, pageSize) : filteredItems;
+    const filteredRows = this.getFilteredRows();
+    const rows = paginate ? this.paginateRows(filteredRows, currentPage, pageSize) : filteredRows;
     const columns = this.fields.filter(column => column.visible);
 
     return (
       <>
         <h2>{this.getTitle()}</h2>
-        {editable && <LinkButton style={this.newButtonStyle} to={this.newButtonLink}>Lisää uusi</LinkButton>}
-        {showSearchBox && <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />}
-        {paginate && <div>
-          <DataPagination
-            itemsCount={filteredItems.length}
-            pageSize={this.state.pageSize}
-            currentPage={this.state.currentPage}
-            onPageChange={this.handlePageChange}
-          />
-        </div>}
+        {creatable && this.renderNewButton()}
+        {showSearchBox && this.renderSearchBox()}
+        {paginate && this.renderPagination(filteredRows)}
         <table className="table">
           <thead>
             <tr>
-              {columns.map(column => (
-                <th
-                  className="clickable"
-                  key={column.name}
-                  onClick={() => this.setSorColumn(column.name)}
-                >
-                  {column.label} {this.renderSortIcon(column)}
-                </th>
-              ))}
+              {columns.map(column => this.renderColumn(column))}
               {deletable && <th></th>}
             </tr>
           </thead>
           <tbody>
-            { items.map(item => (
-              <tr key={item.Id}>
-                {columns.map(column => (<td key={item.Id + column.name}>{this.renderCell(item, column)}</td>))}
-                {deletable &&<td>{this.renderDeleteButton(item)}</td>}
-              </tr>)) }
+            {rows.map(row => (
+              <tr key={row.Id}>
+                {columns.map(column => (<td key={row.Id + column.name}>{this.renderCell(row, column)}</td>))}
+                {deletable &&<td>{this.renderDeleteButton(row)}</td>}
+              </tr>))}
           </tbody>
         </table>
       </>
@@ -213,6 +242,7 @@ export default class DataTable extends FieldsComponent {
 DataTable.defaultProps = {
   showSearchBox: true,
   paginate: true,
+  creatable: true,
   editable: true,
   deletable: true
 }

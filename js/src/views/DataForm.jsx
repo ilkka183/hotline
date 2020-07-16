@@ -59,7 +59,7 @@ export default class DataForm extends FieldsForm {
 
   async populateData() {
     if (this.dataId) {
-      // Load data
+      // Fetch data from database
       try {
         const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
   
@@ -73,8 +73,17 @@ export default class DataForm extends FieldsForm {
           this.props.history.replace('/not-found');
       }
     }
+    else if (this.props.data) {
+      // Copy data from props
+      const data = {...this.state.data};
+
+      for (const name in this.props.data)
+        data[name] = this.props.data[name];
+  
+      this.setState({ data });
+    }
     else {
-      // Set new data
+      // New data
       const data = this.getDefaultData();
   
       this.setState({ data });
@@ -123,7 +132,7 @@ export default class DataForm extends FieldsForm {
         for (let field of this.fields) {
           const value = data[field.name];
 
-          if (value)
+          if (value !== undefined && value != null)
             row[field.name] = field.dataToJson(value);
         }
 

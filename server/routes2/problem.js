@@ -27,7 +27,7 @@ function getListSql(req) {
   for (const field in req.query)
     sql += 'AND ' + field + ' = ' + req.query[field] + ' ';
 
-  sql += 'ORDER BY Problem.Id';
+  sql += 'ORDER BY Problem.Id DESC';
 
   return sql;
 }

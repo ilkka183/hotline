@@ -10,8 +10,6 @@ import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
 export default class BaseForm extends FieldsComponent {
-//  autofocusSet = false;
-
   state = {
     data: {},
     errors: {}
@@ -186,7 +184,7 @@ export default class BaseForm extends FieldsComponent {
       <Button
         variant="primary"
         type="submit"
-        disabled={this.validate()}
+        disabled={this.validate() && false}
       >
         {label}
       </Button>

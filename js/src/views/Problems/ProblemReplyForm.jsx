@@ -21,11 +21,11 @@ export default class ProblemReplyForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  get title() {
+  getTitle() {
     return 'Vastaus';
   }
 
-  get api() {
+  getApiName() {
     return 'problemreplies';
   }
 }

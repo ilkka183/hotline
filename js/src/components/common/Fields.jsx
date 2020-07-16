@@ -120,7 +120,7 @@ export class Field {
   }
 
   validate(value) {
-    if (this.visible) {
+    if (this.visible && !this.readonly) {
       if (this.required && this.type !== 'boolean' && value === '')
         return this.label + ' ei voi olla tyhjä';
 
