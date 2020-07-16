@@ -1,5 +1,5 @@
 import DataForm from '../DataForm';
-import { FUELS } from './ProblemsTable';
+import { FUEL_TYPES } from './ProblemsTable';
 
 export default class ProblemForm extends DataForm {
   state = {
@@ -10,13 +10,22 @@ export default class ProblemForm extends DataForm {
   constructor() {
     super();
     
-    this.addField('userId',      'Käyttäjä',    'number',   { required: true, readonly: true, visible: false });
-    this.addField('brand',       'Merkki',      'text',     { required: true });
-    this.addField('model',       'Malli',       'text');
-    this.addField('modelYear',   'Vuosimalli',  'number');
-    this.addField('fuel',        'Käyttövoima', 'number',   { enums: FUELS });
-    this.addField('title',       'Otsikko',     'text',     { required: true });
-    this.addField('description', 'Kuvaus',      'textarea', { required: true, rows: 10 });
+    this.addField('userId',             'Käyttäjä',           'number',   { required: true, readonly: true, visible: false });
+    this.addField('make',               'Merkki',             'text',     { required: true });
+    this.addField('model',              'Malli',              'text');
+    this.addField('modelYear',          'Vuosimalli',         'number');
+    this.addField('registrationYear',   'Rekisteröintivuosi', 'number');
+    this.addField('registrationNumber', 'Rekisterinumero',    'text');
+    this.addField('fuelType',           'Käyttövoima',        'number',   { enums: FUEL_TYPES });
+    this.addField('power',              'Teho (kW)',          'number');
+    this.addField('cylinderCount',      'Sylinterimäärä',     'number');
+    this.addField('engineSize',         'Sylinteritilavuus',  'number');
+    this.addField('engineCode',         'Moottorin koodi',    'text');
+    this.addField('vin',                'VIN',                'text');
+    this.addField('netWeight',          'Omamassa (kg)',      'number');
+    this.addField('grossWeight',        'Kokonaismassa (kg)', 'number');
+    this.addField('title',              'Otsikko',            'text',     { required: true });
+    this.addField('description',        'Kuvaus',             'textarea', { required: true, rows: 10 });
 
     this.state.data = this.getEmptyData();
   }

@@ -5,11 +5,11 @@ const power = require('../middleware/power');
 
 const router = express.Router();
 
-const table = 'Brand';
+const table = 'Make';
 
 const sql = 
   'SELECT Id, Name, Info, Enabled, CreatedAt, UpdatedAt ' +
-  'FROM Brand ' +
+  'FROM Make ' +
   'ORDER BY Id';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });

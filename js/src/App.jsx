@@ -9,8 +9,8 @@ import Home from './views/Home';
 import About from './views/About';
 import NotFound from './views/Problems/NotFound';
 
-import BrandsTable from './views/Brands/BrandsTable';
-import BrandForm from './views/Brands/BrandForm';
+import MakesTable from './views/Makes/MakesTable';
+import MakeForm from './views/Makes/MakeForm';
 
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UserGroupForm from './views/UserGroups/UserGroupForm';
@@ -62,8 +62,8 @@ export default class App extends Component {
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/users/:id" component={UserForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/brands/:id" component={BrandForm} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/brands" component={BrandsTable} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/makes/:id" component={MakeForm} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/makes" component={MakesTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={ProfileForm} />
             <ProtectedRoute path="/changepassword" component={ChangePasswordForm} />

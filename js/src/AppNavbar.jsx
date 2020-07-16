@@ -19,7 +19,7 @@ export default function AppNavbar({ user }) {
             <NavDropdown title="Asetukset" id="basic-nav-dropdown">
               <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
               <NavItemLink to="/users">Käyttäjät</NavItemLink>
-              <NavItemLink to="/brands">Automerkit</NavItemLink>
+              <NavItemLink to="/makes">Automerkit</NavItemLink>
             </NavDropdown>
             <NavItemLink to="/about">Tietoja</NavItemLink>
           </Nav>

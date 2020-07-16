@@ -1,6 +1,6 @@
 import BaseTable from '../BaseTable';
 
-export default class BrandsTable extends BaseTable {
+export default class MakesTable extends BaseTable {
   constructor() {
     super();
 
@@ -15,6 +15,6 @@ export default class BrandsTable extends BaseTable {
   }
 
   getApiName() {
-    return 'brands';
+    return 'makes';
   }
 }

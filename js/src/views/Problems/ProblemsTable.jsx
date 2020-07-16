@@ -1,6 +1,6 @@
 import BaseTable from '../BaseTable';
 
-export const FUELS = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
+export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
 
 export default class ProblemsTable extends BaseTable {
@@ -9,10 +9,10 @@ export default class ProblemsTable extends BaseTable {
 
     this.addId();
     this.addField('Date',        'Pvm',         'datetime', { displayFormat: 'date', editLink: true });
-    this.addField('Brand',       'Merkki',      'text');
+    this.addField('Make',        'Merkki',      'text');
     this.addField('Model',       'Malli',       'text');
     this.addField('ModelYear',   'Vuosimalli',  'number');
-    this.addField('Fuel',        'Käyttövoima', 'number',   { enums: FUELS });
+    this.addField('FuelType',    'Käyttövoima', 'number',   { enums: FUEL_TYPES });
     this.addField('Title',       'Otsikko',     'text',     { link: item => '/problem/' + item.Id });
     this.addField('Description', 'Kuvaus',      'textarea');
     this.addField('Replies',     'Vastauksia',  'number');

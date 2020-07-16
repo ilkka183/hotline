@@ -2,53 +2,60 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
-import { FUELS } from './ProblemsTable';
+import { FUEL_TYPES } from './ProblemsTable';
 
 
 export default class SelectVehicleForm extends Component {
   state = {
-    brand: '',
-    modelYear: '',
-    fuel: '',
-    model: '',
-    engineSize: ''
+    data: {
+      make: '',
+      modelYear: '',
+      fuelType: '',
+      model: '',
+      engineSize: ''
+    }
   }
 
   handleChange = ({ currentTarget: select }) => {
-    const state = {...this.state};
-    state[select.name] = select.value;
+    const data = {...this.state.data};
+    data[select.name] = select.value;
 
-    if (['brand'].includes(select.name))
-      state.modelYear = '';
+    if (['make'].includes(select.name))
+      data.modelYear = '';
 
-    if (['brand', 'modelYear'].includes(select.name))
-      state.fuel = '';
+    if (['make', 'modelYear'].includes(select.name))
+      data.fuelType = '';
 
-    if (['brand', 'modelYear', 'fuel'].includes(select.name))
-      state.model = '';
+    if (['make', 'modelYear', 'fuelType'].includes(select.name))
+      data.model = '';
 
-    if (['brand', 'modelYear', 'fuel', 'model'].includes(select.name))
-      state.engineSize = '';
+    if (['make', 'modelYear', 'fuelType', 'model'].includes(select.name))
+      data.engineSize = '';
 
-    this.setState(state);
+    this.setState({ data });
   }
 
   handleClear = () => {
-    const state = {...this.state};
+    const data = {...this.state.data};
 
-    for (const name in state)
-      state[name] = '';
+    for (const name in data)
+      data[name] = '';
 
-    this.setState(state);
+    this.setState({ data });
   }
 
   handleSubmit = e => {
     e.preventDefault();
 
-    console.log(this.state);
+    const { data } = this.state;
+    data.fuelType = FUEL_TYPES.indexOf(data.fuelType);
+
+    console.log(data);
+
+    this.props.onSelected(data);
   }
 
-  brands() {
+  makes() {
     return ['Audi', 'Ford', 'Seat', 'Volkswagen'];
   }
 
@@ -56,12 +63,12 @@ export default class SelectVehicleForm extends Component {
     return [2015, 2016, 2017, 2018, 2019, 2020];
   }
 
-  fuels() {
-    return FUELS;
+  fuelTypes() {
+    return FUEL_TYPES;
   }
 
   models() {
-    switch (this.state.brand) {
+    switch (this.state.data.make) {
       case 'Ford': return ['Ka', 'Fiesta', 'Focus', 'Mondeo'];
       case 'Seat': return ['Mii', 'Ibiza', 'Leon', 'Ateca'];
       default: return ['Tuntematon malli'];
@@ -73,17 +80,17 @@ export default class SelectVehicleForm extends Component {
   }
 
   render() {
-    const { brand, modelYear, fuel, model, engineSize } = this.state;
+    const { make, modelYear, fuelType, model, engineSize } = this.state.data;
 
     return (
       <Form onSubmit={this.handleSubmit}>
-        <FieldSelect name="brand" placeholder="Valitse merkki" value={brand} values={this.brands()} onChange={this.handleChange} />
-        {brand && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} values={this.modelYears()} onChange={this.handleChange} />}
-        {modelYear && <FieldSelect name="fuel" placeholder="Valitse käyttövoima" value={fuel} values={this.fuels()} onChange={this.handleChange} />}
-        {fuel && <FieldSelect name="model" placeholder="Valitse malli" value={model} values={this.models()} onChange={this.handleChange} />}
+        <FieldSelect name="make" placeholder="Valitse merkki" value={make} values={this.makes()} onChange={this.handleChange} />
+        {make && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} values={this.modelYears()} onChange={this.handleChange} />}
+        {modelYear && <FieldSelect name="fuelType" placeholder="Valitse käyttövoima" value={fuelType} values={this.fuelTypes()} onChange={this.handleChange} />}
+        {fuelType && <FieldSelect name="model" placeholder="Valitse malli" value={model} values={this.models()} onChange={this.handleChange} />}
         {model && <FieldSelect name="engineSize" placeholder="Valitse moottorin koko" value={engineSize} values={this.engineSizes()} onChange={this.handleChange} />}
-        <Button className="mb-2 mr-sm-2" type="submit">Jatka</Button>
-        <Button className="mb-2 mr-sm-2" onClick={this.handleClear}>Tyhjennä</Button>
+        <Button className="mb-2 mr-sm-2" type="submit" disabled={!engineSize}>Jatka</Button>
+        <Button className="mb-2 mr-sm-2" disabled={!make} onClick={this.handleClear}>Tyhjennä</Button>
       </Form>
     );
   }

@@ -1,6 +1,6 @@
 import BaseForm from '../BaseForm';
 
-export default class BrandForm extends BaseForm {
+export default class MakeForm extends BaseForm {
   state = {
     data: {},
     errors: {}
@@ -23,6 +23,6 @@ export default class BrandForm extends BaseForm {
   }
 
   getApiName() {
-    return 'brands';
+    return 'makes';
   }
 }

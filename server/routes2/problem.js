@@ -7,17 +7,17 @@ const router = express.Router();
 
 const table = 'Problem';
 
-const listSql = 
-  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, ' +
-  'Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status, ' +
-  '(SELECT COUNT(*) FROM ProblemReply WHERE ProblemReply.ProblemId = Problem.Id) AS Replies ' +
+const commonSql = 
+  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.RegistrationYear, Problem.RegistrationNumber, ' +
+  'Problem.Make, Problem.Model, Problem.ModelYear, Problem.FuelType, Problem.Power, Problem.CylinderCount, Problem.Title, Problem.Description, Problem.Status';
+
+const listSql = commonSql +
+  ', (SELECT COUNT(*) FROM ProblemReply WHERE ProblemReply.ProblemId = Problem.Id) AS Replies ' +
   'FROM Problem, User ' +
   'WHERE Problem.UserId = User.Id ';
   
-const openSql = 
-  'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.LicenseNumber, ' +
-  'Problem.Brand, Problem.Model, Problem.ModelYear, Problem.Fuel, Problem.Title, Problem.Description, Problem.Status ' +
-  'FROM Problem, User ' +
+const openSql =  commonSql +
+  ' FROM Problem, User ' +
   'WHERE Problem.UserId = User.Id ' + 
   'AND Problem.Id = ';
 

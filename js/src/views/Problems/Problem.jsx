@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table'
 import ProblemRepliesTable from './ProblemRepliesTable'
 import { DateTimeField } from '../../components/common/Fields';
 import http from '../../services/httpService';
-import { FUELS, STATUSES } from './ProblemsTable';
+import { FUEL_TYPES, STATUSES } from './ProblemsTable';
 import { apiUrl } from '../../config.json';
 
 export default class Problem extends Component {
@@ -35,11 +35,12 @@ export default class Problem extends Component {
             <tr><td>No</td><td>{problem.Id}</td></tr>
             <tr><td>Pvm</td><td>{DateTimeField.toString(problem.Date)}</td></tr>
             <tr><td>Lähettäjä</td><td>{problem.UserName}</td></tr>
-            <tr><td>Rekisterinumero</td><td>{problem.LicenseNumber}</td></tr>
-            <tr><td>Merkki</td><td>{problem.Brand}</td></tr>
+            <tr><td>Rekisteröintivuosi</td><td>{problem.RegistrationYear}</td></tr>
+            <tr><td>Rekisterinumero</td><td>{problem.RegistrationNumber}</td></tr>
+            <tr><td>Merkki</td><td>{problem.Make}</td></tr>
             <tr><td>Malli</td><td>{problem.Model}</td></tr>
             <tr><td>Vuosimalli</td><td>{problem.ModelYear}</td></tr>
-            <tr><td>Käyttövoima</td><td>{FUELS[problem.Fuel]}</td></tr>
+            <tr><td>Käyttövoima</td><td>{FUEL_TYPES[problem.FuelType]}</td></tr>
             <tr><td>Tila</td><td>{STATUSES[problem.Status]}</td></tr>
           </tbody>
         </Table>

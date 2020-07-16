@@ -1,21 +1,19 @@
 const express = require('express');
 
-const auth = require('./routes/auth');
-const data = require('./routes/data');
 const lookup = require('./routes/lookup');
 const custom = require('./routes/custom');
 const query = require('./routes/query');
 const table = require('./routes/table');
-const traficom = require('./routes/traficom');
 
-const brand = require('./routes2/brand');
+const auth = require('./routes/auth');
+const traficom = require('./routes/traficom');
+const data = require('./routes/data');
+
+const make = require('./routes2/make');
 const problem = require('./routes2/problem');
 const problemreply = require('./routes2/problemreply');
 const usergroup = require('./routes2/usergroup');
 const user = require('./routes2/user');
-
-const genre = require('./routes2/genre');
-const movie = require('./routes2/movie');
 
 const app = express();
 
@@ -43,22 +41,20 @@ app.use(function(req, res, next) {
 
 const apiPath = '/hotline/api/';
 
-app.use(apiPath + 'auth', auth);
-app.use(apiPath + 'data', data);
 app.use(apiPath + 'lookup', lookup);
 app.use(apiPath + 'custom', custom);
 app.use(apiPath + 'query', query);
 app.use(apiPath + 'table', table);
-app.use(apiPath + 'traficom', traficom);
 
-app.use(apiPath + 'Brands', brand);
+app.use(apiPath + 'auth', auth);
+app.use(apiPath + 'traficom', traficom);
+app.use(apiPath + 'data', data);
+
+app.use(apiPath + 'Makes', make);
 app.use(apiPath + 'Problems', problem);
 app.use(apiPath + 'ProblemReplies', problemreply);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
-
-app.use(apiPath + 'Genres', genre);
-app.use(apiPath + 'Movies', movie);
 
 const connection = require('./connection');
 connection.connect();

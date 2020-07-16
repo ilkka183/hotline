@@ -7,7 +7,7 @@ import SelectData from './SelectData'
 import EditData from './EditData'
 import auth from '../../services/authService';
 
-function getFuel(text) {
+function getFuelType(text) {
   switch (text) {
     case 'bensiini': return 0;
     case 'diesel': return 1;
@@ -17,8 +17,34 @@ function getFuel(text) {
 
 export default class NewProblemForm extends Component {
   state = {
-    registrationNumber: '',
     data: null
+  }
+
+  handleSelect = (eventKey) => {
+    this.setState({ data: null });
+
+    let data = null;
+
+    if (eventKey === 'manual') {
+      data = {
+        userId: auth.getCurrentUser().id,
+        make: '',
+        model: '',
+        modelYear: '',
+        registrationYear: '',
+        registrationNumber: '',
+        fuelType: '',
+        power: '',
+        cylinderCount: '',
+        engineCode: '',
+        engineSize: '',
+        vin: '',
+        netWeight: '',
+        grossWeight: ''
+      }
+    }
+
+    this.setState({ data });
   }
 
   handleRegistrationNumberSearch = (info) => {
@@ -28,11 +54,11 @@ export default class NewProblemForm extends Component {
 
     const data = {
       userId: auth.getCurrentUser().id,
-      brand: info.carMake,
+      make: info.carMake,
       model: info.carModel,
-      modelYear: info.registrationYear,
+      registrationYear: info.registrationYear,
       registrationNumber: info.registrationNumber,
-      fuel: getFuel(info.fuelType),
+      fuelType: getFuelType(info.fuelType),
       power: info.power,
       cylinderCount: info.cylinderCount,
       engineCode: info.engineCode,
@@ -51,6 +77,19 @@ export default class NewProblemForm extends Component {
     this.setState({ data: null });
   }
 
+  handleSelectionSelected = (info) => {
+    this.setState({ data: null });
+
+    const data = {
+      userId: auth.getCurrentUser().id,
+      ...info
+    }
+
+    this.setState({ data });
+
+    console.log(data);
+  }
+
   handleSubmit = e => {
     this.props.history.goBack();
   }
@@ -59,14 +98,14 @@ export default class NewProblemForm extends Component {
     return (
       <Container>
         <h2>Lisää uusi vikatapaus</h2>
-        <Tabs className="mb-2" variant="pills" defaultActiveKey="home" id="uncontrolled-tab-example">
-          <Tab eventKey="home" title="Hae rekisterinumerolla">
+        <Tabs className="mb-2" variant="pills" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
+          <Tab eventKey="search" title="Hae rekisterinumerolla">
             <RegistrationNumber onSearch={this.handleRegistrationNumberSearch} onClear={this.handleRegistrationNumberClear} />
           </Tab>
-          <Tab eventKey="profile" title="Ohjattu syöttö">
-            <SelectData />
+          <Tab eventKey="select" title="Ohjattu syöttö">
+            <SelectData onSelected={this.handleSelectionSelected} />
           </Tab>
-          <Tab eventKey="contact" title="Manuaalinen syöttö">
+          <Tab eventKey="manual" title="Manuaalinen syöttö">
           </Tab>
         </Tabs>
         {this.state.data && <EditData data={this.state.data} onSubmit={this.handleSubmit}/>}
