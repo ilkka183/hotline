@@ -22,6 +22,7 @@ import { POWER_ROLE } from './views/Users/UsersTable';
 import ProblemsTable from './views/Problems/ProblemsTable';
 import Problem from './views/Problems/Problem';
 import ProblemForm from './views/Problems/ProblemForm';
+import ProblemAttachmentForm from './views/Problems/ProblemAttachmentForm';
 import ProblemReplyForm from './views/Problems/ProblemReplyForm';
 import NewProblemForm from './views/Problems/NewProblemForm';
 
@@ -57,6 +58,7 @@ export default class App extends Component {
             <ProtectedRoute path="/problems/new" component={NewProblemForm} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
             <ProtectedRoute path="/problems" component={ProblemsTable} />
+            <ProtectedRoute path="/problemattachments/:id" component={ProblemAttachmentForm} />
             <ProtectedRoute path="/problemreplies/:id" component={ProblemReplyForm} />
             <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={POWER_ROLE} />

@@ -27,8 +27,4 @@ export default class ProblemRepliessTable extends BaseTable {
   getItemsEndpoint(path) {
     return path + '?ProblemId=' + this.props.problemId;
   }
-
-  deleteItemEndpoint(path, item) {
-    return path + '/' + item.Id;
-  }
 }

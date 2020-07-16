@@ -11,6 +11,7 @@ const data = require('./routes/data');
 
 const make = require('./routes2/make');
 const problem = require('./routes2/problem');
+const problemattachment = require('./routes2/problemattachment');
 const problemreply = require('./routes2/problemreply');
 const usergroup = require('./routes2/usergroup');
 const user = require('./routes2/user');
@@ -52,6 +53,7 @@ app.use(apiPath + 'data', data);
 
 app.use(apiPath + 'Makes', make);
 app.use(apiPath + 'Problems', problem);
+app.use(apiPath + 'ProblemAttachments', problemattachment);
 app.use(apiPath + 'ProblemReplies', problemreply);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);

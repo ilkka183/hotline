@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import ProblemRepliesTable from './ProblemRepliesTable'
+import ProblemAttachmentsTable from './ProblemAttachmentsTable'
 import { DateTimeField } from '../../components/common/Fields';
 import http from '../../services/httpService';
 import { FUEL_TYPES, STATUSES } from './ProblemsTable';
@@ -48,11 +49,17 @@ export default class Problem extends Component {
         <div>{problem.Description}</div>
         <br />
         {problem.Id &&
-          <ProblemRepliesTable
-            problemId={problem.Id}
-            showSearchBox={false}
-          />}
-      </Container>
+          <>
+            <ProblemAttachmentsTable
+              problemId={problem.Id}
+              showSearchBox={false}
+            />
+            <ProblemRepliesTable
+              problemId={problem.Id}
+              showSearchBox={false}
+            />
+          </>}
+    </Container>
     );
   }
 }
