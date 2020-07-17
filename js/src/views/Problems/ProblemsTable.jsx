@@ -8,7 +8,7 @@ export default class ProblemsTable extends BaseTable {
     super();
 
     this.addId();
-    this.addField('Date',        'Pvm',         'datetime', { displayFormat: 'date', editLink: true });
+    this.addField('Date',        'Pvm',         'datetime', { displayFormat: 'date' });
     this.addField('Make',        'Merkki',      'text');
     this.addField('Model',       'Malli',       'text');
     this.addField('ModelYear',   'Vuosimalli',  'number');

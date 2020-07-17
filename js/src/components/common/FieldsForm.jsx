@@ -3,6 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
+import Table from 'react-bootstrap/Table'
 import FieldsComponent from './Fields';
 import MyCheck from '../form/MyCheck';
 import MyFile from '../form/MyFile';
@@ -10,7 +11,7 @@ import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
-export default class BaseForm extends FieldsComponent {
+export default class FieldsForm extends FieldsComponent {
   state = {
     data: {},
     errors: {}
@@ -271,13 +272,22 @@ export default class BaseForm extends FieldsComponent {
     }
   }
 
-  render() {
+  renderTitle() {
+    const { showTitle } = this.props;
+
+    if (showTitle)
+      return <h2>{this.formattedTitle}</h2>
+
+    return null;
+  }
+
+  renderForm() {
     const { successText, errorText } = this.state;
     this.autofocusSet = false;
 
     return (
       <Container>
-        <h2>{this.formattedTitle}</h2>
+        {this.renderTitle()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
           {this.renderSubmitButton(this.getButtonLabel())}
@@ -287,4 +297,55 @@ export default class BaseForm extends FieldsComponent {
       </Container>
     );
   }
+
+  getCellText(field) {
+    const { data } = this.state;
+    const value = data[field.name];
+
+    if (field.lookup) {
+      const item = field.lookup.find(item => item.Id === value);
+
+      if (item)
+        return item.Name;
+    }
+
+    return value;
+  }
+
+  renderTableRow(field) {
+    return (
+      <tr key={field.name}>
+        <td>{field.label}</td>
+        <td>{this.getCellText(field)}</td>
+      </tr>
+    );
+  }
+
+  renderTable() {
+    return (
+      <>
+        {this.renderTitle()}
+        <Table>
+          <tbody>
+            {this.fields.map(field => this.renderTableRow(field))}
+          </tbody>
+        </Table>
+      </>
+    );
+  }
+
+  render() {
+    const { asTable } = this.props;
+
+    if (asTable)
+      return this.renderTable();
+    else
+      return this.renderForm();
+  }
 }
+
+FieldsForm.defaultProps = {
+  asTable: false,
+  showTitle: true
+}
+

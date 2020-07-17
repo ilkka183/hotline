@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
-import Table from 'react-bootstrap/Table'
 import ProblemRepliesTable from './ProblemRepliesTable'
 import ProblemAttachmentsTable from './ProblemAttachmentsTable'
-import { DateTimeField } from '../../components/common/Fields';
+import LinkButton from '../../components/common/LinkButton';
 import http from '../../services/httpService';
-import { FUEL_TYPES, STATUSES } from './ProblemsTable';
+import ProblemForm from './ProblemForm';
 
 export default class Problem extends Component {
   state = {
     problem: {}
   }
 
+  get problemId() {
+    return this.props.match.params.id;
+  }
+
   async componentDidMount() {
     try {
-      const { data: problem } = await http.get('/problems/open/' + this.props.match.params.id);
+      const { data: problem } = await http.get('/problems/open/' + this.problemId);
 
       this.setState({ problem });
     }
@@ -27,29 +30,21 @@ export default class Problem extends Component {
   render() {
     const { problem } = this.state;
 
+    const style = {
+      marginBottom: 10
+    }
+
     return (
       <Container>
         <h2>Vikatapaus</h2>
-        <Table size="sm" borderless>
-          <tbody>
-            <tr><td>No</td><td>{problem.Id}</td></tr>
-            <tr><td>Pvm</td><td>{DateTimeField.toString(problem.Date)}</td></tr>
-            <tr><td>Lähettäjä</td><td>{problem.UserName}</td></tr>
-            <tr><td>Rekisteröintivuosi</td><td>{problem.RegistrationYear}</td></tr>
-            <tr><td>Rekisterinumero</td><td>{problem.RegistrationNumber}</td></tr>
-            <tr><td>Merkki</td><td>{problem.Make}</td></tr>
-            <tr><td>Malli</td><td>{problem.Model}</td></tr>
-            <tr><td>Vuosimalli</td><td>{problem.ModelYear}</td></tr>
-            <tr><td>Käyttövoima</td><td>{FUEL_TYPES[problem.FuelType]}</td></tr>
-            <tr><td>Tila</td><td>{STATUSES[problem.Status]}</td></tr>
-          </tbody>
-        </Table>
+        <LinkButton style={style} to={'/problems/' + this.problemId}>Muokkaa</LinkButton>
+        <ProblemForm asTable={true} showTitle={false} dataId={this.problemId} />
         <h4>{problem.Title}</h4>
         <div>{problem.Description}</div>
         <br />
         {problem.Id &&
           <>
-            {true && <ProblemAttachmentsTable
+            {<ProblemAttachmentsTable
               problemId={problem.Id}
               showSearchBox={false}
             />}

@@ -4,8 +4,12 @@ import http from '../services/httpService';
 
 export default class DataForm extends FieldsForm {
   get dataId() {
-    if (this.props.match && this.props.match.params.id !== 'new')
-      return this.props.match.params.id;
+    const { dataId, match } = this.props;
+
+    if (dataId)
+      return dataId;
+    else if (match && match.params.id !== 'new')
+      return match.params.id;
 
     return undefined;
   }
@@ -133,7 +137,7 @@ export default class DataForm extends FieldsForm {
         for (let field of this.fields) {
           const value = data[field.name];
 
-          if (value)
+          if (value !== null && value !== '')
             row[field.name] = field.dataToJson(value);
         }
 
