@@ -8,8 +8,8 @@ export default class ProblemAttachmentsTable extends BaseTable {
     this.addField('ProblemId',   'Vikatapaus',   'number', { visible: false });
     this.addField('FileName',    'Tiedostonimi', 'text');
     this.addField('FileType',    'Tyyppi',       'text');
-    this.addField('Content',     'Sisältö',      'text');
-    this.addField('Description', 'Kuvaus',       'textarea');
+//    this.addField('Content',     'Sisältö',      'text');
+    this.addField('Description', 'Kuvaus',       'textarea', { editLink: true});
   }
 
   getTitle() {

@@ -20,7 +20,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = { value: '' };
+      data[field.name] = '';
 
     return data;
   }
@@ -29,7 +29,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = { value: field.defaultValue };
+      data[field.name] = field.defaultValue;
 
     return data;
   }
@@ -38,7 +38,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = { value: field.jsonToData(row[field.name]) };
+      data[field.name] = field.jsonToData(row[field.name]);
 
     return data;
   }
@@ -47,7 +47,7 @@ export default class BaseForm extends FieldsComponent {
     const errors = {}
 
     for (const field of this.fields) {
-      const value = this.state.data[field.name].value;
+      const value = this.state.data[field.name];
 
       const error = field.validate(value);
 
@@ -81,22 +81,23 @@ export default class BaseForm extends FieldsComponent {
   }
 
   handleChange = event => {
-    const { currentTarget: input } = event;
+    const { currentTarget } = event;
+
     const errors = {...this.state.errors}
-    const errorMessage = this.validateField(input);
+    const errorMessage = this.validateField(currentTarget);
 
     if (errorMessage)
-      errors[input.name] = errorMessage;
+      errors[currentTarget.name] = errorMessage;
     else
-      delete errors[input.name];
+      delete errors[currentTarget.name];
 
     const data = {...this.state.data}
 
-    if (input.type === 'checkbox')
-      data[input.name].value = input.checked;
-    else if (input.type === 'file') {
+    if (currentTarget.type === 'checkbox')
+      data[currentTarget.name] = currentTarget.checked;
+    else if (currentTarget.type === 'file') {
       console.log(event.target.files);
-      console.log(input.value);
+      console.log(currentTarget.value);
 
       const file = event.target.files[0];
 
@@ -106,17 +107,13 @@ export default class BaseForm extends FieldsComponent {
         type: file.type
       }
 
-      const value = {
-        value: input.value,
-        info
-      }
-
-      data[input.name] = value;
-
-      console.log(value);
+      data[currentTarget.name] = currentTarget.value;
+      data['FileName'].value = info.name;
+      data['FileSize'].value = info.size;
+      data['FileType'].value = info.type;
     }
     else
-      data[input.name].value = input.value;
+      data[currentTarget.name] = currentTarget.value;
 
     this.setState({ data, errors });
   }
@@ -139,7 +136,7 @@ export default class BaseForm extends FieldsComponent {
         required={required}
         disabled={readonly}
         autofocus={autofocus}
-        value={data[name].value}
+        value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -158,7 +155,7 @@ export default class BaseForm extends FieldsComponent {
         label={label}
         required={required}
         rows={rows}
-        value={data[name].value}
+        value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -177,7 +174,7 @@ export default class BaseForm extends FieldsComponent {
         label={label}
         required={required}
         disabled={readonly}
-        value={data[name].value}
+        value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -197,7 +194,7 @@ export default class BaseForm extends FieldsComponent {
         required={required}
         options={lookup}
         disabled={readonly}
-        value={data[name].value}
+        value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -214,7 +211,7 @@ export default class BaseForm extends FieldsComponent {
         key={name}
         name={name}
         label={label}
-        value={data[name].value}
+        value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -246,7 +243,7 @@ export default class BaseForm extends FieldsComponent {
   }
 
   renderField(field) {
-    const value = this.state.data[field.name].value;
+    const value = this.state.data[field.name];
 
     if (!field.visible)
       return null;
