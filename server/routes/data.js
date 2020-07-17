@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-router.get('/brands', (req, res) => {
+router.get('/makes', (req, res) => {
   const list = [];
 
   list.push('Audi');
@@ -15,12 +15,12 @@ router.get('/brands', (req, res) => {
 });
 
 
-router.get('/years', (req, res) => {
-  const brand = req.query.brand;
+router.get('/modelYears', (req, res) => {
+  const make = req.query.make;
 
   const list = [];
 
-  switch (brand) {
+  switch (make) {
     case 'Ford':
       list.push(2009);
       list.push(2008);
@@ -47,13 +47,12 @@ router.get('/years', (req, res) => {
 });
 
 
-router.get('/fuels', (req, res) => {
-  const brand = req.query.brand;
-  const year = req.query.year;
+router.get('/fuelTypes', (req, res) => {
+  const make = req.query.make;
 
   const list = [];
 
-  switch (brand) {
+  switch (make) {
     case 'Ford':
       list.push(0);
       list.push(1);
@@ -75,11 +74,11 @@ router.get('/fuels', (req, res) => {
 
 
 router.get('/models', (req, res) => {
-  const brand = req.query.brand;
+  const make = req.query.make;
 
   const list = [];
 
-  switch (brand) {
+  switch (make) {
     case 'Ford':
       list.push('Fiesta');
       list.push('Focus');
@@ -105,11 +104,11 @@ router.get('/models', (req, res) => {
 
 
 router.get('/engineSizes', (req, res) => {
-  const brand = req.query.brand;
+  const make = req.query.make;
 
   const list = [];
 
-  switch (brand) {
+  switch (make) {
     case 'Ford':
       list.push(999);
       list.push(1499);

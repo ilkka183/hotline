@@ -4,22 +4,23 @@ import MyControl from './MyControl'
 
 export default class MySelect extends MyControl {
   renderControl() {
-    const { disabled, name, options, value, onChange } = this.props;
+    const { autofocus, disabled, name, options, value, onChange } = this.props;
 
     return (
       <Form.Control
         as="select"
         name={name}
         disabled={disabled}
+        autoFocus={autofocus}
         value={value}
         onChange={onChange}
       >
         {options && options.map(option => (
           <option
-            key={option.Id}
-            value={option.Id}
+            key={option.value}
+            value={option.value}
           >
-            {option.Name}
+            {option.text}
           </option>
         ))}
       </Form.Control>

@@ -4,7 +4,7 @@ export default class MakesTable extends BaseTable {
   constructor() {
     super();
 
-    this.addId();
+    this.addId(false);
     this.addName();
     this.addField('Info', 'Info', 'textarea');
     this.addEnabled();

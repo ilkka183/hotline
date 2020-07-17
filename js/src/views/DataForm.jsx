@@ -36,26 +36,30 @@ export default class DataForm extends FieldsForm {
   }
 
   async populateLookups() {
-    const setLookup = (field, data) => {
-      const lookup = [{ Id: null, Name: '' }, ...data];
-      field.lookup = lookup;
-  
-      this.setState({ lookup });
-    }
-    
     for (const field of this.fields) {
       if (field.lookupUrl) {
         const { data } = await http.get('/' + field.lookupUrl);
 
-        setLookup(field, data);
+        const lookup = [{ value: null, text: '' }];
+
+        for (const item of data)
+          lookup.push({ value: item.Id, text: item.Name });
+
+        field.lookup = lookup;
+        this.setState({ lookup });
       }
       else if (field.enums) {
-        const data = [];
+        const lookup = [{ value: null, text: '' }];
 
-        for (const Id in field.enums)
-          data.push({ Id, Name: field.enums[Id] });
+        let value = 0;
 
-        setLookup(field, data);
+        for (const text of field.enums) {
+          lookup.push({ value, text });
+          value++;
+        }
+
+        field.lookup = lookup;
+        this.setState({ lookup });
       }
     }
   }
@@ -100,7 +104,6 @@ export default class DataForm extends FieldsForm {
 
   async doSubmit() {
     const { data } = this.state;
-    console.log('state.data', data);
 
     if (data.Id) {
       // PUT

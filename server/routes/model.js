@@ -5,12 +5,14 @@ const power = require('../middleware/power');
 
 const router = express.Router();
 
-const table = 'Make';
+const table = 'Model';
 
 const sql = 
-  'SELECT Id, Name, Info, Enabled, CreatedAt, UpdatedAt ' +
-  'FROM Make ' +
-  'ORDER BY Name';
+  'SELECT Model.Id, Model.MakeId, Make.Name AS MakeName, Model.Name, Model.BeginYear, Model.EndYear, Model.FuelType, ' +
+  'Model.EngineSize, Model.CylinderCount, Model.Power, Model.Enabled ' +
+  'FROM Model, Make ' +
+  'WHERE Model.MakeId = Make.Id ' +
+  'ORDER BY Make.Name, Model.Name';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });
 router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });

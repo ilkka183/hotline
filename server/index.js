@@ -2,6 +2,7 @@ const express = require('express');
 
 const auth = require('./routes/auth');
 const make = require('./routes/make');
+const model = require('./routes/model');
 const problem = require('./routes/problem');
 const problemattachment = require('./routes/problemattachment');
 const problemreply = require('./routes/problemreply');
@@ -39,6 +40,7 @@ const apiPath = '/hotline/api/';
 app.use(apiPath + 'auth', auth);
 
 app.use(apiPath + 'Makes', make);
+app.use(apiPath + 'Models', model);
 app.use(apiPath + 'Problems', problem);
 app.use(apiPath + 'ProblemAttachments', problemattachment);
 app.use(apiPath + 'ProblemReplies', problemreply);

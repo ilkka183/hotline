@@ -182,7 +182,7 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
-  renderSelect(field) {
+  renderSelect(field, autofocus = false) {
     const { name, label, lookup, readonly, required } = field;
     const { data, errors } = this.state;
 
@@ -195,6 +195,7 @@ export default class FieldsForm extends FieldsComponent {
         required={required}
         options={lookup}
         disabled={readonly}
+        autofocus={autofocus}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
@@ -252,8 +253,16 @@ export default class FieldsForm extends FieldsComponent {
     if (field.readonly && !value)
       return null;
 
-    if (field.isLookup)
-      return this.renderSelect(field);
+    if (field.isLookup) {
+      let autofocus = false;
+
+      if (!field.readonly && !this.autofocusSet) {
+        autofocus = true;
+        this.autofocusSet = true;
+      }
+
+      return this.renderSelect(field, autofocus);
+    }
 
     switch (field.type) {
       case 'boolean': return this.renderCheck(field);
@@ -303,10 +312,7 @@ export default class FieldsForm extends FieldsComponent {
     const value = data[field.name];
 
     if (field.lookup) {
-      const item = field.lookup.find(item => item.Id === value);
-
-      if (item)
-        return item.Name;
+      return field.lookupText(value);
     }
 
     return value;

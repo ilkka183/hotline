@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
 import { FUEL_TYPES } from './ProblemsTable';
+import http from '../../services/httpService';
 
 
 export default class SelectVehicleForm extends Component {
@@ -55,28 +56,31 @@ export default class SelectVehicleForm extends Component {
     this.props.onSelected(data);
   }
 
-  makes() {
-    return ['Audi', 'Ford', 'Seat', 'Volkswagen'];
+  getMakes = async () => {
+    console.log(this.state);
+
+    const { data } = await http.get('/data/makes');
+    return data
   }
 
-  modelYears() {
-    return [2015, 2016, 2017, 2018, 2019, 2020];
+   getModelYears = async () => {
+    const { data } = await http.get('/data/modelYears?make=' + this.state.data.make);
+    return data
   }
 
-  fuelTypes() {
-    return FUEL_TYPES;
+  getFuelTypes = async () => {
+    const { data } = await http.get('/data/fuelTypes?make=' + this.state.data.make);
+    return data
   }
 
-  models() {
-    switch (this.state.data.make) {
-      case 'Ford': return ['Ka', 'Fiesta', 'Focus', 'Mondeo'];
-      case 'Seat': return ['Mii', 'Ibiza', 'Leon', 'Ateca'];
-      default: return ['Tuntematon malli'];
-    }
+  getModels = async () => {
+    const { data } = await http.get('/data/models?make=' + this.state.data.make);
+    return data
   }
 
-  engineSizes() {
-    return [999, 1399, 1499, 1599, 1999];
+  getEngineSizes = async () => {
+    const { data } = await http.get('/data/engineSizes?make=' + this.state.data.make);
+    return data
   }
 
   render() {
@@ -84,11 +88,11 @@ export default class SelectVehicleForm extends Component {
 
     return (
       <Form onSubmit={this.handleSubmit}>
-        <FieldSelect name="make" placeholder="Valitse merkki" value={make} values={this.makes()} onChange={this.handleChange} />
-        {make && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} values={this.modelYears()} onChange={this.handleChange} />}
-        {modelYear && <FieldSelect name="fuelType" placeholder="Valitse käyttövoima" value={fuelType} values={this.fuelTypes()} onChange={this.handleChange} />}
-        {fuelType && <FieldSelect name="model" placeholder="Valitse malli" value={model} values={this.models()} onChange={this.handleChange} />}
-        {model && <FieldSelect name="engineSize" placeholder="Valitse moottorin koko" value={engineSize} values={this.engineSizes()} onChange={this.handleChange} />}
+        <FieldSelect name="make" placeholder="Valitse merkki" value={make} getValues={this.getMakes} onChange={this.handleChange} />
+        {make && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} getValues={this.getModelYears} onChange={this.handleChange} />}
+        {modelYear && <FieldSelect name="fuelType" placeholder="Valitse käyttövoima" value={fuelType} getValues={this.getFuelTypes} onChange={this.handleChange} />}
+        {fuelType && <FieldSelect name="model" placeholder="Valitse malli" value={model} getValues={this.getModels} onChange={this.handleChange} />}
+        {model && <FieldSelect name="engineSize" placeholder="Valitse moottorin koko" value={engineSize} getValues={this.getEngineSizes} onChange={this.handleChange} />}
         <Button className="mb-2 mr-sm-2" type="submit" disabled={!engineSize}>Jatka</Button>
         <Button className="mb-2 mr-sm-2" disabled={!make} onClick={this.handleClear}>Tyhjennä</Button>
       </Form>

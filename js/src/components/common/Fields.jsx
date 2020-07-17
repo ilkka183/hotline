@@ -119,6 +119,17 @@ export class Field {
     }
   }
 
+  lookupText(value) {
+    if (this.lookup) {
+      const item = this.lookup.find(item => item.value === value);
+
+      if (item)
+        return item.text;
+    }
+
+    return null;
+  }
+
   validate(value) {
     if (this.visible && !this.readonly) {
       if (this.required && this.type !== 'boolean' && value === '')

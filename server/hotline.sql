@@ -129,7 +129,31 @@ CREATE TABLE Make
   PRIMARY KEY (Name)
 );
 
-CREATE UNIQUE INDEX MakeIndex ON Make(Name);
+CREATE UNIQUE INDEX MakeIndex ON Make(Id);
+
+
+CREATE TABLE Model
+(
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  MakeId BIGINT UNSIGNED  NOT NULL,
+  Name VARCHAR(80) NOT NULL,
+  BeginYear SMALLINT UNSIGNED NOT NULL,
+  EndYear SMALLINT UNSIGNED,
+  FuelType SMALLINT UNSIGNED NOT NULL, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
+  Power SMALLINT UNSIGNED,
+  CylinderCount SMALLINT UNSIGNED,
+  EngineSize SMALLINT UNSIGNED NOT NULL,
+  NetWeight SMALLINT UNSIGNED,
+  GrossWeight SMALLINT UNSIGNED,
+  Enabled BOOLEAN NOT NULL DEFAULT TRUE,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  Data JSON,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (MakeId) REFERENCES Make(Id)
+);
+
+CREATE UNIQUE INDEX ModelIndex ON Model(Id);
 
 
 CREATE TABLE BulletinGroup
@@ -243,6 +267,7 @@ INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBeg
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto',  'Aalto',     'arto.aalto@prodiags.com',        'weber',    CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg',   'jan.froberg@hmv-systems.fi',     'Kawasaki', CURDATE() - INTERVAL 1 DAY, NULL);
 
+
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Volkswagen');
 INSERT INTO Make(Name) VALUES('Alfa Romeo');
@@ -267,6 +292,15 @@ INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Tesla');
 INSERT INTO Make(Name) VALUES('Toyota');
 INSERT INTO Make(Name) VALUES('Volvo');
+
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  70);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  85);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Ibiza', 2018, NULL, 0, 1499, 4, 110);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Leon',  2013, 2020, 0,  999, 3,  85);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Leon',  2013, 2019, 0, 1399, 4, 110);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Leon',  2013, 2020, 0, 1499, 4, 110);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Leon',  2013, 2017, 1, 1599, 4,  81);
+INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, Power) VALUES(1, 'Leon',  2017, 2020, 1, 1599, 4,  85);
 
 
 INSERT INTO Notice(UserId, Title, Message) VALUES(2, 'Päivitys SMS palveluun', 'HotLinen SMS palvelun hallintaan on tehty muutos.');

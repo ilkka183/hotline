@@ -12,6 +12,9 @@ import NotFound from './views/Problems/NotFound';
 import MakesTable from './views/Makes/MakesTable';
 import MakeForm from './views/Makes/MakeForm';
 
+import ModelsTable from './views/Models/ModelsTable';
+import ModelForm from './views/Models/ModelForm';
+
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UserGroupForm from './views/UserGroups/UserGroupForm';
 
@@ -66,6 +69,8 @@ export default class App extends Component {
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/makes/:id" component={MakeForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/models/:id" component={ModelForm} requiredRole={POWER_ROLE} />
+            <ProtectedRoute path="/models" component={ModelsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={ProfileForm} />
             <ProtectedRoute path="/changepassword" component={ChangePasswordForm} />

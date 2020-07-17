@@ -13,7 +13,7 @@ export default class DataTable extends FieldsComponent {
     data: [],
     searchQuery: '',
     currentPage: 1,
-    pageSize: 4,
+    pageSize: 10,
     sortColumn: {
       name: '',
       order: 'asc'
