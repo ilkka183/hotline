@@ -78,7 +78,7 @@ export default class DataForm extends FieldsForm {
       const data = {...this.state.data};
 
       for (const name in this.props.data)
-        data[name] = this.props.data[name];
+        data[name].value = this.props.data[name];
   
       this.setState({ data });
     }
@@ -97,24 +97,25 @@ export default class DataForm extends FieldsForm {
 
   async doSubmit() {
     const { data } = this.state;
+    console.log(data);
 
-    if (data.Id) {
+    if (data.Id.value) {
       // PUT
       const { savedData } = this.state;
 
       const row = {};
       
       for (let field of this.fields) {
-        const value = data[field.name];
+        const value = data[field.name].value;
 
-        if (value !== savedData[field.name])
+        if (value !== savedData[field.name].value)
           row[field.name] = field.dataToJson(value);
       }
 
       if (Object.keys(row).length > 0) {
         try {
           console.log('put', row);
-          await http.put(this.apiEndpointOf(data.Id), row);
+          await http.put(this.apiEndpointOf(data.Id.value), row);
           this.afterSubmit();
         }
         catch (ex) {
@@ -130,9 +131,9 @@ export default class DataForm extends FieldsForm {
         const row = {};
         
         for (let field of this.fields) {
-          const value = data[field.name];
+          const value = data[field.name].value;
 
-          if (value !== undefined && value != null)
+          if (value)
             row[field.name] = field.dataToJson(value);
         }
 

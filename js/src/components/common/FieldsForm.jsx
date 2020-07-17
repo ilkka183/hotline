@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import FieldsComponent from './Fields';
 import MyCheck from '../form/MyCheck';
+import MyFile from '../form/MyFile';
 import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
@@ -19,7 +20,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = '';
+      data[field.name] = { value: '' };
 
     return data;
   }
@@ -28,7 +29,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = field.defaultValue;
+      data[field.name] = { value: field.defaultValue };
 
     return data;
   }
@@ -37,7 +38,7 @@ export default class BaseForm extends FieldsComponent {
     const data = {}
 
     for (let field of this.fields)
-      data[field.name] = field.jsonToData(row[field.name]);
+      data[field.name] = { value: field.jsonToData(row[field.name]) };
 
     return data;
   }
@@ -46,7 +47,7 @@ export default class BaseForm extends FieldsComponent {
     const errors = {}
 
     for (const field of this.fields) {
-      const value = this.state.data[field.name];
+      const value = this.state.data[field.name].value;
 
       const error = field.validate(value);
 
@@ -79,7 +80,8 @@ export default class BaseForm extends FieldsComponent {
     this.doSubmit();
   }
 
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = event => {
+    const { currentTarget: input } = event;
     const errors = {...this.state.errors}
     const errorMessage = this.validateField(input);
 
@@ -91,9 +93,30 @@ export default class BaseForm extends FieldsComponent {
     const data = {...this.state.data}
 
     if (input.type === 'checkbox')
-      data[input.name] = input.checked;
+      data[input.name].value = input.checked;
+    else if (input.type === 'file') {
+      console.log(event.target.files);
+      console.log(input.value);
+
+      const file = event.target.files[0];
+
+      const info = {
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }
+
+      const value = {
+        value: input.value,
+        info
+      }
+
+      data[input.name] = value;
+
+      console.log(value);
+    }
     else
-      data[input.name] = input.value;
+      data[input.name].value = input.value;
 
     this.setState({ data, errors });
   }
@@ -116,7 +139,7 @@ export default class BaseForm extends FieldsComponent {
         required={required}
         disabled={readonly}
         autofocus={autofocus}
-        value={data[name]}
+        value={data[name].value}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -135,7 +158,26 @@ export default class BaseForm extends FieldsComponent {
         label={label}
         required={required}
         rows={rows}
-        value={data[name]}
+        value={data[name].value}
+        error={errors[name]}
+        onChange={this.handleChange}
+      />
+    );
+  }
+
+  renderFile(field) {
+    const { name, label, readonly, required } = field;
+    const { data, errors } = this.state;
+
+    return (
+      <MyFile
+        asRow={this.getAsRow()}
+        key={name}
+        name={name}
+        label={label}
+        required={required}
+        disabled={readonly}
+        value={data[name].value}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -155,7 +197,7 @@ export default class BaseForm extends FieldsComponent {
         required={required}
         options={lookup}
         disabled={readonly}
-        value={data[name]}
+        value={data[name].value}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -172,7 +214,7 @@ export default class BaseForm extends FieldsComponent {
         key={name}
         name={name}
         label={label}
-        value={data[name]}
+        value={data[name].value}
         error={errors[name]}
         onChange={this.handleChange}
       />
@@ -204,7 +246,7 @@ export default class BaseForm extends FieldsComponent {
   }
 
   renderField(field) {
-    const value = this.state.data[field.name];
+    const value = this.state.data[field.name].value;
 
     if (!field.visible)
       return null;
@@ -217,6 +259,7 @@ export default class BaseForm extends FieldsComponent {
 
     switch (field.type) {
       case 'boolean': return this.renderCheck(field);
+      case 'file': return this.renderFile(field);
       case 'textarea': return this.renderTextArea(field);
 
       default:

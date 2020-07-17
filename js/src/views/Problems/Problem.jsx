@@ -50,10 +50,10 @@ export default class Problem extends Component {
         <br />
         {problem.Id &&
           <>
-            <ProblemAttachmentsTable
+            {true && <ProblemAttachmentsTable
               problemId={problem.Id}
               showSearchBox={false}
-            />
+            />}
             <ProblemRepliesTable
               problemId={problem.Id}
               showSearchBox={false}
