@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import FieldsForm from '../components/common/FieldsForm';
 import http from '../services/httpService';
-import { apiUrl } from '../config.json';
 
 export default class DataForm extends FieldsForm {
   get dataId() {
@@ -25,7 +24,7 @@ export default class DataForm extends FieldsForm {
   }
 
   get apiEndpoint() {
-    return apiUrl + '/' + this.getApiName();
+    return '/' + this.getApiName();
   }
 
   apiEndpointOf(id) {
@@ -42,7 +41,7 @@ export default class DataForm extends FieldsForm {
     
     for (const field of this.fields) {
       if (field.lookupUrl) {
-        const { data } = await http.get(apiUrl + '/' + field.lookupUrl);
+        const { data } = await http.get('/' + field.lookupUrl);
 
         setLookup(field, data);
       }

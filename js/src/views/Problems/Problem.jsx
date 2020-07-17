@@ -6,7 +6,6 @@ import ProblemAttachmentsTable from './ProblemAttachmentsTable'
 import { DateTimeField } from '../../components/common/Fields';
 import http from '../../services/httpService';
 import { FUEL_TYPES, STATUSES } from './ProblemsTable';
-import { apiUrl } from '../../config.json';
 
 export default class Problem extends Component {
   state = {
@@ -15,7 +14,7 @@ export default class Problem extends Component {
 
   async componentDidMount() {
     try {
-      const { data: problem } = await http.get(apiUrl + '/problems/open/' + this.props.match.params.id);
+      const { data: problem } = await http.get('/problems/open/' + this.props.match.params.id);
 
       this.setState({ problem });
     }

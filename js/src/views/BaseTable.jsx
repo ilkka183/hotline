@@ -1,12 +1,11 @@
 import FieldsTable from '../components/common/FieldsTable';
-import { apiUrl } from '../config.json';
 import http from '../services/httpService';
 
 const SHOW_IDS = true;
 
 export default class BaseTable extends FieldsTable {
   get apiPath() {
-    return apiUrl + '/' + this.getApiName();
+    return '/' + this.getApiName();
   }
 
   getItemsEndpoint(path) {

@@ -20,6 +20,23 @@
   - onko lisenssi käyttäjä vai ryhmäkohtainen?
 
 
+  FastComet
+  =========
+
+  1. Tietokanta
+  - tuhoa vanhat taulut phpMyAdmin-paneelissa
+  - luo uudet taulut suorittamalla tämä SQL-tiedosto kommentista alkaen
+
+  2. Node-palvelin
+  - sammuta vanha palvelin Nede.js-paneelissa
+  - kopioi uudet tiedosto FTP:llä
+  - käynnistä uusi palvelin
+
+  3. React JS koodi
+  - tuhoa kaikki vanhat tiedosto palvelimelta
+  - siirrä uudet FTP:llä
+
+
   version 1, 25.10.2020
 
 */
@@ -35,7 +52,7 @@ DROP USER 'suoritac_root'@'localhost';
 CREATE USER 'suoritac_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
 GRANT ALL PRIVILEGES ON *.* TO 'suoritac_root'@'localhost';
 
-
+/* Tästä asti FactCometin phpMyAdmin paneelissa */
 SET default_storage_engine=INNODB;
 
 

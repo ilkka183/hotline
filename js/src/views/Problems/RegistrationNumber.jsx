@@ -3,7 +3,6 @@ import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import http from '../../services/httpService';
-import { apiUrl } from '../../config.json';
 
 export default class RegistrationNumberForm extends Component {
   state = {
@@ -32,7 +31,7 @@ export default class RegistrationNumberForm extends Component {
       this.setState({ error: '' });
 
       const { number } = this.state;
-      const { data } = await http.get(apiUrl + '/traficom/' + number);
+      const { data } = await http.get('/traficom/' + number);
 
       this.props.onSearch(data);
     }

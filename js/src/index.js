@@ -7,8 +7,6 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 
-console.log('SUPERMAN', process.env.REACT_APP_NAME);
-
 logger.init();
 
 ReactDOM.render(
