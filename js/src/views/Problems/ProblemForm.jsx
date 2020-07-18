@@ -21,13 +21,15 @@ export default class ProblemForm extends BaseForm {
     this.addField('RegistrationYear',   'Rekisteröintivuosi', 'number');
     this.addField('RegistrationNumber', 'Rekisterinumero',    'text');
     this.addField('FuelType',           'Käyttövoima',        'number',   { enums: FUEL_TYPES });
-    this.addField('Power',              'Teho (kW)',          'number');
     this.addField('CylinderCount',      'Sylinterimäärä',     'number');
-    this.addField('EngineSize',         'Sylinteritilavuus',  'number');
-    this.addField('EngineCode',         'Moottorin koodi',    'text');
+    this.addField('EnginePower',        'Teho (kW)',          'number');
+    this.addField('EngineSize',         'Kuutiotilavuus',     'number');
+    this.addField('EngineCode',         'Moottorin tunnus',   'text');
+    this.addField('MID',                'MID',                'text');
     this.addField('VIN',                'VIN',                'text');
     this.addField('NetWeight',          'Omamassa (kg)',      'number');
     this.addField('GrossWeight',        'Kokonaismassa (kg)', 'number');
+    this.addField('Info',               'Lisätietoja',        'textarea', { rows: 3 });
     this.addField('Title',              'Otsikko',            'text',     { required: true });
     this.addField('Description',        'Kuvaus',             'textarea', { required: true, rows: 10 });
     this.addField('Status',             'Tila',               'number',   { required: true, getDefaultValue: () => 0, enums: STATUSES });

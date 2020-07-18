@@ -9,11 +9,12 @@ const table = 'Problem';
 
 const commonSql = 
   'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.RegistrationYear, Problem.RegistrationNumber, ' +
-  'Problem.Make, Problem.Model, Problem.ModelYear, Problem.FuelType, Problem.Power, Problem.CylinderCount, Problem.Title, Problem.Description, Problem.Status';
+  'Problem.Make, Problem.Model, Problem.ModelYear, Problem.FuelType, Problem.EnginePower, Problem.CylinderCount, Problem.Title, Problem.Description, Problem.Status';
 
 const listSql = commonSql +
-  ', (SELECT COUNT(*) FROM ProblemReply WHERE ProblemReply.ProblemId = Problem.Id) AS Replies ' +
-  'FROM Problem, User ' +
+', (SELECT COUNT(*) FROM ProblemAttachment WHERE ProblemAttachment.ProblemId = Problem.Id) AS Attachments ' +
+', (SELECT COUNT(*) FROM ProblemReply WHERE ProblemReply.ProblemId = Problem.Id) AS Replies ' +
+'FROM Problem, User ' +
   'WHERE Problem.UserId = User.Id ';
   
 const openSql =  commonSql +

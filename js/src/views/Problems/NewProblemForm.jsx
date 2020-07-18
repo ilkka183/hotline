@@ -4,6 +4,7 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import RegistrationNumber from './RegistrationNumber'
 import SelectData from './SelectData'
+import ProblemWizard from './ProblemWizard'
 import EditData from './EditData'
 import auth from '../../services/authService';
 
@@ -108,7 +109,8 @@ export default class NewProblemForm extends Component {
           <Tab eventKey="manual" title="Manuaalinen syöttö">
           </Tab>
         </Tabs>
-        {this.state.data && <EditData data={this.state.data} onSubmit={this.handleSubmit}/>}
+        {this.state.data && <ProblemWizard data={this.state.data} onSubmit={this.handleSubmit}/>}
+        {this.state.data && false && <EditData data={this.state.data} onSubmit={this.handleSubmit}/>}
       </Container>
     );
   }

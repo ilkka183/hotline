@@ -17,10 +17,10 @@ export default class ProblemForm extends DataForm {
     this.addField('registrationYear',   'Rekisteröintivuosi', 'number');
     this.addField('registrationNumber', 'Rekisterinumero',    'text');
     this.addField('fuelType',           'Käyttövoima',        'number',   { enums: FUEL_TYPES });
-    this.addField('power',              'Teho (kW)',          'number');
     this.addField('cylinderCount',      'Sylinterimäärä',     'number');
-    this.addField('engineSize',         'Sylinteritilavuus',  'number');
-    this.addField('engineCode',         'Moottorin koodi',    'text');
+    this.addField('enginePower',        'Teho (kW)',          'number');
+    this.addField('engineSize',         'Kuutiotilavuus',     'number');
+    this.addField('engineCode',         'Moottorin tunnus',   'text');
     this.addField('vin',                'VIN',                'text');
     this.addField('netWeight',          'Omamassa (kg)',      'number');
     this.addField('grossWeight',        'Kokonaismassa (kg)', 'number');

@@ -9,10 +9,10 @@ const table = 'Model';
 
 const sql = 
   'SELECT Model.Id, Model.MakeId, Make.Name AS MakeName, Model.Name, Model.BeginYear, Model.EndYear, Model.FuelType, ' +
-  'Model.EngineSize, Model.CylinderCount, Model.Power, Model.Enabled ' +
+  'Model.EngineSize, Model.CylinderCount, Model.Power, Model.EngineCode, Model.MID, Model.Enabled ' +
   'FROM Model, Make ' +
   'WHERE Model.MakeId = Make.Id ' +
-  'ORDER BY Make.Name, Model.Name';
+  'ORDER BY Make.Name, Model.Name, Model.Power';
 
 router.get('', (req, res) => { http.getRows(req, res, sql) });
 router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });

@@ -20,7 +20,7 @@ if (!process.env.hotline_jwtPrivateKey) {
 }
 */
 
-const production = false;
+const production = process.env.PORT == '0';
 const port = production ? 0 : 4000;
 
 app.use(express.json());

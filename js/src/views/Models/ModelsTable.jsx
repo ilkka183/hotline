@@ -6,7 +6,7 @@ export default class ModelsTable extends BaseTable {
     super();
 
     this.addId(false);
-    this.addField('MakeName',      'Merkki',            'text',   { editLink: true});
+    this.addField('MakeName',      'Merkki',            'text');
     this.addField('Name',          'Malli',             'text',   { editLink: true});
     this.addField('BeginYear',     'Vuodesta',          'number');
     this.addField('EndYear',       'Vuoteen',           'number');
@@ -14,6 +14,8 @@ export default class ModelsTable extends BaseTable {
     this.addField('EngineSize',    'Sylinteritilavuus', 'number');
     this.addField('CylinderCount', 'Sylinterimäärä',    'number');
     this.addField('Power',         'Teho (kW)',         'number');
+    this.addField('EngineCode',    'Moottorin koodi',   'text');
+    this.addField('MID',           'MID',               'text');
     this.addEnabled();
   }
 

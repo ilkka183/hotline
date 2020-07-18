@@ -181,21 +181,32 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderCell(row, column) {
+  renderCellContent(row, column) {
     if (column.content)
       return column.content(row);
 
     const text = column.formatValue(row[column.name]);
 
-    const { editable } = this.props;
+    const { readOnly, editable } = this.props;
 
-    if (column.editLink && editable && this.canEdit(row))
+    if (column.editLink && !readOnly && editable && this.canEdit(row))
       return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
 
     if (column.link)
       return <Link to={column.link(row)}>{text}</Link>
 
     return text;
+  }
+
+  renderCell(row, column) {
+    return (
+      <td
+        key={row.Id + column.name}
+        align={column.isNumber && false ? 'right' : undefined}
+      >
+        {this.renderCellContent(row, column)}
+      </td>
+    );
   }
 
   renderDeleteButton(item) {
@@ -206,31 +217,34 @@ export default class DataTable extends FieldsComponent {
   }
 
   render() {
-    const { creatable, deletable, showSearchBox, paginate } = this.props;
+    const { autoHide, readOnly, creatable, deletable, showSearchBox, paginate } = this.props;
     const { currentPage, pageSize } = this.state;
 
     const filteredRows = this.getFilteredRows();
     const rows = paginate ? this.paginateRows(filteredRows, currentPage, pageSize) : filteredRows;
     const columns = this.fields.filter(column => column.visible);
 
+    if (autoHide && readOnly && rows.length === 0)
+      return null;
+
     return (
       <>
         <h2>{this.getTitle()}</h2>
-        {creatable && this.renderNewButton()}
+        {!readOnly && creatable && this.renderNewButton()}
         {showSearchBox && this.renderSearchBox()}
         {paginate && this.renderPagination(filteredRows)}
         <table className="table">
           <thead>
             <tr>
               {columns.map(column => this.renderColumn(column))}
-              {deletable && <th></th>}
+              {!readOnly && deletable && <th></th>}
             </tr>
           </thead>
           <tbody>
             {rows.map(row => (
               <tr key={row.Id}>
-                {columns.map(column => (<td key={row.Id + column.name}>{this.renderCell(row, column)}</td>))}
-                {deletable &&<td>{this.renderDeleteButton(row)}</td>}
+                {columns.map(column => this.renderCell(row, column))}
+                {!readOnly && deletable &&<td>{this.renderDeleteButton(row)}</td>}
               </tr>))}
           </tbody>
         </table>
@@ -242,6 +256,8 @@ export default class DataTable extends FieldsComponent {
 DataTable.defaultProps = {
   showSearchBox: true,
   paginate: true,
+  autoHide: false,
+  readOnly: false,
   creatable: true,
   editable: true,
   deletable: true

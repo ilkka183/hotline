@@ -1,136 +1,174 @@
 const express = require('express');
+const connection = require('../connection');
+
 const router = express.Router();
 
 
 router.get('/makes', (req, res) => {
-  const list = [];
+  const sql =
+    'SELECT DISTINCT Make.Name FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'ORDER BY Make.Name';
 
-  list.push('Audi');
-  list.push('Ford');
-  list.push('Seat');
-  list.push('Skoda');
-  list.push('Volkswagen');
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
 
-  res.send(list);
+    const list = results.map(item => item.Name);
+
+    res.send(list);
+  });
 });
 
 
 router.get('/modelYears', (req, res) => {
   const make = req.query.make;
 
-  const list = [];
+  const sql =
+    'SELECT MIN(Model.BeginYear) AS BeginYear, MAX(Model.EndYear) AS EndYear FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'AND Make.Name = "' + make + '"';
 
-  switch (make) {
-    case 'Ford':
-      list.push(2009);
-      list.push(2008);
-      list.push(2007);
-      list.push(2006);
-      break;
+  console.log(sql);
 
-    case 'Seat':
-      list.push(2019);
-      list.push(2018);
-      list.push(2017);
-      list.push(2016);
-      break;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
 
-    case 'Volkswagen':
-      list.push(2005);
-      list.push(2004);
-      list.push(2003);
-      list.push(2002);
-      break;
-  }
+    const date = new Date();
+    const endYear = date.getFullYear();
 
-  res.send(list);
+    const result = results[0];
+
+    const list = [];
+
+    for (let year = endYear; year >= result.BeginYear; year--)
+      list.push(year);
+
+    res.send(list);
+  });
 });
 
 
 router.get('/fuelTypes', (req, res) => {
   const make = req.query.make;
+  const modelYear = req.query.modelYear;
 
-  const list = [];
+  const sql =
+    'SELECT DISTINCT Model.FuelType FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'AND Make.Name = "' + make + '" ' +
+    'AND Model.BeginYear <= ' + modelYear + ' ' +
+    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
+    'ORDER BY Model.FuelType';
 
-  switch (make) {
-    case 'Ford':
-      list.push(0);
-      list.push(1);
-      break;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
 
-    case 'Seat':
-      list.push(0);
-      list.push(1);
-      break;
+    const list = results.map(item => item.FuelType);
 
-    case 'Volkswagen':
-      list.push(0);
-      list.push(1);
-      break;
-  }
-
-  res.send(list);
+    res.send(list);
+  });
 });
 
 
 router.get('/models', (req, res) => {
   const make = req.query.make;
+  const modelYear = req.query.modelYear;
+  const fuelType = req.query.fuelType;
 
-  const list = [];
+  const sql =
+    'SELECT DISTINCT Model.Name FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'AND Make.Name = "' + make + '" ' +
+    'AND Model.BeginYear <= ' + modelYear + ' ' +
+    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
+    'AND Model.FuelType = ' + fuelType + ' ' +
+    'ORDER BY Model.Name';
 
-  switch (make) {
-    case 'Ford':
-      list.push('Fiesta');
-      list.push('Focus');
-      list.push('Mondeo');
-      break;
+  console.log(sql);
 
-    case 'Seat':
-      list.push('Ibiza');
-      list.push('Leon');
-      list.push('Ateca');
-      list.push('Tarraco');
-      break;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
 
-    case 'Volkswagen':
-      list.push('Polo');
-      list.push('Golf');
-      list.push('Passat');
-      break;
-  }
+    const list = results.map(item => item.Name);
 
-  res.send(list);
+    res.send(list);
+  });
 });
 
 
 router.get('/engineSizes', (req, res) => {
   const make = req.query.make;
+  const modelYear = req.query.modelYear;
+  const fuelType = req.query.fuelType;
+  const model = req.query.model;
 
-  const list = [];
+  const sql =
+    'SELECT DISTINCT Model.EngineSize FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'AND Make.Name = "' + make + '" ' +
+    'AND Model.BeginYear <= ' + modelYear + ' ' +
+    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
+    'AND Model.FuelType = ' + fuelType + ' ' +
+    'AND Model.Name = "' + model + '" ' +
+    'ORDER BY Model.EngineSize';
 
-  switch (make) {
-    case 'Ford':
-      list.push(999);
-      list.push(1499);
-      list.push(1999);
-      break;
+  console.log(sql);
 
-    case 'Seat':
-      list.push(999);
-      list.push(1399);
-      list.push(1499);
-      list.push(1999);
-      break;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
 
-    case 'Volkswagen':
-      list.push(999);
-      list.push(1399);
-      list.push(1499);
-      list.push(1999);
-      break;
-  }
+    const list = results.map(item => item.EngineSize);
 
-  res.send(list);
+    res.send(list);
+  });
+});
+
+
+router.get('/engineTypes', (req, res) => {
+  const make = req.query.make;
+  const modelYear = req.query.modelYear;
+  const fuelType = req.query.fuelType;
+  const model = req.query.model;
+  const engineSize = req.query.engineSize;
+
+  const sql =
+    'SELECT Model.EnginePower, Model.EngineCode FROM Model, Make ' +
+    'WHERE Model.MakeId = Make.Id ' +
+    'AND Make.Name = "' + make + '" ' +
+    'AND Model.BeginYear <= ' + modelYear + ' ' +
+    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
+    'AND Model.FuelType = ' + fuelType + ' ' +
+    'AND Model.Name = "' + model + '" ' +
+    'AND Model.EngineSize = ' + engineSize + ' ' +
+    'ORDER BY Model.EnginePower, Model.EngineCode';
+
+  console.log(sql);
+
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.log(error);        
+      return res.status(400).send(error);
+    }
+
+    const list = results.map(item => ({ power: item.EnginePower, code: item.EngineCode }));
+
+    res.send(list);
+  });
 });
 
 

@@ -63,6 +63,10 @@ export class Field {
     return this.type === 'text' || this.type === 'password';
   }
 
+  get isNumber() {
+    return this.type === 'number' && !this.isLookup;
+  }
+
   get isLookup() {
     return this.lookupUrl || this.enums;
   }

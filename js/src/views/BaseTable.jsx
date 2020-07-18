@@ -1,7 +1,7 @@
 import FieldsTable from '../components/common/FieldsTable';
 import http from '../services/httpService';
 
-const SHOW_IDS = true;
+const SHOW_IDS = false;
 
 export default class BaseTable extends FieldsTable {
   get apiPath() {

@@ -1,6 +1,9 @@
 import BaseTable from '../BaseTable';
+import auth from '../../services/authService';
 
 export default class ProblemRepliessTable extends BaseTable {
+  user = auth.getCurrentUser();
+
   constructor() {
     super();
 
@@ -26,5 +29,13 @@ export default class ProblemRepliessTable extends BaseTable {
 
   getItemsEndpoint(path) {
     return path + '?ProblemId=' + this.props.problemId;
+  }
+
+  canEdit(item) {
+    return item.UserId === this.user.id || this.user.role === 0;
+  }
+
+  canDelete(item) {
+    return item.UserId === this.user.id || this.user.role === 0;
   }
 }

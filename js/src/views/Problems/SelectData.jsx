@@ -8,92 +8,167 @@ import http from '../../services/httpService';
 
 export default class SelectVehicleForm extends Component {
   state = {
-    data: {
+    selections: {
       make: '',
       modelYear: '',
       fuelType: '',
       model: '',
-      engineSize: ''
-    }
+      engineSize: '',
+      enginePower: '',
+      engineCode: ''
+    },
+    engineType: null,
+    makes: null,
+    modelYears: null,
+    fuelTypes: null,
+    models: null,
+    engineSizes: null,
+    engineTypes: null
   }
 
-  handleChange = ({ currentTarget: select }) => {
-    const data = {...this.state.data};
-    data[select.name] = select.value;
+  async componentDidMount() {
+    const { data } = await http.get('/data/makes');
+    const makes = data.map(value => ({ value, text: value }));
 
-    if (['make'].includes(select.name))
-      data.modelYear = '';
+    this.setState({ makes });
+  }
 
-    if (['make', 'modelYear'].includes(select.name))
-      data.fuelType = '';
+  handleMakeChange = async ({ currentTarget: select }) => {
+    const selections = {...this.state.selections};
+    selections[select.name] = select.value;
+    selections.modelYear = '';
+    selections.fuelType = '';
+    selections.model = '';
+    selections.engineSize = '';
 
-    if (['make', 'modelYear', 'fuelType'].includes(select.name))
-      data.model = '';
+    const { data } = await http.get('/data/modelYears?make=' + select.value);
+    const modelYears = data.map(value => ({ value, text: value }));
 
-    if (['make', 'modelYear', 'fuelType', 'model'].includes(select.name))
-      data.engineSize = '';
+    this.setState({ selections, modelYears });
+  }
 
-    this.setState({ data });
+  handleModelYearChange = async ({ currentTarget: select }) => {
+    const selections = {...this.state.selections};
+    selections[select.name] = select.value;
+    selections.fuelType = '';
+    selections.model = '';
+    selections.engineSize = '';
+
+    const { make } = this.state.selections;
+
+    const { data } = await http.get('/data/fuelTypes?make=' + make + '&modelYear=' + select.value);
+    const fuelTypes = data.map(value => ({ value, text: FUEL_TYPES[value] }));
+
+    this.setState({ selections, fuelTypes });
+  }
+
+  handleFuelTypeChange = async ({ currentTarget: select }) => {
+    const selections = {...this.state.selections};
+    selections[select.name] = select.value;
+    selections.model = '';
+    selections.engineSize = '';
+
+    const { make, modelYear } = this.state.selections;
+
+    const { data } = await http.get('/data/models?make=' + make + '&modelYear=' + modelYear + '&fuelType=' + select.value);
+    const models = data.map(value => ({ value, text: value }));
+
+    this.setState({ selections, models });
+  }
+
+  handleModelChange = async ({ currentTarget: select }) => {
+    const selections = {...this.state.selections};
+    selections[select.name] = select.value;
+    selections.engineSize = '';
+
+    const { make, modelYear, fuelType } = this.state.selections;
+
+    const { data } = await http.get('/data/engineSizes?make=' + make + '&modelYear=' + modelYear + '&fuelType=' + fuelType + '&model=' + select.value);
+    const engineSizes = data.map(value => ({ value, text: value }));
+
+    this.setState({ selections, engineSizes });
+  }
+
+  handleEngineSizeChange = async ({ currentTarget: select }) => {
+    const selections = {...this.state.selections};
+    selections[select.name] = select.value;
+
+    const { make, modelYear, fuelType, model } = this.state.selections;
+
+    const { data: engineTypes } = await http.get('/data/engineTypes?make=' + make + '&modelYear=' + modelYear + '&fuelType=' + fuelType + '&model=' + model + '&engineSize=' + select.value);
+
+    this.setState({ selections, engineTypes });
+  }
+
+  handleEngineTypeChange = async ({ currentTarget: radio }) => {
+    const engine = this.state.engineTypes[radio.value];
+
+    const engineType = radio.value;
+
+    const selections = {...this.state.selections};
+    selections.enginePower = engine.power;
+    selections.engineCode = engine.code;
+
+    this.setState({ selections, engineType });
+
+    console.log(this.state.selections);
   }
 
   handleClear = () => {
-    const data = {...this.state.data};
+    const selections = {...this.state.selections};
 
-    for (const name in data)
-      data[name] = '';
+    for (const name in selections)
+      selections[name] = '';
 
-    this.setState({ data });
+    this.setState({ selections });
   }
 
   handleSubmit = e => {
     e.preventDefault();
 
-    const { data } = this.state;
-    data.fuelType = FUEL_TYPES.indexOf(data.fuelType);
+    const { selections } = this.state;
+    console.log(selections);
 
-    console.log(data);
-
-    this.props.onSelected(data);
+    this.props.onSelected(selections);
   }
 
-  getMakes = async () => {
-    console.log(this.state);
+  formatEngineType(item) {
+    let text = item.power + ' kW';
+    
+    if (item.code)
+      text += ' (' + item.code + ')';
 
-    const { data } = await http.get('/data/makes');
-    return data
+    return text;
   }
 
-   getModelYears = async () => {
-    const { data } = await http.get('/data/modelYears?make=' + this.state.data.make);
-    return data
-  }
+  renderEngineTypes() {
+    const { engineType, engineTypes } = this.state;
 
-  getFuelTypes = async () => {
-    const { data } = await http.get('/data/fuelTypes?make=' + this.state.data.make);
-    return data
-  }
-
-  getModels = async () => {
-    const { data } = await http.get('/data/models?make=' + this.state.data.make);
-    return data
-  }
-
-  getEngineSizes = async () => {
-    const { data } = await http.get('/data/engineSizes?make=' + this.state.data.make);
-    return data
+    return engineTypes.map((item, index) => (
+      <Form.Check
+        type="radio"
+        label={this.formatEngineType(item)}
+        key={index}
+        value={index}
+        checked={engineType == index}
+        onChange={this.handleEngineTypeChange}
+      />
+    ));
   }
 
   render() {
-    const { make, modelYear, fuelType, model, engineSize } = this.state.data;
+    const { make, modelYear, fuelType, model, engineSize, enginePower, engineCode } = this.state.selections;
+    const { makes, modelYears, fuelTypes, models, engineSizes } = this.state;
 
     return (
       <Form onSubmit={this.handleSubmit}>
-        <FieldSelect name="make" placeholder="Valitse merkki" value={make} getValues={this.getMakes} onChange={this.handleChange} />
-        {make && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} getValues={this.getModelYears} onChange={this.handleChange} />}
-        {modelYear && <FieldSelect name="fuelType" placeholder="Valitse käyttövoima" value={fuelType} getValues={this.getFuelTypes} onChange={this.handleChange} />}
-        {fuelType && <FieldSelect name="model" placeholder="Valitse malli" value={model} getValues={this.getModels} onChange={this.handleChange} />}
-        {model && <FieldSelect name="engineSize" placeholder="Valitse moottorin koko" value={engineSize} getValues={this.getEngineSizes} onChange={this.handleChange} />}
-        <Button className="mb-2 mr-sm-2" type="submit" disabled={!engineSize}>Jatka</Button>
+        <FieldSelect name="make" placeholder="Valitse merkki" value={make} options={makes} onChange={this.handleMakeChange} />
+        {make && <FieldSelect name="modelYear" placeholder="Valitse mallivuosi" value={modelYear} options={modelYears} onChange={this.handleModelYearChange} />}
+        {modelYear && <FieldSelect name="fuelType" placeholder="Valitse käyttövoima" value={fuelType} options={fuelTypes} onChange={this.handleFuelTypeChange} />}
+        {fuelType && <FieldSelect name="model" placeholder="Valitse malli" value={model} options={models} onChange={this.handleModelChange} />}
+        {model && <FieldSelect name="engineSize" placeholder="Valitse moottorin koko" value={engineSize} options={engineSizes} onChange={this.handleEngineSizeChange} />}
+        {engineSize && this.renderEngineTypes()}
+        <Button className="mb-2 mr-sm-2" type="submit" disabled={!(enginePower || engineCode)}>Jatka</Button>
         <Button className="mb-2 mr-sm-2" disabled={!make} onClick={this.handleClear}>Tyhjennä</Button>
       </Form>
     );

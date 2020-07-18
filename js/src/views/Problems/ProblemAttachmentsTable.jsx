@@ -5,11 +5,11 @@ export default class ProblemAttachmentsTable extends BaseTable {
     super();
 
     this.addId();
-    this.addField('ProblemId',   'Vikatapaus',   'number', { visible: false });
-    this.addField('FileName',    'Tiedostonimi', 'text');
-    this.addField('FileType',    'Tyyppi',       'text');
-//    this.addField('Content',     'Sisältö',      'text');
-    this.addField('Description', 'Kuvaus',       'textarea', { editLink: true});
+    this.addField('ProblemId',   'Vikatapaus', 'number',   { visible: false });
+    this.addField('FileName',    'Tiedosto',   'text',     { link: () => '/attachment' });
+    this.addField('FileType',    'Tyyppi',     'text',     { editLink: true});
+//    this.addField('Content',     'Sisältö',    'text');
+    this.addField('Description', 'Kuvaus',     'textarea', { editLink: true});
   }
 
   getTitle() {
