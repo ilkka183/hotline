@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
-import { FUEL_TYPES } from './ProblemsTable';
-import http from '../../services/httpService';
+import { FUEL_TYPES } from './../ProblemsTable';
+import http from '../../../services/httpService';
 
 
 export default class SelectVehicleForm extends Component {
@@ -103,7 +103,7 @@ export default class SelectVehicleForm extends Component {
   handleEngineTypeChange = async ({ currentTarget: radio }) => {
     const engine = this.state.engineTypes[radio.value];
 
-    const engineType = radio.value;
+    const engineType = parseInt(radio.value);
 
     const selections = {...this.state.selections};
     selections.enginePower = engine.power;
@@ -150,7 +150,7 @@ export default class SelectVehicleForm extends Component {
         label={this.formatEngineType(item)}
         key={index}
         value={index}
-        checked={engineType == index}
+        checked={engineType === index}
         onChange={this.handleEngineTypeChange}
       />
     ));

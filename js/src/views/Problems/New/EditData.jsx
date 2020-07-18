@@ -1,5 +1,5 @@
-import DataForm from '../DataForm';
-import { FUEL_TYPES } from './ProblemsTable';
+import DataForm from '../../DataForm';
+import { FUEL_TYPES } from '../ProblemsTable';
 
 export default class ProblemForm extends DataForm {
   state = {

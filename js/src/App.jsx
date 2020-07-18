@@ -7,7 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './views/Home';
 import About from './views/About';
-import NotFound from './views/Problems/NotFound';
+import NotFound from './views/NotFound';
 
 import MakesTable from './views/Makes/MakesTable';
 import MakeForm from './views/Makes/MakeForm';
@@ -27,7 +27,7 @@ import Problem from './views/Problems/Problem';
 import ProblemForm from './views/Problems/ProblemForm';
 import ProblemAttachmentForm from './views/Problems/ProblemAttachmentForm';
 import ProblemReplyForm from './views/Problems/ProblemReplyForm';
-import NewProblemForm from './views/Problems/NewProblemForm';
+import NewProblemForm from './views/Problems/New/NewProblemForm';
 
 import ProfileForm from './views/Profile/ProfileForm';
 import ChangePasswordForm from './views/Profile/ChangePasswordForm';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import http from '../../services/httpService';
+import http from '../../../services/httpService';
 
 export default class RegistrationNumberForm extends Component {
   state = {
@@ -18,6 +18,10 @@ export default class RegistrationNumberForm extends Component {
     this.setState({ number: '', error: '' });
 
     this.props.onClear();
+  }
+
+  handleSkip = () => {
+    this.props.onSkip();
   }
 
   handleFill = (number) => {

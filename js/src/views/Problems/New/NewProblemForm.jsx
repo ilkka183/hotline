@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
-import RegistrationNumber from './RegistrationNumber'
-import SelectData from './SelectData'
-import ProblemWizard from './ProblemWizard'
-import EditData from './EditData'
-import auth from '../../services/authService';
+import RegistrationNumberPage from './RegistrationNumberPage'
+import ProblemFormPage from './ProblemFormPage'
+import SelectDataPage from './SelectDataPage'
+import auth from '../../../services/authService';
 
 function getFuelType(text) {
   switch (text) {
@@ -18,7 +17,9 @@ function getFuelType(text) {
 
 export default class NewProblemForm extends Component {
   state = {
-    data: null
+    data: null,
+    quidedStep: 0,
+    manualStep: 0
   }
 
   handleSelect = (eventKey) => {
@@ -78,6 +79,22 @@ export default class NewProblemForm extends Component {
     this.setState({ data: null });
   }
 
+  handleQuidedPrev = () => {
+    this.setState({ quidedStep: this.state.quidedStep - 1 });
+  }
+
+  handleQuidedNext = () => {
+    this.setState({ quidedStep: this.state.quidedStep + 1 });
+  }
+
+  handleManualPrev = () => {
+    this.setState({ manualStep: this.state.manualStep - 1 });
+  }
+
+  handleManualNext = () => {
+    this.setState({ manualStep: this.state.manualStep + 1 });
+  }
+
   handleSelectionSelected = (info) => {
     this.setState({ data: null });
 
@@ -99,18 +116,17 @@ export default class NewProblemForm extends Component {
     return (
       <Container>
         <h2>Lisää uusi vikatapaus</h2>
-        <Tabs className="mb-2" variant="pills" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
-          <Tab eventKey="search" title="Hae rekisterinumerolla">
-            <RegistrationNumber onSearch={this.handleRegistrationNumberSearch} onClear={this.handleRegistrationNumberClear} />
-          </Tab>
+        <Tabs className="mb-2" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
           <Tab eventKey="select" title="Ohjattu syöttö">
-            <SelectData onSelected={this.handleSelectionSelected} />
+            {this.state.quidedStep === 0 && <RegistrationNumberPage onNext={this.handleQuidedNext} />}
+            {this.state.quidedStep === 1 && <SelectDataPage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} onSelected={this.handleSelectionSelected} />}
+            {this.state.quidedStep === 2 && <ProblemFormPage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} data={this.state.data} showTitle={false} onSubmit={this.handleSubmit}/>}
           </Tab>
           <Tab eventKey="manual" title="Manuaalinen syöttö">
+            {this.state.manualStep === 0 && <RegistrationNumberPage onNext={this.handleManualNext} />}
+            {this.state.manualStep === 1 && <ProblemFormPage onPrev={this.handleManualPrev} />}
           </Tab>
         </Tabs>
-        {this.state.data && <ProblemWizard data={this.state.data} onSubmit={this.handleSubmit}/>}
-        {this.state.data && false && <EditData data={this.state.data} onSubmit={this.handleSubmit}/>}
       </Container>
     );
   }
