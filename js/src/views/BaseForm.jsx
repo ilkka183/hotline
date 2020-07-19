@@ -17,6 +17,12 @@ export default class BaseForm extends DataForm {
   }
 
   afterSubmit() {
-    this.props.history.goBack();
+    const { history, onSubmitted } = this.props;
+
+    if (onSubmitted)
+      onSubmitted();
+
+    if (history)
+      history.goBack();
   }
 }

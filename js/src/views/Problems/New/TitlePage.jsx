@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-export default class ProblemWizard extends Component {
+export default class TitlePage extends Component {
   state = {
     data: null
   }
@@ -29,8 +29,8 @@ export default class ProblemWizard extends Component {
           <Form.Check type="radio" label="Tiedonsiirto diagnoositestilaitteella" />
           <Form.Check type="radio" label="Jokin Muu" inline />
           <Form.Control />
-          <Button variant="primary">Seuraava</Button>          
         </Form>
+        <Button className="mb-2" onClick={this.props.onNext}>Seuraava</Button>
       </>
     );
   }

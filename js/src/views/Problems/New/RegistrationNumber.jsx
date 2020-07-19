@@ -16,12 +16,6 @@ export default class RegistrationNumberForm extends Component {
 
   handleClear = () => {
     this.setState({ number: '', error: '' });
-
-    this.props.onClear();
-  }
-
-  handleSkip = () => {
-    this.props.onSkip();
   }
 
   handleFill = (number) => {
@@ -37,7 +31,7 @@ export default class RegistrationNumberForm extends Component {
       const { number } = this.state;
       const { data } = await http.get('/traficom/' + number);
 
-      this.props.onSearch(data);
+      this.props.onFound(data);
     }
     catch (ex) {
       if (ex.response && ex.response.status === 404) {
@@ -50,9 +44,11 @@ export default class RegistrationNumberForm extends Component {
 
   render() { 
     const { number, error } = this.state;
+    const { onNext } = this.props;
 
     return (
       <>
+        <h4>Hae ajoneuvon tiedot rekisterinumerolla</h4>
         <Form inline onSubmit={this.handleSubmit}>
           <Form.Control
             className="mb-2 mr-sm-2"
@@ -66,8 +62,10 @@ export default class RegistrationNumberForm extends Component {
           <Button className="mb-2 mr-sm-2" variant="light" onClick={() => this.handleFill('ZLP-833')}>Leon</Button>
           <Button className="mb-2 mr-sm-2" variant="light" onClick={() => this.handleFill('ISI-561')}>Golf</Button>
           <Button className="mb-2 mr-sm-2" variant="light" onClick={() => this.handleFill('SIO-913')}>Focus</Button>
+          <Button className="mb-2 mr-sm-2" onClick={onNext}>Ohita</Button>
         </Form>
         {error && <Alert variant="danger">{error}</Alert>}
+        <p>Voit ohittaa haun ja syöttää ajoneuvon tiedot seuraavassa lomakkeessa käsin.</p>
       </>
     );
   }

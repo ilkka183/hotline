@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
-import RegistrationNumberPage from './RegistrationNumberPage'
+import RegistrationNumber from './RegistrationNumber'
 import ProblemFormPage from './ProblemFormPage'
-import SelectDataPage from './SelectDataPage'
+import SelectData from './SelectData'
+import TitlePage from './TitlePage'
+import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
 
 function getFuelType(text) {
@@ -49,34 +51,37 @@ export default class NewProblemForm extends Component {
     this.setState({ data });
   }
 
-  handleRegistrationNumberSearch = (info) => {
-    this.setState({ data: null });
-
-    console.log(info);
-
+  handleRegistrationNumberFound = (info) => {
     const data = {
-      userId: auth.getCurrentUser().id,
-      make: info.carMake,
-      model: info.carModel,
-      registrationYear: info.registrationYear,
-      registrationNumber: info.registrationNumber,
-      fuelType: getFuelType(info.fuelType),
-      power: info.power,
-      cylinderCount: info.cylinderCount,
-      engineCode: info.engineCode,
-      engineSize: info.engineSize,
-      vin: info.vechileIdentificationNumber,
-      netWeight: info.netWeight,
-      grossWeight: info.grossWeight
+      UserId: auth.getCurrentUser().id,
+      Make: info.carMake,
+      Model: info.carModel,
+      RegistrationYear: info.registrationYear,
+      RegistrationNumber: info.registrationNumber,
+      FuelType: getFuelType(info.fuelType),
+      Power: info.power,
+      CylinderCount: info.cylinderCount,
+      EngineCode: info.engineCode,
+      EngineSize: info.engineSize,
+      VIN: info.vechileIdentificationNumber,
+      NetWeight: info.netWeight,
+      GrossWeight: info.grossWeight,
+      Status: 0
     }
 
-    this.setState({ data });
-
     console.log(data);
+
+    this.setState({ data });
   }
 
-  handleRegistrationNumberClear = () => {
-    this.setState({ data: null });
+  handleManualRegistrationNumberFound = (info) => {
+    this.handleRegistrationNumberFound(info);
+    this.setState({ manualStep: 1 });
+  }
+
+  handleQuidedRegistrationNumberFound = (info) => {
+    this.handleRegistrationNumberFound(info);
+    this.setState({ quidedStep: 2 });
   }
 
   handleQuidedPrev = () => {
@@ -103,28 +108,87 @@ export default class NewProblemForm extends Component {
       ...info
     }
 
-    this.setState({ data });
+    const quidedStep = 2;
 
     console.log(data);
+
+    this.setState({ data, quidedStep });
   }
 
-  handleSubmit = e => {
+  handleProblemFormSubmitted = () => {
     this.props.history.goBack();
   }
 
-  render() { 
+  renderQuidedRegistrationNumber() {
+    return (
+      <RegistrationNumber
+        onFound={this.handleQuidedRegistrationNumberFound}
+        onNext={this.handleQuidedNext}
+      />
+    );
+  }
+
+  renderQuidedSelectData() {
+    return (
+      <>
+        <h4>Valitse ajoneuvon tiedot</h4>
+        <SelectData onSelected={this.handleSelectionSelected} />
+      </>
+    );
+  }
+
+  renderQuidedTitle() {
+    return (
+      <TitlePage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} />
+    );
+  }
+
+  renderQuidedProblemForm() {
+    return (
+      <ProblemFormPage
+        data={this.state.data}
+        onPrev={this.handleQuidedPrev}
+        onSubmitted={this.handleProblemFormSubmitted}
+      />
+    );
+  }
+
+  renderManualRegistrationNumber() {
+    return (
+      <RegistrationNumber
+        onFound={this.handleManualRegistrationNumberFound}
+        onNext={this.handleManualNext}
+      />
+    );
+  }
+
+  renderManualProblemForm() {
+    return (
+      <>
+        <h4>Syötä ajoneuvon tiedot sekä kuvaile vikatapaus</h4>
+        <ProblemForm
+          data={this.state.data}
+          showTitle={false}
+          onSubmitted={this.handleSubmitted}
+        />
+      </>
+    );
+  }
+
+  render() {
     return (
       <Container>
         <h2>Lisää uusi vikatapaus</h2>
         <Tabs className="mb-2" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
           <Tab eventKey="select" title="Ohjattu syöttö">
-            {this.state.quidedStep === 0 && <RegistrationNumberPage onNext={this.handleQuidedNext} />}
-            {this.state.quidedStep === 1 && <SelectDataPage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} onSelected={this.handleSelectionSelected} />}
-            {this.state.quidedStep === 2 && <ProblemFormPage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} data={this.state.data} showTitle={false} onSubmit={this.handleSubmit}/>}
+            {this.state.quidedStep === 0 && this.renderQuidedRegistrationNumber()}
+            {this.state.quidedStep === 1 && this.renderQuidedSelectData()}
+            {this.state.quidedStep === 2 && this.renderQuidedTitle()}
+            {this.state.quidedStep === 3 && this.renderQuidedProblemForm()}
           </Tab>
           <Tab eventKey="manual" title="Manuaalinen syöttö">
-            {this.state.manualStep === 0 && <RegistrationNumberPage onNext={this.handleManualNext} />}
-            {this.state.manualStep === 1 && <ProblemFormPage onPrev={this.handleManualPrev} />}
+            {this.state.manualStep === 0 && this.renderManualRegistrationNumber()}
+            {this.state.manualStep === 1 && this.renderManualProblemForm()}
           </Tab>
         </Tabs>
       </Container>
