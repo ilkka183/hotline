@@ -8,8 +8,8 @@ export default class ManualRegistrationNumberPage extends Component {
 
     return (
       <>
-        <Button className="mb-2" onClick={this.props.onPrev}>Edellinen</Button>
-        <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
+        <Button className="mt-2 mb-2" onClick={this.props.onPrev}>Edellinen</Button>
+        <h4>Syötä ajoneuvon tiedot ja vian kuvaus</h4>
         <ProblemForm data={data} showTitle={false} onSubmitted={onSubmitted} />
       </>
     );

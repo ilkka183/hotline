@@ -11,14 +11,16 @@ export default class ModelForm extends BaseForm {
     super();
 
     this.addId();
-    this.addField('MakeId',        'Merkki',            'number', { required: true, lookupUrl: 'Makes' });
-    this.addField('Name',          'Malli',             'text',   { required: true });
-    this.addField('BeginYear',     'Vuodesta',          'number', { required: true });
-    this.addField('EndYear',       'Vuoteen',           'number');
-    this.addField('FuelType',      'Käyttövoima',       'number', { required: true, enums: FUEL_TYPES });
-    this.addField('EngineSize',    'Sylinteritilavuus', 'number', { required: true });
-    this.addField('CylinderCount', 'Sylinterimäärä',    'number');
-    this.addField('Power',         'Teho (kW)',         'number');
+    this.addField('MakeId',        'Merkki',               'number', { required: true, lookupUrl: 'Makes' });
+    this.addField('Name',          'Malli',                'text',   { required: true });
+    this.addField('BeginYear',     'Vuodesta',             'number', { required: true });
+    this.addField('EndYear',       'Vuoteen',              'number');
+    this.addField('FuelType',      'Käyttövoima',          'number', { required: true, enums: FUEL_TYPES });
+    this.addField('EngineSize',    'Kuutiotilavuus (cm3)', 'number', { required: true });
+    this.addField('CylinderCount', 'Sylinterimäärä',       'number', { required: true });
+    this.addField('EnginePower',   'Teho (kW)',            'number', { required: true });
+    this.addField('EngineCode',    'Moottorin koodi',      'text');
+    this.addField('MID',           'MID',                  'text');
     this.addEnabled();
     this.addTimestamps();
     

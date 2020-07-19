@@ -84,8 +84,11 @@ export default class DataForm extends FieldsForm {
       // Copy data from props
       const data = {...this.state.data};
 
-      for (const name in this.props.data)
-        data[name] = this.props.data[name];
+      for (const name in data) {
+        const value = this.props.data[name];
+
+        data[name] = (value !== undefined && value !== null) ? value : '';
+      }
   
       this.setState({ data });
     }

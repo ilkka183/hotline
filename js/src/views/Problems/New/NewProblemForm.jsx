@@ -6,6 +6,7 @@ import RegistrationNumber from './RegistrationNumber'
 import ProblemFormPage from './ProblemFormPage'
 import SelectData from './SelectData'
 import TitlePage from './TitlePage'
+import DescriptionPage from './DescriptionPage'
 import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
 
@@ -24,63 +25,82 @@ export default class NewProblemForm extends Component {
     manualStep: 0
   }
 
-  handleSelect = (eventKey) => {
-    this.setState({ data: null });
+  constructor() {
+    super();
 
-    let data = null;
-
-    if (eventKey === 'manual') {
-      data = {
-        userId: auth.getCurrentUser().id,
-        make: '',
-        model: '',
-        modelYear: '',
-        registrationYear: '',
-        registrationNumber: '',
-        fuelType: '',
-        power: '',
-        cylinderCount: '',
-        engineCode: '',
-        engineSize: '',
-        vin: '',
-        netWeight: '',
-        grossWeight: ''
-      }
+    this.state.data = {
+      UserId: auth.getCurrentUser().id,
+      Make: '',
+      Model: '',
+      ModelYear: '',
+      RegistrationYear: '',
+      RegistrationNumber: '',
+      FuelType: '',
+      Power: '',
+      CylinderCount: '',
+      EngineCode: '',
+      EngineSize: '',
+      VIN: '',
+      NetWeight: '',
+      GrossWeight: '',
+      Title: '',
+      Description: '',
+      Status: 0
     }
+  }
+
+  handleRegistrationNumberFound = (info) => {
+    const data = {...this.state.data}
+
+    data.Make = info.carMake;
+    data.Model = info.carModel;
+    data.RegistrationYear = info.registrationYear;
+    data.RegistrationNumber = info.registrationNumber;
+    data.FuelType = getFuelType(info.fuelType);
+    data.EnginePower = info.power;
+    data.CylinderCount = info.cylinderCount;
+    data.EngineCode = info.engineCode;
+    data.EngineSize = info.engineSize;
+    data.VIN = info.vechileIdentificationNumber;
+    data.NetWeight = info.netWeight;
+    data.GrossWeight = info.grossWeight;
 
     this.setState({ data });
   }
 
-  handleRegistrationNumberFound = (info) => {
-    const data = {
-      UserId: auth.getCurrentUser().id,
-      Make: info.carMake,
-      Model: info.carModel,
-      RegistrationYear: info.registrationYear,
-      RegistrationNumber: info.registrationNumber,
-      FuelType: getFuelType(info.fuelType),
-      Power: info.power,
-      CylinderCount: info.cylinderCount,
-      EngineCode: info.engineCode,
-      EngineSize: info.engineSize,
-      VIN: info.vechileIdentificationNumber,
-      NetWeight: info.netWeight,
-      GrossWeight: info.grossWeight,
-      Status: 0
-    }
+  handleDataSelected = (info) => {
+    const data = {...this.state.data}
 
-    console.log(data);
+    data.Make = info.make;
+    data.Model = info.model;
+    data.ModelYear = info.modelYear;
+    data.FuelType = info.fuelType;
+    data.EngineSize = info.engineSize;
+    data.EnginePower = info.enginePower;
+    data.EngineCode = info.engineCode;
+
+    const quidedStep = 2;
+
+    this.setState({ data, quidedStep });
+  }
+
+  handleInputChange = ({ currentTarget: input }) => {
+    const data = {...this.state.data}
+
+    data[input.name] = input.value;
 
     this.setState({ data });
   }
 
   handleManualRegistrationNumberFound = (info) => {
     this.handleRegistrationNumberFound(info);
+
     this.setState({ manualStep: 1 });
   }
 
   handleQuidedRegistrationNumberFound = (info) => {
     this.handleRegistrationNumberFound(info);
+
     this.setState({ quidedStep: 2 });
   }
 
@@ -100,21 +120,6 @@ export default class NewProblemForm extends Component {
     this.setState({ manualStep: this.state.manualStep + 1 });
   }
 
-  handleSelectionSelected = (info) => {
-    this.setState({ data: null });
-
-    const data = {
-      userId: auth.getCurrentUser().id,
-      ...info
-    }
-
-    const quidedStep = 2;
-
-    console.log(data);
-
-    this.setState({ data, quidedStep });
-  }
-
   handleProblemFormSubmitted = () => {
     this.props.history.goBack();
   }
@@ -132,14 +137,31 @@ export default class NewProblemForm extends Component {
     return (
       <>
         <h4>Valitse ajoneuvon tiedot</h4>
-        <SelectData onSelected={this.handleSelectionSelected} />
+        <SelectData
+          onSelected={this.handleDataSelected}
+        />
       </>
     );
   }
 
   renderQuidedTitle() {
     return (
-      <TitlePage onPrev={this.handleQuidedPrev} onNext={this.handleQuidedNext} />
+      <TitlePage
+        data={this.state.data}
+        onChange={this.handleInputChange}
+        onNext={this.handleQuidedNext}
+      />
+    );
+  }
+
+  renderQuidedDescription() {
+    return (
+      <DescriptionPage
+        data={this.state.data}
+        onChange={this.handleInputChange}
+        onPrev={this.handleQuidedPrev}
+        onNext={this.handleQuidedNext}
+      />
     );
   }
 
@@ -169,7 +191,7 @@ export default class NewProblemForm extends Component {
         <ProblemForm
           data={this.state.data}
           showTitle={false}
-          onSubmitted={this.handleSubmitted}
+          onSubmitted={this.handleProblemFormSubmitted}
         />
       </>
     );
@@ -184,7 +206,8 @@ export default class NewProblemForm extends Component {
             {this.state.quidedStep === 0 && this.renderQuidedRegistrationNumber()}
             {this.state.quidedStep === 1 && this.renderQuidedSelectData()}
             {this.state.quidedStep === 2 && this.renderQuidedTitle()}
-            {this.state.quidedStep === 3 && this.renderQuidedProblemForm()}
+            {this.state.quidedStep === 3 && this.renderQuidedDescription()}
+            {this.state.quidedStep === 4 && this.renderQuidedProblemForm()}
           </Tab>
           <Tab eventKey="manual" title="Manuaalinen syöttö">
             {this.state.manualStep === 0 && this.renderManualRegistrationNumber()}
