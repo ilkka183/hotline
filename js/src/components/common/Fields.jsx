@@ -15,6 +15,9 @@ export class Field {
       this.default = '';
 
     if (options) {
+      if (options.render !== undefined)
+        this.render = options.render;
+
       if (options.link !== undefined)
         this.link = options.link;
 

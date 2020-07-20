@@ -1,8 +1,13 @@
-import DataForm from './DataForm';
+import DataForm from '../components/common/DataForm';
+import http from '../services/httpService';
 
 const SHOW_IDS = true;
 
 export default class BaseForm extends DataForm {
+  getHttp() {
+    return http;
+  }
+
   addId(visible = SHOW_IDS) {
     this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
   }

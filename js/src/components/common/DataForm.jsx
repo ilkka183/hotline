@@ -1,6 +1,5 @@
 import { toast } from 'react-toastify';
-import FieldsForm from '../components/common/FieldsForm';
-import http from '../services/httpService';
+import FieldsForm from './FieldsForm';
 
 export default class DataForm extends FieldsForm {
   get dataId() {
@@ -27,6 +26,14 @@ export default class DataForm extends FieldsForm {
     throw new Error('You have to implement the method getApiName!');
   }
 
+  getHttp() {
+    throw new Error('You have to implement the method getHttp!');
+  }
+
+  get http() {
+    return this.getHttp();
+  }
+
   get apiEndpoint() {
     return '/' + this.getApiName();
   }
@@ -38,7 +45,7 @@ export default class DataForm extends FieldsForm {
   async populateLookups() {
     for (const field of this.fields) {
       if (field.lookupUrl) {
-        const { data } = await http.get('/' + field.lookupUrl);
+        const { data } = await this.http.get('/' + field.lookupUrl);
 
         const lookup = [{ value: null, text: '' }];
 
@@ -68,7 +75,7 @@ export default class DataForm extends FieldsForm {
     if (this.dataId) {
       // Fetch data from database
       try {
-        const { data: item } = await http.get(this.apiEndpointOf(this.dataId));
+        const { data: item } = await this.http.get(this.apiEndpointOf(this.dataId));
   
         const savedData = this.jsonToData(item)
         const data = this.jsonToData(item)
@@ -125,7 +132,7 @@ export default class DataForm extends FieldsForm {
       if (Object.keys(row).length > 0) {
         try {
           console.log('put', row);
-          await http.put(this.apiEndpointOf(data.Id), row);
+          await this.http.put(this.apiEndpointOf(data.Id), row);
           this.afterSubmit();
         }
         catch (ex) {
@@ -148,7 +155,7 @@ export default class DataForm extends FieldsForm {
         }
 
         console.log('post', row);
-        await http.post(this.apiEndpoint, row);
+        await this.http.post(this.apiEndpoint, row);
         this.afterSubmit();
       }
       catch (ex) {

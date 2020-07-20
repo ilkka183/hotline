@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
@@ -270,9 +269,9 @@ export default class NewProblemForm extends Component {
         <ProblemForm
           data={this.state.data}
           showTitle={false}
+          onPrev={this.handleCompositionPrev}
           onSubmitted={this.handleProblemFormSubmitted}
         />
-        <Button className="mt-2" onClick={this.handleCompositionPrev}>Edellinen</Button>
       </>
     );
   }

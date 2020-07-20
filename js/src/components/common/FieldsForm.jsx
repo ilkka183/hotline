@@ -223,6 +223,7 @@ export default class FieldsForm extends FieldsComponent {
   renderSubmitButton(label) {
     return (
       <Button
+        className="mr-2"
         variant="primary"
         type="submit"
         disabled={this.validate() && false}
@@ -230,6 +231,24 @@ export default class FieldsForm extends FieldsComponent {
         {label}
       </Button>
     );
+  }
+
+  renderPrevButton() {
+    const { onPrev } = this.props;
+
+    if (onPrev)
+      return <Button className="mr-2" variant="primary" onClick={onPrev}>Edellinen</Button>
+
+    return null;
+  }
+
+  renderNextButton() {
+    const { onNext } = this.props;
+
+    if (onNext)
+      return <Button className="mr-2" variant="primary" onClick={onNext}>Seuraava</Button>
+
+    return null;
   }
 
   get formattedTitle() {
@@ -299,7 +318,9 @@ export default class FieldsForm extends FieldsComponent {
         {this.renderTitle()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
+          {this.renderPrevButton()}
           {this.renderSubmitButton(this.getButtonLabel())}
+          {this.renderNextButton()}
           {successText && <Alert variant="success">{successText}</Alert>}
           {errorText && <Alert variant="danger">{errorText}</Alert>}
         </Form>

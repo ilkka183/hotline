@@ -1,3 +1,5 @@
+import React from 'react';
+import Button from 'react-bootstrap/Button'
 import BaseTable from '../BaseTable';
 import auth from '../../services/authService';
 
@@ -13,6 +15,7 @@ export default class ProblemRepliessTable extends BaseTable {
     this.addField('UserName',  'Lähettäjä',  'text');
     this.addField('Message',   'Viesti',     'textarea', { editLink: true, rows: 5 });
     this.addField('Solution',  'Ratkaisu',   'boolean');
+    this.addField('Mark',      '',           'button',   { render: row => this.renderSolutionButton(row) });
   }
 
   getTitle() {
@@ -37,5 +40,13 @@ export default class ProblemRepliessTable extends BaseTable {
 
   canDelete(item) {
     return item.UserId === this.user.id || this.user.role === 0;
+  }
+
+  renderSolutionButton(row) {
+    return <Button variant="success" size="sm" onClick={() => this.markToSolution(row)}>Ratkaisu</Button>
+  }
+
+  markToSolution(row) {
+    console.log(row);
   }
 }

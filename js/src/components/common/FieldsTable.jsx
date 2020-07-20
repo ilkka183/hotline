@@ -182,8 +182,8 @@ export default class DataTable extends FieldsComponent {
   }
 
   renderCellContent(row, column) {
-    if (column.content)
-      return column.content(row);
+    if (column.render)
+      return column.render(row);
 
     const text = column.formatValue(row[column.name]);
 
