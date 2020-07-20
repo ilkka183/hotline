@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import DataInfo from './DataInfo'
 
-export default function DescriptionPage({ data, onChange, onPrev, onNext }) {
+export default function CompositionDescription({ data, description, onChange, onPrev, onNext }) {
   return (
     <>
       <Button
@@ -14,7 +14,7 @@ export default function DescriptionPage({ data, onChange, onPrev, onNext }) {
       </Button>
       <Button
         className="mt-2 mb-2"
-        disabled={!data.Description}
+        disabled={!description.description}
         onClick={onNext}
       >
         Seuraava
@@ -26,8 +26,8 @@ export default function DescriptionPage({ data, onChange, onPrev, onNext }) {
           <Form.Control
             as="textarea"
             rows={5}
-            name="Description"
-            value={data.Description}
+            name="description"
+            value={description.description}
             onChange={onChange}
           />
         </Form.Group>          

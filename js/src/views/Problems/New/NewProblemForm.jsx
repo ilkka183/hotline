@@ -5,8 +5,8 @@ import Tabs from 'react-bootstrap/Tabs'
 import RegistrationNumber from './RegistrationNumber'
 import ProblemFormPage from './ProblemFormPage'
 import SelectData from './SelectData'
-import TitlePage from './TitlePage'
-import DescriptionPage from './DescriptionPage'
+import CompositionTitle from './CompositionTitle'
+import CompositionDescription from './CompositionDescription'
 import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
 
@@ -21,7 +21,9 @@ function getFuelType(text) {
 export default class NewProblemForm extends Component {
   state = {
     data: null,
-    quidedStep: 0,
+    title: null,
+    description: null,
+    compositionStep: 0,
     manualStep: 0
   }
 
@@ -46,10 +48,20 @@ export default class NewProblemForm extends Component {
       Title: '',
       Description: '',
       Status: 0
+    };
+
+    this.state.title = {
+      group: '',
+      groupOther: '',
+      title: ''
+    }
+
+    this.state.description = {
+      description: ''
     }
   }
 
-  handleRegistrationNumberFound = (info) => {
+  handleRegistrationNumber = (info) => {
     const data = {...this.state.data}
 
     data.Make = info.carMake;
@@ -79,61 +91,81 @@ export default class NewProblemForm extends Component {
     data.EnginePower = info.enginePower;
     data.EngineCode = info.engineCode;
 
-    const quidedStep = 2;
+    const compositionStep = 2;
 
-    this.setState({ data, quidedStep });
+    this.setState({ data, compositionStep });
   }
 
-  handleInputChange = ({ currentTarget: input }) => {
-    const data = {...this.state.data}
+  handleTitleChange = ({ currentTarget: input }) => {
+    const title = {...this.state.title}
 
-    data[input.name] = input.value;
+    title[input.name] = input.value;
 
-    this.setState({ data });
+    console.log(title);
+
+    this.setState({ title });
   }
 
-  handleManualRegistrationNumberFound = (info) => {
-    this.handleRegistrationNumberFound(info);
+  handleDescriptionChange = ({ currentTarget: input }) => {
+    const description = {...this.state.description}
+
+    description[input.name] = input.value;
+
+    this.setState({ description });
+  }
+
+  handleManualRegistrationNumber = (info) => {
+    this.handleRegistrationNumber(info);
 
     this.setState({ manualStep: 1 });
   }
 
-  handleQuidedRegistrationNumberFound = (info) => {
-    this.handleRegistrationNumberFound(info);
+  handleCompositionRegistrationNumber = (info) => {
+    this.handleRegistrationNumber(info);
 
-    this.setState({ quidedStep: 2 });
+    this.setState({ compositionStep: 2 });
   }
 
-  handleQuidedPrev = () => {
-    this.setState({ quidedStep: this.state.quidedStep - 1 });
+  handleCompositionPrev = () => {
+    const compositionStep = this.state.compositionStep - 1;
+
+    console.log('next');
+
+    this.setState({ compositionStep });
   }
 
-  handleQuidedNext = () => {
-    this.setState({ quidedStep: this.state.quidedStep + 1 });
+  handleCompositionNext = () => {
+    const compositionStep = this.state.compositionStep + 1;
+    
+    this.setState({ compositionStep });
   }
 
   handleManualPrev = () => {
-    this.setState({ manualStep: this.state.manualStep - 1 });
+    const manualStep = this.state.manualStep - 1;
+
+    this.setState({ manualStep });
   }
 
   handleManualNext = () => {
-    this.setState({ manualStep: this.state.manualStep + 1 });
+    const manualStep = this.state.manualStep + 1;
+
+    this.setState({ manualStep });
   }
 
   handleProblemFormSubmitted = () => {
     this.props.history.goBack();
   }
 
-  renderQuidedRegistrationNumber() {
+  renderCompositionRegistrationNumber() {
     return (
       <RegistrationNumber
-        onFound={this.handleQuidedRegistrationNumberFound}
-        onNext={this.handleQuidedNext}
+        onFound={this.handleCompositionRegistrationNumber}
+        onNext={this.handleCompositionNext}
       />
     );
   }
 
-  renderQuidedSelectData() {
+  renderCompositionSelectData() {
     return (
       <>
         <h4>Valitse ajoneuvon tiedot</h4>
@@ -144,32 +176,34 @@ export default class NewProblemForm extends Component {
     );
   }
 
-  renderQuidedTitle() {
+  renderCompositionTitle() {
     return (
-      <TitlePage
+      <CompositionTitle
         data={this.state.data}
-        onChange={this.handleInputChange}
-        onNext={this.handleQuidedNext}
+        title={this.state.title}
+        onChange={this.handleTitleChange}
+        onNext={this.handleCompositionNext}
       />
     );
   }
 
-  renderQuidedDescription() {
+  renderCompositionDescription() {
     return (
-      <DescriptionPage
+      <CompositionDescription
         data={this.state.data}
-        onChange={this.handleInputChange}
-        onPrev={this.handleQuidedPrev}
-        onNext={this.handleQuidedNext}
+        description={this.state.description}
+        onChange={this.handleDescriptionChange}
+        onPrev={this.handleCompositionPrev}
+        onNext={this.handleCompositionNext}
       />
     );
   }
 
-  renderQuidedProblemForm() {
+  renderCompositionProblemForm() {
     return (
       <ProblemFormPage
         data={this.state.data}
-        onPrev={this.handleQuidedPrev}
+        onPrev={this.handleCompositionPrev}
         onSubmitted={this.handleProblemFormSubmitted}
       />
     );
@@ -178,7 +212,7 @@ export default class NewProblemForm extends Component {
   renderManualRegistrationNumber() {
     return (
       <RegistrationNumber
-        onFound={this.handleManualRegistrationNumberFound}
+        onFound={this.handleManualRegistrationNumber}
         onNext={this.handleManualNext}
       />
     );
@@ -202,12 +236,12 @@ export default class NewProblemForm extends Component {
       <Container>
         <h2>Lisää uusi vikatapaus</h2>
         <Tabs className="mb-2" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
-          <Tab eventKey="select" title="Ohjattu syöttö">
-            {this.state.quidedStep === 0 && this.renderQuidedRegistrationNumber()}
-            {this.state.quidedStep === 1 && this.renderQuidedSelectData()}
-            {this.state.quidedStep === 2 && this.renderQuidedTitle()}
-            {this.state.quidedStep === 3 && this.renderQuidedDescription()}
-            {this.state.quidedStep === 4 && this.renderQuidedProblemForm()}
+          <Tab eventKey="composition" title="Ohjattu syöttö">
+            {this.state.compositionStep === 0 && this.renderCompositionRegistrationNumber()}
+            {this.state.compositionStep === 1 && this.renderCompositionSelectData()}
+            {this.state.compositionStep === 2 && this.renderCompositionTitle()}
+            {this.state.compositionStep === 3 && this.renderCompositionDescription()}
+            {this.state.compositionStep === 4 && this.renderCompositionProblemForm()}
           </Tab>
           <Tab eventKey="manual" title="Manuaalinen syöttö">
             {this.state.manualStep === 0 && this.renderManualRegistrationNumber()}
