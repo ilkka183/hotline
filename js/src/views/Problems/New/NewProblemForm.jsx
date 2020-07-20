@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import RegistrationNumber from './RegistrationNumber'
-import ProblemFormPage from './ProblemFormPage'
 import SelectData from './SelectData'
 import CompositionTitle from './CompositionTitle'
 import CompositionDescription from './CompositionDescription'
@@ -57,7 +57,15 @@ export default class NewProblemForm extends Component {
     }
 
     this.state.description = {
-      description: ''
+      description: '',
+      appearance: '',
+      appearanceFrequency: '',
+      diagnostic: '',
+      diagnosticCodes: '',
+      tester: '',
+      testerOther: '',
+      history: '',
+      text: ''
     }
   }
 
@@ -90,6 +98,8 @@ export default class NewProblemForm extends Component {
     data.EngineSize = info.engineSize;
     data.EnginePower = info.enginePower;
     data.EngineCode = info.engineCode;
+    data.VIN = info.vin;
+    data.RegistrationNumber = info.registrationNumber;
 
     const compositionStep = 2;
 
@@ -129,15 +139,60 @@ export default class NewProblemForm extends Component {
   handleCompositionPrev = () => {
     const compositionStep = this.state.compositionStep - 1;
 
-    console.log('next');
-
     this.setState({ compositionStep });
   }
 
   handleCompositionNext = () => {
     const compositionStep = this.state.compositionStep + 1;
-    
+
     this.setState({ compositionStep });
+
+    if (compositionStep === 3) {
+      const data = {...this.state.data}
+      data.Title = this.state.title.group.toUpperCase() + ': ' + this.state.title.title;
+
+      this.setState({ data });
+    }
+    else if (compositionStep === 4) {
+      let lines = '';
+      let index = 0;
+
+      const { description, appearance, diagnostic, tester, history, text } = this.state.description;
+
+      if (description)
+        addGroup('Asiakkaan viankuvaus:', description);
+
+      if (appearance)
+        addGroup('Vian esiintyminen:', appearance);
+
+      if (diagnostic)
+        addGroup('Itsediagnostiikka:', diagnostic);
+
+      if (tester)
+        addGroup('Käytetty testilaite:', tester);
+
+      if (history)
+        addGroup('Korjaushistoria:', history);
+
+      if (text)
+        addGroup('Vapaa teksti:', text);
+
+      const data = {...this.state.data}
+      data.Description = lines;
+
+      this.setState({ data });
+
+      function addGroup(title, text) {
+        if (index > 0)
+          lines += '\n\n';
+
+        lines += title;
+        lines += '\n';
+        lines += text;
+
+        index++;
+      }
+    }
   }
 
   handleManualPrev = () => {
@@ -161,6 +216,15 @@ export default class NewProblemForm extends Component {
       <RegistrationNumber
         onFound={this.handleCompositionRegistrationNumber}
         onNext={this.handleCompositionNext}
+      />
+    );
+  }
+
+  renderManualRegistrationNumber() {
+    return (
+      <RegistrationNumber
+        onFound={this.handleManualRegistrationNumber}
+        onNext={this.handleManualNext}
       />
     );
   }
@@ -201,27 +265,22 @@ export default class NewProblemForm extends Component {
 
   renderCompositionProblemForm() {
     return (
-      <ProblemFormPage
-        data={this.state.data}
-        onPrev={this.handleCompositionPrev}
-        onSubmitted={this.handleProblemFormSubmitted}
-      />
-    );
-  }
-
-  renderManualRegistrationNumber() {
-    return (
-      <RegistrationNumber
-        onFound={this.handleManualRegistrationNumber}
-        onNext={this.handleManualNext}
-      />
+      <>
+        <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
+        <ProblemForm
+          data={this.state.data}
+          showTitle={false}
+          onSubmitted={this.handleProblemFormSubmitted}
+        />
+        <Button className="mt-2" onClick={this.handleCompositionPrev}>Edellinen</Button>
+      </>
     );
   }
 
   renderManualProblemForm() {
     return (
       <>
-        <h4>Syötä ajoneuvon tiedot sekä kuvaile vikatapaus</h4>
+        <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
         <ProblemForm
           data={this.state.data}
           showTitle={false}

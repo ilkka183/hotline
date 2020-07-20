@@ -31,7 +31,7 @@ export default class ProblemForm extends BaseForm {
     this.addField('GrossWeight',        'Kokonaismassa (kg)', 'number');
     this.addField('Info',               'Lisätietoja',        'textarea', { rows: 3 });
     this.addField('Title',              'Otsikko',            'text',     { required: true });
-    this.addField('Description',        'Kuvaus',             'textarea', { required: true, rows: 10 });
+    this.addField('Description',        'Kuvaus',             'textarea', { required: true, rows: 20 });
     this.addField('Status',             'Tila',               'number',   { required: true, getDefaultValue: () => 0, enums: STATUSES });
 
     this.state.data = this.getEmptyData();

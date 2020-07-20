@@ -19,18 +19,10 @@ const GROUPS = [
 ];
 
 export default function CompositionTitle({ data, title, onChange, onNext }) {
-  return (
-    <>
-      <Button
-        className="mt-2 mb-2"
-        disabled={!title.group || (title.group === GROUPS[GROUPS.length - 1] && !title.groupOther) || !title.title}
-        onClick={onNext}
-      >
-        Seuraava
-      </Button>
-      <DataInfo data={data} />
-      <Form>
-        <h4>Rakenneryhmä</h4>
+
+  function renderGroups() {
+    return (
+      <Form.Group>
         {GROUPS.map((group, index) => (
           <Form.Check
             type="radio"
@@ -46,15 +38,38 @@ export default function CompositionTitle({ data, title, onChange, onNext }) {
           value={title.groupOther}
           onChange={onChange}
         />
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Vian otsikko</Form.Label>
-          <Form.Control
-            name="title"
-            value={title.title}
-            onChange={onChange}
-          />
-        </Form.Group>          
+      </Form.Group>          
+    );
+  }
+
+  function renderTitle() {
+    return (
+      <Form.Group>
+        <Form.Label>Vian otsikko</Form.Label>
+        <Form.Control
+          name="title"
+          value={title.title}
+          onChange={onChange}
+        />
+      </Form.Group>          
+    );
+  }
+
+  function ready() {
+    return title.group &&
+      (title.group !== GROUPS[GROUPS.length - 1] || title.groupOther) &&
+      title.title;
+  }
+
+  return (
+    <>
+      <DataInfo data={data} />
+      <h3>Rakenneryhmä</h3>
+      <Form>
+        {renderGroups()}
+        {renderTitle()}
       </Form>
+      <Button disabled={!ready()} onClick={onNext}>Seuraava</Button>
     </>
   );
 }

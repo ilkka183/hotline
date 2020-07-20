@@ -14,12 +14,17 @@ export default function DataInfo({ data }) {
           <Col>{data.Model}</Col>
           <Col>{data.ModelYear}</Col>
           <Col>{data.RegistrationYear}</Col>
+          <Col>{data.RegistrationNumber}</Col>
         </Row>
         <Row>
           <Col>{FUEL_TYPES[data.FuelType]}</Col>
           <Col>{data.EngineSize} cm3</Col>
           <Col>{data.EnginePower} kW</Col>
           <Col>{data.EngineCode}</Col>
+          <Col>{data.VIN}</Col>
+        </Row>
+        <Row>
+          <Col>{data.Title}</Col>
         </Row>
       </Container>
     </Alert>
