@@ -25,12 +25,11 @@ export default class BaseForm extends DataForm {
   }
 
   afterSubmit() {
-    const { history, onSubmitted } = this.props;
+    const { onSubmitted } = this.props;
 
     if (onSubmitted)
       onSubmitted();
 
-    if (history)
-      history.goBack();
+    this.goBack();
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
-import ProblemsTable from './Problems/ProblemsTable';
-import auth from '../services/authService';
+import ProblemsTable from './ProblemsTable';
+import auth from '../../services/authService';
 
-export default function Home() {
+export default function SolvedProblems() {
   const user = auth.getCurrentUser();
 
   const editable = true;
@@ -13,11 +13,11 @@ export default function Home() {
 
   return (
     <ProblemsTable
-      newButtonAsLink={true}
-      newButtonText="Lisää uusi vikatapaus"
+      title="Ratkaistut vikatapaukset"
+      status={1}
       showSearchBox={true}
       paginate={false}
-      creatable={true}
+      creatable={false}
       editable={editable}
       deletable={deletable}
     />

@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class About extends Component {
-  render() { 
-    return (
-      <h2>Tietoja</h2>
-    );
-  }
+export default function About() {
+  return (
+    <h2>Tietoja</h2>
+  );
 }

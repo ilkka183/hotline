@@ -123,6 +123,13 @@ export default class FieldsForm extends FieldsComponent {
     return true;
   }
 
+  goBack() {
+    const { history } = this.props;
+    
+    if (history)
+      history.goBack();
+  }
+
   renderInput(field, autofocus = false) {
     const { name, label, readonly, required, type } = field;
     const { data, errors } = this.state;

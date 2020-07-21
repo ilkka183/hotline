@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button'
+import LinkButton from '../../components/common/LinkButton';
 import BaseTable from '../BaseTable';
 
 export default class ProblemRepliessTable extends BaseTable {
@@ -11,7 +11,7 @@ export default class ProblemRepliessTable extends BaseTable {
     this.addField('Date',      'Pvm',        'datetime', { displayFormat: 'date' });
     this.addField('UserName',  'Lähettäjä',  'text');
     this.addField('Message',   'Viesti',     'textarea', { editLink: true, rows: 5 });
-    this.addField('Solution',  'Ratkaisu',   'boolean');
+//    this.addField('Solution',  'Ratkaisu',   'boolean');
     this.addField('Mark',      '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }
 
@@ -39,13 +39,12 @@ export default class ProblemRepliessTable extends BaseTable {
     const variant = row.Solution ? 'success' : 'warning';
 
     return (
-      <Button
-        variant={variant}
-        size="sm"
-        onClick={() => this.props.onMark(row)}
+      <LinkButton
+        className={'btn-sm btn-' + variant}
+        to={'/problems/solution/' + this.props.problemId + '?ReplyId=' + row.Id}
       >
         Ratkaisu
-      </Button>
+      </LinkButton>
     );
   }
 }

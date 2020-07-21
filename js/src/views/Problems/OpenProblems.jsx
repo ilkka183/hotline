@@ -1,8 +1,8 @@
 import React from 'react';
-import ProblemsTable from './Problems/ProblemsTable';
-import auth from '../services/authService';
+import ProblemsTable from './ProblemsTable';
+import auth from '../../services/authService';
 
-export default function Home() {
+export default function OpenProblems() {
   const user = auth.getCurrentUser();
 
   const editable = true;
@@ -13,6 +13,8 @@ export default function Home() {
 
   return (
     <ProblemsTable
+      title="Avoimet vikatapaukset"
+      status={0}
       newButtonAsLink={true}
       newButtonText="Lisää uusi vikatapaus"
       showSearchBox={true}

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 import DataPagination from './DataPagination';
 import FieldsComponent from './Fields';
 import LinkButton from './LinkButton';
@@ -150,11 +152,45 @@ export default class DataTable extends FieldsComponent {
     return slice;
   }  
 
+  renderTitle() {
+    const { showTitle, title } = this.props;
+
+    if (!showTitle)
+      return null;
+
+    const text = title ? title : this.getTitle();
+
+    return <h2>{text}</h2>;
+  }
+  
   renderNewButton() {
-    return <LinkButton className="new-button" to={this.getNewButtonLink()}>Lisää uusi</LinkButton>
+    const { readOnly, creatable, newButtonAsLink, newButtonText } = this.props;
+
+    if (readOnly || !creatable)
+      return null;
+
+    const text = newButtonText ? newButtonText : 'Lisää uusi';
+    const to = this.getNewButtonLink();
+
+    if (newButtonAsLink)
+      return <Link to={to}>{text}</Link>
+    
+    return <LinkButton className="new-button" to={to}>{text}</LinkButton>
+  }
+  
+  renderHeader() {
+    return (
+      <Row>
+        <Col>{this.renderTitle()}</Col>
+        <Col className="text-right">{this.renderNewButton()}</Col>
+      </Row>
+    );
   }
 
   renderSearchBox() {
+    if (!this.props.showSearchBox)
+      return null;
+
     return <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
   }
 
@@ -228,7 +264,7 @@ export default class DataTable extends FieldsComponent {
   }
 
   render() {
-    const { readOnly, creatable, deletable, showTitle, showSearchBox, paginate } = this.props;
+    const { readOnly, deletable, paginate } = this.props;
     const { currentPage, pageSize } = this.state;
 
     const filteredRows = this.getFilteredRows();
@@ -237,9 +273,8 @@ export default class DataTable extends FieldsComponent {
 
     return (
       <>
-        {showTitle && <h2>{this.getTitle()}</h2>}
-        {!readOnly && creatable && this.renderNewButton()}
-        {showSearchBox && this.renderSearchBox()}
+        {this.renderHeader()}
+        {this.renderSearchBox()}
         {paginate && this.renderPagination(filteredRows)}
         <table className="table">
           <thead>

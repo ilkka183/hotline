@@ -38,14 +38,9 @@ export default class Problem extends Component {
     await this.loadData();
   }
 
-  handleMarkReply = async reply => {
-    await http.put('/problemreplies/' + reply.Id, { Solution: !reply.Solution });
-    await http.put('/problems/' + this.state.problem.Id, { Status: 1 });
-    await this.loadData();
-  }
-
   handleDeleteReply = async reply => {
     await http.delete('/problemreplies/' + reply.Id);
+
     await this.loadData();
   }
 
@@ -81,7 +76,6 @@ export default class Problem extends Component {
           problemId={problem.Id}
           showTitle={false}
           showSearchBox={false}
-          onMark={this.handleMarkReply}
           onDelete={this.handleDeleteReply}
         />
       </>
@@ -98,7 +92,7 @@ export default class Problem extends Component {
         {editable && <LinkButton className="new-button" to={'/problems/' + this.problemId}>Muokkaa</LinkButton>}
         <ProblemForm asTable={true} showTitle={false} data={problem} />
         {this.renderAttachments()}
-        {this.renderReplies()}
+        {problem.Status === 0 && this.renderReplies()}
       </Container>
     );
   }
