@@ -29,10 +29,9 @@ export default class ChangePasswordForm extends FieldsForm {
   async doSubmit() {
     try {
       const { password, newPassword1, newPassword2 } = this.state.data;
-      const user = auth.getCurrentUser();
 
       if (newPassword1 === newPassword2) {
-        await auth.changePassword(user.email, password, newPassword1);
+        await auth.changePassword(this.user.email, password, newPassword1);
         toast.success('Salasana vaihdettu');
       }
       else {

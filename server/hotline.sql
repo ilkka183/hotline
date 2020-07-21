@@ -60,6 +60,7 @@ CREATE TABLE UserGroup
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   Name VARCHAR(80) NOT NULL UNIQUE,
+  BusinessId VARCHAR(20),
   ContactPerson VARCHAR(80),
   Address VARCHAR(160),
   PostalCode VARCHAR(20),
@@ -88,6 +89,7 @@ CREATE TABLE User
   FirstName VARCHAR(40) NOT NULL,
   LastName VARCHAR(40) NOT NULL,
   Title VARCHAR(40),
+  BusinessId VARCHAR(20),
   Address VARCHAR(160),
   PostalCode VARCHAR(20),
   PostOffice VARCHAR(40),
@@ -263,12 +265,15 @@ CREATE TABLE ProblemReplyAttachment
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Prodiags', NULL, 'http://www.prodiags.com');
+INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Matin autohuolto', NULL, 'http://www.maikalainen.com');
 
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Arto',  'Aalto',     'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Jarmo', 'Aalto',     'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg',   'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 1, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
 INSERT INTO Make(Name) VALUES('SEAT');

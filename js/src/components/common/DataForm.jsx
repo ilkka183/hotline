@@ -42,6 +42,13 @@ export default class DataForm extends FieldsForm {
     return this.apiEndpoint + '/' + id;
   }
 
+  getData() {
+    if (this.props.data)
+      return this.props.data;
+    else
+      return this.state.data;
+  }
+
   async populateLookups() {
     for (const field of this.fields) {
       if (field.lookupUrl) {
@@ -87,17 +94,17 @@ export default class DataForm extends FieldsForm {
           this.props.history.replace('/not-found');
       }
     }
-    else if (this.props.data) {
+    else if (this.props.defaultData) {
       // Copy data from props
       const data = {...this.state.data};
 
       for (const name in data) {
-        const value = this.props.data[name];
+        const value = this.props.defaultData[name];
 
         data[name] = (value !== undefined && value !== null) ? value : '';
       }
   
-      this.setState({ data });
+      this.setState({ data });      
     }
     else {
       // New data

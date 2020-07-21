@@ -18,6 +18,7 @@ export default class UserForm extends BaseForm {
     this.addField('Email',        'Sähköposti',       'email',  { required: true });
     this.addField('Password',     'Salasana',         'text',   { required: true });
     this.addField('Title',        'Toimenkuva',       'text');
+    this.addField('BusinessId',   'Y-tunnus',         'text');
     this.addField('Address',      'Osoite',           'text');
     this.addField('PostalCode',   'Postinumero',      'text');
     this.addField('PostOffice',   'Postitoimipaikka', 'text');

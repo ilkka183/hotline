@@ -328,8 +328,12 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
+  getData() {
+    return this.state.data;
+  }
+
   getCellText(field) {
-    const { data } = this.state;
+    const data = this.getData();
     const value = data[field.name];
 
     if (field.lookup) {
@@ -340,10 +344,18 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   renderTableRow(field) {
+    let text = this.getCellText(field);
+
+    if (!text)
+      return null;
+      
+    if (field.preformatted)
+      text = <pre>{text}</pre>
+
     return (
       <tr key={field.name}>
         <td>{field.label}</td>
-        <td>{this.getCellText(field)}</td>
+        <td>{text}</td>
       </tr>
     );
   }
@@ -352,7 +364,7 @@ export default class FieldsForm extends FieldsComponent {
     return (
       <>
         {this.renderTitle()}
-        <Table>
+        <Table size="sm">
           <tbody>
             {this.fields.map(field => this.renderTableRow(field))}
           </tbody>

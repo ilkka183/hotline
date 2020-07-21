@@ -18,6 +18,8 @@ function getFuelType(text) {
 }
 
 export default class NewProblemForm extends Component {
+  user = auth.getCurrentUser();
+
   state = {
     data: null,
     title: null,
@@ -30,7 +32,7 @@ export default class NewProblemForm extends Component {
     super();
 
     this.state.data = {
-      UserId: auth.getCurrentUser().id,
+      UserId: this.user.id,
       Make: '',
       Model: '',
       ModelYear: '',
@@ -83,6 +85,8 @@ export default class NewProblemForm extends Component {
     data.VIN = info.vechileIdentificationNumber;
     data.NetWeight = info.netWeight;
     data.GrossWeight = info.grossWeight;
+
+    console.log(data);
 
     this.setState({ data });
   }
@@ -267,7 +271,7 @@ export default class NewProblemForm extends Component {
       <>
         <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
         <ProblemForm
-          data={this.state.data}
+          defaultData={this.state.data}
           showTitle={false}
           onPrev={this.handleCompositionPrev}
           onSubmitted={this.handleProblemFormSubmitted}
@@ -281,7 +285,7 @@ export default class NewProblemForm extends Component {
       <>
         <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
         <ProblemForm
-          data={this.state.data}
+          defaultData={this.state.data}
           showTitle={false}
           onSubmitted={this.handleProblemFormSubmitted}
         />

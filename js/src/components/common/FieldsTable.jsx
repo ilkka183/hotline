@@ -45,6 +45,9 @@ export default class DataTable extends FieldsComponent {
   }
 
   async componentDidMount() {
+    if (this.props.data)
+      return;
+
     const { data } = await this.getItems();
 
     this.setState({ data });
@@ -54,15 +57,19 @@ export default class DataTable extends FieldsComponent {
     if (!window.confirm('Poista rivi?'))
       return;
 
-    try {
-      await this.deleteItem(item);
-
-      const data = this.state.data.filter(m => m.Id !== item.Id);
+    if (this.props.onDelete)
+      this.props.onDelete(item);
+    else {
+      try {
+        await this.deleteItem(item);
   
-      this.setState({ data });
-    }
-    catch (ex) {
-      toast.error(ex.response.data.sqlMessage);
+        const data = this.state.data.filter(m => m.Id !== item.Id);
+    
+        this.setState({ data });
+      }
+      catch (ex) {
+        toast.error(ex.response.data.sqlMessage);
+      }
     }
   }
 
@@ -91,9 +98,17 @@ export default class DataTable extends FieldsComponent {
     this.handleSort(newSortColumn);
   }
 
-  getFilteredRows() {
-    const { data, searchQuery, sortColumn } = this.state;
+  getData() {
+    if (this.props.data)
+      return this.props.data;
+    else
+      return this.state.data;
+  }
 
+  getFilteredRows() {
+    const { searchQuery, sortColumn } = this.state;
+
+    const data = this.getData();
     let items = data;
 
     if (searchQuery)
@@ -136,11 +151,7 @@ export default class DataTable extends FieldsComponent {
   }  
 
   renderNewButton() {
-    const style = {
-      marginBottom: 20
-    }
-  
-    return <LinkButton style={style} to={this.getNewButtonLink()}>Lisää uusi</LinkButton>
+    return <LinkButton className="new-button" to={this.getNewButtonLink()}>Lisää uusi</LinkButton>
   }
 
   renderSearchBox() {
@@ -217,19 +228,16 @@ export default class DataTable extends FieldsComponent {
   }
 
   render() {
-    const { autoHide, readOnly, creatable, deletable, showSearchBox, paginate } = this.props;
+    const { readOnly, creatable, deletable, showTitle, showSearchBox, paginate } = this.props;
     const { currentPage, pageSize } = this.state;
 
     const filteredRows = this.getFilteredRows();
     const rows = paginate ? this.paginateRows(filteredRows, currentPage, pageSize) : filteredRows;
     const columns = this.fields.filter(column => column.visible);
 
-    if (autoHide && readOnly && rows.length === 0)
-      return null;
-
     return (
       <>
-        <h2>{this.getTitle()}</h2>
+        {showTitle && <h2>{this.getTitle()}</h2>}
         {!readOnly && creatable && this.renderNewButton()}
         {showSearchBox && this.renderSearchBox()}
         {paginate && this.renderPagination(filteredRows)}
@@ -254,9 +262,9 @@ export default class DataTable extends FieldsComponent {
 }
 
 DataTable.defaultProps = {
+  showTitle: true,
   showSearchBox: true,
   paginate: true,
-  autoHide: false,
   readOnly: false,
   creatable: true,
   editable: true,

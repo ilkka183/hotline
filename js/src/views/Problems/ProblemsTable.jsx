@@ -1,12 +1,9 @@
 import BaseTable from '../BaseTable';
-import auth from '../../services/authService';
 
 export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
 
 export default class ProblemsTable extends BaseTable {
-  user = auth.getCurrentUser();
-
   constructor() {
     super();
 
@@ -44,7 +41,7 @@ export default class ProblemsTable extends BaseTable {
     return url;
   }
 
-  canDelete(item) {
-    return item.UserId === this.user.id || this.user.role === 0;
+  canDelete(row) {
+    return (this.user.role <= 1 || row.UserId === this.user.id);
   }
 }

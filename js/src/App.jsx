@@ -27,7 +27,7 @@ import Problem from './views/Problems/Problem';
 import ProblemForm from './views/Problems/ProblemForm';
 import ProblemAttachmentForm from './views/Problems/ProblemAttachmentForm';
 import ProblemReplyForm from './views/Problems/ProblemReplyForm';
-import NewProblemForm from './views/Problems/New/NewProblemForm';
+import NewProblem from './views/Problems/New/NewProblem';
 
 import ProfileForm from './views/Profile/ProfileForm';
 import ChangePasswordForm from './views/Profile/ChangePasswordForm';
@@ -44,6 +44,7 @@ export default class App extends Component {
 
   componentDidMount() {
     const user = auth.getCurrentUser();
+    
     this.setState({ user });
   }
 
@@ -58,7 +59,7 @@ export default class App extends Component {
           <Switch>
             <Route path="/home" component={Home} />
             <ProtectedRoute path="/problem/:id" component={Problem} />
-            <ProtectedRoute path="/problems/new" component={NewProblemForm} />
+            <ProtectedRoute path="/problems/new" component={NewProblem} />
             <ProtectedRoute path="/problems/:id" component={ProblemForm} />
             <ProtectedRoute path="/problems" component={ProblemsTable} />
             <ProtectedRoute path="/problemattachments/:id" component={ProblemAttachmentForm} />

@@ -1,11 +1,8 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button'
 import BaseTable from '../BaseTable';
-import auth from '../../services/authService';
 
 export default class ProblemRepliessTable extends BaseTable {
-  user = auth.getCurrentUser();
-
   constructor() {
     super();
 
@@ -15,7 +12,7 @@ export default class ProblemRepliessTable extends BaseTable {
     this.addField('UserName',  'Lähettäjä',  'text');
     this.addField('Message',   'Viesti',     'textarea', { editLink: true, rows: 5 });
     this.addField('Solution',  'Ratkaisu',   'boolean');
-    this.addField('Mark',      '',           'button',   { render: row => this.renderSolutionButton(row) });
+    this.addField('Mark',      '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }
 
   getTitle() {
@@ -30,23 +27,25 @@ export default class ProblemRepliessTable extends BaseTable {
     return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
   }
 
-  getItemsEndpoint(path) {
-    return path + '?ProblemId=' + this.props.problemId;
+  canEdit(row) {
+    return (this.user.role <= 1 || row.UserId === this.user.id);
   }
 
-  canEdit(item) {
-    return item.UserId === this.user.id || this.user.role === 0;
-  }
-
-  canDelete(item) {
-    return item.UserId === this.user.id || this.user.role === 0;
+  canDelete(row) {
+    return (this.user.role <= 1 || row.UserId === this.user.id) && !row.Solution;
   }
 
   renderSolutionButton(row) {
-    return <Button variant="success" size="sm" onClick={() => this.markToSolution(row)}>Ratkaisu</Button>
-  }
+    const variant = row.Solution ? 'success' : 'warning';
 
-  markToSolution(row) {
-    console.log(row);
+    return (
+      <Button
+        variant={variant}
+        size="sm"
+        onClick={() => this.props.onMark(row)}
+      >
+        Ratkaisu
+      </Button>
+    );
   }
 }

@@ -15,3 +15,7 @@ body {
 .required {
   color: red;
 }
+
+.new-button {
+  margin-bottom: 10px;
+}

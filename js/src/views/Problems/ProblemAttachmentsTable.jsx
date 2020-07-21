@@ -23,8 +23,4 @@ export default class ProblemAttachmentsTable extends BaseTable {
   getNewButtonLink() {
     return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
   }
-
-  getItemsEndpoint(path) {
-    return path + '?ProblemId=' + this.props.problemId;
-  }
 }

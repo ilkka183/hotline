@@ -1,6 +1,5 @@
 import { toast } from 'react-toastify';
 import BaseForm from '../BaseForm';
-import auth from '../../services/authService';
 
 export default class ProfileForm extends BaseForm {
   state = {
@@ -34,7 +33,7 @@ export default class ProfileForm extends BaseForm {
   }
 
   get dataId() {
-    return auth.getCurrentUser().id;
+    return this.user.id;
   }
 
   afterSubmit() {

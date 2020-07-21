@@ -8,6 +8,7 @@ export class Field {
     this.editLink = false;
     this.visible = true;
     this.readonly = false;
+    this.preformatted = false;
 
     if (type === 'boolean')
       this.default = false;
@@ -38,6 +39,9 @@ export class Field {
 
       if (options.readonly !== undefined)
         this.readonly = options.readonly;
+
+      if (options.preformatted !== undefined)
+        this.preformatted = options.preformatted;
 
       if (options.displayFormat !== undefined)
         this.displayFormat = options.displayFormat;

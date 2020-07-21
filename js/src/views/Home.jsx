@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import ProblemsTable from './Problems/ProblemsTable';
@@ -9,7 +10,6 @@ export default class Home extends Component {
   render() { 
     const user = auth.getCurrentUser();
 
-    const creatable = true;
     const editable = true;
     const deletable = user && user.role <= 1;
 
@@ -23,12 +23,13 @@ export default class Home extends Component {
             <ProblemsTable
               title="Avoimet vikatapaukset"
               status={0}
-              showSearchBox={false}
+              showSearchBox={true}
               paginate={false}
-              creatable={creatable}
+              creatable={false}
               editable={editable}
               deletable={deletable}
             />
+            <Link to="/problems/new">Lisää uusi vikatapaus</Link>
           </Col>
         </Row>
         <Row>
