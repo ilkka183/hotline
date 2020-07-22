@@ -10,14 +10,14 @@ export default class ProblemsTable extends BaseTable {
     super();
 
     this.addId();
-    this.addField('Date',        'Pvm',         'datetime', { displayFormat: 'date' });
-    this.addField('UserName',    'Lähettäjä',   'text',     { visible: false });
-    this.addField('Make',        'Merkki',      'text');
-    this.addField('Model',       'Malli',       'text');
-    this.addField('ModelYear',   'Vuosimalli',  'number');
+    this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
+    this.addField('UserName',    'Lähettäjä',            'text',     { visible: false });
+    this.addField('Make',        'Merkki',               'text');
+    this.addField('Model',       'Malli',                'text');
+    this.addField('ModelYear',   'Vuosimalli',           'number');
     this.addField('FuelType',    'Käyttövoima',          'number',   { enums: FUEL_TYPES });
     this.addField('Title',       'Otsikko',              'text',     { link: item => '/problem/' + item.Id });
-    this.addField('Description', 'Kuvaus ja vastaukset', 'textarea', { render: this.renderDescription });
+    this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { render: this.renderDescription });
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
   }
 

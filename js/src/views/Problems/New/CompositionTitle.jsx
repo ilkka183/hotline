@@ -18,7 +18,7 @@ const GROUPS = [
   'Jokin muu'
 ];
 
-export default function CompositionTitle({ data, title, onChange, onNext }) {
+export default function CompositionTitle({ data, title, onChange, onPrev, onNext }) {
 
   function renderGroups() {
     return (
@@ -69,6 +69,7 @@ export default function CompositionTitle({ data, title, onChange, onNext }) {
         {renderGroups()}
         {renderTitle()}
       </Form>
+      <Button className="mr-2" onClick={onPrev}>Edellinen</Button>
       <Button disabled={!ready()} onClick={onNext}>Seuraava</Button>
     </>
   );

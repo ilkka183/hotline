@@ -2,30 +2,33 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
-import RegistrationNumber from './RegistrationNumber'
+import SearchData from './SearchData'
 import SelectData from './SelectData'
+import EnterData from './EnterData'
 import CompositionTitle from './CompositionTitle'
 import CompositionDescription from './CompositionDescription'
 import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
-
-function getFuelType(text) {
-  switch (text) {
-    case 'bensiini': return 0;
-    case 'diesel': return 1;
-    default: return 0;
-  }
-}
+import http from '../../../services/httpService';
 
 export default class NewProblemForm extends Component {
   user = auth.getCurrentUser();
 
   state = {
+    activeKey: undefined,
+    step: 0,
     data: null,
+    options: {
+//      engineType: null,
+      makes: null,
+      modelYears: null,
+      fuelTypes: null,
+      models: null,
+      engineSizes: null,
+      engineTypes: null
+    },
     title: null,
-    description: null,
-    compositionStep: 0,
-    manualStep: 0
+    description: null
   }
 
   constructor() {
@@ -39,10 +42,10 @@ export default class NewProblemForm extends Component {
       RegistrationYear: '',
       RegistrationNumber: '',
       FuelType: '',
-      Power: '',
       CylinderCount: '',
-      EngineCode: '',
       EngineSize: '',
+      EnginePower: '',
+      EngineCode: '',
       VIN: '',
       NetWeight: '',
       GrossWeight: '',
@@ -70,30 +73,21 @@ export default class NewProblemForm extends Component {
     }
   }
 
-  handleRegistrationNumber = (info) => {
-    const data = {...this.state.data}
+  async componentDidMount() {
+    const { data } = await http.get('/data/makes');
 
-    data.Make = info.carMake;
-    data.Model = info.carModel;
-    data.RegistrationYear = info.registrationYear;
-    data.RegistrationNumber = info.registrationNumber;
-    data.FuelType = getFuelType(info.fuelType);
-    data.EnginePower = info.power;
-    data.CylinderCount = info.cylinderCount;
-    data.EngineCode = info.engineCode;
-    data.EngineSize = info.engineSize;
-    data.VIN = info.vechileIdentificationNumber;
-    data.NetWeight = info.netWeight;
-    data.GrossWeight = info.grossWeight;
+    const options = {...this.state.options};
+    options.makes = data.map(value => ({ value, text: value }));
 
-    console.log(data);
-
-    this.setState({ data });
+    this.setState({ options });
   }
 
-  handleDataSelected = (info) => {
+  handleDataSelect = (info) => {
     const data = {...this.state.data}
 
+    console.log(info);
+
+    data.RegistrationNumber = info.registrationNumber;
     data.Make = info.make;
     data.Model = info.model;
     data.ModelYear = info.modelYear;
@@ -102,19 +96,26 @@ export default class NewProblemForm extends Component {
     data.EnginePower = info.enginePower;
     data.EngineCode = info.engineCode;
     data.VIN = info.vin;
-    data.RegistrationNumber = info.registrationNumber;
 
-    const compositionStep = 2;
+    this.setState({ data });
+  }
 
-    this.setState({ data, compositionStep });
+  handleData = (data) => {
+    this.setState({ data });
+  }
+
+  handleOptions = (options) => {
+    this.setState({ options });
+  }
+
+  handleTabSelect = (activeKey) => {
+    this.setState({ activeKey });
   }
 
   handleTitleChange = ({ currentTarget: input }) => {
     const title = {...this.state.title}
 
     title[input.name] = input.value;
-
-    console.log(title);
 
     this.setState({ title });
   }
@@ -127,36 +128,24 @@ export default class NewProblemForm extends Component {
     this.setState({ description });
   }
 
-  handleManualRegistrationNumber = (info) => {
-    this.handleRegistrationNumber(info);
+  handlePrev = () => {
+    const step = this.state.step - 1;
 
-    this.setState({ manualStep: 1 });
+    this.setState({ step });
   }
 
-  handleCompositionRegistrationNumber = (info) => {
-    this.handleRegistrationNumber(info);
+  handleNext = () => {
+    const step = this.state.step + 1;
 
-    this.setState({ compositionStep: 2 });
-  }
+    this.setState({ step });
 
-  handleCompositionPrev = () => {
-    const compositionStep = this.state.compositionStep - 1;
-
-    this.setState({ compositionStep });
-  }
-
-  handleCompositionNext = () => {
-    const compositionStep = this.state.compositionStep + 1;
-
-    this.setState({ compositionStep });
-
-    if (compositionStep === 3) {
+    if (step === 2) {
       const data = {...this.state.data}
       data.Title = this.state.title.group.toUpperCase() + ': ' + this.state.title.title;
 
       this.setState({ data });
     }
-    else if (compositionStep === 4) {
+    else if (step === 3) {
       let lines = '';
       let index = 0;
 
@@ -198,98 +187,60 @@ export default class NewProblemForm extends Component {
     }
   }
 
-  handleManualPrev = () => {
-    const manualStep = this.state.manualStep - 1;
-
-    this.setState({ manualStep });
-  }
-
-  handleManualNext = () => {
-    const manualStep = this.state.manualStep + 1;
-
-    this.setState({ manualStep });
-  }
-
   handleProblemFormSubmitted = () => {
     this.props.history.goBack();
   }
 
-  renderCompositionRegistrationNumber() {
-    return (
-      <RegistrationNumber
-        onFound={this.handleCompositionRegistrationNumber}
-        onNext={this.handleCompositionNext}
-      />
-    );
-  }
-
-  renderManualRegistrationNumber() {
-    return (
-      <RegistrationNumber
-        onFound={this.handleManualRegistrationNumber}
-        onNext={this.handleManualNext}
-      />
-    );
-  }
-
-  renderCompositionSelectData() {
-    return (
-      <>
-        <h4>Valitse ajoneuvon tiedot</h4>
-        <SelectData
-          onSelected={this.handleDataSelected}
-        />
-      </>
-    );
-  }
-
-  renderCompositionTitle() {
+  renderTitle() {
     return (
       <CompositionTitle
         data={this.state.data}
         title={this.state.title}
         onChange={this.handleTitleChange}
-        onNext={this.handleCompositionNext}
+        onPrev={this.handlePrev}
+        onNext={this.handleNext}
       />
     );
   }
 
-  renderCompositionDescription() {
+  renderDescription() {
     return (
       <CompositionDescription
         data={this.state.data}
         description={this.state.description}
         onChange={this.handleDescriptionChange}
-        onPrev={this.handleCompositionPrev}
-        onNext={this.handleCompositionNext}
+        onPrev={this.handlePrev}
+        onNext={this.handleNext}
       />
     );
   }
 
-  renderCompositionProblemForm() {
+  renderProblemForm() {
     return (
       <>
         <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
         <ProblemForm
           defaultData={this.state.data}
           showTitle={false}
-          onPrev={this.handleCompositionPrev}
           onSubmitted={this.handleProblemFormSubmitted}
         />
       </>
     );
   }
 
-  renderManualProblemForm() {
+  renderData() {
     return (
-      <>
-        <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
-        <ProblemForm
-          defaultData={this.state.data}
-          showTitle={false}
-          onSubmitted={this.handleProblemFormSubmitted}
-        />
-      </>
+      <Tabs defaultActiveKey="enterData" activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
+        <Tab eventKey="searchData" title="Hae ajoneuvon tiedot">
+          <SearchData data={this.state.data} onData={this.handleData} onNext={this.handleNext} />
+        </Tab>
+        <Tab eventKey="selectData" title="Valitse ajoneuvon tiedot">
+          <SelectData data={this.state.data} onData={this.handleData} options={this.state.options} onOptions={this.handleOptions} onNext={this.handleNext} />
+        </Tab>
+        <Tab eventKey="enterData" title="Syötä ajoneuvon tiedot">
+          <EnterData data={this.state.data} onData={this.handleData} onNext={this.handleNext} />
+        </Tab>
+      </Tabs>
     );
   }
 
@@ -297,19 +248,10 @@ export default class NewProblemForm extends Component {
     return (
       <Container>
         <h2>Lisää uusi vikatapaus</h2>
-        <Tabs className="mb-2" defaultActiveKey="home" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
-          <Tab eventKey="composition" title="Ohjattu syöttö">
-            {this.state.compositionStep === 0 && this.renderCompositionRegistrationNumber()}
-            {this.state.compositionStep === 1 && this.renderCompositionSelectData()}
-            {this.state.compositionStep === 2 && this.renderCompositionTitle()}
-            {this.state.compositionStep === 3 && this.renderCompositionDescription()}
-            {this.state.compositionStep === 4 && this.renderCompositionProblemForm()}
-          </Tab>
-          <Tab eventKey="manual" title="Manuaalinen syöttö">
-            {this.state.manualStep === 0 && this.renderManualRegistrationNumber()}
-            {this.state.manualStep === 1 && this.renderManualProblemForm()}
-          </Tab>
-        </Tabs>
+        {this.state.step === 0 && this.renderData()}
+        {this.state.step === 1 && this.renderTitle()}
+        {this.state.step === 2 && this.renderDescription()}
+        {this.state.step === 3 && this.renderProblemForm()}
       </Container>
     );
   }

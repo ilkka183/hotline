@@ -160,31 +160,6 @@ CREATE TABLE Model
 CREATE UNIQUE INDEX ModelIndex ON Model(Id);
 
 
-CREATE TABLE BulletinGroup
-(
-  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  Name VARCHAR(80) NOT NULL UNIQUE,
-  Enabled BOOLEAN NOT NULL DEFAULT TRUE,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
-  Data JSON,
-  PRIMARY KEY (Id)
-);
-
-
-CREATE TABLE Notice
-(
-  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  UserId BIGINT UNSIGNED NOT NULL,
-  Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  Title VARCHAR(160) NOT NULL,
-  Message TEXT NOT NULL,
-  Data JSON,
-  PRIMARY KEY (Id),
-  FOREIGN KEY (UserId) REFERENCES User(Id)
-);
-
-
 CREATE TABLE Problem
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
@@ -262,6 +237,7 @@ CREATE TABLE ProblemReplyAttachment
 );
 
 
+/* Käyttäjät */
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
 INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Prodiags', NULL, 'http://www.prodiags.com');
@@ -276,6 +252,7 @@ INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBeg
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
+/* Merkit ja mallit */
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Volkswagen');
@@ -320,13 +297,6 @@ INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, Cylind
 
 INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 81);
 INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 85);
-
-
-INSERT INTO Notice(UserId, Title, Message) VALUES(2, 'Päivitys SMS palveluun', 'HotLinen SMS palvelun hallintaan on tehty muutos.');
-INSERT INTO Notice(UserId, Title, Message) VALUES(1, 'Gates apulaitehihnat', 'Gatesin koulutuksesta muutama hyödyllinen linkki. Varaosakirja www.gatesautocat.com');
-
-INSERT INTO Notice(UserId, Title, Message) VALUES(1, 'Vuosilisenssi 1.10.2013 alkaen', 'HotLinen vuosilisenssin hinta on 280€ (alv 0%) 1.10.2013 alkaen.
-Uusi hinta tulee voimaan lisenssin uudistuksen yhteydessä 1.10.2013 alkaen, eli muutos tulee voimassa 1.10.2013-30.9.2014 välisenä aikana.');
 
 
 /* Vikatapaukset */

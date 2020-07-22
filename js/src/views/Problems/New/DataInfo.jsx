@@ -5,9 +5,9 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import { FUEL_TYPES } from './../ProblemsTable';
 
-export default function DataInfo({ data }) {
+export default function DataInfo({ data, ...props }) {
   return (
-    <Alert variant="success">
+    <Alert variant="success" {...props}>
       <Container>
         <Row>
           <Col>{data.Make}</Col>
