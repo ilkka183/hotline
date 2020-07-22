@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import DataInfo from './DataInfo'
 
-const GROUPS = [
+export const GROUPS = [
   'Alusta',
   'Ilmastointi ja lämmönhallinta',
   'Jarrut',
@@ -18,7 +18,7 @@ const GROUPS = [
   'Jokin muu'
 ];
 
-export default function CompositionTitle({ data, title, onChange, onPrev, onNext }) {
+export default function ComposeTitle({ data, title, onChange, onPrev, onNext }) {
 
   function renderGroups() {
     return (
@@ -35,6 +35,7 @@ export default function CompositionTitle({ data, title, onChange, onPrev, onNext
         ))}
         <Form.Control
           name="groupOther"
+          disabled={title.group !== GROUPS[GROUPS.length - 1]}
           value={title.groupOther}
           onChange={onChange}
         />

@@ -17,7 +17,7 @@ const DIAGNOSTIC = [
   'Vikamuistissa vikakoodit'
 ];
 
-const TESTERS = [
+export const TESTERS = [
   'Texa',
   'Crypton',
   'Bosch',
@@ -29,7 +29,7 @@ const TESTERS = [
   'Jokin muu'
 ];
 
-export default function CompositionDescription({ data, description, onChange, onPrev, onNext }) {
+export default function ComposeDescription({ data, description, onChange, onChangeCheckboxGroup, onPrev, onNext }) {
 
   function renderDescription() {
     return (
@@ -97,16 +97,16 @@ export default function CompositionDescription({ data, description, onChange, on
   function renderTester() {
     return (
       <Form.Group>
-        <Form.Label>Käytetty testilaite</Form.Label>
+        <Form.Label>Käytetyt testilaitteet</Form.Label>
         {TESTERS.map((item, index) => (
           <Form.Check
-            type="radio"
-            name="tester"
+            type="checkbox"
+            name="testers"
+            id={index + 1}
             key={index}
             label={item}
-            checked={item === description.tester}
-            value={item}
-            onChange={onChange} />
+            checked={description.testers[index]}
+            onChange={onChangeCheckboxGroup} />
         ))}
         <Form.Control
           name="testerOther"

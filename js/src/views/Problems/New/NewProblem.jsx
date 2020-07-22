@@ -5,8 +5,8 @@ import Tabs from 'react-bootstrap/Tabs'
 import SearchData from './SearchData'
 import SelectData from './SelectData'
 import EnterData from './EnterData'
-import CompositionTitle from './CompositionTitle'
-import CompositionDescription from './CompositionDescription'
+import ComposeTitle, { GROUPS } from './ComposeTitle'
+import ComposeDescription, { TESTERS } from './ComposeDescription'
 import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
 import http from '../../../services/httpService';
@@ -19,13 +19,13 @@ export default class NewProblemForm extends Component {
     step: 0,
     data: null,
     options: {
-      engineType: null,
       makes: null,
       modelYears: null,
       fuelTypes: null,
       models: null,
       engineSizes: null,
-      engineTypes: null
+      engineTypes: null,
+      engineType: null
     },
     title: null,
     description: null
@@ -60,17 +60,24 @@ export default class NewProblemForm extends Component {
       title: ''
     }
 
+    const testers = [];
+
+    for (let i = 0; i < TESTERS.length; i++)
+      testers.push(false);
+
     this.state.description = {
       description: '',
       appearance: '',
       appearanceFrequency: '',
       diagnostic: '',
       diagnosticCodes: '',
-      tester: '',
+      testers,
       testerOther: '',
       history: '',
       text: ''
     }
+
+    console.log(this.state.description);
   }
 
   async componentDidMount() {
@@ -102,10 +109,20 @@ export default class NewProblemForm extends Component {
     this.setState({ title });
   }
 
-  handleDescriptionChange = ({ currentTarget: input }) => {
+  handleDescriptionChange = ({ currentTarget: target }) => {
     const description = {...this.state.description}
 
-    description[input.name] = input.value;
+    description[target.name] = target.value;
+
+    this.setState({ description });
+  }
+
+  handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }) => {
+    const description = {...this.state.description}
+
+    description[target.name][target.id - 1] = target.checked;
+
+    console.log(description);
 
     this.setState({ description });
   }
@@ -122,8 +139,11 @@ export default class NewProblemForm extends Component {
     this.setState({ step });
 
     if (step === 2) {
+      const { group, groupOther, title } = this.state.title;
+
       const data = {...this.state.data}
-      data.Title = this.state.title.group.toUpperCase() + ': ' + this.state.title.title;
+      const groupName = (group === GROUPS[GROUPS.length - 1]) ? groupOther : group;
+      data.Title = groupName.toUpperCase() + ': ' + title;
 
       this.setState({ data });
     }
@@ -131,38 +151,53 @@ export default class NewProblemForm extends Component {
       let lines = '';
       let index = 0;
 
-      const { description, appearance, diagnostic, tester, history, text } = this.state.description;
+      const { description, appearance, diagnostic, testers, history, text } = this.state.description;
 
       if (description)
-        addGroup('Asiakkaan viankuvaus:', description);
+        addText('Asiakkaan viankuvaus:', description);
 
       if (appearance)
-        addGroup('Vian esiintyminen:', appearance);
+        addText('Vian esiintyminen:', appearance);
 
       if (diagnostic)
-        addGroup('Itsediagnostiikka:', diagnostic);
+        addText('Itsediagnostiikka:', diagnostic);
 
-      if (tester)
-        addGroup('Käytetty testilaite:', tester);
+      if (testers)
+        addTexts('Käytettyt testilaitteet:', testers, TESTERS);
 
       if (history)
-        addGroup('Korjaushistoria:', history);
+        addText('Korjaushistoria:', history);
 
       if (text)
-        addGroup('Vapaa teksti:', text);
+        addText('Vapaa teksti:', text);
 
       const data = {...this.state.data}
       data.Description = lines;
 
       this.setState({ data });
 
-      function addGroup(title, text) {
+      function addText(title, text) {
         if (index > 0)
           lines += '\n\n';
 
         lines += title;
         lines += '\n';
         lines += text;
+
+        index++;
+      }
+
+      function addTexts(title, flags, texts) {
+        if (index > 0)
+          lines += '\n\n';
+
+        lines += title;
+
+        for (let i = 0; i < flags.length; i++)
+          if (flags[i]) {
+            lines += '\n';
+            lines += texts[i];
+          }
 
         index++;
       }
@@ -174,16 +209,20 @@ export default class NewProblemForm extends Component {
   }
 
   renderData() {
+    const searchKey = 'searchData';
+    const selectKey = 'selectData';
+    const enterKey = 'enterData';
+
     return (
-      <Tabs defaultActiveKey="enterData" activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
-        <Tab eventKey="searchData" title="Hae ajoneuvon tiedot">
+      <Tabs defaultActiveKey={searchKey} activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
+        <Tab eventKey={searchKey} title="Hae ajoneuvon tiedot">
           <SearchData
             data={this.state.data}
             onData={this.handleData}
             onNext={this.handleNext}
           />
         </Tab>
-        <Tab eventKey="selectData" title="Valitse ajoneuvon tiedot">
+        <Tab eventKey={selectKey} title="Valitse ajoneuvon tiedot">
           <SelectData
             data={this.state.data}
             onData={this.handleData}
@@ -192,7 +231,7 @@ export default class NewProblemForm extends Component {
             onNext={this.handleNext}
           />
         </Tab>
-        <Tab eventKey="enterData" title="Syötä ajoneuvon tiedot">
+        <Tab eventKey={enterKey} title="Syötä ajoneuvon tiedot">
           <EnterData
             data={this.state.data}
             onData={this.handleData}
@@ -205,7 +244,7 @@ export default class NewProblemForm extends Component {
 
   renderTitle() {
     return (
-      <CompositionTitle
+      <ComposeTitle
         data={this.state.data}
         title={this.state.title}
         onChange={this.handleTitleChange}
@@ -217,10 +256,11 @@ export default class NewProblemForm extends Component {
 
   renderDescription() {
     return (
-      <CompositionDescription
+      <ComposeDescription
         data={this.state.data}
         description={this.state.description}
         onChange={this.handleDescriptionChange}
+        onChangeCheckboxGroup={this.handleDescriptionChangeCheckboxGroup}
         onPrev={this.handlePrev}
         onNext={this.handleNext}
       />
@@ -234,6 +274,7 @@ export default class NewProblemForm extends Component {
         <ProblemForm
           defaultData={this.state.data}
           showTitle={false}
+          onPrev={this.handlePrev}
           onSubmitted={this.handleProblemFormSubmitted}
         />
       </>

@@ -85,6 +85,10 @@ export default function EnterData({ data, onData, onNext }) {
     );
   }
 
+  function renderFillButton(car) {
+    return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
+  }
+
   function isReady() {
     return data.Make && data.Model && data.ModelYear;
   }
@@ -104,9 +108,9 @@ export default function EnterData({ data, onData, onNext }) {
         {renderInputText('RegistrationNumber', 'Rekisterinumero')}
         <Button className="mr-2" disabled={!isReady()} onClick={handleClear}>Tyhjennä</Button>
         <Button className="mr-2" type="submit" disabled={!isReady()}>Seuraava</Button>
-        <Button className="mr-2" variant="light" onClick={() => handleFill(LEON)}>Leon</Button>
-        <Button className="mr-2" variant="light" onClick={() => handleFill(GOLF)}>Golf</Button>
-        <Button className="mr-2" variant="light" onClick={() => handleFill(FOCUS)}>Focus</Button>
+        {renderFillButton(LEON)}
+        {renderFillButton(GOLF)}
+        {renderFillButton(FOCUS)}
       </Form>
     </>
   );
