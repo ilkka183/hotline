@@ -5,7 +5,7 @@ import FieldSelect from './FieldSelect';
 import { FUEL_TYPES } from './../ProblemsTable';
 import http from '../../../services/httpService';
 
-export default function SelectData({ data, options, onData, onOptions, onNext }) {
+export default function SelectData({ data, onData, options, onOptions, onNext }) {
 
   const handleMakeChange = async ({ currentTarget: select }) => {
     const newData = {...data};
@@ -34,7 +34,9 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
 
     onData(newData);
 
-    const { data: items } = await http.get('/data/fuelTypes?make=' + newData.Make + '&modelYear=' + newData.ModelYear);
+    const { data: items } = await http.get(
+      '/data/fuelTypes?make=' + newData.Make +
+      '&modelYear=' + newData.ModelYear);
 
     const newOptions = {...options};
     newOptions.fuelTypes = items.map(value => ({ value, text: FUEL_TYPES[value] }));
@@ -50,7 +52,10 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
 
     onData(newData);
 
-    const { data: items } = await http.get('/data/models?make=' + newData.Make + '&modelYear=' + newData.ModelYear + '&fuelType=' + newData.FuelType);
+    const { data: items } = await http.get(
+      '/data/models?make=' + newData.Make +
+      '&modelYear=' + newData.ModelYear +
+      '&fuelType=' + newData.FuelType);
 
     const newOptions = {...options};
     newOptions.models = items.map(value => ({ value, text: value }));
@@ -65,7 +70,11 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
 
     onData(newData);
 
-    const { data: items } = await http.get('/data/engineSizes?make=' + newData.Make + '&modelYear=' + newData.ModelYear + '&fuelType=' + newData.FuelType + '&model=' + newData.Model);
+    const { data: items } = await http.get(
+      '/data/engineSizes?make=' + newData.Make +
+      '&modelYear=' + newData.ModelYear +
+      '&fuelType=' + newData.FuelType +
+      '&model=' + newData.Model);
 
     const newOptions = {...options};
     newOptions.engineSizes = items.map(value => ({ value, text: value }));
@@ -79,7 +88,12 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
 
     onData(newData);
 
-    const { data: engineTypes } = await http.get('/data/engineTypes?make=' + newData.Make + '&modelYear=' + newData.ModelYear + '&fuelType=' + newData.FuelType + '&model=' + newData.Model + '&engineSize=' + newData.EngineSize);
+    const { data: engineTypes } = await http.get(
+      '/data/engineTypes?make=' + newData.Make +
+      '&modelYear=' + newData.ModelYear +
+      '&fuelType=' + newData.FuelType +
+      '&model=' + newData.Model +
+      '&engineSize=' + newData.EngineSize);
 
     const newOptions = {...options};
     newOptions.engineTypes = engineTypes;
@@ -142,7 +156,7 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
         label={formatEngineType(item)}
         key={index}
         value={index}
-        checked={data.EngineType === index}
+        checked={options.engineType === index}
         onChange={handleEngineTypeChange}
       />
     ));
@@ -174,14 +188,74 @@ export default function SelectData({ data, options, onData, onOptions, onNext })
     );
   }
 
+  function renderMakes() {
+    return (
+      <FieldSelect
+        name="Make"
+        placeholder="Valitse merkki"
+        value={data.Make}
+        options={options.makes}
+        onChange={handleMakeChange}
+      />
+    );
+  }
+
+  function renderModelYears() {
+    return (
+      <FieldSelect
+        name="ModelYear"
+        placeholder="Valitse mallivuosi"
+        value={data.ModelYear}
+        options={options.modelYears}
+        onChange={handleModelYearChange}
+      />
+    );
+  }
+
+  function renderFuelTypes() {
+    return (
+      <FieldSelect
+        name="FuelType"
+        placeholder="Valitse käyttövoima"
+        value={data.FuelType}
+        options={options.fuelTypes}
+        onChange={handleFuelTypeChange}
+      />
+    );
+  }
+
+  function renderModels() {
+    return (
+      <FieldSelect
+        name="Model"
+        placeholder="Valitse malli"
+        value={data.Model}
+        options={options.models}
+        onChange={handleModelChange}
+      />
+    );
+  }
+
+  function renderEngineSizes() {
+    return (
+      <FieldSelect
+        name="EngineSize"
+        placeholder="Valitse kuutiotilavuus"
+        value={data.EngineSize}
+        options={options.engineSizes}
+        onChange={handleEngineSizeChange}
+      />
+    );
+  }
+
   return (
     <Form onSubmit={handleSubmit}>
       <h4>Valitse ajoneuvon tiedot</h4>
-      {options.makes && <FieldSelect name="Make" placeholder="Valitse merkki" value={data.Make} options={options.makes} onChange={handleMakeChange} />}
-      {data.Make && <FieldSelect name="ModelYear" placeholder="Valitse mallivuosi" value={data.ModelYear} options={options.modelYears} onChange={handleModelYearChange} />}
-      {data.ModelYear && <FieldSelect name="FuelType" placeholder="Valitse käyttövoima" value={data.FuelType} options={options.fuelTypes} onChange={handleFuelTypeChange} />}
-      {data.FuelType && <FieldSelect name="Model" placeholder="Valitse malli" value={data.Model} options={options.models} onChange={handleModelChange} />}
-      {data.Model && <FieldSelect name="EngineSize" placeholder="Valitse kuutiotilavuus" value={data.EngineSize} options={options.engineSizes} onChange={handleEngineSizeChange} />}
+      {renderMakes()}
+      {data.Make && renderModelYears()}
+      {data.ModelYear && renderFuelTypes()}
+      {data.FuelType && renderModels()}
+      {data.Model && renderEngineSizes()}
       {data.EngineSize && renderEngineTypes()}
       {data.EngineSize && renderVIN()}
       {data.EngineSize && renderRegistrationNumber()}

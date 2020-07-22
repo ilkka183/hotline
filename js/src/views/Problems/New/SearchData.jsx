@@ -91,7 +91,6 @@ export default function SearchData({ data, onData, onNext }) {
           placeholder="Rekisterinumero"
           value={data.RegistrationNumber}
           onChange={handleChange}
-
         />          
         <Button className="mr-2" type="submit" disabled={!data.RegistrationNumber}>Hae</Button>
         <Button className="mr-2" disabled={!data.RegistrationNumber} onClick={handleClear}>Tyhjennä</Button>

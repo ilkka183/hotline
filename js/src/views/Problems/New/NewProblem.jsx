@@ -19,7 +19,7 @@ export default class NewProblemForm extends Component {
     step: 0,
     data: null,
     options: {
-//      engineType: null,
+      engineType: null,
       makes: null,
       modelYears: null,
       fuelTypes: null,
@@ -80,24 +80,6 @@ export default class NewProblemForm extends Component {
     options.makes = data.map(value => ({ value, text: value }));
 
     this.setState({ options });
-  }
-
-  handleDataSelect = (info) => {
-    const data = {...this.state.data}
-
-    console.log(info);
-
-    data.RegistrationNumber = info.registrationNumber;
-    data.Make = info.make;
-    data.Model = info.model;
-    data.ModelYear = info.modelYear;
-    data.FuelType = info.fuelType;
-    data.EngineSize = info.engineSize;
-    data.EnginePower = info.enginePower;
-    data.EngineCode = info.engineCode;
-    data.VIN = info.vin;
-
-    this.setState({ data });
   }
 
   handleData = (data) => {
@@ -191,6 +173,36 @@ export default class NewProblemForm extends Component {
     this.props.history.goBack();
   }
 
+  renderData() {
+    return (
+      <Tabs defaultActiveKey="enterData" activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
+        <Tab eventKey="searchData" title="Hae ajoneuvon tiedot">
+          <SearchData
+            data={this.state.data}
+            onData={this.handleData}
+            onNext={this.handleNext}
+          />
+        </Tab>
+        <Tab eventKey="selectData" title="Valitse ajoneuvon tiedot">
+          <SelectData
+            data={this.state.data}
+            onData={this.handleData}
+            options={this.state.options}
+            onOptions={this.handleOptions}
+            onNext={this.handleNext}
+          />
+        </Tab>
+        <Tab eventKey="enterData" title="Syötä ajoneuvon tiedot">
+          <EnterData
+            data={this.state.data}
+            onData={this.handleData}
+            onNext={this.handleNext}
+          />
+        </Tab>
+      </Tabs>
+    );
+  }
+
   renderTitle() {
     return (
       <CompositionTitle
@@ -225,22 +237,6 @@ export default class NewProblemForm extends Component {
           onSubmitted={this.handleProblemFormSubmitted}
         />
       </>
-    );
-  }
-
-  renderData() {
-    return (
-      <Tabs defaultActiveKey="enterData" activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
-        <Tab eventKey="searchData" title="Hae ajoneuvon tiedot">
-          <SearchData data={this.state.data} onData={this.handleData} onNext={this.handleNext} />
-        </Tab>
-        <Tab eventKey="selectData" title="Valitse ajoneuvon tiedot">
-          <SelectData data={this.state.data} onData={this.handleData} options={this.state.options} onOptions={this.handleOptions} onNext={this.handleNext} />
-        </Tab>
-        <Tab eventKey="enterData" title="Syötä ajoneuvon tiedot">
-          <EnterData data={this.state.data} onData={this.handleData} onNext={this.handleNext} />
-        </Tab>
-      </Tabs>
     );
   }
 
