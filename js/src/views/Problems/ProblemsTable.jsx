@@ -1,6 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import BaseTable from '../BaseTable';
-//import http from '../../services/httpService';
 
 export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
@@ -12,12 +12,13 @@ export default class ProblemsTable extends BaseTable {
     this.addId();
     this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
     this.addField('UserName',    'Lähettäjä',            'text',     { visible: false });
-    this.addField('Make',        'Merkki',               'text');
-    this.addField('Model',       'Malli',                'text');
+    this.addField('Make',        'Merkki',               'text',     { search: true });
+    this.addField('Model',       'Malli',                'text',     { search: true });
     this.addField('ModelYear',   'Vuosimalli',           'number');
     this.addField('FuelType',    'Käyttövoima',          'number',   { enums: FUEL_TYPES });
-    this.addField('Title',       'Otsikko',              'text',     { link: item => '/problem/' + item.Id });
-    this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { render: this.renderDescription });
+    this.addField('EngineCode',  'Moottorin tunnus',     'text',     { visible: false, search: true });
+//    this.addField('Title',       'Otsikko',              'text',     { search: true, link: item => '/problem/' + item.Id });
+    this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { search: true, render: this.renderDescription });
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
   }
 
@@ -45,11 +46,12 @@ export default class ProblemsTable extends BaseTable {
   renderDescription(row) {
     return (
       <>
-        <div className="description">
+        <Link to={'/problem/' + row.Id}>{row.Title}</Link>
+        <div className="description1">
           {row.Description}
         </div>
         {row.Solution && <div>{row.Solution}</div>}
-        {!row.Solution && row.Replies.map((reply, index) => <div key={index}>{reply.Message}</div>)}
+        {!row.Solution && row.Replies.map((reply, index) => <div key={index}>- {reply.Message}</div>)}
       </>
     );
   }

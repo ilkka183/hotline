@@ -9,6 +9,7 @@ export class Field {
     this.visible = true;
     this.readonly = false;
     this.preformatted = false;
+    this.search = false;
 
     if (type === 'boolean')
       this.default = false;
@@ -42,6 +43,9 @@ export class Field {
 
       if (options.preformatted !== undefined)
         this.preformatted = options.preformatted;
+
+      if (options.search !== undefined)
+        this.search = options.search;
 
       if (options.displayFormat !== undefined)
         this.displayFormat = options.displayFormat;

@@ -7,13 +7,14 @@ import Row from 'react-bootstrap/Row'
 import DataPagination from './DataPagination';
 import FieldsComponent from './Fields';
 import LinkButton from './LinkButton';
-import SearchBox from './SearchBox';
+import SearchPanel from './SearchPanel';
 import SortIcon from './SortIcon';
 
 export default class DataTable extends FieldsComponent {
   state = {
     data: [],
-    searchQuery: '',
+    searchValues: {},
+    searchPanelVisible: false,
     currentPage: 1,
     pageSize: 10,
     sortColumn: {
@@ -52,7 +53,30 @@ export default class DataTable extends FieldsComponent {
 
     const { data } = await this.getItems();
 
-    this.setState({ data });
+    const searchValues = {};
+
+    for (const field of this.fields)
+      searchValues[field.name] = '';
+
+    this.setState({ data, searchValues });
+  }
+
+  hasSearchFields() {
+    for (const field of this.fields)
+      if (field.search)
+        return true;
+
+    return false;
+  }
+
+  hasSearchValues() {
+    const { searchValues } = this.state;
+
+    for (const name in searchValues)
+      if (searchValues[name])
+        return true;
+
+    return false;
   }
 
   handleDelete = async item => {
@@ -76,7 +100,31 @@ export default class DataTable extends FieldsComponent {
   }
 
   handleSearch = query => {
-    this.setState({ searchQuery: query, currentPage: 1 });
+    console.log(this.state.searchValues);
+
+    this.setState({ currentPage: 1 });
+  }
+
+  handleSearchFieldChange = ({ currentTarget }) => {
+    const searchValues = {...this.state.searchValues};
+    searchValues[currentTarget.name] = currentTarget.value;
+
+    this.setState({ searchValues });
+  }
+
+  handleSearchClear = () => {
+    const searchValues = {...this.state.searchValues};
+
+    for (const name in searchValues)
+      searchValues[name] = '';
+
+    this.setState({ searchValues });
+  }
+
+  handleToggleSearchPanel = () => {
+    const searchPanelVisible = !this.state.searchPanelVisible;
+
+    this.setState({ searchPanelVisible });
   }
 
   handlePageChange = page => {
@@ -108,16 +156,19 @@ export default class DataTable extends FieldsComponent {
   }
 
   getFilteredRows() {
-    const { searchQuery, sortColumn } = this.state;
+    const { searchValues, sortColumn } = this.state;
 
-    const data = this.getData();
-    let items = data;
+    let rows = this.getData();
 
-    if (searchQuery)
-      items = data.filter(m => m.Title.toLowerCase().startsWith(searchQuery.toLowerCase()));
+    for (const name in searchValues) {
+      const value = searchValues[name];
+
+      if (value)
+        rows = rows.filter(row => row[name].toLowerCase().startsWith(value.toLowerCase()));
+    }
 
     if (sortColumn.name) {
-      items.sort((a, b) => {
+      rows.sort((a, b) => {
         let result = 0;
   
         if (a[sortColumn.name] > b[sortColumn.name])
@@ -132,7 +183,7 @@ export default class DataTable extends FieldsComponent {
       });
     }
 
-    return items;
+    return rows;
   }
 
   paginateRows(items, pageNumber, pageSize) {
@@ -163,35 +214,55 @@ export default class DataTable extends FieldsComponent {
     return <h2>{text}</h2>;
   }
   
+  renderToggleSearchButton() {
+    const { searchPanelVisible } = this.state;
+
+    const variant = this.hasSearchValues() ? 'secondary' : 'light';
+    const text = searchPanelVisible ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
+
+    return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
+  }
+  
   renderNewButton() {
     const { readOnly, creatable, newButtonAsLink, newButtonText } = this.props;
 
     if (readOnly || !creatable)
       return null;
 
-    const text = newButtonText ? newButtonText : 'Lisää uusi';
+    const variant = newButtonAsLink ? 'link' : 'primary';
     const to = this.getNewButtonLink();
+    const text = newButtonText ? newButtonText : 'Lisää uusi';
 
-    if (newButtonAsLink)
-      return <Link to={to}>{text}</Link>
-    
-    return <LinkButton className="new-button" to={to}>{text}</LinkButton>
+    return <LinkButton className="mb-2" variant={variant} size="sm" to={to}>{text}</LinkButton>
   }
   
   renderHeader() {
     return (
       <Row>
         <Col>{this.renderTitle()}</Col>
-        <Col className="text-right">{this.renderNewButton()}</Col>
+        <Col className="text-right">
+          {this.hasSearchFields() && this.renderToggleSearchButton()}
+          {this.renderNewButton()}
+        </Col>
       </Row>
     );
   }
 
-  renderSearchBox() {
-    if (!this.props.showSearchBox)
+  renderSearchPanel() {
+    if (!this.props.showSearchPanel)
       return null;
 
-    return <SearchBox value={this.state.searchQuery} onChange={this.handleSearch} />
+    if (!this.state.searchPanelVisible)
+      return null;
+      
+    return (
+      <SearchPanel
+        table={this}
+        onChange={this.handleSearchFieldChange}
+        onClear={this.handleSearchClear}
+        onSearch={this.handleSearch}
+      />
+    );
   }
 
   renderPagination(filteredItems) {
@@ -274,7 +345,7 @@ export default class DataTable extends FieldsComponent {
     return (
       <>
         {this.renderHeader()}
-        {this.renderSearchBox()}
+        {this.renderSearchPanel()}
         {paginate && this.renderPagination(filteredRows)}
         <table className="table">
           <thead>
@@ -298,7 +369,8 @@ export default class DataTable extends FieldsComponent {
 
 DataTable.defaultProps = {
   showTitle: true,
-  showSearchBox: true,
+  showSearchPanel: true,
+  newButtonAsLink: false,
   paginate: true,
   readOnly: false,
   creatable: true,
