@@ -16,15 +16,14 @@ const sql =
   'WHERE Problem.UserId = User.Id ' +
   'AND Problem.Id = ';
 
-router.get('', (req, res) => { getProblems(req, res) });
-router.get('/open/:Id', (req, res) => { http.getRow(req, res, sql + req.params.Id) });
-router.get('/:Id', (req, res) => { http.getRow(req, res, http.sql(table, req.params.Id)) });
-router.post('', [auth, power], (req, res) => { http.postRow(req, res, table) });
-router.put('/:Id', [auth, power], (req, res) => { http.putRow(req, res, table, { Id: req.params.Id }) });
-router.delete('/:Id', [auth, power], (req, res) => { http.deleteRow(req, res, table, { Id: req.params.Id }) });
+router.get('', async (req, res) => { await getProblems(req, res) });
+router.get('/open/:Id', async (req, res) => { await http.getRow(req, res, sql + req.params.Id) });
+router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });
+router.post('', [auth, power], async (req, res) => { await http.postRow(req, res, table) });
+router.put('/:Id', [auth, power], async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) });
+router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
-function getProblems(req, res) {
-
+async function getProblems(req, res) {
   let sql = 
     'SELECT Problem.Id, Problem.Date, Problem.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Problem.RegistrationYear, Problem.RegistrationNumber, ' +
     'Problem.Make, Problem.Model, Problem.ModelYear, Problem.FuelType, Problem.EngineCode, Problem.EnginePower, Problem.CylinderCount, ' +
@@ -37,28 +36,24 @@ function getProblems(req, res) {
 
   sql += 'ORDER BY Problem.Id DESC';
 
+  const replySql = 'SELECT Id, Date, ProblemId, UserId, Message, Solution FROM ProblemReply ORDER BY ProblemId, Id';
+
   console.log(sql);
 
-  connection.query(sql, (error, problems, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results: problems } = await connection.query(sql);
+    const { results: replies } = await connection.query(replySql);
 
-    const sql = 'SELECT Id, Date, ProblemId, UserId, Message, Solution FROM ProblemReply ORDER BY ProblemId, Id';
+    for (const problem of problems)
+      problem.Replies = replies.filter(reply => reply.ProblemId === problem.Id);
 
-    connection.query(sql, (error, replies, fields) => {
-      if (error) {
-        console.log(error);        
-        return res.status(400).send(error);
-      }
+    res.send(problems);
+  }
+  catch (ex) {
+    console.log(error);        
+    return res.status(400).send(error);
+  }
 
-      for (const problem of problems)
-        problem.Replies = replies.filter(reply => reply.ProblemId === problem.Id);
-
-      res.send(problems);
-    });
-  });
 }
 
 module.exports = router;

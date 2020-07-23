@@ -50,6 +50,10 @@ app.use(apiPath + 'Users', user);
 app.use(apiPath + 'traficom', traficom);
 app.use(apiPath + 'data', data);
 
+app.use(function(err, req, res, next) {
+  res.status(500).send('Something failed.');
+});
+
 const connection = require('./connection');
 connection.connect();
 

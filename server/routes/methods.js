@@ -13,39 +13,38 @@ function sql(table, id) {
 }
 
 
-function getRow(req, res, sql) {
+async function getRow(req, res, sql) {
   console.log(sql);
 
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const data = await connection.query(sql);
 
-    if (results.length === 0)
+    if (data.results.length === 0)
       return sendNotFound(res);
 
-      console.log(results[0]);
-      res.send(results[0]);
-    });
+    return res.send(data.results[0]);
+  }
+  catch (ex) {
+    console.error(ex);
+    return res.status(400).send(ex.Error);
+  }
 }
 
 
-function getRows(req, res, sql) {
+async function getRows(req, res, sql) {
   console.log(sql);
 
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
-
-    res.send(results);
-  });
+  try {
+    const data = await connection.query(sql);
+    return res.send(data.results);
+  }
+  catch (ex) {
+    console.error(ex);
+    return res.status(400).send(ex.Error);
+  }
 }
 
-
-function postRow(req, res, tableName) {
+async function postRow(req, res, tableName) {
   let sql = 'INSERT INTO ' + tableName + ' (';
 
   const columns = [];
@@ -82,23 +81,23 @@ function postRow(req, res, tableName) {
   console.log(sql);
   console.log(inserts);
 
-  connection.query(sql, inserts, (error, results, fields) => {
-    if (error) {
-      console.log(error);
-      return res.status(400).send(error);
-    }
+  try {
+    const data = await connection.queryValues(sql, inserts);
 
     const response = {
-      Id: results.insertId,
-      ...fields
+      Id: data.results.insertId,
+      ...data.fields
     }
 
-    res.status(201).send(response);
-  });
+    return res.status(201).send(response);
+  }
+  catch (ex) {
+    console.error(ex);
+    return res.status(400).send(ex.Error);
+  }
 }
 
-
-function putRow(req, res, tableName, keys) {
+async function putRow(req, res, tableName, keys) {
   let sql = 'UPDATE ' + tableName + ' SET ';
 
   const inserts = [];
@@ -133,23 +132,23 @@ function putRow(req, res, tableName, keys) {
   console.log(sql);
   console.log(inserts);
 
-  connection.query(sql, inserts, (error, results, fields) => {
-    if (error) {
-      console.log(error);
-      return res.status(400).send(error);
-    }
+  try {
+    const data = await connection.queryValues(sql, inserts);
 
-    if (results.affectedRows === 0)
+    if (data.results.affectedRows === 0)
       return sendNotFound(res);
 
-    const response = { ...fields }
+    const response = { ...data.fields }
 
-    res.send(response);
-  });
+    return res.send(response);
+  }
+  catch (ex) {
+    console.error(ex);
+    return res.status(400).send(ex.Error);
+  }
 }
 
-
-function deleteRow(req, res, tableName, keys) {
+async function deleteRow(req, res, tableName, keys) {
   let sql = 'DELETE FROM ' + tableName;
 
   const inserts = [];
@@ -171,17 +170,18 @@ function deleteRow(req, res, tableName, keys) {
   console.log(sql);
   console.log(inserts);
 
-  connection.query(sql, inserts, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const data = await connection.queryValues(sql, inserts);
 
-    if (results.affectedRows === 0)
+    if (data.results.affectedRows === 0)
       return sendNotFound(res);
 
-    res.send('Success');
-  });
+    return res.send('Success');
+  }
+  catch (ex) {
+    console.error(ex);
+    return res.status(400).send(ex.Error);
+  }
 }
 
 

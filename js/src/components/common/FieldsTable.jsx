@@ -229,7 +229,7 @@ export default class DataTable extends FieldsComponent {
     if (readOnly || !creatable)
       return null;
 
-    const variant = newButtonAsLink ? 'link' : 'primary';
+    const variant = newButtonAsLink ? 'link' : 'success';
     const to = this.getNewButtonLink();
     const text = newButtonText ? newButtonText : 'Lisää uusi';
 
