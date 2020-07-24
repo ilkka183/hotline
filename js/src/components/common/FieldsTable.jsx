@@ -12,10 +12,10 @@ import SortIcon from './SortIcon';
 
 export default class DataTable extends FieldsComponent {
   state = {
-    data: [],
+    rows: [],
     searchValues: {},
-    searchPanelVisible: false,
-    currentPage: 1,
+    searchPanel: false,
+    pageIndex: 0,
     pageSize: 10,
     sortColumn: {
       name: '',
@@ -48,17 +48,17 @@ export default class DataTable extends FieldsComponent {
   }
 
   async componentDidMount() {
-    if (this.props.data)
+    if (this.props.rows)
       return;
 
-    const { data } = await this.getItems();
+    const { data: { rows } } = await this.getItems();
 
     const searchValues = {};
 
     for (const field of this.fields)
       searchValues[field.name] = '';
 
-    this.setState({ data, searchValues });
+    this.setState({ rows, searchValues });
   }
 
   hasSearchFields() {
@@ -89,9 +89,9 @@ export default class DataTable extends FieldsComponent {
       try {
         await this.deleteItem(item);
   
-        const data = this.state.data.filter(m => m.Id !== item.Id);
+        const rows = this.state.rows.filter(m => m.Id !== item.Id);
     
-        this.setState({ data });
+        this.setState({ rows });
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
@@ -102,7 +102,7 @@ export default class DataTable extends FieldsComponent {
   handleSearch = query => {
     console.log(this.state.searchValues);
 
-    this.setState({ currentPage: 1 });
+    this.setState({ pageIndex: 0 });
   }
 
   handleSearchFieldChange = ({ currentTarget }) => {
@@ -122,13 +122,13 @@ export default class DataTable extends FieldsComponent {
   }
 
   handleToggleSearchPanel = () => {
-    const searchPanelVisible = !this.state.searchPanelVisible;
+    const searchPanel = !this.state.searchPanel;
 
-    this.setState({ searchPanelVisible });
+    this.setState({ searchPanel });
   }
 
-  handlePageChange = page => {
-    this.setState({ currentPage: page });
+  handlePageChange = index => {
+    this.setState({ pageIndex: index });
   }
 
   handleSort = sortColumn => {
@@ -148,17 +148,8 @@ export default class DataTable extends FieldsComponent {
     this.handleSort(newSortColumn);
   }
 
-  getData() {
-    if (this.props.data)
-      return this.props.data;
-    else
-      return this.state.data;
-  }
-
-  getFilteredRows() {
+  filterRows(rows) {
     const { searchValues, sortColumn } = this.state;
-
-    let rows = this.getData();
 
     for (const name in searchValues) {
       const value = searchValues[name];
@@ -186,21 +177,20 @@ export default class DataTable extends FieldsComponent {
     return rows;
   }
 
-  paginateRows(items, pageNumber, pageSize) {
-    const startIndex = (pageNumber - 1)*pageSize;
-    const slice = [];
+  paginateRows(rows, pageIndex, pageSize) {
+    const offset = pageIndex*pageSize;
+    const result = [];
   
     for (let i = 0; i < pageSize; i++) {
-      const index = startIndex + i;
+      const index = offset + i;
   
-      if (index >= items.length)
+      if (index >= rows.length)
         break;
   
-      const item =  items[index];
-      slice.push(item);
+        result.push(rows[index]);
     }
   
-    return slice;
+    return result;
   }  
 
   renderTitle() {
@@ -215,10 +205,10 @@ export default class DataTable extends FieldsComponent {
   }
   
   renderToggleSearchButton() {
-    const { searchPanelVisible } = this.state;
+    const { searchPanel } = this.state;
 
     const variant = this.hasSearchValues() ? 'secondary' : 'light';
-    const text = searchPanelVisible ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
+    const text = searchPanel ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
 
     return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
   }
@@ -249,10 +239,10 @@ export default class DataTable extends FieldsComponent {
   }
 
   renderSearchPanel() {
-    if (!this.props.showSearchPanel)
+    if (!this.props.searchPanel)
       return null;
 
-    if (!this.state.searchPanelVisible)
+    if (!this.state.searchPanel)
       return null;
       
     return (
@@ -265,13 +255,15 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderPagination(filteredItems) {
+  renderPagination(rowCount) {
+    const { pageIndex, pageSize } = this.state;
+
     return (
       <div>
         <DataPagination
-          itemsCount={filteredItems.length}
-          pageSize={this.state.pageSize}
-          currentPage={this.state.currentPage}
+          rowCount={rowCount}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
           onPageChange={this.handlePageChange}
         />
       </div>
@@ -334,19 +326,32 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
+  getRows() {
+    if (this.props.rows)
+      return this.props.rows;
+    else
+      return this.state.rows;
+  }
+
   render() {
     const { readOnly, deletable, paginate } = this.props;
-    const { currentPage, pageSize } = this.state;
+    const { pageIndex, pageSize } = this.state;
 
-    const filteredRows = this.getFilteredRows();
-    const rows = paginate ? this.paginateRows(filteredRows, currentPage, pageSize) : filteredRows;
+    let rows = this.getRows();
+    rows = this.filterRows(rows);
+
+    const rowCount = rows.length;
+
+    if (paginate)
+      rows = this.paginateRows(rows, pageIndex, pageSize);
+
     const columns = this.fields.filter(column => column.visible);
 
     return (
       <>
         {this.renderHeader()}
         {this.renderSearchPanel()}
-        {paginate && this.renderPagination(filteredRows)}
+        {paginate && this.renderPagination(rowCount)}
         <table className="table">
           <thead>
             <tr>
@@ -369,7 +374,7 @@ export default class DataTable extends FieldsComponent {
 
 DataTable.defaultProps = {
   showTitle: true,
-  showSearchPanel: true,
+  searchPanel: true,
   newButtonAsLink: false,
   paginate: true,
   readOnly: false,

@@ -27,3 +27,10 @@ body {
 .description {
   font-weight: bold;
 }
+
+.pagination-rows {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+

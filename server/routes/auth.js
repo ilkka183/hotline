@@ -1,14 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const connection = require('../connection');
 const config = require('../middleware/config');
 const auth = require('../middleware/auth');
-const connection = require('../connection');
 
 const router = express.Router();
 
 
 function generateToken(payload) {
-  console.log(payload);
   return jwt.sign(payload, config.jwtPrivateKey);
 }
 
@@ -18,15 +17,14 @@ router.get('/me', auth, (req, res) => {
 });
 
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
   const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
 
-  connection.query(sql, [email], (error, results, fields) => {
-    if (error)
-      return res.status(400).send(error);
+  try {
+    const { results } = await connection.queryValues(sql, [email]);
 
     if ((results.length == 0) || (password !== results[0].Password))
       return res.status(401).send('Invalid email or password.');
@@ -45,46 +43,48 @@ router.post('/login', (req, res) => {
     const token = generateToken(payload);
 
     res.send(token);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.post('/changepassword', (req, res) => {
+router.post('/changepassword', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const newPassword = req.body.newPassword;
 
   const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
 
-  connection.query(sql, [email], (error, results, fields) => {
-    if (error)
-      return res.status(400).send(error);
+  try {
+    const { results } = await connection.queryValues(sql, [email]);
 
     if ((results.length == 0) || (password !== results[0].Password))
       return res.status(401).send('Invalid password.');
 
-    const sql = 'UPDATE User SET Password=? WHERE Email=?';
+    const updateSql = 'UPDATE User SET Password=? WHERE Email=?';
+    await connection.queryValues(updateSql, [email]);
 
-    connection.query(sql, [newPassword, email], (error, results, fields) => {
-      if (error)
-        return res.status(400).send(error);
-
-      res.send('OK');
-    });
-  });
+    res.send('OK');
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   let sql = 'INSERT INTO User (GroupId, Role, FirstName, LastName, Email, Password, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const values = [];
 
   for (const column in req.body) 
     values.push(req.body[column]);
 
-  connection.query(sql, values, (error, results, fields) => {
-    if (error)
-      return res.status(400).send(error);
+  try {
+    const { results } = await connection.queryValues(sql, values);
 
     const payload = {
       id: results.insertId,
@@ -93,11 +93,14 @@ router.post('/register', (req, res) => {
 
     const token = generateToken(payload);
 
-    res
-      .header('x-auth-token', token)
+    res.header('x-auth-token', token)
       .header('access-control-expose-headers', 'x-auth-token')
       .send(token);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 

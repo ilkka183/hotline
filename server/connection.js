@@ -1,21 +1,12 @@
 const mysql = require('mysql');
 
-/*
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'suoritac_root',
-  password: 'OhiOn330!',
-  database: 'suoritac_hotline1'
-});
-*/
-
 class Connection {
-  constructor() {
+  constructor(user, password, database) {
     this.connection = mysql.createConnection({
       host: 'localhost',
-      user: 'suoritac_root',
-      password: 'OhiOn330!',
-      database: 'suoritac_hotline1'
+      user,
+      password,
+      database
     });
   }
 
@@ -50,6 +41,13 @@ class Connection {
   }
 }
 
-const connection = new Connection;
+
+class LocalConnection extends Connection {
+  constructor() {
+    super('suoritac_root', 'OhiOn330!', 'suoritac_hotline1');
+  }
+}
+
+const connection = new LocalConnection;
 
 module.exports = connection;

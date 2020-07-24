@@ -23,8 +23,8 @@ export default class Problem extends Component {
   async loadData() {
     try {
       const { data: problem } = await http.get('/problems/open/' + this.problemId);
-      const { data: attachments } = await http.get('/problemattachments?ProblemId=' + this.problemId);
-      const { data: replies } = await http.get('/problemreplies?ProblemId=' + this.problemId);
+      const { data: { rows: attachments } } = await http.get('/problemattachments?ProblemId=' + this.problemId);
+      const { data: { rows: replies } } = await http.get('/problemreplies?ProblemId=' + this.problemId);
 
       this.setState({ problem, attachments, replies });
     }
@@ -54,7 +54,7 @@ export default class Problem extends Component {
       <>
         <h4>Liitteet</h4>
         <ProblemAttachmentsTable
-          data={attachments}
+          rows={attachments}
           problemId={problem.Id}
           showTitle={false}
           showSearchBox={false}
@@ -72,7 +72,7 @@ export default class Problem extends Component {
       <>
         <h4>Vastaukset</h4>
         <ProblemRepliesTable
-          data={replies}
+          rows={replies}
           problemId={problem.Id}
           showTitle={false}
           showSearchBox={false}
@@ -92,7 +92,7 @@ export default class Problem extends Component {
         {editable && <LinkButton className="mb-2" to={'/problems/' + this.problemId}>Muokkaa</LinkButton>}
         <ProblemForm asTable={true} showTitle={false} data={problem} />
         {this.renderAttachments()}
-        {problem.Status === 0 && this.renderReplies()}
+        {(problem.Status === 0 || this.user.role <= 1) && this.renderReplies()}
       </Container>
     );
   }

@@ -1,46 +1,102 @@
 const connection = require('../connection');
 
-
 function sendNotFound(res) {
-  const message = 'Item not found';
-  console.log(message);
-  return res.status(404).send(message);
+  return res.status(404).send('Item not found');
 }
-
 
 function sql(table, id) {
   return 'SELECT * FROM ' + table + ' WHERE Id = ' + id;
 }
 
+function trim(sql) {
+  const index = sql.indexOf('FROM ');
+
+  if (index !== -1)
+    return 'SELECT ... ' + sql.substring(index);
+
+  return sql
+}
+
+function getCountSql(sql) {
+  const fromIndex = sql.indexOf('FROM ');
+
+  if (fromIndex !== -1) {
+    sql = sql.substring(fromIndex);
+
+    const orderByIndex = sql.lastIndexOf('ORDER BY ');
+
+    if (orderByIndex !== -1)
+      sql = sql.substring(0, orderByIndex);
+
+    return 'SELECT COUNT(*) AS Count ' + sql;
+  }
+
+  return null
+}
 
 async function getRow(req, res, sql) {
-  console.log(sql);
+  console.log(trim(sql));
 
   try {
-    const data = await connection.query(sql);
+    const { results } = await connection.query(sql);
 
-    if (data.results.length === 0)
+    if (results.length === 0)
       return sendNotFound(res);
 
-    return res.send(data.results[0]);
+    res.send(results[0]);
   }
   catch (ex) {
     console.error(ex);
-    return res.status(400).send(ex.Error);
+    res.status(500).send(ex);
   }
 }
 
-
 async function getRows(req, res, sql) {
-  console.log(sql);
-
   try {
-    const data = await connection.query(sql);
-    return res.send(data.results);
+    const pageIndex = req.query.pageIndex;
+    const pageSize = req.query.pageSize;
+
+    if (pageSize) {
+      sql += ' LIMIT ';
+
+      if (pageIndex) {
+        const offset = pageIndex*pageSize;
+        sql += offset + ', ';
+      }
+
+      sql += pageSize;
+
+      const countSql = getCountSql(sql);
+
+      console.log(countSql);
+      console.log(trim(sql));
+
+      const { results: count } = await connection.query(countSql);
+      const { results: rows } = await connection.query(sql);
+
+      const response = {
+        count: count[0].Count,
+        rows
+      }
+
+      res.send(response);
+    }
+    else {
+      console.log(trim(sql));
+
+      const { results: rows } = await connection.query(sql);
+
+      const response = {
+        count: rows.length,
+        rows
+      }
+
+      res.send(response);
+    }
   }
   catch (ex) {
     console.error(ex);
-    return res.status(400).send(ex.Error);
+    res.status(500).send(ex);
   }
 }
 
@@ -82,18 +138,18 @@ async function postRow(req, res, tableName) {
   console.log(inserts);
 
   try {
-    const data = await connection.queryValues(sql, inserts);
+    const { results, fields } = await connection.queryValues(sql, inserts);
 
     const response = {
-      Id: data.results.insertId,
-      ...data.fields
+      Id: results.insertId,
+      ...fields
     }
 
-    return res.status(201).send(response);
+    res.status(201).send(response);
   }
   catch (ex) {
     console.error(ex);
-    return res.status(400).send(ex.Error);
+    res.status(500).send(ex);
   }
 }
 
@@ -133,18 +189,18 @@ async function putRow(req, res, tableName, keys) {
   console.log(inserts);
 
   try {
-    const data = await connection.queryValues(sql, inserts);
+    const { results, fields } = await connection.queryValues(sql, inserts);
 
-    if (data.results.affectedRows === 0)
+    if (results.affectedRows === 0)
       return sendNotFound(res);
 
-    const response = { ...data.fields }
+    const response = { ...fields }
 
-    return res.send(response);
+    res.send(response);
   }
   catch (ex) {
     console.error(ex);
-    return res.status(400).send(ex.Error);
+    res.status(500).send(ex);
   }
 }
 
@@ -171,22 +227,23 @@ async function deleteRow(req, res, tableName, keys) {
   console.log(inserts);
 
   try {
-    const data = await connection.queryValues(sql, inserts);
+    const { results } = await connection.queryValues(sql, inserts);
 
-    if (data.results.affectedRows === 0)
+    if (results.affectedRows === 0)
       return sendNotFound(res);
 
-    return res.send('Success');
+    res.send('Success');
   }
   catch (ex) {
     console.error(ex);
-    return res.status(400).send(ex.Error);
+    res.status(500).send(ex);
   }
 }
 
 
 module.exports = {
   sql,
+  trim,
   getRow,
   getRows,
   postRow,

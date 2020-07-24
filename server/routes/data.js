@@ -4,26 +4,27 @@ const connection = require('../connection');
 const router = express.Router();
 
 
-router.get('/makes', (req, res) => {
+router.get('/makes', async (req, res) => {
   const sql =
     'SELECT DISTINCT Make.Name FROM Model, Make ' +
     'WHERE Model.MakeId = Make.Id ' +
     'ORDER BY Make.Name';
 
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const list = results.map(item => item.Name);
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.get('/modelYears', (req, res) => {
+router.get('/modelYears', async (req, res) => {
   const make = req.query.make;
 
   const sql =
@@ -31,13 +32,8 @@ router.get('/modelYears', (req, res) => {
     'WHERE Model.MakeId = Make.Id ' +
     'AND Make.Name = "' + make + '"';
 
-  console.log(sql);
-
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const date = new Date();
     const endYear = date.getFullYear();
@@ -50,11 +46,15 @@ router.get('/modelYears', (req, res) => {
       list.push(year);
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.get('/fuelTypes', (req, res) => {
+router.get('/fuelTypes', async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
 
@@ -66,20 +66,21 @@ router.get('/fuelTypes', (req, res) => {
     'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
     'ORDER BY Model.FuelType';
 
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const list = results.map(item => item.FuelType);
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.get('/models', (req, res) => {
+router.get('/models', async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -93,22 +94,21 @@ router.get('/models', (req, res) => {
     'AND Model.FuelType = ' + fuelType + ' ' +
     'ORDER BY Model.Name';
 
-  console.log(sql);
-
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const list = results.map(item => item.Name);
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.get('/engineSizes', (req, res) => {
+router.get('/engineSizes', async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -124,22 +124,21 @@ router.get('/engineSizes', (req, res) => {
     'AND Model.Name = "' + model + '" ' +
     'ORDER BY Model.EngineSize';
 
-  console.log(sql);
-
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const list = results.map(item => item.EngineSize);
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 
-router.get('/engineTypes', (req, res) => {
+router.get('/engineTypes', async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -157,18 +156,17 @@ router.get('/engineTypes', (req, res) => {
     'AND Model.EngineSize = ' + engineSize + ' ' +
     'ORDER BY Model.EnginePower, Model.EngineCode';
 
-  console.log(sql);
-
-  connection.query(sql, (error, results, fields) => {
-    if (error) {
-      console.log(error);        
-      return res.status(400).send(error);
-    }
+  try {
+    const { results } = await connection.query(sql);
 
     const list = results.map(item => ({ power: item.EnginePower, code: item.EngineCode }));
 
     res.send(list);
-  });
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
 });
 
 

@@ -21,7 +21,7 @@ export default class BaseTable extends FieldsTable {
 
   async getItems() {
     const endpoint = this.getItemsEndpoint(this.apiPath);
-    
+
     return await http.get(endpoint);
   }
 

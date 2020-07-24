@@ -52,14 +52,15 @@ export default class DataForm extends FieldsForm {
   async populateLookups() {
     for (const field of this.fields) {
       if (field.lookupUrl) {
-        const { data } = await this.http.get('/' + field.lookupUrl);
+        const { data: { rows } } = await this.http.get('/' + field.lookupUrl);
 
         const lookup = [{ value: null, text: '' }];
 
-        for (const item of data)
-          lookup.push({ value: item.Id, text: item.Name });
+        for (const row of rows)
+          lookup.push({ value: row.Id, text: row.Name });
 
         field.lookup = lookup;
+
         this.setState({ lookup });
       }
       else if (field.enums) {
@@ -73,6 +74,7 @@ export default class DataForm extends FieldsForm {
         }
 
         field.lookup = lookup;
+
         this.setState({ lookup });
       }
     }

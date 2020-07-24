@@ -38,20 +38,25 @@ async function getProblems(req, res) {
 
   const replySql = 'SELECT Id, Date, ProblemId, UserId, Message, Solution FROM ProblemReply ORDER BY ProblemId, Id';
 
-  console.log(sql);
+  console.log(http.trim(sql));
 
   try {
-    const { results: problems } = await connection.query(sql);
+    const { results: rows } = await connection.query(sql);
     const { results: replies } = await connection.query(replySql);
 
-    for (const problem of problems)
-      problem.Replies = replies.filter(reply => reply.ProblemId === problem.Id);
+    for (const row of rows)
+      row.Replies = replies.filter(reply => reply.ProblemId === row.Id);
 
-    res.send(problems);
+    const response = {
+      count: rows.length,
+      rows
+    }
+
+    res.send(response);
   }
   catch (ex) {
     console.log(error);        
-    return res.status(400).send(error);
+    res.status(500).send(error);
   }
 
 }
