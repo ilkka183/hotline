@@ -3,9 +3,9 @@ import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import { FUEL_TYPES } from './../ProblemsTable';
+import { FUEL_TYPES } from './ProblemsTable';
 
-export default function DataInfo({ data, ...props }) {
+export default function ProblemSummary({ data, ...props }) {
   return (
     <Alert variant="success" {...props}>
       <Container>

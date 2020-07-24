@@ -30,13 +30,9 @@ export default class ProblemsTable extends BaseTable {
     return 'problems';
   }
 
-  getItemsEndpoint(path) {
-    let url = path;
-
+  getItemsQuery(query) {
     if (this.props.status !== undefined)
-      url += '?Status=' + this.props.status;
-
-    return url;
+      query.Status = this.props.status;
   }
 
   canDelete(row) {

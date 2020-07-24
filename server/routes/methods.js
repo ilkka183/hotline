@@ -68,14 +68,13 @@ async function getRows(req, res, sql) {
 
       const countSql = getCountSql(sql);
 
-      console.log(countSql);
       console.log(trim(sql));
 
       const { results: count } = await connection.query(countSql);
       const { results: rows } = await connection.query(sql);
 
       const response = {
-        count: count[0].Count,
+        rowCount: count[0].Count,
         rows
       }
 
@@ -87,7 +86,7 @@ async function getRows(req, res, sql) {
       const { results: rows } = await connection.query(sql);
 
       const response = {
-        count: rows.length,
+        rowCount: rows.length,
         rows
       }
 

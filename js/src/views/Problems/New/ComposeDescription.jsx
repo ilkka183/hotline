@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
-import DataInfo from './DataInfo'
+import ProblemSummary from '../ProblemSummary'
 
 const APPEARANCES = [
   'Ajoittainen',
@@ -167,7 +167,7 @@ export default function ComposeDescription({ data, description, onChange, onChan
 
   return (
     <>
-      <DataInfo data={data} />
+      <ProblemSummary data={data} />
       <h3>Vian kuvaus</h3>
       <Form>
         {renderDescription()}

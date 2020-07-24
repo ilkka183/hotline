@@ -32,7 +32,8 @@ async function getProblems(req, res) {
     'WHERE Problem.UserId = User.Id ';
 
   for (const field in req.query)
-    sql += 'AND ' + field + ' = ' + req.query[field] + ' ';
+    if (field !== 'pageIndex' && field !== 'pageSize')
+      sql += 'AND ' + field + ' = ' + req.query[field] + ' ';
 
   sql += 'ORDER BY Problem.Id DESC';
 

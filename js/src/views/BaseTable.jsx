@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import FieldsTable from '../components/common/FieldsTable';
 import auth from '../services/authService';
 import http from '../services/httpService';
@@ -11,22 +12,25 @@ export default class BaseTable extends FieldsTable {
     return '/' + this.getApiName();
   }
 
-  getItemsEndpoint(path) {
-    return path;
+  getItemsQuery(query) {
   }
 
-  deleteItemEndpoint(path, item) {
-    return path + '/' + item.Id;
-  }
+  async getItems(pageIndex) {
+    let query = {}
+    this.getItemsQuery(query);
+    query.pageIndex = pageIndex;
+    query.pageSize = this.state.pageSize;
 
-  async getItems() {
-    const endpoint = this.getItemsEndpoint(this.apiPath);
+    let endpoint = this.apiPath;
+
+    if (Object.keys(query).length > 0)
+      endpoint += '?' + queryString.stringify(query);
 
     return await http.get(endpoint);
   }
 
   async deleteItem(item) {
-    const endpoint = this.deleteItemEndpoint(this.apiPath, item);
+    const endpoint = this.apiPath + '/' + item.Id;
 
     await http.delete(endpoint);
   }

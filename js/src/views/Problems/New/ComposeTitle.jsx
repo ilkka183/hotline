@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import DataInfo from './DataInfo'
+import ProblemSummary from '../ProblemSummary'
 
 export const GROUPS = [
   'Alusta',
@@ -64,7 +64,7 @@ export default function ComposeTitle({ data, title, onChange, onPrev, onNext }) 
 
   return (
     <>
-      <DataInfo data={data} />
+      <ProblemSummary data={data} />
       <h3>Rakenneryhmä</h3>
       <Form>
         {renderGroups()}

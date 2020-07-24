@@ -13,12 +13,13 @@ import SortIcon from './SortIcon';
 export default class DataTable extends FieldsComponent {
   state = {
     rows: [],
+    rowCount: 0,
     searchValues: {},
     searchPanel: false,
     pageIndex: 0,
     pageSize: 10,
     sortColumn: {
-      name: '',
+      name: null,
       order: 'asc'
     }
   }
@@ -35,7 +36,7 @@ export default class DataTable extends FieldsComponent {
     return true;
   }
 
-  getItems() {
+  getItems(pageIndex) {
     throw new Error('You have to implement the method getItems!');
   }
 
@@ -45,20 +46,6 @@ export default class DataTable extends FieldsComponent {
 
   getNewButtonLink() {
     return `/${this.getApiName()}/new`;
-  }
-
-  async componentDidMount() {
-    if (this.props.rows)
-      return;
-
-    const { data: { rows } } = await this.getItems();
-
-    const searchValues = {};
-
-    for (const field of this.fields)
-      searchValues[field.name] = '';
-
-    this.setState({ rows, searchValues });
   }
 
   hasSearchFields() {
@@ -79,19 +66,49 @@ export default class DataTable extends FieldsComponent {
     return false;
   }
 
+  async componentDidMount() {
+    const searchValues = {};
+
+    for (const field of this.fields)
+      searchValues[field.name] = '';
+
+    if (this.props.rows) {
+      this.setState({ searchValues });
+    }
+    else {
+      const pageIndex = 0;
+      const { data: { rowCount, rows } } = await this.getItems(pageIndex);
+
+      this.setState({ rowCount, rows, pageIndex, searchValues });
+    }
+  }
+
+  handlePageChange = async pageIndex => {
+    if (this.props.rows) {
+      this.setState({ pageIndex });
+    } else {
+      const { data: { rowCount, rows } } = await this.getItems(pageIndex);
+
+      this.setState({ rowCount, rows, pageIndex });
+    }
+  }
+
   handleDelete = async item => {
     if (!window.confirm('Poista rivi?'))
       return;
 
-    if (this.props.onDelete)
-      this.props.onDelete(item);
+    if (this.props.rows) {
+      if (this.props.onDelete)
+        this.props.onDelete(item);
+    }
     else {
       try {
         await this.deleteItem(item);
+        const { data: { rowCount, rows } } = await this.getItems(this.state.pageIndex);
   
-        const rows = this.state.rows.filter(m => m.Id !== item.Id);
+//        const rows = this.state.rows.filter(m => m.Id !== item.Id);
     
-        this.setState({ rows });
+        this.setState({ rowCount, rows });
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
@@ -125,10 +142,6 @@ export default class DataTable extends FieldsComponent {
     const searchPanel = !this.state.searchPanel;
 
     this.setState({ searchPanel });
-  }
-
-  handlePageChange = index => {
-    this.setState({ pageIndex: index });
   }
 
   handleSort = sortColumn => {
@@ -327,24 +340,28 @@ export default class DataTable extends FieldsComponent {
   }
 
   getRows() {
-    if (this.props.rows)
-      return this.props.rows;
+    const { paginate } = this.props;
+    const { pageIndex, pageSize } = this.state;
+
+    if (this.props.rows) {
+      const filteredRows = this.filterRows(this.props.rows);
+
+      return {
+        rowCount: filteredRows.length,
+        rows: paginate ? this.paginateRows(filteredRows, pageIndex, pageSize) : filteredRows
+      }
+    }
     else
-      return this.state.rows;
+      return {
+        rowCount: this.state.rowCount,
+        rows: this.state.rows
+      }
   }
 
   render() {
     const { readOnly, deletable, paginate } = this.props;
-    const { pageIndex, pageSize } = this.state;
 
-    let rows = this.getRows();
-    rows = this.filterRows(rows);
-
-    const rowCount = rows.length;
-
-    if (paginate)
-      rows = this.paginateRows(rows, pageIndex, pageSize);
-
+    const { rowCount, rows } = this.getRows();
     const columns = this.fields.filter(column => column.visible);
 
     return (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import DataInfo from './DataInfo'
+import ProblemSummary from '../ProblemSummary'
 import http from '../../../services/httpService';
 import { LEON, GOLF, FOCUS } from './Cars';
 
@@ -103,7 +103,7 @@ export default function SearchData({ data, onData, onNext }) {
         {renderFillButton(FOCUS)}
       </Form>
       {error && <Alert variant="danger">{error}</Alert>}
-      {isReady() && <DataInfo className="mt-3" data={data} />}
+      {isReady() && <ProblemSummary className="mt-3" data={data} />}
       {isReady() && <Button onClick={onNext}>Seuraava</Button>}
     </>
   );
