@@ -18,7 +18,7 @@ export default class DataTable extends FieldsComponent {
     searchPanel: false,
     pageIndex: 0,
     pageSize: 10,
-    sortColumn: {
+    sortField: {
       name: null,
       order: 'asc'
     }
@@ -66,6 +66,23 @@ export default class DataTable extends FieldsComponent {
     return false;
   }
 
+  async fetchItems(options) {
+    let { searchValues, pageIndex, sortField } = options;
+
+    if (searchValues === undefined)
+      searchValues = this.state.searchValues;
+
+    if (pageIndex === undefined)
+      pageIndex = this.state.pageIndex;
+
+    if (sortField === undefined)
+      sortField = this.state.sortField
+
+    const { data: { rowCount, rows } } = await this.getItems({ searchValues, pageIndex, sortField });
+
+    this.setState({ rowCount, rows, searchValues, sortField, pageIndex });
+  }
+
   async componentDidMount() {
     const searchValues = {};
 
@@ -77,19 +94,22 @@ export default class DataTable extends FieldsComponent {
     }
     else {
       const pageIndex = 0;
-      const { data: { rowCount, rows } } = await this.getItems(pageIndex);
 
-      this.setState({ rowCount, rows, pageIndex, searchValues });
+      const sortField = {
+        name: null,
+        order: 'asc'
+      }
+
+      await this.fetchItems({ pageIndex, sortField });
     }
   }
 
   handlePageChange = async pageIndex => {
     if (this.props.rows) {
       this.setState({ pageIndex });
-    } else {
-      const { data: { rowCount, rows } } = await this.getItems(pageIndex);
-
-      this.setState({ rowCount, rows, pageIndex });
+    }
+    else {
+      await this.fetchItems({ pageIndex });
     }
   }
 
@@ -104,15 +124,31 @@ export default class DataTable extends FieldsComponent {
     else {
       try {
         await this.deleteItem(item);
-        const { data: { rowCount, rows } } = await this.getItems(this.state.pageIndex);
-  
-//        const rows = this.state.rows.filter(m => m.Id !== item.Id);
-    
-        this.setState({ rowCount, rows });
+        await this.fetchItems({});
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
       }
+    }
+  }
+
+  handleSortField = async name => {
+    const sortField = {...this.state.sortField}
+
+    if (sortField.name === name)
+      sortField.order = (sortField.order === 'asc') ? 'desc' : 'asc';
+    else {
+      sortField.name = name;
+      sortField.order = 'asc';
+    }
+
+    console.log(sortField);
+
+    if (this.props.rows) {
+      this.setState({ sortField });
+    }
+    else {
+      await this.fetchItems({ sortField });
     }
   }
 
@@ -144,25 +180,8 @@ export default class DataTable extends FieldsComponent {
     this.setState({ searchPanel });
   }
 
-  handleSort = sortColumn => {
-    this.setState({ sortColumn });
-  }
-
-  setSorColumn(name) {
-    const newSortColumn = {...this.state.sortColumn}
-
-    if (newSortColumn.name === name)
-      newSortColumn.order = (newSortColumn.order === 'asc') ? 'desc' : 'asc';
-    else {
-      newSortColumn.name = name;
-      newSortColumn.order = 'asc';
-    }
-
-    this.handleSort(newSortColumn);
-  }
-
   filterRows(rows) {
-    const { searchValues, sortColumn } = this.state;
+    const { searchValues, sortField } = this.state;
 
     for (const name in searchValues) {
       const value = searchValues[name];
@@ -171,16 +190,16 @@ export default class DataTable extends FieldsComponent {
         rows = rows.filter(row => row[name].toLowerCase().startsWith(value.toLowerCase()));
     }
 
-    if (sortColumn.name) {
+    if (sortField.name) {
       rows.sort((a, b) => {
         let result = 0;
   
-        if (a[sortColumn.name] > b[sortColumn.name])
+        if (a[sortField.name] > b[sortField.name])
           result = 1;
-        else if (a[sortColumn.name] < b[sortColumn.name])
+        else if (a[sortField.name] < b[sortField.name])
           result = -1;
   
-        if (sortColumn.order === 'desc')
+        if (sortField.order === 'desc')
           result = -result;
   
         return result;
@@ -284,7 +303,7 @@ export default class DataTable extends FieldsComponent {
   }
 
   renderSortIcon(column) {
-    const { name, order } = this.state.sortColumn;
+    const { name, order } = this.state.sortField;
 
     if (column.name === name)
       return <SortIcon order={order} />
@@ -297,7 +316,7 @@ export default class DataTable extends FieldsComponent {
       <th
         className="clickable"
         key={column.name}
-        onClick={() => this.setSorColumn(column.name)}
+        onClick={() => this.handleSortField(column.name)}
       >
         {column.label} {this.renderSortIcon(column)}
       </th>

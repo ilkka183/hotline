@@ -11,8 +11,7 @@ const sql =
   'SELECT Id, Name, ContactPerson,' +
   'Address, PostalCode, PostOffice, Country, Phone, Email, Website, ' +
   'Logo, Info, Enabled ' +
-  'FROM UserGroup ' +
-  'ORDER BY Id';
+  'FROM UserGroup';
 
 router.get('', async (req, res) => { await http.getRows(req, res, sql) });
 router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });

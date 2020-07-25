@@ -56,6 +56,21 @@ async function getRows(req, res, sql) {
     const pageIndex = req.query.pageIndex;
     const pageSize = req.query.pageSize;
 
+    const countSql = pageSize ? getCountSql(sql) : null;
+
+    const sortName = req.query.sortName;
+    const sortOrder = req.query.sortOrder;
+
+    if (sortName) {
+      sql += ' ORDER BY ';
+      sql += sortName;
+
+      if (sortOrder) {
+        sql += ' ';
+        sql += sortOrder.toUpperCase();
+      }
+    }
+
     if (pageSize) {
       sql += ' LIMIT ';
 
@@ -66,8 +81,7 @@ async function getRows(req, res, sql) {
 
       sql += pageSize;
 
-      const countSql = getCountSql(sql);
-
+      console.log(countSql);
       console.log(trim(sql));
 
       const { results: count } = await connection.query(countSql);

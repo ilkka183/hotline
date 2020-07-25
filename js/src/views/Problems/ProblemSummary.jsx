@@ -26,8 +26,10 @@ export default function ProblemSummary({ data, ...props }) {
         <Row>
           <Col>{data.Title}</Col>
         </Row>
+        <Row>
+          <Col><pre>{data.Description}</pre></Col>
+        </Row>
       </Container>
     </Alert>
   );
 }
-

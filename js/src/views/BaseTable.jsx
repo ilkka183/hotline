@@ -15,16 +15,28 @@ export default class BaseTable extends FieldsTable {
   getItemsQuery(query) {
   }
 
-  async getItems(pageIndex) {
+  async getItems(options) {
+    let { pageIndex, sortField } = options;
+    const { pageSize } = this.state;
+
     let query = {}
     this.getItemsQuery(query);
     query.pageIndex = pageIndex;
-    query.pageSize = this.state.pageSize;
+    query.pageSize = pageSize;
+
+    if (sortField.name) {
+      query.sortName = sortField.name;
+
+      if (sortField.order === 'desc')
+        query.sortOrder = sortField.order;
+    }
 
     let endpoint = this.apiPath;
 
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
+
+    console.log(endpoint);
 
     return await http.get(endpoint);
   }

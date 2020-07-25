@@ -316,6 +316,9 @@ export default class FieldsForm extends FieldsComponent {
     return null;
   }
 
+  renderInfo() {
+  }
+
   renderForm() {
     const { successText, errorText } = this.state;
     this.autofocusSet = false;
@@ -323,6 +326,7 @@ export default class FieldsForm extends FieldsComponent {
     return (
       <Container>
         {this.renderTitle()}
+        {this.renderInfo()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
           {this.renderPrevButton()}
