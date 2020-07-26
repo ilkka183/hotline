@@ -21,7 +21,8 @@ export default class DataTable extends FieldsComponent {
     sortField: {
       name: null,
       order: 'asc'
-    }
+    },
+    showModal: true
   }
 
   getApiName() {
@@ -178,6 +179,10 @@ export default class DataTable extends FieldsComponent {
     const searchPanel = !this.state.searchPanel;
 
     this.setState({ searchPanel });
+  }
+
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
   }
 
   filterRows(rows) {
@@ -358,6 +363,27 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
+  getForm() {
+    return null;
+  }
+
+  renderModal() {
+    const Form = this.getForm();
+
+    if (!Form)
+      return null;
+
+    const { showModal } = this.state;
+
+    return (
+      <Form
+        asModal={true}
+        showModal={showModal}
+        onCloseModal={this.handleCloseModal}
+      />
+    );
+  }
+
   getRows() {
     const { paginate } = this.props;
     const { pageIndex, pageSize } = this.state;
@@ -403,6 +429,7 @@ export default class DataTable extends FieldsComponent {
               </tr>))}
           </tbody>
         </table>
+        {this.renderModal()}
       </>
     );
   }

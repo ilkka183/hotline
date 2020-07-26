@@ -3,6 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
 import Table from 'react-bootstrap/Table'
 import FieldsComponent from './Fields';
 import MyCheck from '../form/MyCheck';
@@ -339,6 +340,32 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
+  renderModal() {
+    const { showModal, onCloseModal } = this.props;
+
+    return (
+      <Modal
+        size="lg"
+        backdrop="static"
+        show={showModal}
+        onHide={onCloseModal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{this.formattedTitle}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {this.fields.map(field => this.renderField(field))}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onCloseModal}>Sulje</Button>
+          <Button variant="primary">{this.getButtonLabel()}</Button>
+        </Modal.Footer>
+      </Modal>      
+    );
+  }
+
   getData() {
     return this.state.data;
   }
@@ -385,10 +412,12 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   render() {
-    const { asTable } = this.props;
+    const { asTable, asModal } = this.props;
 
     if (asTable)
       return this.renderTable();
+    else if (asModal)
+      return this.renderModal();
     else
       return this.renderForm();
   }

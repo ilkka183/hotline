@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import UserGroupForm from './UserGroupForm';
 
 export default class UserGroupsTable extends BaseTable {
   constructor() {
@@ -23,5 +24,9 @@ export default class UserGroupsTable extends BaseTable {
 
   getApiName() {
     return 'usergroups';
+  }
+
+  getForm() {
+    return UserGroupForm;
   }
 }
