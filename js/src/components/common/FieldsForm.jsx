@@ -82,6 +82,20 @@ export default class FieldsForm extends FieldsComponent {
     this.doSubmit();
   }
 
+  handlePost = e => {
+    const { onPostModal } = this.props;
+
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+
+    if (errors)
+      return;
+
+    this.doSubmit();
+
+    onPostModal();
+  }
+
   handleChange = event => {
     const { currentTarget } = event;
 
@@ -341,14 +355,14 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   renderModal() {
-    const { showModal, onCloseModal } = this.props;
+    const { showModal, onCancelModal } = this.props;
 
     return (
       <Modal
-        size="lg"
+        size="xl"
         backdrop="static"
         show={showModal}
-        onHide={onCloseModal}
+        onHide={onCancelModal}
       >
         <Modal.Header closeButton>
           <Modal.Title>{this.formattedTitle}</Modal.Title>
@@ -359,8 +373,8 @@ export default class FieldsForm extends FieldsComponent {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={onCloseModal}>Sulje</Button>
-          <Button variant="primary">{this.getButtonLabel()}</Button>
+          <Button variant="primary" onClick={this.handlePost}>OK</Button>
+          <Button variant="secondary" onClick={onCancelModal}>Peru</Button>
         </Modal.Footer>
       </Modal>      
     );
@@ -412,14 +426,13 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   render() {
-    const { asTable, asModal } = this.props;
+    const { variant } = this.props;
 
-    if (asTable)
-      return this.renderTable();
-    else if (asModal)
-      return this.renderModal();
-    else
-      return this.renderForm();
+    switch (variant) {
+      case 'modal': return this.renderModal();
+      case 'table': return this.renderTable();
+      default:  return this.renderForm();
+    }
   }
 }
 

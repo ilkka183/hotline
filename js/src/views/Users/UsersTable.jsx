@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import UserForm from './UserForm';
 
 export const USER_ROLES = ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'];
 
@@ -32,5 +33,9 @@ export default class UsersTable extends BaseTable {
 
   getApiName() {
     return 'users';
+  }
+
+  getForm() {
+    return UserForm;
   }
 }

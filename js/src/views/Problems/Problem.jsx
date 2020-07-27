@@ -90,7 +90,7 @@ export default class Problem extends Component {
       <Container>
         <h2>Vikatapaus</h2>
         {editable && <LinkButton className="mb-2" to={'/problems/' + this.problemId}>Muokkaa</LinkButton>}
-        <ProblemForm asTable={true} showTitle={false} data={problem} />
+        <ProblemForm variant="table" showTitle={false} data={problem} />
         {this.renderAttachments()}
         {(problem.Status === 0 || this.user.role <= 1) && this.renderReplies()}
       </Container>

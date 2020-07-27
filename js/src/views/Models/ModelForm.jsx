@@ -28,7 +28,7 @@ export default class ModelForm extends BaseForm {
   }
 
   getTitle() {
-    return 'Automallit';
+    return 'Automalli';
   }
 
   getApiName() {

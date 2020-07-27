@@ -36,8 +36,6 @@ export default class BaseTable extends FieldsTable {
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
 
-    console.log(endpoint);
-
     return await http.get(endpoint);
   }
 

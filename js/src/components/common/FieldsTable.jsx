@@ -22,7 +22,12 @@ export default class DataTable extends FieldsComponent {
       name: null,
       order: 'asc'
     },
-    showModal: true
+    showModal: false,
+    modalDataId: null
+  }
+
+  getUseModals() {
+    return true;
   }
 
   getApiName() {
@@ -181,8 +186,20 @@ export default class DataTable extends FieldsComponent {
     this.setState({ searchPanel });
   }
 
-  handleCloseModal = () => {
-    this.setState({ showModal: false });
+  handleOpenModal = (row) => {
+    const modalDataId = row ? row.Id : null;
+
+    this.setState({ showModal: true, modalDataId });
+  }
+
+  handleCancelModal = () => {
+    this.setState({ showModal: false, modalDataId: null });
+  }
+
+  handlePostModal = async () => {
+    await this.fetchItems({});
+
+    this.handleCancelModal();
   }
 
   filterRows(rows) {
@@ -257,10 +274,15 @@ export default class DataTable extends FieldsComponent {
       return null;
 
     const variant = newButtonAsLink ? 'link' : 'success';
-    const to = this.getNewButtonLink();
     const text = newButtonText ? newButtonText : 'Lisää uusi';
 
-    return <LinkButton className="mb-2" variant={variant} size="sm" to={to}>{text}</LinkButton>
+    if (this.getUseModals())
+      return <Button className="mb-2" variant={variant} size="sm" onClick={() => this.handleOpenModal(null)}>{text}</Button>
+    else {
+      const to = this.getNewButtonLink();
+
+      return <LinkButton className="mb-2" variant={variant} size="sm" to={to}>{text}</LinkButton>
+    }
   }
   
   renderHeader() {
@@ -336,8 +358,12 @@ export default class DataTable extends FieldsComponent {
 
     const { readOnly, editable } = this.props;
 
-    if (column.editLink && !readOnly && editable && this.canEdit(row))
-      return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
+    if (column.editLink && !readOnly && editable && this.canEdit(row)) {
+      if (this.getUseModals())
+        return <Button variant="link" size="sm" onClick={() => this.handleOpenModal(row)}>{text}</Button>
+      else
+        return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
+    }
 
     if (column.link)
       return <Link to={column.link(row)}>{text}</Link>
@@ -373,13 +399,15 @@ export default class DataTable extends FieldsComponent {
     if (!Form)
       return null;
 
-    const { showModal } = this.state;
+    const { showModal, modalDataId } = this.state;
 
     return (
       <Form
-        asModal={true}
+        variant='modal'
+        dataId={modalDataId}
         showModal={showModal}
-        onCloseModal={this.handleCloseModal}
+        onPostModal={this.handlePostModal}
+        onCancelModal={this.handleCancelModal}
       />
     );
   }

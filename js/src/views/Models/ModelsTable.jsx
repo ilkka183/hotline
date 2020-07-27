@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import ModelForm from './ModelForm';
 import { FUEL_TYPES } from '../Problems/ProblemsTable';
 
 export default class ModelsTable extends BaseTable {
@@ -26,4 +27,8 @@ export default class ModelsTable extends BaseTable {
   getApiName() {
     return 'models';
   }
+
+  getForm() {
+    return ModelForm;
+  }  
 }

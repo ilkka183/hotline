@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import MakeForm from './MakeForm';
 
 export default class MakesTable extends BaseTable {
   constructor() {
@@ -16,5 +17,9 @@ export default class MakesTable extends BaseTable {
 
   getApiName() {
     return 'makes';
+  }
+
+  getForm() {
+    return MakeForm;
   }
 }
