@@ -18,6 +18,10 @@ export default class FieldsForm extends FieldsComponent {
     errors: {}
   }
 
+  getData() {
+    return this.state.data;
+  }
+
   getEmptyData() {
     const data = {}
 
@@ -273,12 +277,15 @@ export default class FieldsForm extends FieldsComponent {
     return null;
   }
 
-  get formattedTitle() {
-    return this.getTitle();
-  }
-
   getTitle() {
-    return null;
+    const { action } = this.props;
+
+    switch (action) {
+      case 'new': return this.getNewTitle();
+      case 'edit': return this.getEditTitle();
+      case 'delete': return this.getDeleteTitle() + '?';
+      default: return null;
+    }
   }
 
   getButtonLabel() {
@@ -326,7 +333,7 @@ export default class FieldsForm extends FieldsComponent {
     const { showTitle } = this.props;
 
     if (showTitle)
-      return <h2>{this.formattedTitle}</h2>
+      return <h2>{this.getTitle()}</h2>
 
     return null;
   }
@@ -354,8 +361,26 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
+  renderModalFields() {
+    const { action } = this.props;
+
+    if (action === 'delete')
+      return (
+        <Table size="sm">
+          <tbody>
+            {this.fields.map(field => this.renderTableRow(field))}
+          </tbody>
+        </Table>
+      );
+    else
+      return this.fields.map(field => this.renderField(field));
+  }
+  
   renderModal() {
-    const { showModal, onCancelModal } = this.props;
+    const { showModal, onCancelModal, action } = this.props;
+
+    const variant = action === 'delete' ? 'danger' : 'primary';
+    const text = action === 'delete' ? 'Poista' : 'Tallenna';
 
     return (
       <Modal
@@ -365,23 +390,19 @@ export default class FieldsForm extends FieldsComponent {
         onHide={onCancelModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{this.formattedTitle}</Modal.Title>
+          <Modal.Title>{this.getTitle()}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          {this.fields.map(field => this.renderField(field))}
+          {this.renderModalFields()}
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="primary" onClick={this.handlePost}>OK</Button>
+          <Button variant={variant} onClick={this.handlePost}>{text}</Button>
           <Button variant="secondary" onClick={onCancelModal}>Peru</Button>
         </Modal.Footer>
       </Modal>      
     );
-  }
-
-  getData() {
-    return this.state.data;
   }
 
   getCellText(field) {

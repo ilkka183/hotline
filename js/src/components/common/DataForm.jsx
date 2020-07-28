@@ -13,15 +13,6 @@ export default class DataForm extends FieldsForm {
     return undefined;
   }
 
-  get formattedTitle() {
-    let title = this.getTitle();
-
-    if (!this.dataId)
-      title += ' - uusi';
-
-    return title;
-  }
-
   getApiName() {
     throw new Error('You have to implement the method getApiName!');
   }
@@ -81,6 +72,8 @@ export default class DataForm extends FieldsForm {
   }
 
   async populateData() {
+    const errors = {};
+
     if (this.dataId) {
       // Fetch data from database
       try {
@@ -89,7 +82,7 @@ export default class DataForm extends FieldsForm {
         const savedData = this.jsonToData(item)
         const data = this.jsonToData(item)
   
-        this.setState({ savedData, data });
+        this.setState({ savedData, data, errors });
       }
       catch (ex) {
         if (ex.response && ex.response.status === 404)
@@ -106,13 +99,13 @@ export default class DataForm extends FieldsForm {
         data[name] = (value !== undefined && value !== null) ? value : '';
       }
   
-      this.setState({ data });      
+      this.setState({ data, errors });
     }
     else {
       // New data
       const data = this.getDefaultData();
   
-      this.setState({ data });
+      this.setState({ data, errors });
     }
   }
 

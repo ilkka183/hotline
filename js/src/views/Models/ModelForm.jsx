@@ -27,11 +27,19 @@ export default class ModelForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Automalli';
-  }
-
   getApiName() {
     return 'models';
+  }
+
+  getNewTitle() {
+    return 'Uusi automalli';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa automallia';
+  }
+
+  getDeleteTitle() {
+    return 'Poista automalli';
   }
 }

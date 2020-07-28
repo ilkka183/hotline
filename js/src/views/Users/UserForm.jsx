@@ -33,11 +33,19 @@ export default class UserForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Käyttäjä';
-  }
-
   getApiName() {
     return 'users';
+  }
+
+  getNewTitle() {
+    return 'Uusi käyttäjä';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa käyttäjää';
+  }
+
+  getDeleteTitle() {
+    return 'Poista käyttäjä';
   }
 }

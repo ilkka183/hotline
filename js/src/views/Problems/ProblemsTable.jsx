@@ -22,6 +22,10 @@ export default class ProblemsTable extends BaseTable {
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
   }
 
+  getUseModals() {
+    return false;
+  }
+
   getTitle() {
     return 'Vikatapaukset';
   }

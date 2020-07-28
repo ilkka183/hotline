@@ -26,11 +26,19 @@ export default class UserGroupForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Käyttäjäryhmä';
-  }
-
   getApiName() {
     return 'usergroups';
+  }
+
+  getNewTitle() {
+    return 'Uusi käyttäjäryhmä';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa käyttäjäryhmää';
+  }
+
+  getDeleteTitle() {
+    return 'Poista käyttäjäryhmä';
   }
 }

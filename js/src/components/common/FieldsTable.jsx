@@ -22,8 +22,10 @@ export default class DataTable extends FieldsComponent {
       name: null,
       order: 'asc'
     },
-    showModal: false,
-    modalDataId: null
+    showEditModal: false,
+    showDeleteModal: false,
+    deleteRow: undefined,
+    modalDataId: undefined
   }
 
   getUseModals() {
@@ -119,25 +121,6 @@ export default class DataTable extends FieldsComponent {
     }
   }
 
-  handleDelete = async item => {
-    if (!window.confirm('Poista rivi?'))
-      return;
-
-    if (this.props.rows) {
-      if (this.props.onDelete)
-        this.props.onDelete(item);
-    }
-    else {
-      try {
-        await this.deleteItem(item);
-        await this.fetchItems({});
-      }
-      catch (ex) {
-        toast.error(ex.response.data.sqlMessage);
-      }
-    }
-  }
-
   handleSortField = async name => {
     const sortField = {...this.state.sortField}
 
@@ -186,20 +169,50 @@ export default class DataTable extends FieldsComponent {
     this.setState({ searchPanel });
   }
 
-  handleOpenModal = (row) => {
+  handleOpenEditModal = (row) => {
     const modalDataId = row ? row.Id : null;
 
-    this.setState({ showModal: true, modalDataId });
+    this.setState({ showEditModal: true, modalDataId });
   }
 
-  handleCancelModal = () => {
-    this.setState({ showModal: false, modalDataId: null });
+  handleCancelEditModal = () => {
+    this.setState({ showEditModal: false, modalDataId: undefined });
   }
 
-  handlePostModal = async () => {
+  handlePostEditModal = async () => {
     await this.fetchItems({});
 
-    this.handleCancelModal();
+    this.handleCancelEditModal();
+  }
+
+  handleOpenDeleteModal = (row) => {
+    this.setState({ showDeleteModal: true, deleteRow: row });
+  }
+
+  handleCancelDeleteModal = () => {
+    this.setState({ showDeleteModal: false, deleteRow: undefined });
+  }
+
+  handlePostDeleteModal = async () => {
+    const { deleteRow } = this.state;
+
+    if (this.props.rows) {
+      if (this.props.onDelete)
+        this.props.onDelete(deleteRow);
+    }
+    else {
+      try {
+        await this.deleteItem(deleteRow);
+        await this.fetchItems({});
+      }
+      catch (ex) {
+        toast.error(ex.response.data.sqlMessage);
+      }
+    }
+
+    await this.fetchItems({});
+
+    this.handleCancelDeleteModal();
   }
 
   filterRows(rows) {
@@ -273,16 +286,13 @@ export default class DataTable extends FieldsComponent {
     if (readOnly || !creatable)
       return null;
 
-    const variant = newButtonAsLink ? 'link' : 'success';
+    const variant = newButtonAsLink ? 'link' : 'primary';
     const text = newButtonText ? newButtonText : 'Lisää uusi';
 
     if (this.getUseModals())
-      return <Button className="mb-2" variant={variant} size="sm" onClick={() => this.handleOpenModal(null)}>{text}</Button>
-    else {
-      const to = this.getNewButtonLink();
-
-      return <LinkButton className="mb-2" variant={variant} size="sm" to={to}>{text}</LinkButton>
-    }
+      return <Button className="mb-2" variant={variant} onClick={() => this.handleOpenEditModal(null)}>{text}</Button>
+    else
+      return <LinkButton className="mb-2" variant={variant} size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
   }
   
   renderHeader() {
@@ -360,7 +370,7 @@ export default class DataTable extends FieldsComponent {
 
     if (column.editLink && !readOnly && editable && this.canEdit(row)) {
       if (this.getUseModals())
-        return <Button variant="link" size="sm" onClick={() => this.handleOpenModal(row)}>{text}</Button>
+        return <Button variant="link" size="sm" onClick={() => this.handleOpenEditModal(row)}>{text}</Button>
       else
         return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
     }
@@ -382,9 +392,9 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderDeleteButton(item) {
-    if (this.canDelete(item))
-      return <Button variant="danger" size="sm" onClick={() => this.handleDelete(item)}>Poista</Button>;
+  renderDeleteButton(row) {
+    if (this.canDelete(row))
+      return <Button variant="danger" size="sm" onClick={() => this.handleOpenDeleteModal(row)}>Poista</Button>;
 
     return null;
   }
@@ -393,21 +403,46 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
-  renderModal() {
+  renderEditModal() {
     const Form = this.getForm();
 
     if (!Form)
       return null;
 
-    const { showModal, modalDataId } = this.state;
+    const { showEditModal, modalDataId } = this.state;
+
+    const action = modalDataId ? 'edit' : 'new';
 
     return (
       <Form
         variant='modal'
+        action={action}
         dataId={modalDataId}
-        showModal={showModal}
-        onPostModal={this.handlePostModal}
-        onCancelModal={this.handleCancelModal}
+        showModal={showEditModal}
+        onPostModal={this.handlePostEditModal}
+        onCancelModal={this.handleCancelEditModal}
+      />
+    );
+  }
+
+  renderDeleteModal() {
+    const Form = this.getForm();
+
+    if (!Form)
+      return null;
+
+    const { showDeleteModal, deleteRow } = this.state;
+
+    const dataId = deleteRow ? deleteRow.Id : null;
+
+    return (
+      <Form
+        variant='modal'
+        action='delete'
+        dataId={dataId}
+        showModal={showDeleteModal}
+        onPostModal={this.handlePostDeleteModal}
+        onCancelModal={this.handleCancelDeleteModal}
       />
     );
   }
@@ -457,7 +492,8 @@ export default class DataTable extends FieldsComponent {
               </tr>))}
           </tbody>
         </table>
-        {this.renderModal()}
+        {this.renderEditModal()}
+        {this.renderDeleteModal()}
       </>
     );
   }

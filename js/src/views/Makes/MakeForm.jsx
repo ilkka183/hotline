@@ -18,11 +18,19 @@ export default class MakeForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Automerkki';
-  }
-
   getApiName() {
     return 'makes';
+  }
+
+  getNewTitle() {
+    return 'Uusi automerkki';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa automerkkiä';
+  }
+
+  getDeleteTitle() {
+    return 'Poista automerkki';
   }
 }
