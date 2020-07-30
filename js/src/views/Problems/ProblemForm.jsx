@@ -38,11 +38,19 @@ export default class ProblemForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Vikatapaus';
-  }
-
   getApiName() {
     return 'problems';
+  }
+
+  getNewTitle() {
+    return 'Uusi vikatapaus';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa vikatapausta';
+  }
+
+  getDeleteTitle() {
+    return 'Poista vikatapaus';
   }
 }

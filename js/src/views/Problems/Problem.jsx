@@ -38,9 +38,17 @@ export default class Problem extends Component {
     await this.loadData();
   }
 
-  handleDeleteReply = async reply => {
-    await http.delete('/problemreplies/' + reply.Id);
+  handleDeleteAttachment = async reply => {
+    console.log('handleDeleteAttachment');
 
+    await http.delete('/problemattachments/' + reply.Id);
+    await this.loadData();
+  }
+
+  handleDeleteReply = async reply => {
+    console.log('handleDeleteReplies');
+
+    await http.delete('/problemreplies/' + reply.Id);
     await this.loadData();
   }
 
@@ -59,7 +67,7 @@ export default class Problem extends Component {
           showTitle={false}
           showSearchBox={false}
           autoHide={true}
-          readOnly={true}
+          onDelete={this.handleDeleteAttachment}
         />
       </>
     );

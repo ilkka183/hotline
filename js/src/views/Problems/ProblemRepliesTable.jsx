@@ -1,6 +1,7 @@
 import React from 'react';
 import LinkButton from '../../components/common/LinkButton';
 import BaseTable from '../BaseTable';
+import ProblemReplyForm from './ProblemReplyForm';
 
 export default class ProblemRepliessTable extends BaseTable {
   constructor() {
@@ -23,10 +24,19 @@ export default class ProblemRepliessTable extends BaseTable {
     return 'problemreplies';
   }
 
+  getForm() {
+    return ProblemReplyForm;
+  }
+
+  getParentId() {
+    return this.props.problemId;
+  }
+
   getNewButtonLink() {
     return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
   }
 
+/*  
   canEdit(row) {
     return (this.user.role <= 1 || row.UserId === this.user.id);
   }
@@ -34,6 +44,7 @@ export default class ProblemRepliessTable extends BaseTable {
   canDelete(row) {
     return (this.user.role <= 1 || row.UserId === this.user.id) && !row.Solution;
   }
+*/
 
   renderSolutionButton(row) {
     const variant = row.Solution ? 'success' : 'warning';

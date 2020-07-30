@@ -1,4 +1,5 @@
 import BaseTable from '../BaseTable';
+import ProblemAttachmentForm from './ProblemAttachmentForm';
 
 export default class ProblemAttachmentsTable extends BaseTable {
   constructor() {
@@ -12,12 +13,20 @@ export default class ProblemAttachmentsTable extends BaseTable {
     this.addField('Description', 'Kuvaus',     'textarea', { editLink: true});
   }
 
+  getApiName() {
+    return 'problemattachments';
+  }
+
   getTitle() {
     return 'Liitteet';
   }
 
-  getApiName() {
-    return 'problemattachments';
+  getForm() {
+    return ProblemAttachmentForm;
+  }
+
+  getParentId() {
+    return this.props.problemId;
   }
 
   getNewButtonLink() {

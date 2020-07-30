@@ -87,13 +87,15 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   handlePost = e => {
-    const { onPostModal } = this.props;
+    const { action, onPostModal } = this.props;
 
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-
-    if (errors)
-      return;
+    if (action !== 'delete') {
+      const errors = this.validate();
+      this.setState({ errors: errors || {} });
+  
+      if (errors)
+        return;
+    }
 
     this.doSubmit();
 
@@ -246,7 +248,7 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
-  renderSubmitButton(label) {
+  renderSubmitButton(text) {
     return (
       <Button
         className="mr-2"
@@ -254,7 +256,7 @@ export default class FieldsForm extends FieldsComponent {
         type="submit"
         disabled={this.validate() && false}
       >
-        {label}
+        {text}
       </Button>
     );
   }
@@ -277,6 +279,18 @@ export default class FieldsForm extends FieldsComponent {
     return null;
   }
 
+  getNewTitle() {
+    throw new Error('You have to implement the method getTitle');
+  }
+
+  getEditTitle() {
+    throw new Error('You have to implement the method getTitle');
+  }
+
+  getDeleteTitle() {
+    throw new Error('You have to implement the method getTitle');
+  }
+
   getTitle() {
     const { action } = this.props;
 
@@ -286,10 +300,6 @@ export default class FieldsForm extends FieldsComponent {
       case 'delete': return this.getDeleteTitle() + '?';
       default: return null;
     }
-  }
-
-  getButtonLabel() {
-    return 'Tallenna';
   }
 
   renderField(field) {
@@ -329,30 +339,23 @@ export default class FieldsForm extends FieldsComponent {
     }
   }
 
-  renderTitle() {
-    const { showTitle } = this.props;
-
-    if (showTitle)
-      return <h2>{this.getTitle()}</h2>
-
-    return null;
-  }
-
   renderInfo() {
   }
 
   renderForm() {
+    const { showTitle, postButtonText} = this.props;
     const { successText, errorText } = this.state;
+
     this.autofocusSet = false;
 
     return (
       <Container>
-        {this.renderTitle()}
+        {showTitle && <h2>{this.getTitle()}</h2>}
         {this.renderInfo()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
           {this.renderPrevButton()}
-          {this.renderSubmitButton(this.getButtonLabel())}
+          {this.renderSubmitButton(postButtonText)}
           {this.renderNextButton()}
           {successText && <Alert variant="success">{successText}</Alert>}
           {errorText && <Alert variant="danger">{errorText}</Alert>}
@@ -377,10 +380,7 @@ export default class FieldsForm extends FieldsComponent {
   }
   
   renderModal() {
-    const { showModal, onCancelModal, action } = this.props;
-
-    const variant = action === 'delete' ? 'danger' : 'primary';
-    const text = action === 'delete' ? 'Poista' : 'Tallenna';
+    const { showModal, postButtonVariant, postButtonText, cancelButtonText, onCancelModal } = this.props;
 
     return (
       <Modal
@@ -398,26 +398,18 @@ export default class FieldsForm extends FieldsComponent {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant={variant} onClick={this.handlePost}>{text}</Button>
-          <Button variant="secondary" onClick={onCancelModal}>Peru</Button>
+          <Button variant={postButtonVariant} onClick={this.handlePost}>{postButtonText}</Button>
+         <Button variant="secondary" onClick={onCancelModal}>{cancelButtonText}</Button>
         </Modal.Footer>
       </Modal>      
     );
   }
 
-  getCellText(field) {
+  renderTableRow(field) {
     const data = this.getData();
     const value = data[field.name];
 
-    if (field.lookup) {
-      return field.lookupText(value);
-    }
-
-    return value;
-  }
-
-  renderTableRow(field) {
-    let text = this.getCellText(field);
+    let text = field.formatValue(value);
 
     if (!text)
       return null;
@@ -434,9 +426,11 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   renderTable() {
+    const { showTitle } = this.props;
+
     return (
       <>
-        {this.renderTitle()}
+        {showTitle && <h2>{this.getTitle()}</h2>}
         <Table size="sm">
           <tbody>
             {this.fields.map(field => this.renderTableRow(field))}
@@ -459,6 +453,9 @@ export default class FieldsForm extends FieldsComponent {
 
 FieldsForm.defaultProps = {
   asTable: false,
-  showTitle: true
+  showTitle: true,
+  postButtonVariant: 'primary',
+  postButtonText: 'Tallenna',
+  cancelButtonText: 'Peru'
 }
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import BaseForm from '../BaseForm';
 import ProblemSummary from './ProblemSummary';
-import queryString from 'query-string';
 import http from '../../services/httpService';
 
 export default class ProblemReplyForm extends BaseForm {
@@ -15,7 +14,7 @@ export default class ProblemReplyForm extends BaseForm {
     super(props);
 
     this.addId();
-    this.addField('ProblemId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: false, getDefaultValue: () => queryString.parse(props.location.search).ProblemId });
+    this.addField('ProblemId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: false, getDefaultValue: () => props.parentId });
     this.addField('Date',      'Pvm',        'datetime', { required: true, readonly: true });
     this.addField('UserId',    'Lähettäjä',  'number',   { required: true, readonly: true, lookupUrl: 'Users', getDefaultValue: () => this.user.id });
     this.addField('Message',   'Viesti',     'textarea', { required: true, rows: 5 });
@@ -24,19 +23,27 @@ export default class ProblemReplyForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Vastaus';
-  }
-
   getApiName() {
     return 'problemreplies';
+  }
+
+  getNewTitle() {
+    return 'Uusi vastaus';
+  }
+
+  getEditTitle() {
+    return 'Muokkaa vastausta';
+  }
+
+  getDeleteTitle() {
+    return 'Poista vastaus';
   }
 
   async componentDidMount() {
     super.componentDidMount();
 
-    if (this.props.match.params.id === 'new') {
-      const problemId =  queryString.parse(this.props.location.search).ProblemId;
+/*    if (this.props.match.params.id === 'new') {
+      const problemId =  this.props.parentId;
 
       const { data: problem } = await http.get('/problems/' + problemId);
   
@@ -49,7 +56,7 @@ export default class ProblemReplyForm extends BaseForm {
       const { data: problem } = await http.get('/problems/' + problemReply.ProblemId);
   
       this.setState({ problem });
-    }
+    } */
   }
 
   renderInfo() {

@@ -81,7 +81,7 @@ export default class DataForm extends FieldsForm {
   
         const savedData = this.jsonToData(item)
         const data = this.jsonToData(item)
-  
+
         this.setState({ savedData, data, errors });
       }
       catch (ex) {

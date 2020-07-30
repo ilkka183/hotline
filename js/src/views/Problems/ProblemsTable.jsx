@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import BaseTable from '../BaseTable';
+import ProblemForm from './ProblemForm';
 
 export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
@@ -33,6 +34,10 @@ export default class ProblemsTable extends BaseTable {
   getApiName() {
     return 'problems';
   }
+
+  getForm() {
+    return ProblemForm;
+  }  
 
   getItemsQuery(query) {
     if (this.props.status !== undefined)

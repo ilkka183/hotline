@@ -120,20 +120,6 @@ export class Field {
     return null;
   }
 
-  formatValue(value) {
-    if (this.enums)
-      return this.enums[value];
-
-    switch (this.type) {
-      case 'boolean': return this.formatBoolean(value);
-      case 'date': return this.formatDate(value);
-      case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
-      case 'time': return this.formatTime(value);
-      
-      default: return value;
-    }
-  }
-
   lookupText(value) {
     if (this.lookup) {
       const item = this.lookup.find(item => item.value === value);
@@ -143,6 +129,23 @@ export class Field {
     }
 
     return null;
+  }
+
+  formatValue(value) {
+    if (this.enums)
+      return this.enums[value];
+
+    if (this.lookup)
+      return this.lookupText(value);
+
+    switch (this.type) {
+      case 'boolean': return this.formatBoolean(value);
+      case 'date': return this.formatDate(value);
+      case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
+      case 'time': return this.formatTime(value);
+      
+      default: return value;
+    }
   }
 
   validate(value) {
@@ -193,6 +196,7 @@ export class Field {
     switch (this.type) {
       case 'date': return this.date_JsonToData(value);
       case 'datetime': return this.datetime_JsonToData(value);
+      case 'file': return '';
       default: return value;
     }
   }

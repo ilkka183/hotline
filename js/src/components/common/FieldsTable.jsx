@@ -32,8 +32,12 @@ export default class DataTable extends FieldsComponent {
     return true;
   }
 
+  getForm() {
+    throw new Error('You have to implement the method getForm');
+  }
+
   getApiName() {
-    throw new Error('You have to implement the method getApiName!');
+    throw new Error('You have to implement the method getApiName');
   }
 
   canEdit(item) {
@@ -45,11 +49,11 @@ export default class DataTable extends FieldsComponent {
   }
 
   getItems(pageIndex) {
-    throw new Error('You have to implement the method getItems!');
+    throw new Error('You have to implement the method getItems');
   }
 
   deleteItem() {
-    throw new Error('You have to implement the method deleteItem!');
+    throw new Error('You have to implement the method deleteItem');
   }
 
   getNewButtonLink() {
@@ -180,7 +184,11 @@ export default class DataTable extends FieldsComponent {
   }
 
   handlePostEditModal = async () => {
-    await this.fetchItems({});
+    if (this.props.rows) {
+    }
+    else {
+      await this.fetchItems({});
+    }
 
     this.handleCancelEditModal();
   }
@@ -196,6 +204,8 @@ export default class DataTable extends FieldsComponent {
   handlePostDeleteModal = async () => {
     const { deleteRow } = this.state;
 
+    console.log('delete');
+
     if (this.props.rows) {
       if (this.props.onDelete)
         this.props.onDelete(deleteRow);
@@ -203,14 +213,17 @@ export default class DataTable extends FieldsComponent {
     else {
       try {
         await this.deleteItem(deleteRow);
-        await this.fetchItems({});
+
+        if (this.props.rows) {
+        }
+        else {
+          await this.fetchItems({});
+        }
       }
       catch (ex) {
         toast.error(ex.response.data.sqlMessage);
       }
     }
-
-    await this.fetchItems({});
 
     this.handleCancelDeleteModal();
   }
@@ -399,10 +412,6 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
-  getForm() {
-    return null;
-  }
-
   renderEditModal() {
     const Form = this.getForm();
 
@@ -435,16 +444,26 @@ export default class DataTable extends FieldsComponent {
 
     const dataId = deleteRow ? deleteRow.Id : null;
 
+    console.log(deleteRow);
+
     return (
       <Form
         variant='modal'
         action='delete'
         dataId={dataId}
         showModal={showDeleteModal}
+        postButtonVariant="danger"
+        postButtonText="Kyllä"
+        cancelButtonText="Ei"
+        getParentId={this.getModalParentId}
         onPostModal={this.handlePostDeleteModal}
         onCancelModal={this.handleCancelDeleteModal}
       />
     );
+  }
+
+  getModalParentId() {
+    return null;
   }
 
   getRows() {
