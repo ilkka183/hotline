@@ -36,7 +36,6 @@ export default function AppNavbar({ user }) {
             <>
               <NavDropdown title={user.firstName + ' ' + user.lastName} id="basic-nav-dropdown">
                 <NavItemLink to="/profile">Omat tiedot</NavItemLink>
-                <NavItemLink to="/changepassword">Vaihda salasana</NavItemLink>
               </NavDropdown>          
               <NavItemLink to="/logout">Kirjaudu ulos</NavItemLink>
             </>

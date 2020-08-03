@@ -65,7 +65,7 @@ router.post('/changepassword', async (req, res) => {
       return res.status(401).send('Invalid password.');
 
     const updateSql = 'UPDATE User SET Password=? WHERE Email=?';
-    await connection.queryValues(updateSql, [email]);
+    await connection.queryValues(updateSql, [newPassword, email]);
 
     res.send('OK');
   }

@@ -19,8 +19,7 @@ import Problem from './views/Problems/Problem';
 import OpenProblems from './views/Problems/OpenProblems';
 import SolvedProblems from './views/Problems/SolvedProblems';
 
-import ProfileForm from './views/Profile/ProfileForm';
-import ChangePasswordForm from './views/Profile/ChangePasswordForm';
+import Profile from './views/Profile/Profile';
 
 import LoginForm from './views/Login/LoginForm';
 import RegisterForm from './views/Login/RegisterForm';
@@ -57,8 +56,7 @@ export default class App extends Component {
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
-            <ProtectedRoute path="/profile" component={ProfileForm} />
-            <ProtectedRoute path="/changepassword" component={ChangePasswordForm} />
+            <ProtectedRoute path="/profile" component={Profile} />
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />

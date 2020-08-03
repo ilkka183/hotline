@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
@@ -22,17 +21,30 @@ export default class ChangePasswordForm extends FieldsForm {
     return 'Vaihda salasana';
   }
 
-  getButtonLabel() {
-    return 'Vaihda salasana';
-  }
+  handleSubmitModal = async () => {
+    const { onSubmitModal } = this.props;
 
-  async doSubmit() {
+    if (this.hasErrors())
+      return;
+
     try {
       const { password, newPassword1, newPassword2 } = this.state.data;
 
       if (newPassword1 === newPassword2) {
-        await auth.changePassword(this.user.email, password, newPassword1);
-        toast.success('Salasana vaihdettu');
+        try {
+          console.log(this.props);
+
+          await auth.changePassword(this.props.user.email, password, newPassword1);
+          onSubmitModal();
+        }
+        catch (ex) {
+          if (ex.response && ex.response.status === 401) {
+            const errors = { ...this.state.errors };
+            errors.password = 'Nykyinen salasana ei ole oikea';
+
+            this.setState({ errors });
+          }
+        }
       }
       else {
         const errors = { ...this.state.errors };

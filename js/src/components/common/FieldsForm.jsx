@@ -362,7 +362,7 @@ export default class FieldsForm extends FieldsComponent {
   }
   
   renderModal() {
-    const { showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
+    const { showTitle, showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
 
     return (
       <Modal
@@ -372,7 +372,7 @@ export default class FieldsForm extends FieldsComponent {
         onHide={onHideModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{this.getTitle()}</Modal.Title>
+          {showTitle && <Modal.Title>{this.getTitle()}</Modal.Title>}
         </Modal.Header>
 
         <Modal.Body>

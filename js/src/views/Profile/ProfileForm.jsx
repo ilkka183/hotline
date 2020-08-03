@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import BaseForm from '../BaseForm';
 
 export default class ProfileForm extends BaseForm {
@@ -7,8 +6,8 @@ export default class ProfileForm extends BaseForm {
     errors: {}
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     
     this.addId();
     this.addField('FirstName',  'Etunimi',          'text',   { required: true, readonly: true });
@@ -24,19 +23,15 @@ export default class ProfileForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
-    return 'Omat tiedot';
-  }
-
   getApiName() {
     return 'users';
   }
 
-  get dataId() {
-    return this.user.id;
+  getEditTitle() {
+    return 'Muokkaa omia tietoja';
   }
 
-  afterSubmit() {
-    toast.success('Omat tiedot talletettu');
+  get dataId() {
+    return this.props.userId;
   }
 }
