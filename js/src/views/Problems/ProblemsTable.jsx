@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import BaseTable from '../BaseTable';
 import ProblemForm from './ProblemForm';
+import NewProblemModal from './New/NewProblemModal';
 
 export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
@@ -9,6 +10,8 @@ export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
 export default class ProblemsTable extends BaseTable {
   constructor() {
     super();
+
+    this.state.showNewModal = false;
 
     this.addId();
     this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
@@ -21,10 +24,6 @@ export default class ProblemsTable extends BaseTable {
 //    this.addField('Title',       'Otsikko',              'text',     { search: true, link: item => '/problem/' + item.Id });
     this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { search: true, render: this.renderDescription });
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
-  }
-
-  getUseModals() {
-    return false;
   }
 
   getTitle() {
@@ -67,6 +66,31 @@ export default class ProblemsTable extends BaseTable {
 
     return (
       <span className={className}>{text}</span>
+    );
+  }
+
+  showNewModal() {
+    this.setState({ showNewModal: true });
+  }
+
+  handleSubmitNewModal = async () => {
+    await this.fetchItems({});
+
+    this.setState({ showNewModal: false });
+  }
+
+  handleHideNewModal = () => {
+    this.setState({ showNewModal: false });
+  }
+
+  renderModals() {
+    const { showNewModal } = this.state;
+
+    if (!showNewModal)
+      return null;
+
+    return (
+      <NewProblemModal onSubmit={this.handleSubmitNewModal} onHide={this.handleHideNewModal} />
     );
   }
 }

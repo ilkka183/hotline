@@ -14,7 +14,7 @@ function getFuelType(text) {
   }
 }
 
-export default function SearchData({ data, onData, onNext }) {
+export default function SearchData({ data, onData }) {
   const [error, setError] = useState('');
 
   const handleChange = ({ currentTarget: input }) => {
@@ -88,7 +88,7 @@ export default function SearchData({ data, onData, onNext }) {
 
   return (
     <>
-      <h4>Hae ajoneuvon tiedot rekisterinumerolla</h4>
+      <h5>Hae ajoneuvon tiedot rekisterinumerolla</h5>
       <Form inline onSubmit={handleSubmit}>
         <Form.Control
           className="mr-2"
@@ -104,7 +104,6 @@ export default function SearchData({ data, onData, onNext }) {
       </Form>
       {error && <Alert variant="danger">{error}</Alert>}
       {isReady() && <ProblemSummary className="mt-3" data={data} />}
-      {isReady() && <Button onClick={onNext}>Seuraava</Button>}
     </>
   );
 }

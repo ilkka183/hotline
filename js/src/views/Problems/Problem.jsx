@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
+import ProblemSolutionModal from './ProblemSolutionModal';
 import ProblemRepliesTable from './ProblemRepliesTable'
 import ProblemAttachmentsTable from './ProblemAttachmentsTable'
-import LinkButton from '../../components/common/LinkButton';
 import ProblemForm from './ProblemForm';
 import auth from '../../services/authService';
 import http from '../../services/httpService';
@@ -12,6 +13,9 @@ export default class Problem extends Component {
 
   state = {
     problem: {},
+    replyId: null,
+    showModal: false,
+    showSolutionModal: false,
     attachments: [],
     replies: []
   }
@@ -38,18 +42,79 @@ export default class Problem extends Component {
     await this.loadData();
   }
 
-  handleDeleteAttachment = async reply => {
-    console.log('handleDeleteAttachment');
+  handleShowModal = () => {
+    this.setState({ showModal: true });
+  }
 
+  handleHideModal = () => {
+    this.setState({ showModal: false });
+  }
+
+  handleSubmitModal = async () => {
+    await this.loadData();
+
+    this.setState({ showModal: false });
+  }
+
+  handleShowSolutionModal = row => {
+    this.setState({ showSolutionModal: true, replyId: row.Id });
+  }
+
+  handleHideSolutionModal = () => {
+    this.setState({ showSolutionModal: false });
+  }
+
+  handleSubmitSolutionModal = async () => {
+    await this.loadData();
+
+    this.setState({ showSolutionModal: false });
+  }
+
+  handleAttachmentEdited = async () => {
+    await this.loadData();
+  }
+
+  handleAttachmentDelete = async reply => {
     await http.delete('/problemattachments/' + reply.Id);
     await this.loadData();
   }
 
-  handleDeleteReply = async reply => {
-    console.log('handleDeleteReplies');
+  handleReplyEdited = async () => {
+    await this.loadData();
+  }
 
+  handleReplyDelete = async reply => {
     await http.delete('/problemreplies/' + reply.Id);
     await this.loadData();
+  }
+
+  renderModal() {
+    const { problem } = this.state;
+
+    return (
+      <ProblemForm
+        variant="modal"
+        action="edit"
+        showModal={true}
+        dataId={problem.Id}
+        onSubmitModal={this.handleSubmitModal}
+        onHideModal={this.handleHideModal}
+      />      
+    );
+  }
+
+  renderSolutionModal() {
+    const { problem, replyId } = this.state;
+
+    return (
+      <ProblemSolutionModal
+        showProblem={false}
+        problemId={problem.Id}
+        replyId={replyId}
+        onSubmit={this.handleSubmitSolutionModal}
+        onHide={this.handleHideSolutionModal}
+      />
+    );
   }
 
   renderAttachments() {
@@ -67,7 +132,8 @@ export default class Problem extends Component {
           showTitle={false}
           showSearchBox={false}
           autoHide={true}
-          onDelete={this.handleDeleteAttachment}
+          onEdited={this.handleAttachmentEdited}
+          onDelete={this.handleAttachmentDelete}
         />
       </>
     );
@@ -84,21 +150,25 @@ export default class Problem extends Component {
           problemId={problem.Id}
           showTitle={false}
           showSearchBox={false}
-          onDelete={this.handleDeleteReply}
+          onSolution={this.handleShowSolutionModal}
+          onEdited={this.handleReplyEdited}
+          onDelete={this.handleReplyDelete}
         />
       </>
     );
   }
 
   render() {
-    const { problem } = this.state;
+    const { problem, showModal, showSolutionModal } = this.state;
     const editable = (this.user.role <= 1 || problem.UserId === this.user.id);
 
     return (
       <Container>
         <h2>Vikatapaus</h2>
-        {editable && <LinkButton className="mb-2" to={'/problems/' + this.problemId}>Muokkaa</LinkButton>}
+        {editable && <Button className="mb-2" onClick={this.handleShowModal}>Muokkaa</Button>}
         <ProblemForm variant="table" showTitle={false} data={problem} />
+        {showModal && this.renderModal()}
+        {showSolutionModal && this.renderSolutionModal()}
         {this.renderAttachments()}
         {(problem.Status === 0 || this.user.role <= 1) && this.renderReplies()}
       </Container>

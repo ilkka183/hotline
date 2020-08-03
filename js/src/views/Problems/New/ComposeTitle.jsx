@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import ProblemSummary from '../ProblemSummary'
 
@@ -18,7 +17,7 @@ export const GROUPS = [
   'Jokin muu'
 ];
 
-export default function ComposeTitle({ data, title, onChange, onPrev, onNext }) {
+export default function ComposeTitle({ data, title, onChange }) {
 
   function renderGroups() {
     return (
@@ -56,12 +55,6 @@ export default function ComposeTitle({ data, title, onChange, onPrev, onNext }) 
     );
   }
 
-  function ready() {
-    return title.group &&
-      (title.group !== GROUPS[GROUPS.length - 1] || title.groupOther) &&
-      title.title;
-  }
-
   return (
     <>
       <ProblemSummary data={data} />
@@ -70,8 +63,6 @@ export default function ComposeTitle({ data, title, onChange, onPrev, onNext }) 
         {renderGroups()}
         {renderTitle()}
       </Form>
-      <Button className="mr-2" onClick={onPrev}>Edellinen</Button>
-      <Button disabled={!ready()} onClick={onNext}>Seuraava</Button>
     </>
   );
 }

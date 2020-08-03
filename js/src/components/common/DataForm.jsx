@@ -109,19 +109,9 @@ export default class DataForm extends FieldsForm {
     }
   }
 
-  async populate() {
+  async componentDidMount() {
     await this.populateLookups();
     await this.populateData();
-  }
-
-  async componentDidMount() {
-    await this.populate();
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-    if (prevProps.dataId !== this.props.dataId) {
-      await this.populate();
-    }
   }
 
   async doSubmit() {

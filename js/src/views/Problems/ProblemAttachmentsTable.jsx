@@ -13,12 +13,12 @@ export default class ProblemAttachmentsTable extends BaseTable {
     this.addField('Description', 'Kuvaus',     'textarea', { editLink: true});
   }
 
-  getApiName() {
-    return 'problemattachments';
-  }
-
   getTitle() {
     return 'Liitteet';
+  }
+
+  getApiName() {
+    return 'problemattachments';
   }
 
   getForm() {
@@ -27,9 +27,5 @@ export default class ProblemAttachmentsTable extends BaseTable {
 
   getParentId() {
     return this.props.problemId;
-  }
-
-  getNewButtonLink() {
-    return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
   }
 }

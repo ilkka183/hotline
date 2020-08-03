@@ -95,7 +95,7 @@ export default function EnterData({ data, onData, onNext }) {
 
   return (
     <>
-      <h4>Syötä ajoneuvon tiedot</h4>
+      <h5>Syötä ajoneuvon tiedot</h5>
       <Form onSubmit={handleSubmit}>
         {renderInputText('Make', 'Merkki')}
         {renderInputText('Model', 'Malli')}

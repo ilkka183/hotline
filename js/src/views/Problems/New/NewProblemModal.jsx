@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Container from 'react-bootstrap/Container'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import SearchData from './SearchData'
@@ -17,6 +18,7 @@ export default class NewProblemForm extends Component {
   state = {
     activeKey: undefined,
     step: 0,
+    stepReady: [false, false, false, false],
     data: null,
     options: {
       makes: null,
@@ -76,8 +78,6 @@ export default class NewProblemForm extends Component {
       history: '',
       text: ''
     }
-
-    console.log(this.state.description);
   }
 
   async componentDidMount() {
@@ -87,6 +87,43 @@ export default class NewProblemForm extends Component {
     options.makes = data.map(value => ({ value, text: value }));
 
     this.setState({ options });
+  }
+
+  isDataReady() {
+    const { data } = this.state;
+
+    return data.RegistrationNumber && data.Make;
+  }
+
+  isTitleReady() {
+    const { title } = this.state;
+
+    return title &&
+      title.group &&
+      (title.group !== GROUPS[GROUPS.length - 1] || title.groupOther) &&
+      title.title;
+  }
+
+  isDescriptionReady() {
+    const { description } = this.state;
+
+    return description.description;
+  }
+
+  isProblemReady() {
+    return true;
+  }
+
+  isStepReady() {
+    const { step } = this.state;
+
+    switch (step) {
+      case 0: return this.isDataReady();
+      case 1: return this.isTitleReady();
+      case 2: return this.isDescriptionReady();
+      case 3: return this.isProblemReady();
+      default: return false;
+    }
   }
 
   handleData = (data) => {
@@ -204,8 +241,15 @@ export default class NewProblemForm extends Component {
     }
   }
 
-  handleProblemFormSubmitted = () => {
-    this.props.history.goBack();
+  handleSubmit = () => {
+    const { onSubmit } = this.props;
+
+    try {
+      this.refs.problemForm.handleSubmit();
+      onSubmit();
+    }
+    catch (ex) {
+    }
   }
 
   renderData() {
@@ -219,7 +263,6 @@ export default class NewProblemForm extends Component {
           <SearchData
             data={this.state.data}
             onData={this.handleData}
-            onNext={this.handleNext}
           />
         </Tab>
         <Tab eventKey={selectKey} title="Valitse ajoneuvon tiedot">
@@ -228,14 +271,12 @@ export default class NewProblemForm extends Component {
             onData={this.handleData}
             options={this.state.options}
             onOptions={this.handleOptions}
-            onNext={this.handleNext}
           />
         </Tab>
         <Tab eventKey={enterKey} title="Syötä ajoneuvon tiedot">
           <EnterData
             data={this.state.data}
             onData={this.handleData}
-            onNext={this.handleNext}
           />
         </Tab>
       </Tabs>
@@ -248,8 +289,6 @@ export default class NewProblemForm extends Component {
         data={this.state.data}
         title={this.state.title}
         onChange={this.handleTitleChange}
-        onPrev={this.handlePrev}
-        onNext={this.handleNext}
       />
     );
   }
@@ -261,8 +300,6 @@ export default class NewProblemForm extends Component {
         description={this.state.description}
         onChange={this.handleDescriptionChange}
         onChangeCheckboxGroup={this.handleDescriptionChangeCheckboxGroup}
-        onPrev={this.handlePrev}
-        onNext={this.handleNext}
       />
     );
   }
@@ -272,8 +309,10 @@ export default class NewProblemForm extends Component {
       <>
         <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
         <ProblemForm
+          ref="problemForm"
           defaultData={this.state.data}
           showTitle={false}
+          showSubmitButton={false}
           onPrev={this.handlePrev}
           onSubmitted={this.handleProblemFormSubmitted}
         />
@@ -282,14 +321,36 @@ export default class NewProblemForm extends Component {
   }
 
   render() {
+    const { onHide } = this.props;
+    const { step } = this.state;
+
     return (
-      <Container>
-        <h2>Lisää uusi vikatapaus</h2>
-        {this.state.step === 0 && this.renderData()}
-        {this.state.step === 1 && this.renderTitle()}
-        {this.state.step === 2 && this.renderDescription()}
-        {this.state.step === 3 && this.renderProblemForm()}
-      </Container>
+      <Modal
+        size="xl"
+        backdrop="static"
+        show={true}
+        onHide={onHide}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Lisää uusi vikatapaus</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {step === 0 && this.renderData()}
+          {step === 1 && this.renderTitle()}
+          {step === 2 && this.renderDescription()}
+          {step === 3 && this.renderProblemForm()}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <div className="mr-auto" >
+            {(step > 0) && <Button variant="primary" className="mr-2" onClick={this.handlePrev}>Edellinen</Button>}
+            {(step < 3) && <Button variant="primary" disabled={!this.isStepReady()} onClick={this.handleNext}>Seuraava</Button>}
+          </div>
+          {(step === 3) && <Button variant="primary" onClick={this.handleSubmit}>Tallenna</Button>}
+          <Button variant="secondary" onClick={onHide}>Peru</Button>
+        </Modal.Footer>
+      </Modal>      
     );
   }
 }

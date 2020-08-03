@@ -2,6 +2,6 @@ import React from 'react';
 
 export default function About() {
   return (
-    <h2>Tietoja</h2>
+    <h2>Tietoja Hotlinesta</h2>
   );
 }

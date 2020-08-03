@@ -66,6 +66,13 @@ export default class FieldsForm extends FieldsComponent {
     return Object.keys(errors).length === 0 ? null : errors;
   }
 
+  hasErrors() {
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+
+    return errors;
+  }
+
   validateField({ name, value }) {
     const field = this.findField(name);
     return field && field.validate(value);
@@ -75,31 +82,26 @@ export default class FieldsForm extends FieldsComponent {
   }
   
   handleSubmit = e => {
-    e.preventDefault();
+    if (e)
+      e.preventDefault();
 
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-
-    if (errors)
+    if (this.hasErrors())
       return;
 
     this.doSubmit();
   }
 
-  handlePost = e => {
-    const { action, onPostModal } = this.props;
+  handleSubmitModal = e => {
+    const { action, onSubmitModal } = this.props;
 
     if (action !== 'delete') {
-      const errors = this.validate();
-      this.setState({ errors: errors || {} });
-  
-      if (errors)
+      if (this.hasErrors())
         return;
     }
 
     this.doSubmit();
 
-    onPostModal();
+    onSubmitModal();
   }
 
   handleChange = event => {
@@ -261,24 +263,6 @@ export default class FieldsForm extends FieldsComponent {
     );
   }
 
-  renderPrevButton() {
-    const { onPrev } = this.props;
-
-    if (onPrev)
-      return <Button className="mr-2" variant="primary" onClick={onPrev}>Edellinen</Button>
-
-    return null;
-  }
-
-  renderNextButton() {
-    const { onNext } = this.props;
-
-    if (onNext)
-      return <Button className="mr-2" variant="primary" onClick={onNext}>Seuraava</Button>
-
-    return null;
-  }
-
   getNewTitle() {
     throw new Error('You have to implement the method getTitle');
   }
@@ -343,7 +327,7 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   renderForm() {
-    const { showTitle, postButtonText} = this.props;
+    const { showTitle, submitButtonText, showSubmitButton} = this.props;
     const { successText, errorText } = this.state;
 
     this.autofocusSet = false;
@@ -354,9 +338,7 @@ export default class FieldsForm extends FieldsComponent {
         {this.renderInfo()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
-          {this.renderPrevButton()}
-          {this.renderSubmitButton(postButtonText)}
-          {this.renderNextButton()}
+          {showSubmitButton && this.renderSubmitButton(submitButtonText)}
           {successText && <Alert variant="success">{successText}</Alert>}
           {errorText && <Alert variant="danger">{errorText}</Alert>}
         </Form>
@@ -380,14 +362,14 @@ export default class FieldsForm extends FieldsComponent {
   }
   
   renderModal() {
-    const { showModal, postButtonVariant, postButtonText, cancelButtonText, onCancelModal } = this.props;
+    const { showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
 
     return (
       <Modal
         size="xl"
         backdrop="static"
         show={showModal}
-        onHide={onCancelModal}
+        onHide={onHideModal}
       >
         <Modal.Header closeButton>
           <Modal.Title>{this.getTitle()}</Modal.Title>
@@ -398,8 +380,8 @@ export default class FieldsForm extends FieldsComponent {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant={postButtonVariant} onClick={this.handlePost}>{postButtonText}</Button>
-         <Button variant="secondary" onClick={onCancelModal}>{cancelButtonText}</Button>
+          <Button variant={submitButtonVariant} onClick={this.handleSubmitModal}>{submitButtonText}</Button>
+         <Button variant="secondary" onClick={onHideModal}>{cancelButtonText}</Button>
         </Modal.Footer>
       </Modal>      
     );
@@ -454,8 +436,9 @@ export default class FieldsForm extends FieldsComponent {
 FieldsForm.defaultProps = {
   asTable: false,
   showTitle: true,
-  postButtonVariant: 'primary',
-  postButtonText: 'Tallenna',
+  showSubmitButton: true,
+  submitButtonVariant: 'primary',
+  submitButtonText: 'Tallenna',
   cancelButtonText: 'Peru'
 }
 

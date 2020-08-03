@@ -1,31 +1,22 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button'
-import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
-import queryString from 'query-string';
+import Modal from 'react-bootstrap/Modal'
 import ProblemForm from './ProblemForm';
 import http from '../../services/httpService';
 
-export default class ProblemSolutionForm extends Component {
+export default class ProblemSolutionModal extends Component {
   state = {
     problem: {},
     reply: {}
   }
 
-  constructor(props) {
-    super(props);
-
-    this.replyId = queryString.parse(this.props.location.search).ReplyId;
-  }
-
-  get problemId() {
-    return this.props.match.params.id;
-  }
-
   async componentDidMount() {
+    const { problemId, replyId } = this.props;
+
     try {
-      const { data: problem } = await http.get('/problems/open/' + this.problemId);
-      const { data: reply } = await http.get('/problemreplies/' + this.replyId);
+      const { data: problem } = await http.get('/problems/open/' + problemId);
+      const { data: reply } = await http.get('/problemreplies/' + replyId);
 
       problem.Solution = reply.Message;
 
@@ -48,19 +39,13 @@ export default class ProblemSolutionForm extends Component {
   handleSubmit = async e => {
     e.preventDefault();
 
+    const { onSubmit } = this.props;
     const { problem, reply } = this.state;
 
     await http.put('/problems/' + problem.Id, { Solution: problem.Solution, Status: 1 });
     await http.put('/problemreplies/' + reply.Id, { Solution: true });
     
-    this.goBack();
-  }
-
-  goBack() {
-    const { history } = this.props;
-    
-    if (history)
-      history.goBack();
+    onSubmit();
   }
 
   renderSolution() {
@@ -68,7 +53,7 @@ export default class ProblemSolutionForm extends Component {
 
     return (
       <Form.Group>
-        <h4>Ratkaisu</h4>
+        <Form.Label>Ratkaisu</Form.Label>
         <Form.Control
           as="textarea"
           rows={10}
@@ -81,17 +66,30 @@ export default class ProblemSolutionForm extends Component {
   }
 
   render() {
+    const { showProblem, onHide } = this.props;
     const { problem } = this.state;
 
     return (
-      <Container>
-        <h2>Vikatapauksen ratkaisu</h2>
-        <ProblemForm data={problem} asTable={true} showTitle={false} />
-        <Form onSubmit={this.handleSubmit}>
+      <Modal
+        size="xl"
+        backdrop="static"
+        show={true}
+        onHide={onHide}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Vikatapauksen ratkaisu</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {showProblem && <ProblemForm variant="table" data={problem} showTitle={false} />}
           {this.renderSolution()}
-          <Button className="mr-2" variant="primary" type="submit" disabled={!problem.Solution}>Tallenna</Button>
-        </Form>
-      </Container>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="primary" onClick={this.handleSubmit}>Tallenna</Button>
+          <Button variant="secondary" onClick={onHide}>Peru</Button>
+        </Modal.Footer>
+      </Modal>      
     );
   }
 }

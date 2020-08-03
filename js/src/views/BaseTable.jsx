@@ -16,7 +16,7 @@ export default class BaseTable extends FieldsTable {
   }
 
   async getItems(options) {
-    let { pageIndex, sortField } = options;
+    let { pageIndex, sortFields } = options;
     const { pageSize } = this.state;
 
     let query = {}
@@ -24,19 +24,25 @@ export default class BaseTable extends FieldsTable {
     query.pageIndex = pageIndex;
     query.pageSize = pageSize;
 
-    if (sortField.name) {
-      query.sortName = sortField.name;
+    if (sortFields.length > 0) {
+      query.sortFields = sortFields.length;
 
-      if (sortField.order === 'desc')
-        query.sortOrder = sortField.order;
+      let number = 1;
+  
+      for (const sortField of sortFields) {
+        query['sortName' + number] = sortField.name;
+  
+        if (sortField.order === 'desc')
+          query['sortOrder' + number] = sortField.order;
+  
+        number++;
+      }
     }
 
     let endpoint = this.apiPath;
 
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
-
-    console.log(endpoint);
 
     return await http.get(endpoint);
   }

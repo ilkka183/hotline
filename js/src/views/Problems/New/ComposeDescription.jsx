@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
@@ -29,7 +28,7 @@ export const TESTERS = [
   'Jokin muu'
 ];
 
-export default function ComposeDescription({ data, description, onChange, onChangeCheckboxGroup, onPrev, onNext }) {
+export default function ComposeDescription({ data, description, onChange, onChangeCheckboxGroup }) {
 
   function renderDescription() {
     return (
@@ -161,10 +160,6 @@ export default function ComposeDescription({ data, description, onChange, onChan
     );
   }
 
-  function ready() {
-    return description.description;
-  }
-
   return (
     <>
       <ProblemSummary data={data} />
@@ -178,8 +173,6 @@ export default function ComposeDescription({ data, description, onChange, onChan
         {renderHistory()}
         {renderText()}
       </Form>
-      <Button className="mr-2" onClick={onPrev}>Edellinen</Button>
-      <Button disabled={!ready()} onClick={onNext}>Seuraava</Button>
     </>
   );
 }

@@ -250,7 +250,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h4>Valitse ajoneuvon tiedot</h4>
+      <h5>Valitse ajoneuvon tiedot</h5>
       {renderMakes()}
       {data.Make && renderModelYears()}
       {data.ModelYear && renderFuelTypes()}

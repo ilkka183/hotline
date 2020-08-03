@@ -7,7 +7,7 @@ export default class ModelsTable extends BaseTable {
     super();
 
     this.addId(false);
-    this.addField('MakeName',      'Merkki',               'text');
+    this.addField('MakeName',      'Merkki',               'text',   { editLink: true});
     this.addField('Name',          'Malli',                'text',   { editLink: true});
     this.addField('BeginYear',     'Vuodesta',             'number');
     this.addField('EndYear',       'Vuoteen',              'number');

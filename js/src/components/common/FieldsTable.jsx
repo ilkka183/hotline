@@ -18,10 +18,7 @@ export default class DataTable extends FieldsComponent {
     searchPanel: false,
     pageIndex: 0,
     pageSize: 10,
-    sortField: {
-      name: null,
-      order: 'asc'
-    },
+    sortFields: [],
     showEditModal: false,
     showDeleteModal: false,
     deleteRow: undefined,
@@ -79,7 +76,7 @@ export default class DataTable extends FieldsComponent {
   }
 
   async fetchItems(options) {
-    let { searchValues, pageIndex, sortField } = options;
+    let { searchValues, pageIndex, sortFields } = options;
 
     if (searchValues === undefined)
       searchValues = this.state.searchValues;
@@ -87,12 +84,12 @@ export default class DataTable extends FieldsComponent {
     if (pageIndex === undefined)
       pageIndex = this.state.pageIndex;
 
-    if (sortField === undefined)
-      sortField = this.state.sortField
+    if (sortFields === undefined)
+      sortFields = this.state.sortFields
 
-    const { data: { rowCount, rows } } = await this.getItems({ searchValues, pageIndex, sortField });
+    const { data: { rowCount, rows } } = await this.getItems({ searchValues, pageIndex, sortFields });
 
-    this.setState({ rowCount, rows, searchValues, sortField, pageIndex });
+    this.setState({ rowCount, rows, searchValues, sortFields, pageIndex });
   }
 
   async componentDidMount() {
@@ -106,13 +103,9 @@ export default class DataTable extends FieldsComponent {
     }
     else {
       const pageIndex = 0;
+      const sortFields = []
 
-      const sortField = {
-        name: null,
-        order: 'asc'
-      }
-
-      await this.fetchItems({ pageIndex, sortField });
+      await this.fetchItems({ pageIndex, sortFields });
     }
   }
 
@@ -126,22 +119,26 @@ export default class DataTable extends FieldsComponent {
   }
 
   handleSortField = async name => {
-    const sortField = {...this.state.sortField}
+    const sortFields = [...this.state.sortFields];
 
-    if (sortField.name === name)
-      sortField.order = (sortField.order === 'asc') ? 'desc' : 'asc';
-    else {
-      sortField.name = name;
-      sortField.order = 'asc';
+    const index = sortFields.findIndex(field => field.name === name);
+
+    if (index !== -1) {
+      const sortField = sortFields[index];
+
+      if (sortField.order === 'asc')
+        sortField.order = 'desc';
+      else
+        sortFields.splice(index, 1);
     }
-
-    console.log(sortField);
+    else
+      sortFields.push({ name, order: 'asc' });
 
     if (this.props.rows) {
-      this.setState({ sortField });
+      this.setState({ sortFields });
     }
     else {
-      await this.fetchItems({ sortField });
+      await this.fetchItems({ sortFields });
     }
   }
 
@@ -173,42 +170,54 @@ export default class DataTable extends FieldsComponent {
     this.setState({ searchPanel });
   }
 
-  handleOpenEditModal = (row) => {
-    const modalDataId = row ? row.Id : null;
-
-    this.setState({ showEditModal: true, modalDataId });
+  showNewModal() {
+    this.setState({ showEditModal: true, modalDataId: null });
   }
 
-  handleCancelEditModal = () => {
+  showEditModal(row) {
+    this.setState({ showEditModal: true, modalDataId: row.Id });
+  }
+
+  handleShowEditModal = (row) => {
+    if (row)
+      this.showEditModal(row);
+    else
+      this.showNewModal();
+  }
+
+  handleHideEditModal = () => {
     this.setState({ showEditModal: false, modalDataId: undefined });
   }
 
-  handlePostEditModal = async () => {
+  handleSubmitEditModal = async () => {
+    const { onEdited } = this.props;
+
     if (this.props.rows) {
+      if (onEdited)
+        onEdited();
     }
     else {
       await this.fetchItems({});
     }
 
-    this.handleCancelEditModal();
+    this.handleHideEditModal();
   }
 
-  handleOpenDeleteModal = (row) => {
+  handleShowDeleteModal = (row) => {
     this.setState({ showDeleteModal: true, deleteRow: row });
   }
 
-  handleCancelDeleteModal = () => {
+  handleHideDeleteModal = () => {
     this.setState({ showDeleteModal: false, deleteRow: undefined });
   }
 
-  handlePostDeleteModal = async () => {
+  handleSubmitDeleteModal = async () => {
+    const { onDelete } = this.props;
     const { deleteRow } = this.state;
 
-    console.log('delete');
-
     if (this.props.rows) {
-      if (this.props.onDelete)
-        this.props.onDelete(deleteRow);
+      if (onDelete)
+        onDelete(deleteRow);
     }
     else {
       try {
@@ -225,11 +234,11 @@ export default class DataTable extends FieldsComponent {
       }
     }
 
-    this.handleCancelDeleteModal();
+    this.handleHideDeleteModal();
   }
 
   filterRows(rows) {
-    const { searchValues, sortField } = this.state;
+    const { searchValues, sortFields } = this.state;
 
     for (const name in searchValues) {
       const value = searchValues[name];
@@ -238,7 +247,9 @@ export default class DataTable extends FieldsComponent {
         rows = rows.filter(row => row[name].toLowerCase().startsWith(value.toLowerCase()));
     }
 
-    if (sortField.name) {
+    if (sortFields.length > 0) {
+      const sortField = sortFields[0];
+      
       rows.sort((a, b) => {
         let result = 0;
   
@@ -303,7 +314,7 @@ export default class DataTable extends FieldsComponent {
     const text = newButtonText ? newButtonText : 'Lisää uusi';
 
     if (this.getUseModals())
-      return <Button className="mb-2" variant={variant} onClick={() => this.handleOpenEditModal(null)}>{text}</Button>
+      return <Button className="mb-2" variant={variant} onClick={() => this.handleShowEditModal(null)}>{text}</Button>
     else
       return <LinkButton className="mb-2" variant={variant} size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
   }
@@ -353,10 +364,10 @@ export default class DataTable extends FieldsComponent {
   }
 
   renderSortIcon(column) {
-    const { name, order } = this.state.sortField;
+    const field = this.state.sortFields.find(field => field.name === column.name);
 
-    if (column.name === name)
-      return <SortIcon order={order} />
+    if (field)
+      return <SortIcon order={field.order} />
 
     return null;
   }
@@ -383,7 +394,7 @@ export default class DataTable extends FieldsComponent {
 
     if (column.editLink && !readOnly && editable && this.canEdit(row)) {
       if (this.getUseModals())
-        return <Button variant="link" size="sm" onClick={() => this.handleOpenEditModal(row)}>{text}</Button>
+        return <Button variant="link" size="sm" onClick={() => this.handleShowEditModal(row)}>{text}</Button>
       else
         return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
     }
@@ -407,8 +418,12 @@ export default class DataTable extends FieldsComponent {
 
   renderDeleteButton(row) {
     if (this.canDelete(row))
-      return <Button variant="danger" size="sm" onClick={() => this.handleOpenDeleteModal(row)}>Poista</Button>;
+      return <Button variant="danger" size="sm" onClick={() => this.handleShowDeleteModal(row)}>Poista</Button>;
 
+    return null;
+  }
+
+  getParentId() {
     return null;
   }
 
@@ -427,9 +442,10 @@ export default class DataTable extends FieldsComponent {
         variant='modal'
         action={action}
         dataId={modalDataId}
+        parentId={this.getParentId()}
         showModal={showEditModal}
-        onPostModal={this.handlePostEditModal}
-        onCancelModal={this.handleCancelEditModal}
+        onSubmitModal={this.handleSubmitEditModal}
+        onHideModal={this.handleHideEditModal}
       />
     );
   }
@@ -444,26 +460,23 @@ export default class DataTable extends FieldsComponent {
 
     const dataId = deleteRow ? deleteRow.Id : null;
 
-    console.log(deleteRow);
-
     return (
       <Form
         variant='modal'
         action='delete'
         dataId={dataId}
+        parentId={this.getParentId()}
         showModal={showDeleteModal}
-        postButtonVariant="danger"
-        postButtonText="Kyllä"
+        submitButtonVariant="danger"
+        submitButtonText="Kyllä"
         cancelButtonText="Ei"
-        getParentId={this.getModalParentId}
-        onPostModal={this.handlePostDeleteModal}
-        onCancelModal={this.handleCancelDeleteModal}
+        onSubmitModal={this.handleSubmitDeleteModal}
+        onHideModal={this.handleHideDeleteModal}
       />
     );
   }
 
-  getModalParentId() {
-    return null;
+  renderModals() {
   }
 
   getRows() {
@@ -487,6 +500,7 @@ export default class DataTable extends FieldsComponent {
 
   render() {
     const { readOnly, deletable, paginate } = this.props;
+    const { showEditModal, showDeleteModal } = this.state;
 
     const { rowCount, rows } = this.getRows();
     const columns = this.fields.filter(column => column.visible);
@@ -511,8 +525,9 @@ export default class DataTable extends FieldsComponent {
               </tr>))}
           </tbody>
         </table>
-        {this.renderEditModal()}
-        {this.renderDeleteModal()}
+        {showEditModal && this.renderEditModal()}
+        {showDeleteModal && this.renderDeleteModal()}
+        {this.renderModals()}
       </>
     );
   }

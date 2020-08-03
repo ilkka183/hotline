@@ -10,25 +10,12 @@ import About from './views/About';
 import NotFound from './views/NotFound';
 
 import MakesTable from './views/Makes/MakesTable';
-import MakeForm from './views/Makes/MakeForm';
-
 import ModelsTable from './views/Models/ModelsTable';
-import ModelForm from './views/Models/ModelForm';
-
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
-import UserGroupForm from './views/UserGroups/UserGroupForm';
-
-import UsersTable from './views/Users/UsersTable';
-import UserForm from './views/Users/UserForm';
-import { POWER_ROLE } from './views/Users/UsersTable';
+import UsersTable, { POWER_ROLE } from './views/Users/UsersTable';
 
 import ProblemsTable from './views/Problems/ProblemsTable';
 import Problem from './views/Problems/Problem';
-import ProblemForm from './views/Problems/ProblemForm';
-import ProblemAttachmentForm from './views/Problems/ProblemAttachmentForm';
-import ProblemReplyForm from './views/Problems/ProblemReplyForm';
-import ProblemSolutionForm from './views/Problems/ProblemSolutionForm';
-import NewProblem from './views/Problems/New/NewProblem';
 import OpenProblems from './views/Problems/OpenProblems';
 import SolvedProblems from './views/Problems/SolvedProblems';
 
@@ -62,21 +49,12 @@ export default class App extends Component {
           <Switch>
             <Route path="/home" component={Home} />
             <ProtectedRoute path="/problem/:id" component={Problem} />
-            <ProtectedRoute path="/problems/solution/:id" component={ProblemSolutionForm} />
-            <ProtectedRoute path="/problems/new" component={NewProblem} />
             <ProtectedRoute path="/problems/open" component={OpenProblems} />
             <ProtectedRoute path="/problems/solved" component={SolvedProblems} />
-            <ProtectedRoute path="/problems/:id" component={ProblemForm} />
             <ProtectedRoute path="/problems" component={ProblemsTable} />
-            <ProtectedRoute path="/problemattachments/:id" component={ProblemAttachmentForm} />
-            <ProtectedRoute path="/problemreplies/:id" component={ProblemReplyForm} />
-            <ProtectedRoute path="/usergroups/:id" component={UserGroupForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/users/:id" component={UserForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/makes/:id" component={MakeForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={POWER_ROLE} />
-            <ProtectedRoute path="/models/:id" component={ModelForm} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={POWER_ROLE} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={ProfileForm} />

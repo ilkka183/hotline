@@ -1,5 +1,5 @@
 import React from 'react';
-import LinkButton from '../../components/common/LinkButton';
+import Button from 'react-bootstrap/Button'
 import BaseTable from '../BaseTable';
 import ProblemReplyForm from './ProblemReplyForm';
 
@@ -32,30 +32,13 @@ export default class ProblemRepliessTable extends BaseTable {
     return this.props.problemId;
   }
 
-  getNewButtonLink() {
-    return `/${this.getApiName()}/new?ProblemId=${this.props.problemId}`;
-  }
-
-/*  
-  canEdit(row) {
-    return (this.user.role <= 1 || row.UserId === this.user.id);
-  }
-
-  canDelete(row) {
-    return (this.user.role <= 1 || row.UserId === this.user.id) && !row.Solution;
-  }
-*/
-
   renderSolutionButton(row) {
+    const { onSolution } = this.props;
+
     const variant = row.Solution ? 'success' : 'warning';
 
     return (
-      <LinkButton
-        className={'btn-sm btn-' + variant}
-        to={'/problems/solution/' + this.props.problemId + '?ReplyId=' + row.Id}
-      >
-        Ratkaisu
-      </LinkButton>
+      <Button variant={variant} onClick={() => onSolution(row)}>Ratkaisu</Button>
     );
   }
 }

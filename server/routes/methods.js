@@ -58,16 +58,28 @@ async function getRows(req, res, sql) {
 
     const countSql = pageSize ? getCountSql(sql) : null;
 
-    const sortName = req.query.sortName;
-    const sortOrder = req.query.sortOrder;
+    const sortFields = req.query.sortFields;
 
-    if (sortName) {
-      sql += ' ORDER BY ';
-      sql += sortName;
+    if (sortFields) {
+      sql += ' ORDER BY';
 
-      if (sortOrder) {
+      const count = parseInt(sortFields);
+
+      for (let i = 1; i <= count; i++) {
+        if (i > 1)
+          sql += ',';
+
         sql += ' ';
-        sql += sortOrder.toUpperCase();
+
+        const sortName = req.query['sortName' + i];
+        const sortOrder = req.query['sortOrder' + i];
+  
+        sql += sortName;
+  
+        if (sortOrder) {
+          sql += ' ';
+          sql += sortOrder.toUpperCase();
+        }
       }
     }
 
