@@ -82,6 +82,10 @@ export default function SearchData({ data, onData }) {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
+  function isNull() {
+    return !data.RegistrationNumber;
+  }
+
   function isReady() {
     return data.RegistrationNumber && data.Make && !error;
   }
@@ -97,7 +101,7 @@ export default function SearchData({ data, onData }) {
           onChange={handleChange}
         />          
         <Button className="mr-2" type="submit" disabled={!data.RegistrationNumber}>Hae</Button>
-        <Button className="mr-2" disabled={!data.RegistrationNumber} onClick={handleClear}>Tyhjennä</Button>
+        <Button className="mr-2" disabled={isNull()} onClick={handleClear}>Tyhjennä</Button>
         {renderFillButton(LEON)}
         {renderFillButton(GOLF)}
         {renderFillButton(FOCUS)}

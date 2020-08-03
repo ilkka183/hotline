@@ -127,8 +127,17 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     const newData = {...data};
 
     newData.Make = '';
+    newData.Model = '';
+    newData.ModelYear = '';
+    newData.FuelType = '';
+    newData.EngineSize = '';
+    newData.EngineType = '';
+    newData.EnginePower = '';
+    newData.EngineCode = '';
+    newData.VIN = '';
+    newData.RegistrationNumber = '';
 
-    onData(data);
+    onData(newData);
   }
 
   const handleSubmit = e => {
@@ -260,7 +269,6 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
       {data.EngineSize && renderVIN()}
       {data.EngineSize && renderRegistrationNumber()}
       <Button className="mr-2" disabled={!data.Make} onClick={handleClear}>Tyhjennä</Button>
-      <Button className="mr-2" type="submit" disabled={!(data.EnginePower || data.EngineCode) || !data.VIN}>Seuraava</Button>
     </Form>
   );
 }

@@ -92,7 +92,7 @@ export default class NewProblemForm extends Component {
   isDataReady() {
     const { data } = this.state;
 
-    return data.RegistrationNumber && data.Make;
+    return data.Make;
   }
 
   isTitleReady() {

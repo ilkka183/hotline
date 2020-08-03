@@ -89,8 +89,8 @@ export default function EnterData({ data, onData, onNext }) {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
-  function isReady() {
-    return data.Make && data.Model && data.ModelYear;
+  function isNull() {
+    return !data.Make && !data.Model && !data.ModelYear;
   }
 
   return (
@@ -106,8 +106,7 @@ export default function EnterData({ data, onData, onNext }) {
         {renderInputText('EngineCode', 'Moottorin tunnus')}
         {renderInputText('VIN', 'VIN')}
         {renderInputText('RegistrationNumber', 'Rekisterinumero')}
-        <Button className="mr-2" disabled={!isReady()} onClick={handleClear}>Tyhjennä</Button>
-        <Button className="mr-2" type="submit" disabled={!isReady()}>Seuraava</Button>
+        <Button className="mr-2" disabled={isNull()} onClick={handleClear}>Tyhjennä</Button>
         {renderFillButton(LEON)}
         {renderFillButton(GOLF)}
         {renderFillButton(FOCUS)}
