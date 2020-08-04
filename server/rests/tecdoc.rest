@@ -1,0 +1,14 @@
+@endPoint = http://localhost:4000/hotline/api/tecdoc
+
+GET {{endPoint}}/getManufacturers
+  ?country=CN
+  &lang=en
+  &linkingTargetType=P
+  &provider=12345
+###
+GET {{endPoint}}/getModelSeries
+  ?country=CN
+  &lang=EN
+  &linkingTargetType=P
+  &manuId=2
+  &provider=12345

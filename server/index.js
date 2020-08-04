@@ -9,6 +9,7 @@ const problemreply = require('./routes/problemreply');
 const usergroup = require('./routes/usergroup');
 const user = require('./routes/user');
 const traficom = require('./routes/traficom');
+const tecdoc = require('./routes/tecdoc');
 const data = require('./routes/data');
 
 const app = express();
@@ -48,6 +49,7 @@ app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
 
 app.use(apiPath + 'traficom', traficom);
+app.use(apiPath + 'tecdoc', tecdoc);
 app.use(apiPath + 'data', data);
 
 app.use(function(err, req, res, next) {

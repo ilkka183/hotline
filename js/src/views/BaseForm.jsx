@@ -1,11 +1,15 @@
 import DataForm from '../components/common/DataForm';
-import auth from '../services/authService';
+import auth, { ROLE_POWER } from '../services/authService';
 import http from '../services/httpService';
 
 const SHOW_IDS = true;
 
 export default class BaseForm extends DataForm {
   user = auth.getCurrentUser();
+
+  get hasPowerRights() {
+    return this.user.role <= ROLE_POWER;
+  }
 
   getHttp() {
     return http;

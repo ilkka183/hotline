@@ -8,6 +8,12 @@ const jwt = getJwt();
 http.setJwt(jwt);
 
 
+export const ROLE_ADMIN = 0;
+export const ROLE_POWER = 1;
+export const ROLE_USER = 2;
+export const ROLE_DEMO = 3;
+
+
 export function getJwt() {
   return localStorage.getItem(tokenKey);
 }

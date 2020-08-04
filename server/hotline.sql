@@ -99,6 +99,7 @@ CREATE TABLE User
   Info TEXT,
   LicenseBegin DATE,
   LicenseEnd DATE,
+  MaxOpenProblemCount INTEGER NOT NULL DEFAULT 2,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -179,6 +180,7 @@ CREATE TABLE Problem
   EngineCode VARCHAR(10),
   MID VARCHAR(10),
   VIN VARCHAR(20),
+  KType INTEGER UNSIGNED,
   NetWeight SMALLINT UNSIGNED,
   GrossWeight SMALLINT UNSIGNED,
   Info TEXT,
@@ -246,8 +248,8 @@ INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Matin autohuolto', N
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 1, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
+import Required from '../../../components/form/Required';
 import { FUEL_TYPES } from './../ProblemsTable';
 import http from '../../../services/httpService';
 
@@ -174,7 +175,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
   function renderVIN() {
     return (
       <Form.Group controlId="VIN">
-        <Form.Label>VIN <span className="required">*</span></Form.Label>
+        <Form.Label>VIN <Required /></Form.Label>
         <Form.Control
           name="VIN"
           value={data.VIN}

@@ -7,6 +7,23 @@ import NewProblemModal from './New/NewProblemModal';
 export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
 export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
 
+function lastWhiteSpaceOf(str) {
+  for (let i = str.length - 1; i >= 0; i--)
+    if (' \t\n\r\v'.indexOf(str[i]) > -1)
+      return i;
+
+  return -1;
+}
+
+function truncate(str, n = 80, useWordBoundary = true){
+  if (str.length <= n)
+    return str;
+
+  const subString = str.substr(0, n - 1); // the original check
+
+  return (useWordBoundary ? subString.substr(0, lastWhiteSpaceOf(subString)) : subString) + '...';
+}
+
 export default class ProblemsTable extends BaseTable {
   constructor() {
     super();
@@ -52,10 +69,10 @@ export default class ProblemsTable extends BaseTable {
       <>
         <Link to={'/problem/' + row.Id}>{row.Title}</Link>
         <div className="description1">
-          {row.Description}
+          {truncate(row.Description)}
         </div>
-        {row.Solution && <div>{row.Solution}</div>}
-        {!row.Solution && row.Replies.map((reply, index) => <div key={index}>- {reply.Message}</div>)}
+        {row.Solution && <div>{truncate(row.Solution)}</div>}
+        {!row.Solution && row.Replies.map((reply, index) => <div key={index}>- {truncate(reply.Message)}</div>)}
       </>
     );
   }

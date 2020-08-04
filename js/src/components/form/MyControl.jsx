@@ -3,6 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
+import Required from './Required';
 
 export default class MyControl extends Component {
   renderLabel() {
@@ -10,7 +11,7 @@ export default class MyControl extends Component {
 
     return (
       <>
-        {label} {required && <span className="required">*</span>}
+        {label} {required && <Required />}
       </>
     );
   }

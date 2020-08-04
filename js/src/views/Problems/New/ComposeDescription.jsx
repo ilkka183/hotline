@@ -3,10 +3,11 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import ProblemSummary from '../ProblemSummary'
+import Required from '../../../components/form/Required';
 
 const APPEARANCES = [
-  'Ajoittainen',
-  'Jatkuva, esiintymistiheys'
+  'Jatkuva',
+  'Ajoittainen, esiintymistiheys'
 ];
 
 const DIAGNOSTIC = [
@@ -33,7 +34,7 @@ export default function ComposeDescription({ data, description, onChange, onChan
   function renderDescription() {
     return (
       <Form.Group>
-        <Form.Label>Asiakkaan viankuvaus</Form.Label>
+        <Form.Label>Asiakkaan viankuvaus <Required /></Form.Label>
         <Form.Control
           as="textarea"
           rows={3}

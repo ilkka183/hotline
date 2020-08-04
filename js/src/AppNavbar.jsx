@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import NavItemLink from './components/common/NavItemLink';
+import { ROLE_POWER } from './services/authService';
 
 
 export default function AppNavbar({ user }) {
@@ -17,12 +18,12 @@ export default function AppNavbar({ user }) {
             <NavItemLink to="/">Koti</NavItemLink>
             <NavItemLink to="/problems/open">Avoimet</NavItemLink>
             <NavItemLink to="/problems/solved">Ratkaistut</NavItemLink>
-            <NavDropdown title="Asetukset" id="basic-nav-dropdown">
+            {user.role <= ROLE_POWER && <NavDropdown title="Asetukset" id="basic-nav-dropdown">
               <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
               <NavItemLink to="/users">Käyttäjät</NavItemLink>
               <NavItemLink to="/makes">Automerkit</NavItemLink>
               <NavItemLink to="/models">Automallit</NavItemLink>
-            </NavDropdown>
+            </NavDropdown>}
             <NavItemLink to="/about">Tietoja</NavItemLink>
           </Nav>
         }

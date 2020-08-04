@@ -13,7 +13,7 @@ export default function SolvedProblems() {
 
   return (
     <ProblemsTable
-      title="Ratkaistut vikatapaukset"
+      title="Uusimmat ratkaisut"
       status={1}
       showSearchBox={true}
       paginate={false}

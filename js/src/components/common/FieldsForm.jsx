@@ -292,7 +292,7 @@ export default class FieldsForm extends FieldsComponent {
     if (!field.visible)
       return null;
 
-    if (field.readonly && !value)
+    if (field.readonly && (!value && !field.isLookup))
       return null;
 
     if (field.isLookup) {
@@ -388,6 +388,9 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   renderTableRow(field) {
+    if (!field.visible)
+      return null;
+
     const data = this.getData();
     const value = data[field.name];
 

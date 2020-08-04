@@ -27,6 +27,7 @@ export default class UserForm extends BaseForm {
     this.addField('Website',      'Nettisivut',       'text');
     this.addField('LicenseBegin', 'Lisenssi alku',    'date');
     this.addField('LicenseEnd',   'Lisenssi loppu',   'date');
+    this.addField('MaxOpenProblemCount', 'Avoimia vikatapauksia enintään', 'number');
     this.addEnabled();
     this.addTimestamps();
 
