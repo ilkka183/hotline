@@ -1,7 +1,7 @@
-function init() {
+function init(): void {
 }
 
-function log(error) {
+function log(error: string): void {
   console.log('Logging error', error);
 }
 
