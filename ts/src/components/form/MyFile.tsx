@@ -1,9 +1,14 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import MyControl from './MyControl'
+import MyControl, { ControlProps } from './MyControl'
 
-export default class MyFile extends MyControl {
-  renderControl() {
+interface Props extends ControlProps {
+  disabled: boolean,
+  value: string
+}
+
+export default class MyFile extends MyControl<Props> {
+  protected renderControl(): JSX.Element {
     const { disabled, name, value, onChange } = this.props;
 
     return (

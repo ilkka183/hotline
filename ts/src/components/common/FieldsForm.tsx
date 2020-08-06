@@ -12,8 +12,13 @@ import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
-export default class FieldsForm extends FieldsComponent {
-  state = {
+interface State {
+  data: any,
+  errors: any
+}
+
+export default class FieldsForm<P> extends FieldsComponent<P, State> {
+  public state = {
     data: {},
     errors: {}
   }
@@ -23,7 +28,7 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   getEmptyData() {
-    const data = {}
+    const data: any = {}
 
     for (let field of this.fields)
       data[field.name] = '';
@@ -32,7 +37,7 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   getDefaultData() {
-    const data = {}
+    const data: any = {}
 
     for (let field of this.fields)
       data[field.name] = field.defaultValue;
@@ -40,8 +45,8 @@ export default class FieldsForm extends FieldsComponent {
     return data;
   }
 
-  jsonToData(row) {
-    const data = {}
+  jsonToData(row: any) {
+    const data: any = {}
 
     for (let field of this.fields)
       data[field.name] = field.jsonToData(row[field.name]);
@@ -50,12 +55,12 @@ export default class FieldsForm extends FieldsComponent {
   }
 
   validate() {
-    const errors = {}
+    const errors: any = {}
 
     for (const field of this.fields) {
-      const value = this.state.data[field.name];
+      const value: any = this.state.data[field.name];
 
-      const error = field.validate(value);
+      const error: string | null = field.validate(value);
 
       if (error) {
         errors[field.name] = error;

@@ -1,15 +1,62 @@
 import { Component } from 'react';
 
+export enum SortOrder { Asc, Desc }
+
+type LinkFunc = (row: any) => string;
+type RenderFunc = (row: any) => JSX.Element;
+type DefaultValueFunc = () => any;
+
+interface FieldOptions {
+  order?: SortOrder,
+  link?: LinkFunc,
+  render?: RenderFunc,
+  getDefaultValue?: DefaultValueFunc,
+  lookupUrl?: string,
+  primaryKey?: boolean,
+  editLink?: boolean,
+  required?: boolean,
+  readonly?: boolean,
+  visible?: boolean,
+  search?: boolean,
+  preformatted?: boolean,
+  rows?: number,
+  min?: number,
+  max?: number,
+  minLength?: number,
+  enums?: Array<string>,
+  displayFormat?: string,
+}
+
 export class Field {
-  constructor(name, label, type, options) {
+  public index: number = -1;
+  public name: string;
+  public label: string;
+  public type: string;
+  public default: any = null;
+  public primaryKey: boolean = false;
+  public editLink: boolean = false;
+  public visible: boolean = true;
+  public readonly: boolean = false;
+  public required: boolean = false;
+  public preformatted: boolean = false;
+  public search: boolean = false;
+  public rows?: number;
+  public min?: number;
+  public max?: number;
+  public minLength?: number;
+  public order?: SortOrder;
+  public link?: LinkFunc;
+  public render?: RenderFunc;
+  public getDefaultValue?: DefaultValueFunc;
+  public lookupUrl?: string;
+  public lookup?: any;
+  public enums?: Array<string>;
+  public displayFormat?: string;
+  
+  constructor(name: string, label: string, type: string, options?: FieldOptions) {
     this.name = name;
     this.label = label;
     this.type = type;
-    this.editLink = false;
-    this.visible = true;
-    this.readonly = false;
-    this.preformatted = false;
-    this.search = false;
 
     if (type === 'boolean')
       this.default = false;
@@ -70,30 +117,30 @@ export class Field {
     }
   }
 
-  get isString() {
+  get isString(): boolean {
     return this.type === 'text' || this.type === 'password';
   }
 
-  get isNumber() {
+  get isNumber(): boolean {
     return this.type === 'number' && !this.isLookup;
   }
 
-  get isLookup() {
-    return this.lookupUrl || this.enums;
+  get isLookup(): boolean {
+    return this.lookupUrl !== undefined || this.enums !== undefined;
   }
 
-  get defaultValue() {
+  get defaultValue(): any {
     if (this.getDefaultValue)
       return this.getDefaultValue();
 
     return '';
   }
 
-  formatBoolean(value) {
+  formatBoolean(value: boolean): string {
     return value ? 'kyllä' : 'ei';
   }
 
-  formatDate(value) {
+  formatDate(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleDateString();
@@ -102,7 +149,7 @@ export class Field {
     return null;
   }
 
-  formatTime(value) {
+  formatTime(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleTimeString();
@@ -111,7 +158,7 @@ export class Field {
     return null;
   }
 
-  formatDateTime(value) {
+  formatDateTime(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleString();
@@ -120,9 +167,9 @@ export class Field {
     return null;
   }
 
-  lookupText(value) {
-    if (this.lookup) {
-      const item = this.lookup.find(item => item.value === value);
+  lookupText(value: any): string | null {
+    if (this.lookup !== undefined) {
+      const item: any = this.lookup.find((item: any) => item.value === value);
 
       if (item)
         return item.text;
@@ -131,7 +178,7 @@ export class Field {
     return null;
   }
 
-  formatValue(value) {
+  formatValue(value: any): string | null {
     if (this.enums)
       return this.enums[value];
 
@@ -148,7 +195,7 @@ export class Field {
     }
   }
 
-  validate(value) {
+  validate(value: any): string | null {
     if (this.visible && !this.readonly) {
       if (this.required && this.type !== 'boolean' && value === '')
         return this.label + ' ei voi olla tyhjä';
@@ -168,19 +215,19 @@ export class Field {
     return null;
   }
 
-  hasFormControl(value) {
+  hasFormControl(value: any): boolean {
     return this.visible && (!this.readonly || value);
   }
 
-  date_JsonToData(value) {
+  date_JsonToData(value: any) {
     return value.substring(0, 10);
   }
 
-  datetime_JsonToData(value) {
+  datetime_JsonToData(value: any) {
     return DateTimeField.toString(value);
   }
 
-  date_DataToJson(value) {
+  date_DataToJson(value: any) {
     const values = value.split('.');
 
     if (values.length === 3)
@@ -189,7 +236,7 @@ export class Field {
     return value;
   }
 
-  jsonToData(value) {
+  jsonToData(value: any) {
     if (value === null)
       return '';
 
@@ -201,7 +248,7 @@ export class Field {
     }
   }
 
-  dataToJson(value) {
+  dataToJson(value: any) {
     if (value === '')
       return null;
 
@@ -214,7 +261,7 @@ export class Field {
 
 
 export class DateTimeField extends Field {
-  static toString(value) {
+  static toString(value: any) {
     if (value) {
       const date = new Date(value);
       return date.toLocaleString();
@@ -225,10 +272,10 @@ export class DateTimeField extends Field {
 }
 
 
-export default class FieldsComponent extends Component {
-  fields = [];
+export default class FieldsComponent<P, S> extends Component<P, S> {
+  public fields: Field[] = [];
 
-  findField(name) {
+  findField(name: string) {
     for (const field of this.fields)
       if (field.name === name)
         return field;
@@ -236,7 +283,7 @@ export default class FieldsComponent extends Component {
     return null;
   }
 
-  fieldByName(name) {
+  fieldByName(name: string) {
     const field = this.findField(name);
 
     if (field === null)
@@ -245,7 +292,7 @@ export default class FieldsComponent extends Component {
    return field;
   }
 
-  addField(name, label, type, options) {
+  addField(name: string, label: string, type: string, options?: FieldOptions) {
     const field = new Field(name, label, type, options);
     field.index = this.fields.length;
     

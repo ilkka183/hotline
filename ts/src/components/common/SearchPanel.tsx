@@ -3,10 +3,19 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
+import { Field } from './Fields';
+import FieldsTable from './FieldsTable';
 
-export default function SearchPanel({ table, onChange, onClear, onSearch }) {
+interface Props {
+  table: FieldsTable,
+  onChange: () => void,
+  onClear: () => void,
+  onSearch: () => void
+}
 
-  function renderTextInput(field) {
+const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) => {
+
+  function renderTextInput(field: Field): JSX.Element {
     return (
       <Form.Group key={field.name} as={Row}>
         <Form.Label column sm="2">{field.label}</Form.Label>
@@ -37,3 +46,5 @@ export default function SearchPanel({ table, onChange, onClear, onSearch }) {
     </Form>
   );
 }
+
+export default SearchPanel;

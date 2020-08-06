@@ -6,7 +6,7 @@ interface Props extends RouteProps {
   requiredRole?: UserRole
 }
 
-const ProtectedRoute: React.FC< Props> = ({ path, component: Component, render, requiredRole, ...rest }) => {
+const ProtectedRoute: React.FC<Props> = ({ path, component: Component, render, requiredRole, ...rest }) => {
   const user: User | null = auth.getCurrentUser();
 
   return (

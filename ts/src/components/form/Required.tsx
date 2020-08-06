@@ -1,5 +1,7 @@
 import React from 'react';
 
-export default function Required() {
+const Required: React.FC = () => {
   return <span className="required">*</span>
 }
+
+export default Required;

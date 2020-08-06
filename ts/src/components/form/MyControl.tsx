@@ -5,8 +5,17 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Required from './Required';
 
-export default class MyControl extends Component {
-  renderLabel() {
+export interface ControlProps {
+  name: string,
+  label: string,
+  error: string,
+  asRow: boolean,
+  required: boolean,
+  onChange: () => void
+}
+
+export default abstract class MyControl<P> extends Component<P & ControlProps> {
+  protected renderLabel(): JSX.Element | null {
     const { label, required } = this.props;
 
     return (
@@ -16,7 +25,7 @@ export default class MyControl extends Component {
     );
   }
 
-  renderAlert() {
+  private renderAlert(): JSX.Element | null {
     const { error } = this.props;
 
     if (error)
@@ -25,7 +34,9 @@ export default class MyControl extends Component {
     return null;
   }
 
-  renderContent() {
+  protected abstract renderControl(): JSX.Element;
+
+  private renderContent(): JSX.Element {
     return (
       <>
         {this.renderControl()}

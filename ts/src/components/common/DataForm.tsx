@@ -3,12 +3,10 @@ import FieldsForm from './FieldsForm';
 
 export default class DataForm extends FieldsForm {
   get dataId() {
-    const { dataId, match } = this.props;
+    const { dataId } = this.props;
 
     if (dataId)
       return dataId;
-    else if (match && match.params.id !== 'new')
-      return match.params.id;
 
     return undefined;
   }

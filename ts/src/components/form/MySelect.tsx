@@ -1,9 +1,21 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import MyControl from './MyControl'
+import MyControl, { ControlProps } from './MyControl'
 
-export default class MySelect extends MyControl {
-  renderControl() {
+interface TextValue {
+  text: string,
+  value: any
+}
+
+interface Props extends ControlProps {
+  autofocus: boolean,
+  disabled: boolean,
+  options: TextValue[],
+  value: any
+}
+
+export default class MySelect extends MyControl<Props> {
+  protected renderControl(): JSX.Element {
     const { autofocus, disabled, name, options, value, onChange } = this.props;
 
     return (

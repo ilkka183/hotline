@@ -5,13 +5,47 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import DataPagination from './DataPagination';
-import FieldsComponent from './Fields';
+import FieldsComponent, { Field, SortOrder } from './Fields';
 import LinkButton from './LinkButton';
 import SearchPanel from './SearchPanel';
 import SortIcon from './SortIcon';
 
-export default class DataTable extends FieldsComponent {
-  state = {
+interface Rows {
+  rowCount: number,
+  rows: any[]
+}
+
+interface SortField {
+  name: string,
+  order: SortOrder
+}
+
+interface Props {
+  rows: any[],
+  showTitle: boolean,
+  title: string,
+  readOnly: boolean,
+  editable: boolean,
+  deletable: boolean,
+  paginate: boolean
+}
+
+interface State {
+  rows: any[],
+  rowCount: number,
+  searchValues: any,
+  searchPanel: boolean,
+  pageIndex: number,
+  pageSize: number,
+  sortFields: SortField[],
+  showEditModal: boolean,
+  showDeleteModal: boolean,
+  deleteRow: any,
+  modalDataId: any
+}
+
+export default abstract class FieldsTable extends FieldsComponent<Props, State> {
+  public state = {
     rows: [],
     rowCount: 0,
     searchValues: {},
@@ -25,39 +59,31 @@ export default class DataTable extends FieldsComponent {
     modalDataId: undefined
   }
 
-  getUseModals() {
+  public getUseModals(): boolean {
     return true;
   }
 
-  getForm() {
-    throw new Error('You have to implement the method getForm');
-  }
+  public abstract getForm(): any;
 
-  getApiName() {
-    throw new Error('You have to implement the method getApiName');
-  }
+  public abstract getApiName(): string;
 
-  canEdit(item) {
+  public canEdit(row: any): boolean {
     return true;
   }
 
-  canDelete(item) {
+  public canDelete(row: any): boolean {
     return true;
   }
 
-  getItems(pageIndex) {
-    throw new Error('You have to implement the method getItems');
-  }
+  public abstract getItems(pageIndex: number): any[];
 
-  deleteItem() {
-    throw new Error('You have to implement the method deleteItem');
-  }
+  public abstract deleteItem(): void;
 
-  getNewButtonLink() {
+  public getNewButtonLink(): string {
     return `/${this.getApiName()}/new`;
   }
 
-  hasSearchFields() {
+  public hasSearchFields(): boolean {
     for (const field of this.fields)
       if (field.search)
         return true;
@@ -65,7 +91,7 @@ export default class DataTable extends FieldsComponent {
     return false;
   }
 
-  hasSearchValues() {
+  public hasSearchValues(): boolean {
     const { searchValues } = this.state;
 
     for (const name in searchValues)
@@ -103,13 +129,13 @@ export default class DataTable extends FieldsComponent {
     }
     else {
       const pageIndex = 0;
-      const sortFields = []
+      const sortFields: SortField[] = []
 
       await this.fetchItems({ pageIndex, sortFields });
     }
   }
 
-  handlePageChange = async pageIndex => {
+  handlePageChange = async (pageIndex: number) => {
     if (this.props.rows) {
       this.setState({ pageIndex });
     }
@@ -118,21 +144,21 @@ export default class DataTable extends FieldsComponent {
     }
   }
 
-  handleSortField = async name => {
-    const sortFields = [...this.state.sortFields];
+  handleSortField = async (name: string) => {
+    const sortFields: SortField[] = [...this.state.sortFields];
 
-    const index = sortFields.findIndex(field => field.name === name);
+    const index: number = sortFields.findIndex(field => field.name === name);
 
     if (index !== -1) {
       const sortField = sortFields[index];
 
-      if (sortField.order === 'asc')
-        sortField.order = 'desc';
+      if (sortField.order === SortOrder.Asc)
+        sortField.order = SortOrder.Desc;
       else
         sortFields.splice(index, 1);
     }
     else
-      sortFields.push({ name, order: 'asc' });
+      sortFields.push({ name, order: SortOrder.Asc });
 
     if (this.props.rows) {
       this.setState({ sortFields });
@@ -142,7 +168,7 @@ export default class DataTable extends FieldsComponent {
     }
   }
 
-  handleSearch = query => {
+  handleSearch = (query) => {
     console.log(this.state.searchValues);
 
     this.setState({ pageIndex: 0 });
@@ -174,11 +200,11 @@ export default class DataTable extends FieldsComponent {
     this.setState({ showEditModal: true, modalDataId: null });
   }
 
-  showEditModal(row) {
+  showEditModal(row: any) {
     this.setState({ showEditModal: true, modalDataId: row.Id });
   }
 
-  handleShowEditModal = (row) => {
+  handleShowEditModal = (row: any) => {
     if (row)
       this.showEditModal(row);
     else
@@ -203,7 +229,7 @@ export default class DataTable extends FieldsComponent {
     this.handleHideEditModal();
   }
 
-  handleShowDeleteModal = (row) => {
+  handleShowDeleteModal = (row: any) => {
     this.setState({ showDeleteModal: true, deleteRow: row });
   }
 
@@ -237,7 +263,7 @@ export default class DataTable extends FieldsComponent {
     this.handleHideDeleteModal();
   }
 
-  filterRows(rows) {
+  filterRows(rows: any[]) {
     const { searchValues, sortFields } = this.state;
 
     for (const name in searchValues) {
@@ -248,7 +274,7 @@ export default class DataTable extends FieldsComponent {
     }
 
     if (sortFields.length > 0) {
-      const sortField = sortFields[0];
+      const sortField: SortField = sortFields[0];
       
       rows.sort((a, b) => {
         let result = 0;
@@ -258,7 +284,7 @@ export default class DataTable extends FieldsComponent {
         else if (a[sortField.name] < b[sortField.name])
           result = -1;
   
-        if (sortField.order === 'desc')
+        if (sortField.order === SortOrder.Desc)
           result = -result;
   
         return result;
@@ -268,7 +294,7 @@ export default class DataTable extends FieldsComponent {
     return rows;
   }
 
-  paginateRows(rows, pageIndex, pageSize) {
+  paginateRows(rows: any[], pageIndex: number, pageSize: number) {
     const offset = pageIndex*pageSize;
     const result = [];
   
@@ -284,7 +310,7 @@ export default class DataTable extends FieldsComponent {
     return result;
   }  
 
-  renderTitle() {
+  private renderTitle(): JSX.Element | null {
     const { showTitle, title } = this.props;
 
     if (!showTitle)
@@ -295,7 +321,7 @@ export default class DataTable extends FieldsComponent {
     return <h2>{text}</h2>;
   }
   
-  renderToggleSearchButton() {
+  private renderToggleSearchButton(): JSX.Element {
     const { searchPanel } = this.state;
 
     const variant = this.hasSearchValues() ? 'secondary' : 'light';
@@ -304,7 +330,7 @@ export default class DataTable extends FieldsComponent {
     return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
   }
   
-  renderNewButton() {
+  private renderNewButton(): JSX.Element | null {
     const { readOnly, creatable, newButtonAsLink, newButtonText } = this.props;
 
     if (readOnly || !creatable)
@@ -319,7 +345,7 @@ export default class DataTable extends FieldsComponent {
       return <LinkButton className="mb-2" variant={variant} size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
   }
   
-  renderHeader() {
+  private renderHeader(): JSX.Element {
     return (
       <Row>
         <Col>{this.renderTitle()}</Col>
@@ -331,7 +357,7 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderSearchPanel() {
+  private renderSearchPanel(): JSX.Element | null {
     if (!this.props.searchPanel)
       return null;
 
@@ -348,7 +374,7 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderPagination(rowCount) {
+  private renderPagination(rowCount: number): JSX.Element {
     const { pageIndex, pageSize } = this.state;
 
     return (
@@ -363,8 +389,8 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderSortIcon(column) {
-    const field = this.state.sortFields.find(field => field.name === column.name);
+  private renderSortIcon(column: Field): JSX.Element | null {
+    const field: SortField | undefined = this.state.sortFields.find(field => field.name === column.name);
 
     if (field)
       return <SortIcon order={field.order} />
@@ -372,7 +398,7 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
-  renderColumn(column) {
+  private renderColumn(column: Field): JSX.Element {
     return (
       <th
         className="clickable"
@@ -384,11 +410,11 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderCellContent(row, column) {
+  private renderCellContent(row: any, column: Field): JSX.Element | string | null {
     if (column.render)
       return column.render(row);
 
-    const text = column.formatValue(row[column.name]);
+    const text: string | null = column.formatValue(row[column.name]);
 
     const { readOnly, editable } = this.props;
 
@@ -405,7 +431,7 @@ export default class DataTable extends FieldsComponent {
     return text;
   }
 
-  renderCell(row, column) {
+  private renderCell(row: any, column: Field): JSX.Element {
     return (
       <td
         key={row.Id + column.name}
@@ -416,7 +442,7 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderDeleteButton(row) {
+  private renderDeleteButton(row: any): JSX.Element | null {
     if (this.canDelete(row))
       return <Button variant="danger" size="sm" onClick={() => this.handleShowDeleteModal(row)}>Poista</Button>;
 
@@ -427,7 +453,7 @@ export default class DataTable extends FieldsComponent {
     return null;
   }
 
-  renderEditModal() {
+  private renderEditModal(): JSX.Element | null {
     const Form = this.getForm();
 
     if (!Form)
@@ -450,7 +476,7 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderDeleteModal() {
+  private renderDeleteModal(): JSX.Element | null {
     const Form = this.getForm();
 
     if (!Form)
@@ -476,10 +502,11 @@ export default class DataTable extends FieldsComponent {
     );
   }
 
-  renderModals() {
+  private renderModals(): JSX.Element | null {
+    return null;
   }
 
-  getRows() {
+  private getRows(): Rows {
     const { paginate } = this.props;
     const { pageIndex, pageSize } = this.state;
 
@@ -533,7 +560,7 @@ export default class DataTable extends FieldsComponent {
   }
 }
 
-DataTable.defaultProps = {
+FieldsTable.defaultProps = {
   showTitle: true,
   searchPanel: true,
   newButtonAsLink: false,

@@ -1,13 +1,17 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import MyControl from './MyControl'
+import MyControl, { ControlProps } from './MyControl'
 
-export default class MyCheck extends MyControl {
-  renderLabel() {
+interface Props extends ControlProps {
+  value: boolean
+}
+
+export default class MyCheck extends MyControl<Props> {
+  protected renderLabel(): JSX.Element | null {
     return null
   }
 
-  renderControl() {
+  protected renderControl(): JSX.Element {
     const { label, name, value, onChange } = this.props;
 
     return (
