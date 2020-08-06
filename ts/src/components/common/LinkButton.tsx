@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function LinkButton({ className, variant, size, to, ...props }) {
+interface Props {
+  className: string,
+  variant: string,
+  size: string,
+  to: string
+}
+
+const LinkButton: React.FC<Props> = ({ className, variant, size, to, ...props }) => {
   let classes = 'btn btn-' + (variant ? variant : 'primary');
 
   if (size)
@@ -15,4 +22,4 @@ export default function LinkButton({ className, variant, size, to, ...props }) {
   );
 }
 
-
+export default LinkButton;

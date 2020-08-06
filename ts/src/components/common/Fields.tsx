@@ -6,12 +6,18 @@ type LinkFunc = (row: any) => string;
 type RenderFunc = (row: any) => JSX.Element;
 type DefaultValueFunc = () => any;
 
+export interface LookupPair {
+  value: any,
+  text: string
+}
+
 interface FieldOptions {
   order?: SortOrder,
   link?: LinkFunc,
   render?: RenderFunc,
   getDefaultValue?: DefaultValueFunc,
   lookupUrl?: string,
+  enums?: Array<string>,
   primaryKey?: boolean,
   editLink?: boolean,
   required?: boolean,
@@ -23,7 +29,6 @@ interface FieldOptions {
   min?: number,
   max?: number,
   minLength?: number,
-  enums?: Array<string>,
   displayFormat?: string,
 }
 
@@ -48,10 +53,10 @@ export class Field {
   public link?: LinkFunc;
   public render?: RenderFunc;
   public getDefaultValue?: DefaultValueFunc;
-  public lookupUrl?: string;
-  public lookup?: any;
-  public enums?: Array<string>;
   public displayFormat?: string;
+  public lookupUrl?: string;
+  public enums?: Array<string>;
+  public lookup?: LookupPair[];
   
   constructor(name: string, label: string, type: string, options?: FieldOptions) {
     this.name = name;
@@ -117,30 +122,30 @@ export class Field {
     }
   }
 
-  get isString(): boolean {
+  public get isString(): boolean {
     return this.type === 'text' || this.type === 'password';
   }
 
-  get isNumber(): boolean {
+  public get isNumber(): boolean {
     return this.type === 'number' && !this.isLookup;
   }
 
-  get isLookup(): boolean {
+  public get isLookup(): boolean {
     return this.lookupUrl !== undefined || this.enums !== undefined;
   }
 
-  get defaultValue(): any {
+  public get defaultValue(): any {
     if (this.getDefaultValue)
       return this.getDefaultValue();
 
     return '';
   }
 
-  formatBoolean(value: boolean): string {
+  public formatBoolean(value: boolean): string {
     return value ? 'kyllä' : 'ei';
   }
 
-  formatDate(value: any): string | null {
+  public formatDate(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleDateString();
@@ -149,7 +154,7 @@ export class Field {
     return null;
   }
 
-  formatTime(value: any): string | null {
+  public formatTime(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleTimeString();
@@ -158,7 +163,7 @@ export class Field {
     return null;
   }
 
-  formatDateTime(value: any): string | null {
+  public formatDateTime(value: any): string | null {
     if (value) {
       const date = new Date(value);
       return date.toLocaleString();
@@ -167,9 +172,9 @@ export class Field {
     return null;
   }
 
-  lookupText(value: any): string | null {
-    if (this.lookup !== undefined) {
-      const item: any = this.lookup.find((item: any) => item.value === value);
+  public lookupText(value: any): string | null {
+    if (this.lookup) {
+      const item: LookupPair | undefined = this.lookup.find(item => item.value === value);
 
       if (item)
         return item.text;
@@ -178,7 +183,7 @@ export class Field {
     return null;
   }
 
-  formatValue(value: any): string | null {
+  public formatValue(value: any): string | null {
     if (this.enums)
       return this.enums[value];
 
@@ -195,7 +200,7 @@ export class Field {
     }
   }
 
-  validate(value: any): string | null {
+  public validate(value: any): string | null {
     if (this.visible && !this.readonly) {
       if (this.required && this.type !== 'boolean' && value === '')
         return this.label + ' ei voi olla tyhjä';
@@ -215,19 +220,19 @@ export class Field {
     return null;
   }
 
-  hasFormControl(value: any): boolean {
+  public hasFormControl(value: any): boolean {
     return this.visible && (!this.readonly || value);
   }
 
-  date_JsonToData(value: any) {
+  public date_JsonToData(value: any) {
     return value.substring(0, 10);
   }
 
-  datetime_JsonToData(value: any) {
+  public datetime_JsonToData(value: any) {
     return DateTimeField.toString(value);
   }
 
-  date_DataToJson(value: any) {
+  public date_DataToJson(value: any) {
     const values = value.split('.');
 
     if (values.length === 3)
@@ -236,7 +241,7 @@ export class Field {
     return value;
   }
 
-  jsonToData(value: any) {
+  public jsonToData(value: any) {
     if (value === null)
       return '';
 
@@ -248,7 +253,7 @@ export class Field {
     }
   }
 
-  dataToJson(value: any) {
+  public dataToJson(value: any) {
     if (value === '')
       return null;
 
@@ -275,7 +280,7 @@ export class DateTimeField extends Field {
 export default class FieldsComponent<P, S> extends Component<P, S> {
   public fields: Field[] = [];
 
-  findField(name: string) {
+  protected findField(name: string): Field | null {
     for (const field of this.fields)
       if (field.name === name)
         return field;
@@ -283,8 +288,8 @@ export default class FieldsComponent<P, S> extends Component<P, S> {
     return null;
   }
 
-  fieldByName(name: string) {
-    const field = this.findField(name);
+  protected fieldByName(name: string): Field {
+    const field: Field | null = this.findField(name);
 
     if (field === null)
       throw new Error(`Field ${name} not found`);
@@ -292,8 +297,8 @@ export default class FieldsComponent<P, S> extends Component<P, S> {
    return field;
   }
 
-  addField(name: string, label: string, type: string, options?: FieldOptions) {
-    const field = new Field(name, label, type, options);
+  protected addField(name: string, label: string, type: string, options?: FieldOptions): Field {
+    const field: Field = new Field(name, label, type, options);
     field.index = this.fields.length;
     
     this.fields.push(field);

@@ -1,12 +1,15 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 
-MyListGroup.defaultProps = {
-  valueProperty: 'Id',
-  textProperty: 'Name'
+interface Props {
+  items: any[],
+  selectedItem: any,
+  valueProperty: string,
+  textProperty: string,
+  onItemSelect: (item: any) => void
 }
 
-export default function MyListGroup({ items, selectedItem, valueProperty, textProperty, onItemSelect }) {
+const MyListGroup: React.FC<Props> = ({ items, selectedItem, valueProperty, textProperty, onItemSelect }) => {
   return (
     <ListGroup>
       {items.map(item => (
@@ -19,4 +22,11 @@ export default function MyListGroup({ items, selectedItem, valueProperty, textPr
         </ListGroup.Item>))}
     </ListGroup>
   );
+}
+
+export default MyListGroup;
+
+MyListGroup.defaultProps = {
+  valueProperty: 'Id',
+  textProperty: 'Name'
 }

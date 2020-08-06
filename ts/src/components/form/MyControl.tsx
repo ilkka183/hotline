@@ -10,8 +10,8 @@ export interface ControlProps {
   label: string,
   error: string,
   asRow: boolean,
-  required: boolean,
-  onChange: () => void
+  required?: boolean,
+  onChange: (e: any) => void
 }
 
 export default abstract class MyControl<P> extends Component<P & ControlProps> {

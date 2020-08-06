@@ -1,19 +1,14 @@
-import FieldsForm from '../../components/common/FieldsForm';
+import FieldsForm, { FieldsFormProps } from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
-export default class RegisterForm extends FieldsForm {
-  state = {
-    data: {},
-    errors: {}
-  }
+export default class RegisterForm extends FieldsForm<{}> {
+  constructor(props: FieldsFormProps) {
+    super(props);
 
-  constructor() {
-    super();
-
-    this.addField('email',     'Sähköposti', 'text', { email: true, required: true });
-    this.addField('password',  'Salasana',   'text', { min: 5, required: true });
-    this.addField('firstName', 'Etunimi',    'text', { required: true });
-    this.addField('lastName',  'Sukunimi',   'text', { required: true });
+    this.addField('email',     'Sähköposti', 'email', { required: true });
+    this.addField('password',  'Salasana',   'text',  { min: 5, required: true });
+    this.addField('firstName', 'Etunimi',    'text',  { required: true });
+    this.addField('lastName',  'Sukunimi',   'text',  { required: true });
 
     this.state.data = this.getEmptyData();
   }

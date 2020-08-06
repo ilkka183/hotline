@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form'
 import MyControl, { ControlProps } from './MyControl'
 
 interface Props extends ControlProps {
-  value: boolean
+  value: any
 }
 
 export default class MyCheck extends MyControl<Props> {

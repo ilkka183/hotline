@@ -5,29 +5,60 @@ import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Table from 'react-bootstrap/Table'
-import FieldsComponent from './Fields';
+import FieldsComponent, { Field } from './Fields';
 import MyCheck from '../form/MyCheck';
 import MyFile from '../form/MyFile';
 import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
-interface State {
-  data: any,
-  errors: any
+export interface FieldsFormProps {
+  asTable: boolean,
+  variant: string,
+  action: string,
+  showTitle: boolean,
+  showModal: boolean,
+  showSubmitButton: boolean,
+  submitButtonVariant: string,
+  submitButtonText: string,
+  cancelButtonText: string,
+  onHideModal: () => void,
+  onSubmitModal: () => void
 }
 
-export default class FieldsForm<P> extends FieldsComponent<P, State> {
-  public state = {
-    data: {},
-    errors: {}
+interface State {
+  savedData: any,
+  data: any,
+  errors: any,
+  successText: string,
+  errorText: string
+}
+
+export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFormProps, State> {
+  static defaultProps = {
+    asTable: false,
+    showTitle: true,
+    showSubmitButton: true,
+    submitButtonVariant: 'primary',
+    submitButtonText: 'Tallenna',
+    cancelButtonText: 'Peru'
   }
 
-  getData() {
+  public state = {
+    savedData: {},
+    data: {},
+    errors: {},
+    successText: '',
+    errorText: ''
+  }
+
+  private autofocusSet: boolean = false;
+
+  public getData(): any {
     return this.state.data;
   }
 
-  getEmptyData() {
+  public getEmptyData(): any {
     const data: any = {}
 
     for (let field of this.fields)
@@ -36,7 +67,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     return data;
   }
 
-  getDefaultData() {
+  public getDefaultData(): any {
     const data: any = {}
 
     for (let field of this.fields)
@@ -45,7 +76,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     return data;
   }
 
-  jsonToData(row: any) {
+  public jsonToData(row: any): any {
     const data: any = {}
 
     for (let field of this.fields)
@@ -54,11 +85,12 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     return data;
   }
 
-  validate() {
+  private validate(): any {
     const errors: any = {}
 
     for (const field of this.fields) {
-      const value: any = this.state.data[field.name];
+      const data: any = this.state.data;
+      const value: any = data[field.name];
 
       const error: string | null = field.validate(value);
 
@@ -71,14 +103,14 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     return Object.keys(errors).length === 0 ? null : errors;
   }
 
-  hasErrors() {
+  private hasErrors(): any {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
 
     return errors;
   }
 
-  validateField({ name, value }) {
+  private validateField({ name, value }: any): any {
     const field = this.findField(name);
     return field && field.validate(value);
   }
@@ -86,7 +118,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
   doSubmit() {
   }
   
-  handleSubmit = e => {
+  handleSubmit = (e: any) => {
     if (e)
       e.preventDefault();
 
@@ -96,7 +128,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     this.doSubmit();
   }
 
-  handleSubmitModal = e => {
+  handleSubmitModal = (e: any) => {
     const { action, onSubmitModal } = this.props;
 
     if (action !== 'delete') {
@@ -109,10 +141,10 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     onSubmitModal();
   }
 
-  handleChange = event => {
+  handleChange = (event: any) => {
     const { currentTarget } = event;
 
-    const errors = {...this.state.errors}
+    const errors: any = {...this.state.errors}
     const errorMessage = this.validateField(currentTarget);
 
     if (errorMessage)
@@ -120,7 +152,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     else
       delete errors[currentTarget.name];
 
-    const data = {...this.state.data}
+    const data: any = {...this.state.data}
 
     if (currentTarget.type === 'checkbox')
       data[currentTarget.name] = currentTarget.checked;
@@ -152,15 +184,16 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
   }
 
   goBack() {
-    const { history } = this.props;
+/*    const { history } = this.props;
     
     if (history)
-      history.goBack();
+      history.goBack(); */
   }
 
-  renderInput(field, autofocus = false) {
+  renderInput(field: Field, autofocus: boolean = false) {
     const { name, label, readonly, required, type } = field;
-    const { data, errors } = this.state;
+    const data: any = this.state.data;
+    const errors: any = this.state.errors;
 
     return (
       <MyInput
@@ -179,9 +212,10 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderTextArea(field) {
+  renderTextArea(field: Field) {
     const { name, label, required, rows } = field;
-    const { data, errors } = this.state;
+    const data: any = this.state.data;
+    const errors: any = this.state.errors;
 
     return (
       <MyTextArea
@@ -198,9 +232,10 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderFile(field) {
+  renderFile(field: Field) {
     const { name, label, readonly, required } = field;
-    const { data, errors } = this.state;
+    const data: any = this.state.data;
+    const errors: any = this.state.errors;
 
     return (
       <MyFile
@@ -217,9 +252,10 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderSelect(field, autofocus = false) {
+  renderSelect(field: Field, autofocus: boolean = false) {
     const { name, label, lookup, readonly, required } = field;
-    const { data, errors } = this.state;
+    const data: any = this.state.data;
+    const errors: any = this.state.errors;
 
     return (
       <MySelect
@@ -238,9 +274,10 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderCheck(field) {
+  renderCheck(field: Field) {
     const { name, label } = field;
-    const { data, errors } = this.state;
+    const data: any = this.state.data;
+    const errors: any = this.state.errors;
 
     return (
       <MyCheck
@@ -255,7 +292,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderSubmitButton(text) {
+  renderSubmitButton(text: string) {
     return (
       <Button
         className="mr-2"
@@ -268,31 +305,11 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  getNewTitle() {
-    throw new Error('You have to implement the method getTitle');
-  }
+  public abstract getTitle(): string;
 
-  getEditTitle() {
-    throw new Error('You have to implement the method getTitle');
-  }
-
-  getDeleteTitle() {
-    throw new Error('You have to implement the method getTitle');
-  }
-
-  getTitle() {
-    const { action } = this.props;
-
-    switch (action) {
-      case 'new': return this.getNewTitle();
-      case 'edit': return this.getEditTitle();
-      case 'delete': return this.getDeleteTitle() + '?';
-      default: return null;
-    }
-  }
-
-  renderField(field) {
-    const value = this.state.data[field.name];
+  private renderField(field: Field): JSX.Element | null {
+    const data: any = this.state.data;
+    const value: any = data[field.name];
 
     if (!field.visible)
       return null;
@@ -328,10 +345,11 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     }
   }
 
-  renderInfo() {
+  private renderInfo(): JSX.Element | null {
+    return null;
   }
 
-  renderForm() {
+  private renderForm(): JSX.Element {
     const { showTitle, submitButtonText, showSubmitButton} = this.props;
     const { successText, errorText } = this.state;
 
@@ -351,7 +369,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderModalFields() {
+  private renderModalFields(): (JSX.Element | null)[] | JSX.Element | null {
     const { action } = this.props;
 
     if (action === 'delete')
@@ -366,7 +384,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
       return this.fields.map(field => this.renderField(field));
   }
   
-  renderModal() {
+  private renderModal(): JSX.Element {
     const { showTitle, showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
 
     return (
@@ -392,14 +410,14 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderTableRow(field) {
+  private renderTableRow(field: Field): JSX.Element | null {
     if (!field.visible)
       return null;
 
     const data = this.getData();
     const value = data[field.name];
 
-    let text = field.formatValue(value);
+    let text: JSX.Element | string | null = field.formatValue(value);
 
     if (!text)
       return null;
@@ -415,7 +433,7 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  renderTable() {
+  private renderTable(): JSX.Element {
     const { showTitle } = this.props;
 
     return (
@@ -430,23 +448,14 @@ export default class FieldsForm<P> extends FieldsComponent<P, State> {
     );
   }
 
-  render() {
+  public render(): JSX.Element {
     const { variant } = this.props;
 
     switch (variant) {
       case 'modal': return this.renderModal();
       case 'table': return this.renderTable();
-      default:  return this.renderForm();
     }
+
+    return this.renderForm();
   }
 }
-
-FieldsForm.defaultProps = {
-  asTable: false,
-  showTitle: true,
-  showSubmitButton: true,
-  submitButtonVariant: 'primary',
-  submitButtonText: 'Tallenna',
-  cancelButtonText: 'Peru'
-}
-

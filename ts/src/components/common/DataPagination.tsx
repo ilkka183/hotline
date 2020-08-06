@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pagination from 'react-bootstrap/Pagination'
 
-DataPagination.propTypes = {
-  rowCount: PropTypes.number.isRequired,
-  pageIndex: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired
+interface Props {
+  rowCount: number,
+  pageIndex: number,
+  pageSize: number,
+  onPageChange: (index: number) => void
 }
 
-export default function DataPagination({ rowCount, pageIndex, pageSize, onPageChange }) {
+const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPageChange }) => {
   const pageCount = Math.ceil(rowCount/pageSize);
 
   if (pageCount <= 1)
@@ -20,7 +20,7 @@ export default function DataPagination({ rowCount, pageIndex, pageSize, onPageCh
   for (let i = 0; i < pageCount; i++)
     pages.push(i);
 
-  function changePage(index) {
+  function changePage(index: number): void {
     if ((index >= 0) && (index < pageCount))
       onPageChange(index);
   }
@@ -41,4 +41,13 @@ export default function DataPagination({ rowCount, pageIndex, pageSize, onPageCh
       <div className="pagination-rows">{rowCount} riviä</div>
     </Pagination>
   );
+}
+
+export default DataPagination;
+
+DataPagination.propTypes = {
+  rowCount: PropTypes.number.isRequired,
+  pageIndex: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired
 }

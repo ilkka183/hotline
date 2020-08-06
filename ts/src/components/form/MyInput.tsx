@@ -4,9 +4,9 @@ import MyControl, { ControlProps } from './MyControl'
 
 interface Props extends ControlProps {
   type: string,
-  autofocus: boolean,
-  disabled: boolean,
-  value: string
+  value: string,
+  autofocus?: boolean,
+  disabled?: boolean
 }
 
 export default class MyInput extends MyControl<Props> {

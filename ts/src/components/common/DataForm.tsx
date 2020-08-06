@@ -1,7 +1,14 @@
 import { toast } from 'react-toastify';
+import { LookupPair } from './Fields';
 import FieldsForm from './FieldsForm';
 
-export default class DataForm extends FieldsForm {
+interface Props {
+  dataId: number,
+  data: any,
+  defaultData: any
+}
+
+export default abstract class DataForm extends FieldsForm<Props> {
   get dataId() {
     const { dataId } = this.props;
 
@@ -11,31 +18,43 @@ export default class DataForm extends FieldsForm {
     return undefined;
   }
 
-  getApiName() {
-    throw new Error('You have to implement the method getApiName!');
-  }
+  public abstract getHttp(): any;
 
-  getHttp() {
-    throw new Error('You have to implement the method getHttp!');
-  }
-
-  get http() {
+  public get http(): any {
     return this.getHttp();
   }
 
-  get apiEndpoint() {
+  public abstract getApiName(): string;
+
+  public get apiEndpoint(): string {
     return '/' + this.getApiName();
   }
 
-  apiEndpointOf(id) {
+  public apiEndpointOf(id: number): string {
     return this.apiEndpoint + '/' + id;
   }
 
-  getData() {
+  public getData(): any {
     if (this.props.data)
       return this.props.data;
     else
       return this.state.data;
+  }
+
+  protected abstract getNewTitle(): string;
+  protected abstract getEditTitle(): string;
+  protected abstract getDeleteTitle(): string;
+
+  public getTitle(): string {
+    const { action } = this.props;
+
+    switch (action) {
+      case 'new': return this.getNewTitle();
+      case 'edit': return this.getEditTitle();
+      case 'delete': return this.getDeleteTitle() + '?';
+    }
+
+    return '';
   }
 
   async populateLookups() {
@@ -43,17 +62,17 @@ export default class DataForm extends FieldsForm {
       if (field.lookupUrl) {
         const { data: { rows } } = await this.http.get('/' + field.lookupUrl);
 
-        const lookup = [{ value: null, text: '' }];
+        const lookup: LookupPair[] = [{ value: null, text: '' }];
 
         for (const row of rows)
           lookup.push({ value: row.Id, text: row.Name });
 
         field.lookup = lookup;
 
-        this.setState({ lookup });
+//        this.setState({ lookup });
       }
       else if (field.enums) {
-        const lookup = [{ value: null, text: '' }];
+        const lookup: LookupPair[] = [{ value: null, text: '' }];
 
         let value = 0;
 
@@ -64,35 +83,37 @@ export default class DataForm extends FieldsForm {
 
         field.lookup = lookup;
 
-        this.setState({ lookup });
+//        this.setState({ lookup });
       }
     }
   }
 
   async populateData() {
-    const errors = {};
+    const errors: any = {};
 
     if (this.dataId) {
       // Fetch data from database
       try {
         const { data: item } = await this.http.get(this.apiEndpointOf(this.dataId));
   
-        const savedData = this.jsonToData(item)
-        const data = this.jsonToData(item)
+        const savedData: any = this.jsonToData(item);
+        const data: any = this.jsonToData(item);
 
         this.setState({ savedData, data, errors });
       }
       catch (ex) {
-        if (ex.response && ex.response.status === 404)
-          this.props.history.replace('/not-found');
+        if (ex.response && ex.response.status === 404) {
+//          this.props.history.replace('/not-found');
+        }
       }
     }
     else if (this.props.defaultData) {
       // Copy data from props
-      const data = {...this.state.data};
+      const data: any = {...this.state.data};
 
       for (const name in data) {
-        const value = this.props.defaultData[name];
+        const defaultData: any = this.props.defaultData;
+        const value: any = defaultData[name];
 
         data[name] = (value !== undefined && value !== null) ? value : '';
       }
@@ -101,7 +122,7 @@ export default class DataForm extends FieldsForm {
     }
     else {
       // New data
-      const data = this.getDefaultData();
+      const data: any = this.getDefaultData();
   
       this.setState({ data, errors });
     }
@@ -113,13 +134,13 @@ export default class DataForm extends FieldsForm {
   }
 
   async doSubmit() {
-    const { data } = this.state;
+    const data: any = this.state.data;
 
     if (data.Id) {
       // PUT
-      const { savedData } = this.state;
+      const savedData: any = this.state.savedData;
 
-      const row = {};
+      const row: any = {};
       
       for (let field of this.fields) {
         const value = data[field.name];
@@ -145,7 +166,7 @@ export default class DataForm extends FieldsForm {
     else {
       // POST
       try {
-        const row = {};
+        const row: any = {};
         
         for (let field of this.fields) {
           const value = data[field.name];
@@ -164,6 +185,6 @@ export default class DataForm extends FieldsForm {
     }
   }
 
-  afterSubmit() {
+  protected afterSubmit(): void {
   }
 }

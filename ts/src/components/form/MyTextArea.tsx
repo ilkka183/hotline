@@ -3,8 +3,8 @@ import Form from 'react-bootstrap/Form'
 import MyControl, { ControlProps } from './MyControl'
 
 interface Props extends ControlProps {
-  rows: number,
-  value: string
+  value: string,
+  rows?: number
 }
 
 export default class MyTextArea extends MyControl<Props> {

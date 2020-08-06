@@ -1,17 +1,13 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
 import MyControl, { ControlProps } from './MyControl'
-
-interface TextValue {
-  text: string,
-  value: any
-}
+import { LookupPair } from '../common/Fields';
 
 interface Props extends ControlProps {
-  autofocus: boolean,
-  disabled: boolean,
-  options: TextValue[],
-  value: any
+  value: any,
+  options?: LookupPair[],
+  autofocus?: boolean,
+  disabled?: boolean
 }
 
 export default class MySelect extends MyControl<Props> {

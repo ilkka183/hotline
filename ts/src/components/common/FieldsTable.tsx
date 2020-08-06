@@ -20,6 +20,12 @@ interface SortField {
   order: SortOrder
 }
 
+interface SearchOptions {
+  searchValues: object,
+  pageIndex: number,
+  sortFields: SortField[]
+}
+
 interface Props {
   rows: any[],
   showTitle: boolean,
@@ -27,13 +33,14 @@ interface Props {
   readOnly: boolean,
   editable: boolean,
   deletable: boolean,
-  paginate: boolean
+  paginate: boolean,
+  onEdited: () => void
 }
 
 interface State {
   rows: any[],
   rowCount: number,
-  searchValues: any,
+  searchValues: object,
   searchPanel: boolean,
   pageIndex: number,
   pageSize: number,
@@ -45,6 +52,17 @@ interface State {
 }
 
 export default abstract class FieldsTable extends FieldsComponent<Props, State> {
+  static defaultProps = {
+    showTitle: true,
+    searchPanel: true,
+    newButtonAsLink: false,
+    paginate: true,
+    readOnly: false,
+    creatable: true,
+    editable: true,
+    deletable: true
+  }
+  
   public state = {
     rows: [],
     rowCount: 0,
@@ -59,13 +77,14 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     modalDataId: undefined
   }
 
+  public abstract getForm(): any;
+  public abstract getApiName(): string;
+  public abstract getItems(pageIndex: number): any[];
+  public abstract deleteItem(): void;
+
   public getUseModals(): boolean {
     return true;
   }
-
-  public abstract getForm(): any;
-
-  public abstract getApiName(): string;
 
   public canEdit(row: any): boolean {
     return true;
@@ -74,10 +93,6 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
   public canDelete(row: any): boolean {
     return true;
   }
-
-  public abstract getItems(pageIndex: number): any[];
-
-  public abstract deleteItem(): void;
 
   public getNewButtonLink(): string {
     return `/${this.getApiName()}/new`;
@@ -92,16 +107,16 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
   }
 
   public hasSearchValues(): boolean {
-    const { searchValues } = this.state;
+    const searchValues: any = this.state.searchValues;
 
-    for (const name in searchValues)
-      if (searchValues[name])
+    for (const key in searchValues)
+      if (searchValues[key])
         return true;
 
     return false;
   }
 
-  async fetchItems(options) {
+  async fetchItems(options: SearchOptions) {
     let { searchValues, pageIndex, sortFields } = options;
 
     if (searchValues === undefined)
@@ -119,7 +134,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
   }
 
   async componentDidMount() {
-    const searchValues = {};
+    const searchValues: any = {};
 
     for (const field of this.fields)
       searchValues[field.name] = '';
@@ -168,21 +183,19 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     }
   }
 
-  handleSearch = (query) => {
-    console.log(this.state.searchValues);
-
+  handleSearch = () => {
     this.setState({ pageIndex: 0 });
   }
 
   handleSearchFieldChange = ({ currentTarget }) => {
-    const searchValues = {...this.state.searchValues};
+    const searchValues: any = {...this.state.searchValues};
     searchValues[currentTarget.name] = currentTarget.value;
 
     this.setState({ searchValues });
   }
 
   handleSearchClear = () => {
-    const searchValues = {...this.state.searchValues};
+    const searchValues: any = {...this.state.searchValues};
 
     for (const name in searchValues)
       searchValues[name] = '';
@@ -558,15 +571,4 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
       </>
     );
   }
-}
-
-FieldsTable.defaultProps = {
-  showTitle: true,
-  searchPanel: true,
-  newButtonAsLink: false,
-  paginate: true,
-  readOnly: false,
-  creatable: true,
-  editable: true,
-  deletable: true
 }
