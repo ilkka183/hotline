@@ -6,10 +6,18 @@ import Required from '../../../components/form/Required';
 import { FUEL_TYPES } from './../ProblemsTable';
 import http from '../../../services/httpService';
 
-export default function SelectData({ data, onData, options, onOptions, onNext }) {
+interface Props {
+  data: any,
+  options: any,
+  onData: (data: any) => void,
+  onOptions: (options: any) => void,
+  onNext?: () => void
+}
 
-  const handleMakeChange = async ({ currentTarget: select }) => {
-    const newData = {...data};
+const SelectData: React.FC<Props> = ({ data, onData, options, onOptions, onNext }) => {
+
+  const handleMakeChange = async ({ currentTarget: select }: any) => {
+    const newData: any = {...data};
     newData[select.name] = select.value;
     newData.ModelYear = '';
     newData.FuelType = '';
@@ -20,14 +28,14 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
 
     const { data: items } = await http.get('/data/modelYears?make=' + newData.Make);
 
-    const newOptions = {...options};
-    newOptions.modelYears = items.map(value => ({ value, text: value }));
+    const newOptions: any = {...options};
+    newOptions.modelYears = items.map((value: any) => ({ value, text: value }));
 
     onOptions(newOptions);
   }
 
-  const handleModelYearChange = async ({ currentTarget: select }) => {
-    const newData = {...data};
+  const handleModelYearChange = async ({ currentTarget: select }: any) => {
+    const newData: any = {...data};
     newData[select.name] = select.value;
     newData.FuelType = '';
     newData.Model = '';
@@ -39,14 +47,14 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
       '/data/fuelTypes?make=' + newData.Make +
       '&modelYear=' + newData.ModelYear);
 
-    const newOptions = {...options};
-    newOptions.fuelTypes = items.map(value => ({ value, text: FUEL_TYPES[value] }));
+    const newOptions: any = {...options};
+    newOptions.fuelTypes = items.map((value: any) => ({ value, text: FUEL_TYPES[value] }));
 
     onOptions(newOptions);
   }
 
-  const handleFuelTypeChange = async ({ currentTarget: select }) => {
-    const newData = {...data};
+  const handleFuelTypeChange = async ({ currentTarget: select }: any) => {
+    const newData: any = {...data};
     newData[select.name] = select.value;
     newData.Model = '';
     newData.EngineSize = '';
@@ -58,14 +66,14 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
       '&modelYear=' + newData.ModelYear +
       '&fuelType=' + newData.FuelType);
 
-    const newOptions = {...options};
-    newOptions.models = items.map(value => ({ value, text: value }));
+    const newOptions: any = {...options};
+    newOptions.models = items.map((value: any) => ({ value, text: value }));
 
     onOptions(newOptions);
   }
 
-  const handleModelChange = async ({ currentTarget: select }) => {
-    const newData = {...data};
+  const handleModelChange = async ({ currentTarget: select }: any) => {
+    const newData: any = {...data};
     newData[select.name] = select.value;
     newData.EngineSize = '';
 
@@ -77,14 +85,14 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
       '&fuelType=' + newData.FuelType +
       '&model=' + newData.Model);
 
-    const newOptions = {...options};
-    newOptions.engineSizes = items.map(value => ({ value, text: value }));
+    const newOptions: any = {...options};
+    newOptions.engineSizes = items.map((value: any) => ({ value, text: value }));
 
     onOptions(newOptions);
   }
 
-  const handleEngineSizeChange = async ({ currentTarget: select }) => {
-    const newData = {...data};
+  const handleEngineSizeChange = async ({ currentTarget: select }: any) => {
+    const newData: any = {...data};
     newData[select.name] = select.value;
 
     onData(newData);
@@ -96,28 +104,28 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
       '&model=' + newData.Model +
       '&engineSize=' + newData.EngineSize);
 
-    const newOptions = {...options};
+    const newOptions: any = {...options};
     newOptions.engineTypes = engineTypes;
 
     onOptions(newOptions);
   }
 
-  const handleEngineTypeChange = async ({ currentTarget: radio }) => {
+  const handleEngineTypeChange = async ({ currentTarget: radio }: any) => {
     const engine = options.engineTypes[radio.value];
 
-    const newData = {...data};
+    const newData: any = {...data};
     newData.EnginePower = engine.power;
     newData.EngineCode = engine.code;
 
     onData(newData);
 
-    const newOptions = {...options};
+    const newOptions: any = {...options};
     newOptions.engineType = parseInt(radio.value);
 
     onOptions(newOptions);
   }
 
-  const handleInputChange = ({ currentTarget: input }) => {
+  const handleInputChange = ({ currentTarget: input }: any) => {
     const newData = {...data};
     newData[input.name] = input.value;
 
@@ -125,7 +133,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
   }
 
   const handleClear = () => {
-    const newData = {...data};
+    const newData: any = {...data};
 
     newData.Make = '';
     newData.Model = '';
@@ -141,13 +149,14 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     onData(newData);
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    onNext();
+    if (onNext)
+      onNext();
   }
 
-  function formatEngineType(item) {
+  function formatEngineType(item: any) {
     let text = item.power + ' kW';
     
     if (item.code)
@@ -160,7 +169,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     if (!options.engineTypes)
       return null;
 
-    return options.engineTypes.map((item, index) => (
+    return options.engineTypes.map((item: any, index: number) => (
       <Form.Check
         type="radio"
         label={formatEngineType(item)}
@@ -172,7 +181,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     ));
   }
 
-  function renderVIN() {
+  function renderVIN(): JSX.Element {
     return (
       <Form.Group controlId="VIN">
         <Form.Label>VIN <Required /></Form.Label>
@@ -185,7 +194,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderRegistrationNumber() {
+  function renderRegistrationNumber(): JSX.Element {
     return (
       <Form.Group controlId="RegistrationNumber">
         <Form.Label>Rekisterinumero</Form.Label>
@@ -198,7 +207,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderMakes() {
+  function renderMakes(): JSX.Element {
     return (
       <FieldSelect
         name="Make"
@@ -210,7 +219,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderModelYears() {
+  function renderModelYears(): JSX.Element {
     return (
       <FieldSelect
         name="ModelYear"
@@ -222,7 +231,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderFuelTypes() {
+  function renderFuelTypes(): JSX.Element {
     return (
       <FieldSelect
         name="FuelType"
@@ -234,7 +243,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderModels() {
+  function renderModels(): JSX.Element {
     return (
       <FieldSelect
         name="Model"
@@ -246,7 +255,7 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     );
   }
 
-  function renderEngineSizes() {
+  function renderEngineSizes(): JSX.Element {
     return (
       <FieldSelect
         name="EngineSize"
@@ -273,3 +282,5 @@ export default function SelectData({ data, onData, options, onOptions, onNext })
     </Form>
   );
 }
+
+export default SelectData;

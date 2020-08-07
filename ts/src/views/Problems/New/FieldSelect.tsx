@@ -1,7 +1,15 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
 
-export default function FieldSelect({ name, placeholder, value, options, onChange }) {
+interface Props {
+  name: string,
+  placeholder: string,
+  value: any,
+  options: any[],
+  onChange: (event: any) => void
+}
+
+const FieldSelect: React.FC<Props> = ({ name, placeholder, value, options, onChange }) => {
   return (
     <Form.Control
       as="select"
@@ -10,8 +18,10 @@ export default function FieldSelect({ name, placeholder, value, options, onChang
       value={value}
       onChange={onChange}
     >
-      <option value={null}>{placeholder}</option>
+      <option value={undefined}>{placeholder}</option>
       {options && options.map((option, index) => <option key={index} value={option.value}>{option.text}</option>)}
     </Form.Control>
   );
 }
+
+export default FieldSelect;

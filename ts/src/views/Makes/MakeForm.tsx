@@ -1,13 +1,8 @@
 import BaseForm from '../BaseForm';
 
 export default class MakeForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('Name', 'Nimi', 'text',     { required: true });
@@ -18,19 +13,19 @@ export default class MakeForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'makes';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi automerkki';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa automerkkiä';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista automerkki';
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
@@ -10,34 +10,40 @@ import LinkButton from './LinkButton';
 import SearchPanel from './SearchPanel';
 import SortIcon from './SortIcon';
 
-interface Rows {
-  rowCount: number,
-  rows: any[]
-}
-
 interface SortField {
   name: string,
   order: SortOrder
 }
 
-interface SearchOptions {
-  searchValues: object,
-  pageIndex: number,
-  sortFields: SortField[]
+export interface Rows {
+  rowCount: number,
+  rows: any[]
 }
 
-interface Props {
-  rows: any[],
-  showTitle: boolean,
-  title: string,
-  readOnly: boolean,
+export interface SearchOptions {
+  searchValues?: object,
+  pageIndex?: number,
+  sortFields?: SortField[]
+}
+
+export interface FieldsTableProps {
+  newButtonAsLink: boolean,
+  newButtonText: string,
+  paginate: boolean,
+  creatable: boolean,
   editable: boolean,
   deletable: boolean,
-  paginate: boolean,
-  onEdited: () => void
+  rows?: any[],
+  showTitle?: boolean,
+  showSearchBox?: boolean,
+  title?: string,
+  readOnly?: boolean,
+  searchPanel?: boolean,
+  onEdited?: () => void,
+  onDelete?: (row: any) => void
 }
 
-interface State {
+export interface FieldsTableState {
   rows: any[],
   rowCount: number,
   searchValues: object,
@@ -45,13 +51,14 @@ interface State {
   pageIndex: number,
   pageSize: number,
   sortFields: SortField[],
+  showNewModal: boolean,
   showEditModal: boolean,
   showDeleteModal: boolean,
   deleteRow: any,
   modalDataId: any
 }
 
-export default abstract class FieldsTable extends FieldsComponent<Props, State> {
+export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsTableProps, FieldsTableState> {
   static defaultProps = {
     showTitle: true,
     searchPanel: true,
@@ -63,7 +70,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     deletable: true
   }
   
-  public state = {
+  public state: FieldsTableState = {
     rows: [],
     rowCount: 0,
     searchValues: {},
@@ -71,16 +78,18 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     pageIndex: 0,
     pageSize: 10,
     sortFields: [],
+    showNewModal: false,
     showEditModal: false,
     showDeleteModal: false,
     deleteRow: undefined,
     modalDataId: undefined
   }
 
-  public abstract getForm(): any;
-  public abstract getApiName(): string;
-  public abstract getItems(pageIndex: number): any[];
-  public abstract deleteItem(): void;
+  protected abstract getForm(): any;
+  protected abstract getApiName(): string;
+
+  protected abstract async getItems(options: SearchOptions): Promise<Rows>;
+  protected abstract deleteItem(row: any): void;
 
   public getUseModals(): boolean {
     return true;
@@ -128,7 +137,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     if (sortFields === undefined)
       sortFields = this.state.sortFields
 
-    const { data: { rowCount, rows } } = await this.getItems({ searchValues, pageIndex, sortFields });
+    const { rowCount, rows } = await this.getItems({ searchValues, pageIndex, sortFields });
 
     this.setState({ rowCount, rows, searchValues, sortFields, pageIndex });
   }
@@ -187,7 +196,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     this.setState({ pageIndex: 0 });
   }
 
-  handleSearchFieldChange = ({ currentTarget }) => {
+  handleSearchFieldChange = ({ currentTarget }: any ) => {
     const searchValues: any = {...this.state.searchValues};
     searchValues[currentTarget.name] = currentTarget.value;
 
@@ -277,7 +286,8 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
   }
 
   filterRows(rows: any[]) {
-    const { searchValues, sortFields } = this.state;
+    const { sortFields } = this.state;
+    const searchValues: any = this.state.searchValues;
 
     for (const name in searchValues) {
       const value = searchValues[name];
@@ -322,6 +332,8 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
   
     return result;
   }  
+
+  protected abstract getTitle(): string;
 
   private renderTitle(): JSX.Element | null {
     const { showTitle, title } = this.props;
@@ -515,7 +527,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     );
   }
 
-  private renderModals(): JSX.Element | null {
+  protected renderModals(): JSX.Element | null {
     return null;
   }
 
@@ -524,7 +536,7 @@ export default abstract class FieldsTable extends FieldsComponent<Props, State> 
     const { pageIndex, pageSize } = this.state;
 
     if (this.props.rows) {
-      const filteredRows = this.filterRows(this.props.rows);
+      const filteredRows = this.filterRows(this.props.rows!);
 
       return {
         rowCount: filteredRows.length,

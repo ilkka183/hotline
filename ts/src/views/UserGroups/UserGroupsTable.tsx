@@ -1,9 +1,9 @@
 import BaseTable from '../BaseTable';
 import UserGroupForm from './UserGroupForm';
 
-export default class UserGroupsTable extends BaseTable {
-  constructor() {
-    super();
+export default class UserGroupsTable extends BaseTable<{}> {
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addName();
@@ -18,15 +18,15 @@ export default class UserGroupsTable extends BaseTable {
     this.addEnabled();
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Käyttäjäryhmät';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'usergroups';
   }
 
-  getForm() {
+  protected getForm(): string {
     return UserGroupForm;
   }
 }

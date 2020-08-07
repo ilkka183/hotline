@@ -27,7 +27,7 @@ export default class LoginForm extends FieldsForm<{}> {
     try {
       const { email, password } = this.state.data;
       await auth.login(email, password);
-      window.location = '/';
+//      window.location = '/';
     }
     catch (ex) {
       if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {

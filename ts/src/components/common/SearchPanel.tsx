@@ -7,8 +7,8 @@ import { Field } from './Fields';
 import FieldsTable from './FieldsTable';
 
 interface Props {
-  table: FieldsTable,
-  onChange: () => void,
+  table: any,
+  onChange: (e: any) => void,
   onClear: () => void,
   onSearch: () => void
 }
@@ -16,6 +16,8 @@ interface Props {
 const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) => {
 
   function renderTextInput(field: Field): JSX.Element {
+    const searchValues: any = table.state.searchValues;
+    
     return (
       <Form.Group key={field.name} as={Row}>
         <Form.Label column sm="2">{field.label}</Form.Label>
@@ -23,7 +25,7 @@ const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) =>
           <Form.Control
             type="text"
             name={field.name}
-            value={table.state.searchValues[field.name]}
+            value={searchValues[field.name]}
             onChange={onChange}
           />
         </Col>
@@ -31,11 +33,11 @@ const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) =>
     );
   }
 
-  const fields = table.fields.filter(field => field.search);
+  const fields = table.fields.filter((field: any) => field.search);
 
   return (
     <Form className="mb-4" >
-      {fields.map(field => renderTextInput(field))}
+      {fields.map((field: any) => renderTextInput(field))}
       <Row>
         <Col sm="2"></Col>
         <Col sm="10">

@@ -14,16 +14,17 @@ import MyTextArea from '../form/MyTextArea';
 
 export interface FieldsFormProps {
   asTable: boolean,
-  variant: string,
-  action: string,
   showTitle: boolean,
-  showModal: boolean,
-  showSubmitButton: boolean,
   submitButtonVariant: string,
   submitButtonText: string,
   cancelButtonText: string,
-  onHideModal: () => void,
-  onSubmitModal: () => void
+  showSubmitButton?: boolean,
+  variant?: string,
+  action?: string,
+  showModal?: boolean,
+  onHideModal?: () => void,
+  onPrev?: () => void,
+  onSubmitModal?: () => void
 }
 
 interface State {
@@ -44,7 +45,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     cancelButtonText: 'Peru'
   }
 
-  public state = {
+  public state: State = {
     savedData: {},
     data: {},
     errors: {},
@@ -138,7 +139,8 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
 
     this.doSubmit();
 
-    onSubmitModal();
+    if (onSubmitModal)
+      onSubmitModal();
   }
 
   handleChange = (event: any) => {

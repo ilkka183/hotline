@@ -1,9 +1,9 @@
 import BaseTable from '../BaseTable';
 import MakeForm from './MakeForm';
 
-export default class MakesTable extends BaseTable {
-  constructor() {
-    super();
+export default class MakesTable extends BaseTable<{}> {
+  constructor(props: any) {
+    super(props);
 
     this.addId(false);
     this.addName();
@@ -11,15 +11,15 @@ export default class MakesTable extends BaseTable {
     this.addEnabled();
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Automerkit';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'makes';
   }
 
-  getForm() {
+  protected getForm(): any {
     return MakeForm;
   }
 }

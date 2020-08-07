@@ -3,9 +3,10 @@ import { LookupPair } from './Fields';
 import FieldsForm from './FieldsForm';
 
 interface Props {
-  dataId: number,
-  data: any,
-  defaultData: any
+  dataId?: number,
+  data?: any,
+  defaultData?: any,
+  onSubmitted?: () => void
 }
 
 export default abstract class DataForm extends FieldsForm<Props> {
@@ -18,13 +19,13 @@ export default abstract class DataForm extends FieldsForm<Props> {
     return undefined;
   }
 
-  public abstract getHttp(): any;
+  protected abstract getHttp(): any;
 
   public get http(): any {
     return this.getHttp();
   }
 
-  public abstract getApiName(): string;
+  protected abstract getApiName(): string;
 
   public get apiEndpoint(): string {
     return '/' + this.getApiName();

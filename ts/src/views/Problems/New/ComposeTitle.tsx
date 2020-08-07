@@ -17,7 +17,13 @@ export const GROUPS = [
   'Jokin muu'
 ];
 
-export default function ComposeTitle({ data, title, onChange }) {
+interface Props {
+  data: any,
+  title: any,
+  onChange: (e: any) => void
+}
+
+const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
 
   function renderGroups() {
     return (
@@ -66,3 +72,5 @@ export default function ComposeTitle({ data, title, onChange }) {
     </>
   );
 }
+
+export default ComposeTitle;

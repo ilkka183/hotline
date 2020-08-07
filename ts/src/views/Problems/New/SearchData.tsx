@@ -6,7 +6,7 @@ import ProblemSummary from '../ProblemSummary'
 import http from '../../../services/httpService';
 import { LEON, GOLF, FOCUS } from './Cars';
 
-function getFuelType(text) {
+function getFuelType(text: string): number {
   switch (text) {
     case 'bensiini': return 0;
     case 'diesel': return 1;
@@ -14,11 +14,16 @@ function getFuelType(text) {
   }
 }
 
-export default function SearchData({ data, onData }) {
+interface Props {
+  data: any,
+  onData: (data: any) => void
+}
+
+const SearchData: React.FC<Props> = ({ data, onData }) => {
   const [error, setError] = useState('');
 
-  const handleChange = ({ currentTarget: input }) => {
-    const newData = {...data};
+  const handleChange = ({ currentTarget: input }: any) => {
+    const newData: any = {...data};
 
     newData.RegistrationNumber = input.value;
 
@@ -28,7 +33,7 @@ export default function SearchData({ data, onData }) {
   const handleClear = () => {
     setError('');
 
-    const newData = {...data};
+    const newData: any = {...data};
 
     newData.Make = '';
     newData.RegistrationNumber = '';
@@ -36,7 +41,7 @@ export default function SearchData({ data, onData }) {
     onData(newData);
   }
 
-  const handleFill = (car) => {
+  const handleFill = (car: any) => {
     setError('');
 
     const newData = {...data};
@@ -46,7 +51,7 @@ export default function SearchData({ data, onData }) {
     onData(newData);
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
@@ -78,7 +83,7 @@ export default function SearchData({ data, onData }) {
     }
   }
 
-  function renderFillButton(car) {
+  function renderFillButton(car: any): JSX.Element {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
@@ -111,3 +116,5 @@ export default function SearchData({ data, onData }) {
     </>
   );
 }
+
+export default SearchData;

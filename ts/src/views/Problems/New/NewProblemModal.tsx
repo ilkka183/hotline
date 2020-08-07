@@ -12,10 +12,67 @@ import ProblemForm from '../ProblemForm'
 import auth from '../../../services/authService';
 import http from '../../../services/httpService';
 
-export default class NewProblemForm extends Component {
-  user = auth.getCurrentUser();
+class Lines {
+  private lines: string = '';
+  private index: number = 0;
 
-  state = {
+  public get toString(): string {
+    return this.lines;
+  }
+
+  public addText(title: string, text: string): void {
+    if (this.index > 0)
+      this.lines += '\n\n';
+
+    this.lines += title;
+    this.lines += '\n';
+    this.lines += text;
+
+    this.index++;
+  }
+
+  public addTexts(title: string, flags: any[], texts: string[]): void {
+    if (this.index > 0)
+      this.lines += '\n\n';
+
+    this.lines += title;
+
+    for (let i = 0; i < flags.length; i++)
+      if (flags[i]) {
+        this.lines += '\n';
+        this.lines += texts[i];
+      }
+
+      this.index++;
+  }
+}
+
+interface Props {
+  onHide: () => void
+}
+
+interface State {
+  activeKey: any,
+  step: number,
+  stepReady: boolean[],
+  data: any,
+  options: {
+    makes: any,
+    modelYears: any,
+    fuelTypes: any,
+    models: any,
+    engineSizes: any,
+    engineTypes: any,
+    engineType: any
+  },
+  title: any,
+  description: any
+}
+
+export default class NewProblemForm extends Component<Props, State> {
+  private user: any = auth.getCurrentUser();
+
+  public state: State = {
     activeKey: undefined,
     step: 0,
     stepReady: [false, false, false, false],
@@ -33,8 +90,8 @@ export default class NewProblemForm extends Component {
     description: null
   }
 
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.state.data = {
       UserId: this.user.id,
@@ -84,7 +141,7 @@ export default class NewProblemForm extends Component {
     const { data } = await http.get('/data/makes');
 
     const options = {...this.state.options};
-    options.makes = data.map(value => ({ value, text: value }));
+    options.makes = data.map((value: any) => ({ value, text: value }));
 
     this.setState({ options });
   }
@@ -126,19 +183,19 @@ export default class NewProblemForm extends Component {
     }
   }
 
-  handleData = (data) => {
+  handleData = (data: any) => {
     this.setState({ data });
   }
 
-  handleOptions = (options) => {
+  handleOptions = (options: any) => {
     this.setState({ options });
   }
 
-  handleTabSelect = (activeKey) => {
+  handleTabSelect = (activeKey: any) => {
     this.setState({ activeKey });
   }
 
-  handleTitleChange = ({ currentTarget: input }) => {
+  handleTitleChange = ({ currentTarget: input }: any) => {
     const title = {...this.state.title}
 
     title[input.name] = input.value;
@@ -146,7 +203,7 @@ export default class NewProblemForm extends Component {
     this.setState({ title });
   }
 
-  handleDescriptionChange = ({ currentTarget: target }) => {
+  handleDescriptionChange = ({ currentTarget: target }: any) => {
     const description = {...this.state.description}
 
     description[target.name] = target.value;
@@ -154,7 +211,7 @@ export default class NewProblemForm extends Component {
     this.setState({ description });
   }
 
-  handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }) => {
+  handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }: any) => {
     const description = {...this.state.description}
 
     description[target.name][target.id - 1] = target.checked;
@@ -185,67 +242,40 @@ export default class NewProblemForm extends Component {
       this.setState({ data });
     }
     else if (step === 3) {
-      let lines = '';
-      let index = 0;
+      const lines = new Lines();
 
       const { description, appearance, diagnostic, testers, history, text } = this.state.description;
 
       if (description)
-        addText('Asiakkaan viankuvaus:', description);
+        lines.addText('Asiakkaan viankuvaus:', description);
 
       if (appearance)
-        addText('Vian esiintyminen:', appearance);
+        lines.addText('Vian esiintyminen:', appearance);
 
       if (diagnostic)
-        addText('Itsediagnostiikka:', diagnostic);
+        lines.addText('Itsediagnostiikka:', diagnostic);
 
       if (testers)
-        addTexts('Käytettyt testilaitteet:', testers, TESTERS);
+        lines.addTexts('Käytettyt testilaitteet:', testers, TESTERS);
 
       if (history)
-        addText('Korjaushistoria:', history);
+        lines.addText('Korjaushistoria:', history);
 
       if (text)
-        addText('Vapaa teksti:', text);
+        lines.addText('Vapaa teksti:', text);
 
-      const data = {...this.state.data}
-      data.Description = lines;
+      const data: any = {...this.state.data}
+      data.Description = lines.toString;
 
       this.setState({ data });
-
-      function addText(title, text) {
-        if (index > 0)
-          lines += '\n\n';
-
-        lines += title;
-        lines += '\n';
-        lines += text;
-
-        index++;
-      }
-
-      function addTexts(title, flags, texts) {
-        if (index > 0)
-          lines += '\n\n';
-
-        lines += title;
-
-        for (let i = 0; i < flags.length; i++)
-          if (flags[i]) {
-            lines += '\n';
-            lines += texts[i];
-          }
-
-        index++;
-      }
     }
   }
 
   handleSubmit = () => {
-    const { onSubmit } = this.props;
+    const { onSubmit }: any = this.props;
 
     try {
-      this.refs.problemForm.handleSubmit();
+      (this.refs.problemForm as any).handleSubmit();
       onSubmit();
     }
     catch (ex) {
@@ -314,7 +344,7 @@ export default class NewProblemForm extends Component {
           showTitle={false}
           showSubmitButton={false}
           onPrev={this.handlePrev}
-          onSubmitted={this.handleProblemFormSubmitted}
+          onSubmitted={this.handleSubmit}
         />
       </>
     );

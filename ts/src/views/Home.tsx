@@ -3,10 +3,10 @@ import ProblemsTable from './Problems/ProblemsTable';
 import auth from '../services/authService';
 
 export default function Home() {
-  const user = auth.getCurrentUser();
+  const user: any = auth.getCurrentUser();
 
   const editable = true;
-  const deletable = user && user.role <= 1;
+  const deletable: boolean = user && user.role <= 1;
 
   if (!user)
     return null;
@@ -15,7 +15,6 @@ export default function Home() {
     <ProblemsTable
       newButtonAsLink={true}
       newButtonText="Lisää uusi vikatapaus"
-      showSearchBox={true}
       paginate={false}
       creatable={true}
       editable={editable}

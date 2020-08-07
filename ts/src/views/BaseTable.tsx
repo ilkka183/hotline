@@ -1,25 +1,27 @@
 import queryString from 'query-string';
-import FieldsTable from '../components/common/FieldsTable';
-import auth from '../services/authService';
+import { Field } from '../components/common/Fields';
+import FieldsTable, { SearchOptions, Rows } from '../components/common/FieldsTable';
+import auth, { User } from '../services/authService';
 import http from '../services/httpService';
 
 const SHOW_IDS = false;
 
-export default class BaseTable extends FieldsTable {
-  user = auth.getCurrentUser();
+export default abstract class BaseTable<P> extends FieldsTable<P> {
+  protected user: any = auth.getCurrentUser();
 
-  get apiPath() {
+  public get apiPath(): string {
     return '/' + this.getApiName();
   }
 
-  getItemsQuery(query) {
+  protected getItemsQuery(query: any): void {
   }
 
-  async getItems(options) {
-    let { pageIndex, sortFields } = options;
+  protected async getItems(options: SearchOptions): Promise<Rows> {
+    const { pageIndex } = options;
+    const sortFields: any = options.sortFields;
     const { pageSize } = this.state;
 
-    let query = {}
+    let query: any = {}
     this.getItemsQuery(query);
     query.pageIndex = pageIndex;
     query.pageSize = pageSize;
@@ -47,21 +49,21 @@ export default class BaseTable extends FieldsTable {
     return await http.get(endpoint);
   }
 
-  async deleteItem(item) {
-    const endpoint = this.apiPath + '/' + item.Id;
+  async deleteItem(row: any) {
+    const endpoint = this.apiPath + '/' + row.Id;
 
     await http.delete(endpoint);
   }
 
-  addId(visible = SHOW_IDS) {
-    this.addField('Id', 'No', 'number', { editLink: true, visible });
+  protected addId(visible: boolean = SHOW_IDS): Field {
+    return this.addField('Id', 'No', 'number', { editLink: true, visible });
   }
 
-  addName(name = 'Name', label = 'Nimi') {
-    this.addField(name, label, 'text', { editLink: true });
+  protected addName(name: string = 'Name', label: string = 'Nimi'): Field {
+    return this.addField(name, label, 'text', { editLink: true });
   }
 
-  addEnabled() {
-    this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
+  protected addEnabled(): Field {
+    return this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
 }

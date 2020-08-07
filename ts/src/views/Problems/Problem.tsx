@@ -8,10 +8,19 @@ import ProblemForm from './ProblemForm';
 import auth from '../../services/authService';
 import http from '../../services/httpService';
 
-export default class Problem extends Component {
-  user = auth.getCurrentUser();
+interface State {
+  problem: any,
+  replyId: number | null,
+  showModal: boolean,
+  showSolutionModal: boolean,
+  attachments: any[],
+  replies: any[]
+}
 
-  state = {
+export default class Problem extends Component<{}, State> {
+  private user: any = auth.getCurrentUser();
+
+  public state: State = {
     problem: {},
     replyId: null,
     showModal: false,
@@ -21,7 +30,8 @@ export default class Problem extends Component {
   }
 
   get problemId() {
-    return this.props.match.params.id;
+//    return this.props.match.params.id;
+    return 1;
   }
 
   async loadData() {
@@ -33,8 +43,9 @@ export default class Problem extends Component {
       this.setState({ problem, attachments, replies });
     }
     catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        this.props.history.replace('/not-found');
+      if (ex.response && ex.response.status === 404) {
+//        this.props.history.replace('/not-found');
+      }
     }
   }
 
@@ -56,7 +67,7 @@ export default class Problem extends Component {
     this.setState({ showModal: false });
   }
 
-  handleShowSolutionModal = row => {
+  handleShowSolutionModal = (row: any) => {
     this.setState({ showSolutionModal: true, replyId: row.Id });
   }
 
@@ -74,7 +85,7 @@ export default class Problem extends Component {
     await this.loadData();
   }
 
-  handleAttachmentDelete = async reply => {
+  handleAttachmentDelete = async (reply: any) => {
     await http.delete('/problemattachments/' + reply.Id);
     await this.loadData();
   }
@@ -83,7 +94,7 @@ export default class Problem extends Component {
     await this.loadData();
   }
 
-  handleReplyDelete = async reply => {
+  handleReplyDelete = async (reply: any) => {
     await http.delete('/problemreplies/' + reply.Id);
     await this.loadData();
   }

@@ -2,13 +2,8 @@ import BaseForm from '../BaseForm';
 import { USER_ROLES } from './UsersTable';
 
 export default class UserForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('FirstName',    'Etunimi',          'text',   { required: true });
@@ -34,19 +29,19 @@ export default class UserForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'users';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi käyttäjä';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa käyttäjää';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista käyttäjä';
   }
 }

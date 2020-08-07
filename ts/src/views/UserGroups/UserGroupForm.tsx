@@ -1,13 +1,8 @@
 import BaseForm from '../BaseForm';
 
 export default class UserGroupForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('Name',          'Nimi',             'text',   { required: true });
@@ -26,19 +21,19 @@ export default class UserGroupForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'usergroups';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi käyttäjäryhmä';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa käyttäjäryhmää';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista käyttäjäryhmä';
   }
 }

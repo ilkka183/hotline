@@ -6,10 +6,16 @@ import Row from 'react-bootstrap/Row'
 import { FUEL_TYPES } from './../ProblemsTable';
 import { LEON, GOLF, FOCUS } from './Cars';
 
-export default function EnterData({ data, onData, onNext }) {
+interface Props {
+  data: any,
+  onData: (data: any) => void,
+  onNext?: () => void
+}
 
-  const handleChange = ({ currentTarget: input }) => {
-    const newData = {...data};
+const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
+
+  const handleChange = ({ currentTarget: input }: any) => {
+    const newData: any = {...data};
 
     newData[input.name] = input.value;
 
@@ -17,7 +23,7 @@ export default function EnterData({ data, onData, onNext }) {
   }
 
   const handleClear = () => {
-    const newData = {...data};
+    const newData: any = {...data};
 
     newData.Make = '';
     newData.Model = '';
@@ -32,8 +38,8 @@ export default function EnterData({ data, onData, onNext }) {
     onData(newData);
   }
 
-  const handleFill = (car) => {
-    const newData = {...data};
+  const handleFill = (car: any) => {
+    const newData: any = {...data};
 
     for (const name in car)
       newData[name] = car[name];
@@ -41,13 +47,14 @@ export default function EnterData({ data, onData, onNext }) {
     onData(newData);
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    onNext();
+    if (onNext)
+      onNext();
   }
 
-  function renderInputText(name, label) {
+  function renderInputText(name: string, label: string) {
     return (
       <Form.Group as={Row}>
         <Form.Label column sm="2">{label}</Form.Label>
@@ -58,7 +65,7 @@ export default function EnterData({ data, onData, onNext }) {
     );
   }
 
-  function renderSelectEnum(name, label, enums) {
+  function renderSelectEnum(name: string, label: string, enums: string[]) {
     const options = [{ value: null, text: '' }, ...enums.map((text, value) => ({ value, text }))];
 
     return (
@@ -71,7 +78,7 @@ export default function EnterData({ data, onData, onNext }) {
             value={data[name]}
             onChange={handleChange}
           >
-            {options.map(option => (
+            {options.map((option: any) => (
               <option
                 key={option.value}
                 value={option.value}
@@ -85,7 +92,7 @@ export default function EnterData({ data, onData, onNext }) {
     );
   }
 
-  function renderFillButton(car) {
+  function renderFillButton(car: any) {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
@@ -114,3 +121,5 @@ export default function EnterData({ data, onData, onNext }) {
     </>
   );
 }
+
+export default EnterData;

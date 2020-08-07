@@ -2,13 +2,8 @@ import BaseForm from '../BaseForm';
 import { FUEL_TYPES, STATUSES } from './ProblemsTable';
 
 export default class ProblemForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('Date',               'Pvm',                 'datetime', { required: true, readonly: true, visible: this.hasPowerRights });
@@ -39,19 +34,19 @@ export default class ProblemForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'problems';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi vikatapaus';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa vikatapausta';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista vikatapaus';
   }
 }

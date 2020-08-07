@@ -8,9 +8,9 @@ export const POWER_ROLE = 1;
 export const USER_ROLE = 2;
 export const DEMO_ROLE = 3;
 
-export default class UsersTable extends BaseTable {
-  constructor() {
-    super();
+export default class UsersTable extends BaseTable<{}> {
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addName('FirstName',     'Etunimi');
@@ -27,15 +27,15 @@ export default class UsersTable extends BaseTable {
     this.addEnabled();
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Käyttäjät';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'users';
   }
 
-  getForm() {
+  protected getForm(): any {
     return UserForm;
   }
 }

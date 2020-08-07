@@ -2,9 +2,9 @@ import BaseTable from '../BaseTable';
 import ModelForm from './ModelForm';
 import { FUEL_TYPES } from '../Problems/ProblemsTable';
 
-export default class ModelsTable extends BaseTable {
-  constructor() {
-    super();
+export default class ModelsTable extends BaseTable<{}> {
+  constructor(props: any) {
+    super(props);
 
     this.addId(false);
     this.addField('MakeName',      'Merkki',               'text',   { editLink: true});
@@ -20,15 +20,15 @@ export default class ModelsTable extends BaseTable {
     this.addEnabled();
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Automallit';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'models';
   }
 
-  getForm() {
+  protected getForm(): any {
     return ModelForm;
   }  
 }

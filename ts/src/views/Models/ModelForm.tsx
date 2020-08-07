@@ -2,13 +2,8 @@ import BaseForm from '../BaseForm';
 import { FUEL_TYPES } from '../Problems/ProblemsTable';
 
 export default class ModelForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('MakeId',        'Merkki',               'number', { required: true, lookupUrl: 'Makes' });
@@ -27,19 +22,19 @@ export default class ModelForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'models';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi automalli';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa automallia';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista automalli';
   }
 }

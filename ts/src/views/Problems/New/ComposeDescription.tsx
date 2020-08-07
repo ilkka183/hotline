@@ -29,7 +29,14 @@ export const TESTERS = [
   'Jokin muu'
 ];
 
-export default function ComposeDescription({ data, description, onChange, onChangeCheckboxGroup }) {
+interface Props {
+  data: any,
+  description: any,
+  onChange: (event: any) => void,
+  onChangeCheckboxGroup: (event: any) => void
+}
+
+const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onChangeCheckboxGroup }) => {
 
   function renderDescription() {
     return (
@@ -50,7 +57,7 @@ export default function ComposeDescription({ data, description, onChange, onChan
     return (
       <Form.Group>
       <Form.Label>Vian ensiintyminen</Form.Label>
-        {APPEARANCES.map((item, index) => (
+        {APPEARANCES.map((item: any, index: number) => (
           <Form.Check
             type="radio"
             name="appearance"
@@ -73,7 +80,7 @@ export default function ComposeDescription({ data, description, onChange, onChan
     return (
       <Form.Group>
       <Form.Label>Itsediagnostiikka</Form.Label>
-        {DIAGNOSTIC.map((item, index) => (
+        {DIAGNOSTIC.map((item: any, index: number) => (
           <Form.Check
             type="radio"
             name="diagnostic"
@@ -98,11 +105,11 @@ export default function ComposeDescription({ data, description, onChange, onChan
     return (
       <Form.Group>
         <Form.Label>Käytetyt testilaitteet</Form.Label>
-        {TESTERS.map((item, index) => (
+        {TESTERS.map((item: any, index: number) => (
           <Form.Check
             type="checkbox"
             name="testers"
-            id={index + 1}
+            id={(index + 1).toString()}
             key={index}
             label={item}
             checked={description.testers[index]}
@@ -177,3 +184,5 @@ export default function ComposeDescription({ data, description, onChange, onChan
     </>
   );
 }
+
+export default ComposeDescription;
