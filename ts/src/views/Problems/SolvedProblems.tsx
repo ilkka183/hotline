@@ -2,11 +2,11 @@ import React from 'react';
 import ProblemsTable from './ProblemsTable';
 import auth from '../../services/authService';
 
-export default function SolvedProblems() {
-  const user = auth.getCurrentUser();
+const SolvedProblems: React.FC<{}> = () => {
+  const user: any = auth.getCurrentUser();
 
-  const editable = true;
-  const deletable = user && user.role <= 1;
+  const editable: boolean = true;
+  const deletable: boolean = user && user.role <= 1;
 
   if (!user)
     return null;
@@ -23,3 +23,5 @@ export default function SolvedProblems() {
     />
   );
 }
+
+export default SolvedProblems;

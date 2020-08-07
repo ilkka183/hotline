@@ -13,11 +13,11 @@ import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
 export interface FieldsFormProps {
-  asTable: boolean,
-  showTitle: boolean,
-  submitButtonVariant: string,
-  submitButtonText: string,
-  cancelButtonText: string,
+  asTable?: boolean,
+  showTitle?: boolean,
+  submitButtonVariant?: string,
+  submitButtonText?: string,
+  cancelButtonText?: string,
   showSubmitButton?: boolean,
   variant?: string,
   action?: string,
@@ -104,7 +104,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     return Object.keys(errors).length === 0 ? null : errors;
   }
 
-  private hasErrors(): any {
+  protected hasErrors(): any {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
 
@@ -116,7 +116,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     return field && field.validate(value);
   }
 
-  doSubmit() {
+  protected doSubmit(): void {
   }
   
   handleSubmit = (e: any) => {
@@ -347,7 +347,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     }
   }
 
-  private renderInfo(): JSX.Element | null {
+  protected renderInfo(): JSX.Element | null {
     return null;
   }
 
@@ -363,7 +363,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         {this.renderInfo()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
-          {showSubmitButton && this.renderSubmitButton(submitButtonText)}
+          {showSubmitButton && this.renderSubmitButton(submitButtonText!)}
           {successText && <Alert variant="success">{successText}</Alert>}
           {errorText && <Alert variant="danger">{errorText}</Alert>}
         </Form>

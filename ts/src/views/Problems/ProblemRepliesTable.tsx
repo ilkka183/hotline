@@ -3,9 +3,14 @@ import Button from 'react-bootstrap/Button'
 import BaseTable from '../BaseTable';
 import ProblemReplyForm from './ProblemReplyForm';
 
-export default class ProblemRepliessTable extends BaseTable {
-  constructor() {
-    super();
+interface Props {
+  problemId: number,
+  onSolution: (row: any) => void
+}
+
+export default class ProblemRepliessTable extends BaseTable<Props> {
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('ProblemId', 'Vikatapaus', 'number',   { visible: false });
@@ -16,23 +21,23 @@ export default class ProblemRepliessTable extends BaseTable {
     this.addField('Mark',      '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Vastaukset';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'problemreplies';
   }
 
-  getForm() {
+  protected getForm(): any {
     return ProblemReplyForm;
   }
 
-  getParentId() {
+  protected getParentId(): number | null {
     return this.props.problemId;
   }
 
-  renderSolutionButton(row) {
+  private renderSolutionButton(row: any): JSX.Element {
     const { onSolution } = this.props;
 
     const variant = row.Solution ? 'success' : 'warning';

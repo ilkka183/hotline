@@ -5,9 +5,14 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import { FUEL_TYPES } from './ProblemsTable';
 
-export default function ProblemSummary({ data, ...props }) {
+interface Props {
+  data: any,
+  className?: string
+}
+
+const ProblemSummary: React.FC<Props> = ({ className, data }) => {
   return (
-    <Alert variant="success" {...props}>
+    <Alert className={className} variant="success">
       <Container>
         <Row>
           <Col>{data.Make}</Col>
@@ -33,3 +38,5 @@ export default function ProblemSummary({ data, ...props }) {
     </Alert>
   );
 }
+
+export default ProblemSummary;

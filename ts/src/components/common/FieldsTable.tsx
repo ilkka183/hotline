@@ -27,12 +27,13 @@ export interface SearchOptions {
 }
 
 export interface FieldsTableProps {
-  newButtonAsLink: boolean,
-  newButtonText: string,
-  paginate: boolean,
-  creatable: boolean,
-  editable: boolean,
-  deletable: boolean,
+  newButtonAsLink?: boolean,
+  newButtonText?: string,
+  paginate?: boolean,
+  creatable?: boolean,
+  editable?: boolean,
+  deletable?: boolean,
+  autoHide?: boolean,
   rows?: any[],
   showTitle?: boolean,
   showSearchBox?: boolean,
@@ -474,7 +475,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return null;
   }
 
-  getParentId() {
+  protected getParentId(): number | null {
     return null;
   }
 

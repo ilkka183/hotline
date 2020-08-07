@@ -1,9 +1,13 @@
 import BaseTable from '../BaseTable';
 import ProblemAttachmentForm from './ProblemAttachmentForm';
 
-export default class ProblemAttachmentsTable extends BaseTable {
-  constructor() {
-    super();
+interface Props {
+  problemId: number
+}
+
+export default class ProblemAttachmentsTable extends BaseTable<Props> {
+  constructor(props: any) {
+    super(props);
 
     this.addId();
     this.addField('ProblemId',   'Vikatapaus', 'number',   { visible: false });
@@ -13,19 +17,19 @@ export default class ProblemAttachmentsTable extends BaseTable {
     this.addField('Description', 'Kuvaus',     'textarea', { editLink: true});
   }
 
-  getTitle() {
+  protected getTitle(): string {
     return 'Liitteet';
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'problemattachments';
   }
 
-  getForm() {
+  protected getForm(): any {
     return ProblemAttachmentForm;
   }
 
-  getParentId() {
+  protected getParentId(): number | null {
     return this.props.problemId;
   }
 }

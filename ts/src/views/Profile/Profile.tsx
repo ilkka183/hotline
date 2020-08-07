@@ -7,10 +7,17 @@ import ChangePasswordForm from './ChangePasswordForm';
 import auth from '../../services/authService';
 import http from '../../services/httpService';
 
-export default class Profile extends Component {
-  user = auth.getCurrentUser();
+interface State {
+  user: any,
+  showModal: boolean,
+  showChangePasswordModal: boolean,
+  passwordChanged: boolean
+}
 
-  state = {
+export default class Profile extends Component<{}, State> {
+  private user: any = auth.getCurrentUser();
+
+  public state: State = {
     user: null,
     showModal: false,
     showChangePasswordModal: false,
@@ -23,33 +30,33 @@ export default class Profile extends Component {
     this.setState({ user });
   }
 
-  showModal = () => {
+  private showModal = () => {
     this.setState({ showModal: true });
   }
 
-  hideModal = () => {
+  private hideModal = () => {
     this.setState({ showModal: false });
   }
 
-  handleSubmit = async () => {
+  private handleSubmit = async () => {
     const { data: user } = await http.get('/users/' + this.user.id);
 
     this.setState({ user, showModal: false });
   }
 
-  showChangePasswordModal = () => {
+  private showChangePasswordModal = () => {
     this.setState({ showChangePasswordModal: true, passwordChanged: false });
   }
 
-  hideChangePasswordModal = () => {
+  private hideChangePasswordModal = () => {
     this.setState({ showChangePasswordModal: false, passwordChanged: false });
   }
 
-  handleChangePasswordSubmit = async () => {
+  private handleChangePasswordSubmit = async () => {
     this.setState({ showChangePasswordModal: false, passwordChanged: true });
   }
 
-  render() {
+  public render(): JSX.Element {
     const { user, showModal, showChangePasswordModal, passwordChanged } = this.state;
 
     return (

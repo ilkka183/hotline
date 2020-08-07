@@ -5,8 +5,21 @@ import Modal from 'react-bootstrap/Modal'
 import ProblemForm from './ProblemForm';
 import http from '../../services/httpService';
 
-export default class ProblemSolutionModal extends Component {
-  state = {
+interface Props {
+  showProblem: boolean,
+  problemId: number,
+  replyId: number | null,
+  onSubmit: () => void,
+  onHide: () => void
+}
+
+interface State {
+  problem: any,
+  reply: any
+}
+
+export default class ProblemSolutionModal extends Component<Props, State> {
+  public state: State = {
     problem: {},
     reply: {}
   }
@@ -23,12 +36,13 @@ export default class ProblemSolutionModal extends Component {
       this.setState({ problem, reply });
     }
     catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        this.props.history.replace('/not-found');
+      if (ex.response && ex.response.status === 404) {
+//        this.props.history.replace('/not-found');
+      }
     }
   }
 
-  handleChange = ({ currentTarget }) => {
+  private handleChange = ({ currentTarget }: any) => {
     const problem = {...this.state.problem}
 
     problem[currentTarget.name] = currentTarget.value;
@@ -36,7 +50,7 @@ export default class ProblemSolutionModal extends Component {
     this.setState({ problem });
   }
 
-  handleSubmit = async e => {
+  private handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const { onSubmit } = this.props;
@@ -48,7 +62,7 @@ export default class ProblemSolutionModal extends Component {
     onSubmit();
   }
 
-  renderSolution() {
+  private renderSolution(): JSX.Element {
     const { problem } = this.state;
 
     return (
@@ -65,7 +79,7 @@ export default class ProblemSolutionModal extends Component {
     );
   }
 
-  render() {
+  public render(): JSX.Element {
     const { showProblem, onHide } = this.props;
     const { problem } = this.state;
 

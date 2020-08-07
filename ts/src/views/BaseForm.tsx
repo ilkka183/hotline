@@ -5,7 +5,7 @@ import http from '../services/httpService';
 
 const SHOW_IDS = true;
 
-export default abstract class BaseForm extends DataForm {
+export default abstract class BaseForm<P> extends DataForm<P> {
   protected user: any = auth.getCurrentUser();
 
   public get hasPowerRights(): boolean {

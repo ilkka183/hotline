@@ -2,16 +2,13 @@ import React from 'react';
 import BaseForm from '../BaseForm';
 import ProblemSummary from './ProblemSummary';
 
-export default class ProblemReplyForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
+interface Props {
+  problem: any
+}
 
-  constructor(props) {
+export default class ProblemReplyForm extends BaseForm<Props> {
+  constructor(props: any) {
     super(props);
-
-    console.log(props.parentId);
 
     this.addId();
     this.addField('ProblemId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: true, getDefaultValue: () => props.parentId });
@@ -23,23 +20,23 @@ export default class ProblemReplyForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'problemreplies';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi vastaus';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa vastausta';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista vastaus';
   }
 
-  renderInfo() {
+  protected renderInfo(): JSX.Element | null {
     const { problem } = this.props;
 
     if (!problem)

@@ -1,6 +1,6 @@
 import BaseForm from '../BaseForm';
 
-export default class UserGroupForm extends BaseForm {
+export default class UserGroupForm extends BaseForm<{}> {
   constructor(props: any) {
     super(props);
 

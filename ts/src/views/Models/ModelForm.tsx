@@ -1,7 +1,7 @@
 import BaseForm from '../BaseForm';
 import { FUEL_TYPES } from '../Problems/ProblemsTable';
 
-export default class ModelForm extends BaseForm {
+export default class ModelForm extends BaseForm<{}> {
   constructor(props: any) {
     super(props);
 

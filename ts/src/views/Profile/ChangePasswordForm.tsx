@@ -1,14 +1,13 @@
 import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
-export default class ChangePasswordForm extends FieldsForm {
-  state = {
-    data: {},
-    errors: {}
-  }
+interface Props {
+  user: any
+}
 
-  constructor() {
-    super();
+export default class ChangePasswordForm extends FieldsForm<Props> {
+  constructor(props: any) {
+    super(props);
     
     this.addField('password',     'Nykyinen salasana',       'password', { minLength: 5, required: true });
     this.addField('newPassword1', 'Uusi salasana',           'password', { minLength: 5, required: true });
@@ -17,7 +16,7 @@ export default class ChangePasswordForm extends FieldsForm {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
+  public getTitle(): string {
     return 'Vaihda salasana';
   }
 
@@ -35,7 +34,9 @@ export default class ChangePasswordForm extends FieldsForm {
           console.log(this.props);
 
           await auth.changePassword(this.props.user.email, password, newPassword1);
-          onSubmitModal();
+
+          if (onSubmitModal)
+            onSubmitModal();
         }
         catch (ex) {
           if (ex.response && ex.response.status === 401) {

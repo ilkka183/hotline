@@ -110,7 +110,10 @@ export default class ProblemsTable extends BaseTable<Props> {
       return null;
 
     return (
-      <NewProblemModal onSubmit={this.handleSubmitNewModal} onHide={this.handleHideNewModal} />
+      <NewProblemModal
+        onSubmit={this.handleSubmitNewModal}
+        onHide={this.handleHideNewModal}
+      />
     );
   }
 }

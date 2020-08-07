@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import ProblemRepliesTable from './ProblemRepliesTable';
 import http from '../../services/httpService';
-import { apiUrl } from '../../config.json';
+//import { apiUrl } from '../../config.json';
 
 export default class Replies extends Component {
   render() {
-    const apiEndpoint = apiUrl + '/problemreplies';
-    const { problemId } = this.props;
-    
+    const apiEndpoint = /* apiUrl + */ '/problemreplies';
+//    const { problemId } = this.props;
+
+    return null;
+
+/*    
     return (
       <ProblemRepliesTable
         title="Vastaukset"
@@ -20,5 +23,6 @@ export default class Replies extends Component {
         deletable={true}
       />
     );
+*/    
   }
 }

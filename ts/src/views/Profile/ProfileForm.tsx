@@ -1,12 +1,11 @@
 import BaseForm from '../BaseForm';
 
-export default class ProfileForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
+interface Props {
+  userId?: number
+}
 
-  constructor(props) {
+export default class ProfileForm extends BaseForm<Props> {
+  constructor(props: any) {
     super(props);
     
     this.addId();
@@ -28,15 +27,23 @@ export default class ProfileForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'users';
   }
 
-  getEditTitle() {
+  protected getNewTitle(): string {
+    return 'Uusi oma tieto';
+  }
+
+  protected getEditTitle(): string {
     return 'Muokkaa omia tietoja';
   }
 
-  get dataId() {
+  protected getDeleteTitle(): string {
+    return 'Poista oma tieto';
+  }
+
+  protected getDataId(): number | undefined {
     return this.props.userId;
   }
 }

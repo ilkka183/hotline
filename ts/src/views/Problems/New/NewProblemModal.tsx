@@ -48,6 +48,7 @@ class Lines {
 }
 
 interface Props {
+  onSubmit: () => void,
   onHide: () => void
 }
 

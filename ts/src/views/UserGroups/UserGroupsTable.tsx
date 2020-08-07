@@ -26,7 +26,7 @@ export default class UserGroupsTable extends BaseTable<{}> {
     return 'usergroups';
   }
 
-  protected getForm(): string {
+  protected getForm(): any {
     return UserGroupForm;
   }
 }

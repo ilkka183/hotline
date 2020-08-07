@@ -1,6 +1,6 @@
 import BaseForm from '../BaseForm';
 
-export default class MakeForm extends BaseForm {
+export default class MakeForm extends BaseForm<{}> {
   constructor(props: any) {
     super(props);
 

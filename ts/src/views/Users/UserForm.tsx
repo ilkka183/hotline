@@ -1,7 +1,7 @@
 import BaseForm from '../BaseForm';
 import { USER_ROLES } from './UsersTable';
 
-export default class UserForm extends BaseForm {
+export default class UserForm extends BaseForm<{}> {
   constructor(props: any) {
     super(props);
 

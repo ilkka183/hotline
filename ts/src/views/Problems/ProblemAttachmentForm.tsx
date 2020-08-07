@@ -1,12 +1,7 @@
 import BaseForm from '../BaseForm';
 
-export default class ProblemAttachmentForm extends BaseForm {
-  state = {
-    data: {},
-    errors: {}
-  }
-
-  constructor(props) {
+export default class ProblemAttachmentForm extends BaseForm<{}> {
+  constructor(props: any) {
     super(props);
 
     this.addId();
@@ -20,19 +15,19 @@ export default class ProblemAttachmentForm extends BaseForm {
     this.state.data = this.getEmptyData();
   }
 
-  getApiName() {
+  protected getApiName(): string {
     return 'problemattachments';
   }
 
-  getNewTitle() {
+  protected getNewTitle(): string {
     return 'Uusi liite';
   }
 
-  getEditTitle() {
+  protected getEditTitle(): string {
     return 'Muokkaa liitettä';
   }
 
-  getDeleteTitle() {
+  protected getDeleteTitle(): string {
     return 'Poista liite';
   }
 }

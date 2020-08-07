@@ -9,14 +9,13 @@ interface Props {
   onSubmitted?: () => void
 }
 
-export default abstract class DataForm extends FieldsForm<Props> {
-  get dataId() {
-    const { dataId } = this.props;
+export default abstract class DataForm<P> extends FieldsForm<P & Props> {
+  protected get dataId(): number | undefined {
+    return this.getDataId();
+  }
 
-    if (dataId)
-      return dataId;
-
-    return undefined;
+  protected getDataId(): number | undefined {
+    return this.props.dataId;
   }
 
   protected abstract getHttp(): any;
