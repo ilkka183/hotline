@@ -1,8 +1,8 @@
-import FieldsForm, { FieldsFormProps } from '../../components/common/FieldsForm';
+import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
 export default class LoginForm extends FieldsForm<{}> {
-  constructor(props: FieldsFormProps) {
+  constructor(props: any) {
     super(props);
     
     this.addField('email',    'Sähköposti', 'email',    { required: true });
@@ -11,23 +11,23 @@ export default class LoginForm extends FieldsForm<{}> {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
+  public getTitle(): string {
     return 'Kirjaudu';
   }
 
-  getButtonLabel() {
+  protected getButtonLabel(): string {
     return 'Kirjaudu';
   }
 
-  getAsRow() {
+  protected getAsRow(): boolean {
     return false;
   }
 
-  async doSubmit() {
+  protected async doSubmit() {
     try {
       const { email, password } = this.state.data;
       await auth.login(email, password);
-//      window.location = '/';
+      window.location.replace('/');
     }
     catch (ex) {
       if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {

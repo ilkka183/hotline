@@ -8,13 +8,35 @@ export enum UserRole {
   Demo
 }
 
-export interface User {
+interface IUser {
   id: number,
   firstName: string,
   lastName: string,
   email: string,
   phone: string,
   role: UserRole
+}
+
+export class User implements IUser {
+  public id: number;
+  public firstName: string;
+  public lastName: string;
+  public email: string;
+  public phone: string;
+  public role: UserRole;
+
+  constructor(user: IUser) {
+    this.id = user.id;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.email = user.email;
+    this.phone = user.phone;
+    this.role = user.role;
+  }
+
+  public get isPowerOrAdmin(): boolean {
+    return this.role <= UserRole.Power;
+  }
 }
 
 const apiEndpoint = '/auth';
@@ -30,7 +52,11 @@ export function getJwt(): string | null {
 export function getCurrentUser(): User | null {
   try {
     const jwt: string | null = localStorage.getItem(tokenKey);
-    return jwt ? jwtDecode<User>(jwt!) : null;
+
+    if (jwt)
+      return new User(jwtDecode<User>(jwt!))
+
+    return null;
   } catch (ex) {
     return null;
   }

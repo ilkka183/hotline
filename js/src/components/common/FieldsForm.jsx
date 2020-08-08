@@ -282,8 +282,9 @@ export default class FieldsForm extends FieldsComponent {
       case 'new': return this.getNewTitle();
       case 'edit': return this.getEditTitle();
       case 'delete': return this.getDeleteTitle() + '?';
-      default: return null;
     }
+
+    return null;
   }
 
   renderField(field) {
@@ -310,17 +311,16 @@ export default class FieldsForm extends FieldsComponent {
       case 'boolean': return this.renderCheck(field);
       case 'file': return this.renderFile(field);
       case 'textarea': return this.renderTextArea(field);
-
-      default:
-        let autofocus = false;
-
-        if (!field.readonly && !this.autofocusSet) {
-          autofocus = true;
-          this.autofocusSet = true;
-        }
-
-        return this.renderInput(field, autofocus);
     }
+
+    let autofocus = false;
+
+    if (!field.readonly && !this.autofocusSet) {
+      autofocus = true;
+      this.autofocusSet = true;
+    }
+
+    return this.renderInput(field, autofocus);
   }
 
   renderInfo() {
@@ -431,8 +431,9 @@ export default class FieldsForm extends FieldsComponent {
     switch (variant) {
       case 'modal': return this.renderModal();
       case 'table': return this.renderTable();
-      default:  return this.renderForm();
     }
+
+    return this.renderForm();
   }
 }
 

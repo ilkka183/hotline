@@ -143,9 +143,9 @@ export class Field {
       case 'date': return this.formatDate(value);
       case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
       case 'time': return this.formatTime(value);
-      
-      default: return value;
     }
+
+    return value;
   }
 
   validate(value) {
@@ -197,8 +197,9 @@ export class Field {
       case 'date': return this.date_JsonToData(value);
       case 'datetime': return this.datetime_JsonToData(value);
       case 'file': return '';
-      default: return value;
     }
+
+    return value;
   }
 
   dataToJson(value) {
@@ -207,8 +208,9 @@ export class Field {
 
     switch (this.type) {
       case 'date': return this.date_DataToJson(value);
-      default: return value;
     }
+
+    return value;
   }
 }
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import ProblemsTable from './ProblemsTable';
-import auth from '../../services/authService';
+import auth, { User } from '../../services/authService';
 
 const SolvedProblems: React.FC<{}> = () => {
-  const user: any = auth.getCurrentUser();
+  const user: User | null = auth.getCurrentUser();
 
   const editable: boolean = true;
-  const deletable: boolean = user && user.role <= 1;
+  const deletable: boolean = (user !== null) && user.isPowerOrAdmin;
 
   if (!user)
     return null;

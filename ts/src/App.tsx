@@ -11,7 +11,7 @@ import NotFound from './views/NotFound';
 import MakesTable from './views/Makes/MakesTable';
 import ModelsTable from './views/Models/ModelsTable';
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
-import UsersTable, { POWER_ROLE } from './views/Users/UsersTable';
+import UsersTable from './views/Users/UsersTable';
 
 import ProblemsTable from './views/Problems/ProblemsTable';
 import Problem from './views/Problems/Problem';

@@ -9,6 +9,11 @@ interface Props {
   onItemSelect: (item: any) => void
 }
 
+const defaultProps = {
+  valueProperty: 'Id',
+  textProperty: 'Name'
+}
+
 const MyListGroup: React.FC<Props> = ({ items, selectedItem, valueProperty, textProperty, onItemSelect }) => {
   return (
     <ListGroup>
@@ -24,9 +29,7 @@ const MyListGroup: React.FC<Props> = ({ items, selectedItem, valueProperty, text
   );
 }
 
+MyListGroup.defaultProps = defaultProps;
+
 export default MyListGroup;
 
-MyListGroup.defaultProps = {
-  valueProperty: 'Id',
-  textProperty: 'Name'
-}

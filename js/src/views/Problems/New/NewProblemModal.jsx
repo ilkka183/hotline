@@ -122,8 +122,9 @@ export default class NewProblemForm extends Component {
       case 1: return this.isTitleReady();
       case 2: return this.isDescriptionReady();
       case 3: return this.isProblemReady();
-      default: return false;
     }
+
+    return false;
   }
 
   handleData = (data) => {

@@ -5,7 +5,7 @@ import ProblemSolutionModal from './ProblemSolutionModal';
 import ProblemRepliesTable from './ProblemRepliesTable'
 import ProblemAttachmentsTable from './ProblemAttachmentsTable'
 import ProblemForm from './ProblemForm';
-import auth from '../../services/authService';
+import auth, { User } from '../../services/authService';
 import http from '../../services/httpService';
 
 interface State {
@@ -18,7 +18,7 @@ interface State {
 }
 
 export default class Problem extends Component<{}, State> {
-  private user: any = auth.getCurrentUser();
+  private user: User | null = auth.getCurrentUser();
 
   public state: State = {
     problem: {},
@@ -171,7 +171,7 @@ export default class Problem extends Component<{}, State> {
 
   render() {
     const { problem, showModal, showSolutionModal } = this.state;
-    const editable = (this.user.role <= 1 || problem.UserId === this.user.id);
+    const editable = (this.user !== null) && (this.user.isPowerOrAdmin || problem.UserId === this.user.id);
 
     return (
       <Container>
@@ -181,7 +181,7 @@ export default class Problem extends Component<{}, State> {
         {showModal && this.renderModal()}
         {showSolutionModal && this.renderSolutionModal()}
         {this.renderAttachments()}
-        {(problem.Status === 0 || this.user.role <= 1) && this.renderReplies()}
+        {(problem.Status === 0 || ((this.user !== null) && this.user.isPowerOrAdmin)) && this.renderReplies()}
       </Container>
     );
   }

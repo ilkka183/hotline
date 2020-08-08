@@ -9,7 +9,7 @@ import EnterData from './EnterData'
 import ComposeTitle, { GROUPS } from './ComposeTitle'
 import ComposeDescription, { TESTERS } from './ComposeDescription'
 import ProblemForm from '../ProblemForm'
-import auth from '../../../services/authService';
+import auth, { User } from '../../../services/authService';
 import http from '../../../services/httpService';
 
 class Lines {
@@ -71,7 +71,7 @@ interface State {
 }
 
 export default class NewProblemForm extends Component<Props, State> {
-  private user: any = auth.getCurrentUser();
+  private user: User | null = auth.getCurrentUser();
 
   public state: State = {
     activeKey: undefined,
@@ -95,7 +95,7 @@ export default class NewProblemForm extends Component<Props, State> {
     super(props);
 
     this.state.data = {
-      UserId: this.user.id,
+      UserId: this.user?.id,
       Make: '',
       Model: '',
       ModelYear: '',

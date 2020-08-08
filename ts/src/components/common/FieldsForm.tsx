@@ -119,7 +119,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   protected doSubmit(): void {
   }
   
-  handleSubmit = (e: any) => {
+  protected handleSubmit = (e: any) => {
     if (e)
       e.preventDefault();
 
@@ -129,7 +129,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     this.doSubmit();
   }
 
-  handleSubmitModal = (e: any) => {
+  protected handleSubmitModal = (e: any) => {
     const { action, onSubmitModal } = this.props;
 
     if (action !== 'delete') {
@@ -143,7 +143,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       onSubmitModal();
   }
 
-  handleChange = (event: any) => {
+  protected handleChange = (event: any) => {
     const { currentTarget } = event;
 
     const errors: any = {...this.state.errors}
@@ -181,18 +181,18 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     this.setState({ data, errors });
   }
 
-  getAsRow() {
+  protected getAsRow(): boolean {
     return true;
   }
 
-  goBack() {
+  public goBack(): void {
 /*    const { history } = this.props;
     
     if (history)
       history.goBack(); */
   }
 
-  renderInput(field: Field, autofocus: boolean = false) {
+  protected renderInput(field: Field, autofocus: boolean = false): JSX.Element {
     const { name, label, readonly, required, type } = field;
     const data: any = this.state.data;
     const errors: any = this.state.errors;
@@ -214,7 +214,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
-  renderTextArea(field: Field) {
+  protected renderTextArea(field: Field): JSX.Element {
     const { name, label, required, rows } = field;
     const data: any = this.state.data;
     const errors: any = this.state.errors;
@@ -234,7 +234,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
-  renderFile(field: Field) {
+  protected renderFile(field: Field): JSX.Element {
     const { name, label, readonly, required } = field;
     const data: any = this.state.data;
     const errors: any = this.state.errors;
@@ -254,7 +254,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
-  renderSelect(field: Field, autofocus: boolean = false) {
+  protected renderSelect(field: Field, autofocus: boolean = false): JSX.Element {
     const { name, label, lookup, readonly, required } = field;
     const data: any = this.state.data;
     const errors: any = this.state.errors;
@@ -276,7 +276,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
-  renderCheck(field: Field) {
+  protected renderCheck(field: Field): JSX.Element {
     const { name, label } = field;
     const data: any = this.state.data;
     const errors: any = this.state.errors;
@@ -294,7 +294,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
-  renderSubmitButton(text: string) {
+  protected renderSubmitButton(text: string): JSX.Element {
     return (
       <Button
         className="mr-2"

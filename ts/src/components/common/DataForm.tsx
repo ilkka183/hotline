@@ -57,7 +57,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     return '';
   }
 
-  async populateLookups() {
+  private async populateLookups(): Promise<void> {
     for (const field of this.fields) {
       if (field.lookupUrl) {
         const { data: { rows } } = await this.http.get('/' + field.lookupUrl);
@@ -88,7 +88,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     }
   }
 
-  async populateData() {
+  private async populateData(): Promise<void> {
     const errors: any = {};
 
     if (this.dataId) {
@@ -128,12 +128,12 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     }
   }
 
-  async componentDidMount() {
+  public async componentDidMount(): Promise<void> {
     await this.populateLookups();
     await this.populateData();
   }
 
-  async doSubmit() {
+  protected async doSubmit(): Promise<void> {
     const data: any = this.state.data;
 
     if (data.Id) {

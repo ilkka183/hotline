@@ -64,7 +64,7 @@ export default class ProblemsTable extends BaseTable<Props> {
   }
 
   canDelete(row: any) {
-    return (this.user.role <= 1 || row.UserId === this.user.id);
+    return (this.user !== null) && (this.user.isPowerOrAdmin || row.UserId === this.user.id);
   }
 
   renderDescription(row: any) {

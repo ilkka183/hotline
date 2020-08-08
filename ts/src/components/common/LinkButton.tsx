@@ -9,7 +9,7 @@ interface Props {
 }
 
 const LinkButton: React.FC<Props> = ({ className, variant, size, to, ...props }) => {
-  let classes = 'btn btn-' + (variant ? variant : 'primary');
+  let classes: string = 'btn btn-' + (variant ? variant : 'primary');
 
   if (size)
     classes += ' btn-' + size;

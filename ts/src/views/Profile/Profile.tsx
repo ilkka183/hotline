@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import ProfileForm from './ProfileForm';
 import ChangePasswordForm from './ChangePasswordForm';
-import auth from '../../services/authService';
+import auth, { User } from '../../services/authService';
 import http from '../../services/httpService';
 
 interface State {
@@ -15,7 +15,7 @@ interface State {
 }
 
 export default class Profile extends Component<{}, State> {
-  private user: any = auth.getCurrentUser();
+  private user: User | null = auth.getCurrentUser();
 
   public state: State = {
     user: null,
@@ -24,8 +24,12 @@ export default class Profile extends Component<{}, State> {
     passwordChanged: false
   }
 
+  private get userId(): number | undefined {
+    return this.user !== null ? this.user.id : undefined;
+  }
+
   async componentDidMount() {
-    const { data: user } = await http.get('/users/' + this.user.id);
+    const { data: user } = await http.get('/users/' + this.userId);
 
     this.setState({ user });
   }
@@ -39,7 +43,7 @@ export default class Profile extends Component<{}, State> {
   }
 
   private handleSubmit = async () => {
-    const { data: user } = await http.get('/users/' + this.user.id);
+    const { data: user } = await http.get('/users/' + this.userId);
 
     this.setState({ user, showModal: false });
   }
@@ -73,7 +77,7 @@ export default class Profile extends Component<{}, State> {
         {showModal && <ProfileForm
           variant="modal"
           action="edit"
-          userId={this.user.id}
+          userId={this.userId}
           showModal={true}
           onSubmitModal={this.handleSubmit}
           onHideModal={this.hideModal}

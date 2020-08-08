@@ -2,12 +2,12 @@ import { Component } from 'react';
 import auth from '../../services/authService';
 
 export default class Logout extends Component {
-  componentDidMount() {
+  public componentDidMount(): void {
     auth.logout();
-//    window.location = '/';
+    window.location.replace('/');
   }
 
-  render() { 
+  public render(): JSX.Element | null { 
     return null;
   }
 }

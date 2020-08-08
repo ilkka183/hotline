@@ -14,7 +14,7 @@ export default class UserGroupsTable extends BaseTable<{}> {
     this.addField('Country',       'Maa',              'text');
     this.addField('Phone',         'Puhelin',          'phone');
     this.addField('Email',         'Sähköposti',       'email');
-    this.addField('Website',       'Nettisivut',       'text');
+    this.addField('Website',       'Nettisivut',       'text', { code: true });
     this.addEnabled();
   }
 

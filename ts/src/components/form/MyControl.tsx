@@ -45,7 +45,7 @@ export default abstract class MyControl<P> extends Component<P & ControlProps> {
     );
   }
 
-  render() {
+  public render(): JSX.Element {
     const { asRow, name } = this.props;
 
     if (asRow) {

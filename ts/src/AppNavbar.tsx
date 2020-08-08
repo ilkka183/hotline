@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import NavItemLink from './components/common/NavItemLink';
-import { User, UserRole } from './services/authService';
+import { User } from './services/authService';
 
 
 interface Props {
@@ -22,7 +22,7 @@ const AppNavbar: React.FC<Props> = ({ user }) => {
             <NavItemLink to="/">Koti</NavItemLink>
             <NavItemLink to="/problems/open">Avoimet</NavItemLink>
             <NavItemLink to="/problems/solved">Ratkaistut</NavItemLink>
-            {user.role <= UserRole.Power && <NavDropdown title="Asetukset" id="basic-nav-dropdown">
+            {user.isPowerOrAdmin && <NavDropdown title="Asetukset" id="basic-nav-dropdown">
               <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
               <NavItemLink to="/users">Käyttäjät</NavItemLink>
               <NavItemLink to="/makes">Automerkit</NavItemLink>

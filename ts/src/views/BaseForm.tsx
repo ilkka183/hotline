@@ -1,22 +1,20 @@
 import { Field } from '../components/common/Fields';
 import DataForm from '../components/common/DataForm';
-import auth, { User, UserRole } from '../services/authService';
+import auth, { User } from '../services/authService';
 import http from '../services/httpService';
 
-const SHOW_IDS = true;
-
 export default abstract class BaseForm<P> extends DataForm<P> {
-  protected user: any = auth.getCurrentUser();
+  protected user: User | null = auth.getCurrentUser();
 
   public get hasPowerRights(): boolean {
-    return this.user.role <= UserRole.Power;
+    return this.user ? this.user.isPowerOrAdmin : false;
   }
 
   public getHttp(): any {
     return http;
   }
 
-  public addId(visible: boolean = SHOW_IDS): Field {
+  public addId(visible: boolean = false): Field {
     return this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
   }
 
@@ -29,7 +27,7 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true });
   }
 
-  afterSubmit() {
+  protected afterSubmit(): void {
     const { onSubmitted } = this.props;
 
     if (onSubmitted)

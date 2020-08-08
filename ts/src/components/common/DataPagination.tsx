@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Pagination from 'react-bootstrap/Pagination'
 
 interface Props {
@@ -10,14 +9,14 @@ interface Props {
 }
 
 const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPageChange }) => {
-  const pageCount = Math.ceil(rowCount/pageSize);
+  const pageCount: number = Math.ceil(rowCount/pageSize);
 
   if (pageCount <= 1)
     return null;
 
-  const pages = [];
+  const pages: number[] = [];
 
-  for (let i = 0; i < pageCount; i++)
+  for (let i: number = 0; i < pageCount; i++)
     pages.push(i);
 
   function changePage(index: number): void {
@@ -44,10 +43,3 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
 }
 
 export default DataPagination;
-
-DataPagination.propTypes = {
-  rowCount: PropTypes.number.isRequired,
-  pageIndex: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired
-}

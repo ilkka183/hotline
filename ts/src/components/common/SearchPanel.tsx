@@ -4,7 +4,6 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import { Field } from './Fields';
-import FieldsTable from './FieldsTable';
 
 interface Props {
   table: any,
@@ -33,7 +32,7 @@ const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) =>
     );
   }
 
-  const fields = table.fields.filter((field: any) => field.search);
+  const fields: Field[] = table.fields.filter((field: any) => field.search);
 
   return (
     <Form className="mb-4" >

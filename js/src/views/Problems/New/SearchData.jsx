@@ -10,8 +10,9 @@ function getFuelType(text) {
   switch (text) {
     case 'bensiini': return 0;
     case 'diesel': return 1;
-    default: return 0;
   }
+
+  return 0;
 }
 
 export default function SearchData({ data, onData }) {

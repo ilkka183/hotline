@@ -4,10 +4,8 @@ import FieldsTable, { SearchOptions, Rows } from '../components/common/FieldsTab
 import auth, { User } from '../services/authService';
 import http from '../services/httpService';
 
-const SHOW_IDS = false;
-
 export default abstract class BaseTable<P> extends FieldsTable<P> {
-  protected user: any = auth.getCurrentUser();
+  protected user: User | null = auth.getCurrentUser();
 
   public get apiPath(): string {
     return '/' + this.getApiName();
@@ -17,9 +15,9 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected async getItems(options: SearchOptions): Promise<Rows> {
+    const { pageSize } = this.state;
     const { pageIndex } = options;
     const sortFields: any = options.sortFields;
-    const { pageSize } = this.state;
 
     let query: any = {}
     this.getItemsQuery(query);
@@ -46,16 +44,18 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
 
-    return await http.get(endpoint);
+    const response: any = await http.get(endpoint);
+
+    return response.data;
   }
 
-  async deleteItem(row: any) {
+  protected async deleteItem(row: any): Promise<void> {
     const endpoint = this.apiPath + '/' + row.Id;
 
     await http.delete(endpoint);
   }
 
-  protected addId(visible: boolean = SHOW_IDS): Field {
+  protected addId(visible: boolean = false): Field {
     return this.addField('Id', 'No', 'number', { editLink: true, visible });
   }
 

@@ -18,6 +18,7 @@ interface FieldOptions {
   getDefaultValue?: DefaultValueFunc,
   lookupUrl?: string,
   enums?: Array<string>,
+  code?: boolean,
   primaryKey?: boolean,
   editLink?: boolean,
   required?: boolean,
@@ -38,6 +39,7 @@ export class Field {
   public label: string;
   public type: string;
   public default: any = null;
+  public code: boolean = false;
   public primaryKey: boolean = false;
   public editLink: boolean = false;
   public visible: boolean = true;
@@ -83,6 +85,9 @@ export class Field {
 
       if (options.enums !== undefined)
         this.enums = options.enums;
+
+      if (options.code !== undefined)
+        this.code = options.code;
 
       if (options.primaryKey !== undefined)
         this.primaryKey = options.primaryKey;
@@ -195,9 +200,9 @@ export class Field {
       case 'date': return this.formatDate(value);
       case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
       case 'time': return this.formatTime(value);
-      
-      default: return value;
     }
+    
+    return value;
   }
 
   public validate(value: any): string | null {
@@ -259,8 +264,9 @@ export class Field {
 
     switch (this.type) {
       case 'date': return this.date_DataToJson(value);
-      default: return value;
     }
+
+    return value;
   }
 }
 

@@ -1,8 +1,8 @@
-import FieldsForm, { FieldsFormProps } from '../../components/common/FieldsForm';
-import auth from '../../services/authService';
+import FieldsForm from '../../components/common/FieldsForm';
+import auth, { User, UserRole } from '../../services/authService';
 
 export default class RegisterForm extends FieldsForm<{}> {
-  constructor(props: FieldsFormProps) {
+  constructor(props: any) {
     super(props);
 
     this.addField('email',     'Sähköposti', 'email', { required: true });
@@ -13,31 +13,31 @@ export default class RegisterForm extends FieldsForm<{}> {
     this.state.data = this.getEmptyData();
   }
 
-  getTitle() {
+  public getTitle(): string {
     return 'Rekisteröidy';
   }
 
-  getButtonLabel() {
+  protected getButtonLabel(): string {
     return 'Rekisteröidy';
   }
 
-  getAsRow() {
+  protected getAsRow(): boolean {
     return false;
   }
 
-  async doSubmit() {
+  protected async doSubmit() {
     try {
-      const data = {
+      const user: User = new User({
         id: 1,
         firstName: this.state.data.firstName,
         lastName: this.state.data.lastName,
         email: this.state.data.email,
         phone: '',
-        role: 2
-      }
+        role: UserRole.User
+      });
 
-      await auth.register(data);
-//      window.location = '/';
+      await auth.register(user);
+      window.location.replace('/');
     }
     catch (ex) {
       if (ex.response && ex.response.status === 400) {

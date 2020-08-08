@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
@@ -89,9 +89,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   protected abstract getForm(): any;
   protected abstract getApiName(): string;
 
-  protected abstract async getItems(options: SearchOptions): Promise<Rows>;
-  protected abstract deleteItem(row: any): void;
-
   public getUseModals(): boolean {
     return true;
   }
@@ -126,7 +123,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return false;
   }
 
-  async fetchItems(options: SearchOptions) {
+  protected abstract async getItems(options: SearchOptions): Promise<Rows>;
+  protected abstract async deleteItem(row: any): Promise<void>;
+
+  protected async fetchItems(options: SearchOptions): Promise<void> {
     let { searchValues, pageIndex, sortFields } = options;
 
     if (searchValues === undefined)
@@ -143,7 +143,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ rowCount, rows, searchValues, sortFields, pageIndex });
   }
 
-  async componentDidMount() {
+  public async componentDidMount(): Promise<void> {
     const searchValues: any = {};
 
     for (const field of this.fields)
@@ -160,7 +160,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  handlePageChange = async (pageIndex: number) => {
+  private handlePageChange = async (pageIndex: number) => {
     if (this.props.rows) {
       this.setState({ pageIndex });
     }
@@ -169,7 +169,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  handleSortField = async (name: string) => {
+  private handleSortField = async (name: string) => {
     const sortFields: SortField[] = [...this.state.sortFields];
 
     const index: number = sortFields.findIndex(field => field.name === name);
@@ -193,18 +193,18 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  handleSearch = () => {
+  private handleSearch = () => {
     this.setState({ pageIndex: 0 });
   }
 
-  handleSearchFieldChange = ({ currentTarget }: any ) => {
+  private handleSearchFieldChange = ({ currentTarget }: any ) => {
     const searchValues: any = {...this.state.searchValues};
     searchValues[currentTarget.name] = currentTarget.value;
 
     this.setState({ searchValues });
   }
 
-  handleSearchClear = () => {
+  private handleSearchClear = () => {
     const searchValues: any = {...this.state.searchValues};
 
     for (const name in searchValues)
@@ -213,32 +213,32 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ searchValues });
   }
 
-  handleToggleSearchPanel = () => {
+  private handleToggleSearchPanel = () => {
     const searchPanel = !this.state.searchPanel;
 
     this.setState({ searchPanel });
   }
 
-  showNewModal() {
+  protected showNewModal() {
     this.setState({ showEditModal: true, modalDataId: null });
   }
 
-  showEditModal(row: any) {
+  protected showEditModal(row: any) {
     this.setState({ showEditModal: true, modalDataId: row.Id });
   }
 
-  handleShowEditModal = (row: any) => {
+  private handleShowEditModal = (row: any) => {
     if (row)
       this.showEditModal(row);
     else
       this.showNewModal();
   }
 
-  handleHideEditModal = () => {
+  private handleHideEditModal = () => {
     this.setState({ showEditModal: false, modalDataId: undefined });
   }
 
-  handleSubmitEditModal = async () => {
+  private handleSubmitEditModal = async () => {
     const { onEdited } = this.props;
 
     if (this.props.rows) {
@@ -252,15 +252,15 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.handleHideEditModal();
   }
 
-  handleShowDeleteModal = (row: any) => {
+  private handleShowDeleteModal = (row: any) => {
     this.setState({ showDeleteModal: true, deleteRow: row });
   }
 
-  handleHideDeleteModal = () => {
+  private handleHideDeleteModal = () => {
     this.setState({ showDeleteModal: false, deleteRow: undefined });
   }
 
-  handleSubmitDeleteModal = async () => {
+  private handleSubmitDeleteModal = async () => {
     const { onDelete } = this.props;
     const { deleteRow } = this.state;
 
@@ -286,7 +286,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.handleHideDeleteModal();
   }
 
-  filterRows(rows: any[]) {
+  private filterRows(rows: any[]) {
     const { sortFields } = this.state;
     const searchValues: any = this.state.searchValues;
 
@@ -318,7 +318,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return rows;
   }
 
-  paginateRows(rows: any[], pageIndex: number, pageSize: number) {
+  private paginateRows(rows: any[], pageIndex: number, pageSize: number) {
     const offset = pageIndex*pageSize;
     const result = [];
   
@@ -454,6 +454,9 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (column.link)
       return <Link to={column.link(row)}>{text}</Link>
 
+    if (column.code)
+      return <code>{text}</code>
+
     return text;
   }
 
@@ -551,7 +554,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       }
   }
 
-  render() {
+  public render(): JSX.Element {
     const { readOnly, deletable, paginate } = this.props;
     const { showEditModal, showDeleteModal } = this.state;
 
