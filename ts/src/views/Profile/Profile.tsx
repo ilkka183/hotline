@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import ProfileForm from './ProfileForm';
 import ChangePasswordForm from './ChangePasswordForm';
-import auth, { User } from '../../services/authService';
+import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
 
 interface State {
@@ -14,9 +14,7 @@ interface State {
   passwordChanged: boolean
 }
 
-export default class Profile extends Component<{}, State> {
-  private user: User | null = auth.getCurrentUser();
-
+export default class Profile extends UserComponent<{}, State> {
   public state: State = {
     user: null,
     showModal: false,

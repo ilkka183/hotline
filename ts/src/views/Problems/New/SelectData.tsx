@@ -156,8 +156,8 @@ const SelectData: React.FC<Props> = ({ data, onData, options, onOptions, onNext 
       onNext();
   }
 
-  function formatEngineType(item: any) {
-    let text = item.power + ' kW';
+  function formatEngineType(item: any): string {
+    let text: string = item.power + ' kW';
     
     if (item.code)
       text += ' (' + item.code + ')';
@@ -165,7 +165,7 @@ const SelectData: React.FC<Props> = ({ data, onData, options, onOptions, onNext 
     return text;
   }
 
-  function renderEngineTypes() {
+  function renderEngineTypes(): JSX.Element | null {
     if (!options.engineTypes)
       return null;
 

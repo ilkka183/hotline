@@ -10,8 +10,9 @@ function getFuelType(text: string): number {
   switch (text) {
     case 'bensiini': return 0;
     case 'diesel': return 1;
-    default: return 0;
   }
+
+  return 0;
 }
 
 interface Props {
@@ -44,7 +45,7 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
   const handleFill = (car: any) => {
     setError('');
 
-    const newData = {...data};
+    const newData: any = {...data};
 
     newData.RegistrationNumber = car.RegistrationNumber;
 
@@ -59,7 +60,7 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
 
       const { data: info } = await http.get('/traficom/' + data.RegistrationNumber);
 
-      const newData = {...data};
+      const newData: any = {...data};
 
       newData.Make = info.carMake;
       newData.Model = info.carModel;
@@ -87,11 +88,11 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
-  function isNull() {
+  function isNull(): boolean {
     return !data.RegistrationNumber;
   }
 
-  function isReady() {
+  function isReady(): boolean {
     return data.RegistrationNumber && data.Make && !error;
   }
 

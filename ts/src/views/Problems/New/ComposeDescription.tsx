@@ -38,7 +38,7 @@ interface Props {
 
 const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onChangeCheckboxGroup }) => {
 
-  function renderDescription() {
+  function renderDescription(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Asiakkaan viankuvaus <Required /></Form.Label>
@@ -53,7 +53,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderAppearance() {
+  function renderAppearance(): JSX.Element {
     return (
       <Form.Group>
       <Form.Label>Vian ensiintyminen</Form.Label>
@@ -76,7 +76,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderDiagnostic() {
+  function renderDiagnostic(): JSX.Element {
     return (
       <Form.Group>
       <Form.Label>Itsediagnostiikka</Form.Label>
@@ -101,7 +101,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderTester() {
+  function renderTester(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Käytetyt testilaitteet</Form.Label>
@@ -124,7 +124,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderInspections() {
+  function renderInspections(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Suoritukset tarkastukset</Form.Label>
@@ -138,7 +138,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderHistory() {
+  function renderHistory(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Korjaushistoria</Form.Label>
@@ -153,7 +153,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
-  function renderText() {
+  function renderText(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Vapaa teksti</Form.Label>

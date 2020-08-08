@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Tab from 'react-bootstrap/Tab'
@@ -9,43 +9,9 @@ import EnterData from './EnterData'
 import ComposeTitle, { GROUPS } from './ComposeTitle'
 import ComposeDescription, { TESTERS } from './ComposeDescription'
 import ProblemForm from '../ProblemForm'
-import auth, { User } from '../../../services/authService';
+import UserComponent from '../../UserComponent';
+import Lines from '../../../lib/Lines';
 import http from '../../../services/httpService';
-
-class Lines {
-  private lines: string = '';
-  private index: number = 0;
-
-  public get toString(): string {
-    return this.lines;
-  }
-
-  public addText(title: string, text: string): void {
-    if (this.index > 0)
-      this.lines += '\n\n';
-
-    this.lines += title;
-    this.lines += '\n';
-    this.lines += text;
-
-    this.index++;
-  }
-
-  public addTexts(title: string, flags: any[], texts: string[]): void {
-    if (this.index > 0)
-      this.lines += '\n\n';
-
-    this.lines += title;
-
-    for (let i = 0; i < flags.length; i++)
-      if (flags[i]) {
-        this.lines += '\n';
-        this.lines += texts[i];
-      }
-
-      this.index++;
-  }
-}
 
 interface Props {
   onSubmit: () => void,
@@ -70,9 +36,7 @@ interface State {
   description: any
 }
 
-export default class NewProblemForm extends Component<Props, State> {
-  private user: User | null = auth.getCurrentUser();
-
+export default class NewProblemForm extends UserComponent<Props, State> {
   public state: State = {
     activeKey: undefined,
     step: 0,
@@ -120,9 +84,9 @@ export default class NewProblemForm extends Component<Props, State> {
       title: ''
     }
 
-    const testers = [];
+    const testers: boolean[] = [];
 
-    for (let i = 0; i < TESTERS.length; i++)
+    for (let i: number = 0; i < TESTERS.length; i++)
       testers.push(false);
 
     this.state.description = {
@@ -141,19 +105,19 @@ export default class NewProblemForm extends Component<Props, State> {
   async componentDidMount() {
     const { data } = await http.get('/data/makes');
 
-    const options = {...this.state.options};
+    const options: any = {...this.state.options};
     options.makes = data.map((value: any) => ({ value, text: value }));
 
     this.setState({ options });
   }
 
-  isDataReady() {
+  private isDataReady(): boolean {
     const { data } = this.state;
 
     return data.Make;
   }
 
-  isTitleReady() {
+  private isTitleReady(): boolean {
     const { title } = this.state;
 
     return title &&
@@ -162,17 +126,17 @@ export default class NewProblemForm extends Component<Props, State> {
       title.title;
   }
 
-  isDescriptionReady() {
+  private isDescriptionReady(): boolean {
     const { description } = this.state;
 
     return description.description;
   }
 
-  isProblemReady() {
+  private isProblemReady(): boolean {
     return true;
   }
 
-  isStepReady() {
+  private isStepReady(): boolean {
     const { step } = this.state;
 
     switch (step) {
@@ -180,23 +144,24 @@ export default class NewProblemForm extends Component<Props, State> {
       case 1: return this.isTitleReady();
       case 2: return this.isDescriptionReady();
       case 3: return this.isProblemReady();
-      default: return false;
     }
+
+    return false;
   }
 
-  handleData = (data: any) => {
+  private handleData = (data: any) => {
     this.setState({ data });
   }
 
-  handleOptions = (options: any) => {
+  private handleOptions = (options: any) => {
     this.setState({ options });
   }
 
-  handleTabSelect = (activeKey: any) => {
+  private handleTabSelect = (activeKey: any) => {
     this.setState({ activeKey });
   }
 
-  handleTitleChange = ({ currentTarget: input }: any) => {
+  private handleTitleChange = ({ currentTarget: input }: any) => {
     const title = {...this.state.title}
 
     title[input.name] = input.value;
@@ -204,32 +169,30 @@ export default class NewProblemForm extends Component<Props, State> {
     this.setState({ title });
   }
 
-  handleDescriptionChange = ({ currentTarget: target }: any) => {
-    const description = {...this.state.description}
+  private handleDescriptionChange = ({ currentTarget: target }: any) => {
+    const description: any = {...this.state.description}
 
     description[target.name] = target.value;
 
     this.setState({ description });
   }
 
-  handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }: any) => {
-    const description = {...this.state.description}
+  private handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }: any) => {
+    const description: any = {...this.state.description}
 
     description[target.name][target.id - 1] = target.checked;
-
-    console.log(description);
 
     this.setState({ description });
   }
 
-  handlePrev = () => {
-    const step = this.state.step - 1;
+  private handlePrev = () => {
+    const step: number = this.state.step - 1;
 
     this.setState({ step });
   }
 
-  handleNext = () => {
-    const step = this.state.step + 1;
+  private handleNext = () => {
+    const step: number = this.state.step + 1;
 
     this.setState({ step });
 
@@ -272,7 +235,7 @@ export default class NewProblemForm extends Component<Props, State> {
     }
   }
 
-  handleSubmit = () => {
+  private handleSubmit = () => {
     const { onSubmit }: any = this.props;
 
     try {
@@ -283,10 +246,10 @@ export default class NewProblemForm extends Component<Props, State> {
     }
   }
 
-  renderData() {
-    const searchKey = 'searchData';
-    const selectKey = 'selectData';
-    const enterKey = 'enterData';
+  private renderData(): JSX.Element {
+    const searchKey: string = 'searchData';
+    const selectKey: string = 'selectData';
+    const enterKey: string = 'enterData';
 
     return (
       <Tabs defaultActiveKey={searchKey} activeKey={this.state.activeKey} onSelect={this.handleTabSelect}>
@@ -314,7 +277,7 @@ export default class NewProblemForm extends Component<Props, State> {
     );
   }
 
-  renderTitle() {
+  private renderTitle(): JSX.Element {
     return (
       <ComposeTitle
         data={this.state.data}
@@ -324,7 +287,7 @@ export default class NewProblemForm extends Component<Props, State> {
     );
   }
 
-  renderDescription() {
+  private renderDescription(): JSX.Element {
     return (
       <ComposeDescription
         data={this.state.data}
@@ -335,7 +298,7 @@ export default class NewProblemForm extends Component<Props, State> {
     );
   }
 
-  renderProblemForm() {
+  private renderProblemForm(): JSX.Element {
     return (
       <>
         <h3>Syötä ajoneuvon tiedot ja vian kuvaus</h3>
@@ -351,7 +314,7 @@ export default class NewProblemForm extends Component<Props, State> {
     );
   }
 
-  render() {
+  public render(): JSX.Element {
     const { onHide } = this.props;
     const { step } = this.state;
 

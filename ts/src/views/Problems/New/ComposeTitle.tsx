@@ -25,7 +25,7 @@ interface Props {
 
 const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
 
-  function renderGroups() {
+  function renderGroups(): JSX.Element {
     return (
       <Form.Group>
         {GROUPS.map((group, index) => (
@@ -48,7 +48,7 @@ const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
     );
   }
 
-  function renderTitle() {
+  function renderTitle(): JSX.Element {
     return (
       <Form.Group>
         <Form.Label>Vian otsikko</Form.Label>

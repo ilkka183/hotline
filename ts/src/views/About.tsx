@@ -1,7 +1,9 @@
 import React from 'react';
 
-export default function About() {
+const About: React.FC<{}> = () => {
   return (
     <h2>Tietoja Hotlinesta</h2>
   );
 }
+
+export default About;

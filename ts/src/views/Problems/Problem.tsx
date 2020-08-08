@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import ProblemSolutionModal from './ProblemSolutionModal';
 import ProblemRepliesTable from './ProblemRepliesTable'
 import ProblemAttachmentsTable from './ProblemAttachmentsTable'
 import ProblemForm from './ProblemForm';
-import auth, { User } from '../../services/authService';
+import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
 
 interface State {
@@ -17,9 +17,7 @@ interface State {
   replies: any[]
 }
 
-export default class Problem extends Component<{}, State> {
-  private user: User | null = auth.getCurrentUser();
-
+export default class Problem extends UserComponent<{}, State> {
   public state: State = {
     problem: {},
     replyId: null,

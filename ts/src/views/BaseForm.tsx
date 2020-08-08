@@ -4,7 +4,7 @@ import auth, { User } from '../services/authService';
 import http from '../services/httpService';
 
 export default abstract class BaseForm<P> extends DataForm<P> {
-  protected user: User | null = auth.getCurrentUser();
+  protected readonly user: User | null = auth.getCurrentUser();
 
   public get hasPowerRights(): boolean {
     return this.user ? this.user.isPowerOrAdmin : false;

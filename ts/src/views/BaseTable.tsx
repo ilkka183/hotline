@@ -5,7 +5,7 @@ import auth, { User } from '../services/authService';
 import http from '../services/httpService';
 
 export default abstract class BaseTable<P> extends FieldsTable<P> {
-  protected user: User | null = auth.getCurrentUser();
+  protected readonly user: User | null = auth.getCurrentUser();
 
   public get apiPath(): string {
     return '/' + this.getApiName();

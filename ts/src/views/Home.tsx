@@ -2,7 +2,7 @@ import React from 'react';
 import ProblemsTable from './Problems/ProblemsTable';
 import auth, { User } from '../services/authService';
 
-export default function Home() {
+const Home: React.FC<{}> = () => {
   const user: User | null = auth.getCurrentUser();
 
   const editable: boolean = true;
@@ -22,3 +22,5 @@ export default function Home() {
     />
   );
 }
+
+export default Home;

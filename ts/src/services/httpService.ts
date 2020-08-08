@@ -5,7 +5,7 @@ import logger from './logService';
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.response.use(undefined, error => {
-  const expectedError =
+  const expectedError: boolean =
     error.response &&
     error.response.status >= 400 &&
     error.response.status < 500

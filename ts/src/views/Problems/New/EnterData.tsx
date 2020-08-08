@@ -54,7 +54,7 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
       onNext();
   }
 
-  function renderInputText(name: string, label: string) {
+  function renderInputText(name: string, label: string): JSX.Element {
     return (
       <Form.Group as={Row}>
         <Form.Label column sm="2">{label}</Form.Label>
@@ -65,7 +65,7 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
     );
   }
 
-  function renderSelectEnum(name: string, label: string, enums: string[]) {
+  function renderSelectEnum(name: string, label: string, enums: string[]): JSX.Element {
     const options = [{ value: null, text: '' }, ...enums.map((text, value) => ({ value, text }))];
 
     return (
@@ -92,11 +92,11 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
     );
   }
 
-  function renderFillButton(car: any) {
+  function renderFillButton(car: any): JSX.Element {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
-  function isNull() {
+  function isNull(): boolean {
     return !data.Make && !data.Model && !data.ModelYear;
   }
 

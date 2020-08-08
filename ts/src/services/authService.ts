@@ -18,12 +18,12 @@ interface IUser {
 }
 
 export class User implements IUser {
-  public id: number;
-  public firstName: string;
-  public lastName: string;
-  public email: string;
-  public phone: string;
-  public role: UserRole;
+  public readonly id: number;
+  public readonly firstName: string;
+  public readonly lastName: string;
+  public readonly email: string;
+  public readonly phone: string;
+  public readonly role: UserRole;
 
   constructor(user: IUser) {
     this.id = user.id;
@@ -32,6 +32,10 @@ export class User implements IUser {
     this.email = user.email;
     this.phone = user.phone;
     this.role = user.role;
+  }
+
+  public get fullName(): string {
+    return this.firstName + ' ' + this.lastName;
   }
 
   public get isPowerOrAdmin(): boolean {
@@ -53,8 +57,10 @@ export function getCurrentUser(): User | null {
   try {
     const jwt: string | null = localStorage.getItem(tokenKey);
 
-    if (jwt)
-      return new User(jwtDecode<User>(jwt!))
+    if (jwt) {
+      const data: IUser = jwtDecode<User>(jwt!);
+      return new User(data)
+    }
 
     return null;
   } catch (ex) {

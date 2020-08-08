@@ -36,13 +36,13 @@ export default class App extends React.Component<{}, State> {
     user: null
   };
 
-  componentDidMount() {
+  public componentDidMount() {
     const user: User | null = auth.getCurrentUser();
     
     this.setState({ user });
   }
 
-  render() {
+  public render(): JSX.Element {
     return (
       <>
         <AppNavbar user={this.state.user} />

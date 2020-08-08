@@ -334,17 +334,16 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       case 'boolean': return this.renderCheck(field);
       case 'file': return this.renderFile(field);
       case 'textarea': return this.renderTextArea(field);
-
-      default:
-        let autofocus = false;
-
-        if (!field.readonly && !this.autofocusSet) {
-          autofocus = true;
-          this.autofocusSet = true;
-        }
-
-        return this.renderInput(field, autofocus);
     }
+
+    let autofocus: boolean = false;
+
+    if (!field.readonly && !this.autofocusSet) {
+      autofocus = true;
+      this.autofocusSet = true;
+    }
+
+    return this.renderInput(field, autofocus);
   }
 
   protected renderInfo(): JSX.Element | null {

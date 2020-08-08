@@ -35,25 +35,25 @@ interface FieldOptions {
 
 export class Field {
   public index: number = -1;
-  public name: string;
+  public readonly name: string;
   public label: string;
-  public type: string;
+  public readonly type: string;
   public default: any = null;
-  public code: boolean = false;
-  public primaryKey: boolean = false;
-  public editLink: boolean = false;
+  public readonly code: boolean = false;
+  public readonly primaryKey: boolean = false;
+  public readonly editLink: boolean = false;
   public visible: boolean = true;
   public readonly: boolean = false;
-  public required: boolean = false;
-  public preformatted: boolean = false;
-  public search: boolean = false;
+  public readonly required: boolean = false;
+  public readonly preformatted: boolean = false;
+  public readonly search: boolean = false;
   public rows?: number;
-  public min?: number;
-  public max?: number;
-  public minLength?: number;
+  public readonly min?: number;
+  public readonly max?: number;
+  public readonly minLength?: number;
   public order?: SortOrder;
-  public link?: LinkFunc;
-  public render?: RenderFunc;
+  public readonly link?: LinkFunc;
+  public readonly render?: RenderFunc;
   public getDefaultValue?: DefaultValueFunc;
   public displayFormat?: string;
   public lookupUrl?: string;
@@ -254,8 +254,9 @@ export class Field {
       case 'date': return this.date_JsonToData(value);
       case 'datetime': return this.datetime_JsonToData(value);
       case 'file': return '';
-      default: return value;
     }
+
+    return value;
   }
 
   public dataToJson(value: any) {
