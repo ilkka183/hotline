@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default class ProblemAttachmentsTable extends BaseTable<Props> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -25,7 +25,7 @@ export default class ProblemAttachmentsTable extends BaseTable<Props> {
     return 'problemattachments';
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return ProblemAttachmentForm;
   }
 

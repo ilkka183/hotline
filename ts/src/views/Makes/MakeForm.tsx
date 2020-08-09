@@ -1,7 +1,11 @@
 import BaseForm from '../BaseForm';
+import { API_MAKES } from './MakesTable';
 
-export default class MakeForm extends BaseForm<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class MakeForm extends BaseForm<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -14,7 +18,7 @@ export default class MakeForm extends BaseForm<{}> {
   }
 
   protected getApiName(): string {
-    return 'makes';
+    return API_MAKES;
   }
 
   protected getNewTitle(): string {

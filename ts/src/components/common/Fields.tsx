@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 
 export enum SortOrder { Asc, Desc }
 
@@ -284,7 +284,7 @@ export class DateTimeField extends Field {
 }
 
 
-export default class FieldsComponent<P, S> extends Component<P, S> {
+export default class FieldsComponent<P, S> extends React.Component<P, S> {
   public fields: Field[] = [];
 
   protected findField(name: string): Field | null {

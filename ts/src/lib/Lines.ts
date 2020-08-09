@@ -23,7 +23,7 @@ export default class Lines {
 
     this.lines += title;
 
-    for (let i = 0; i < flags.length; i++)
+    for (let i: number = 0; i < flags.length; i++)
       if (flags[i]) {
         this.lines += '\n';
         this.lines += texts[i];

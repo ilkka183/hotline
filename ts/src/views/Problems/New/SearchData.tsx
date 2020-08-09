@@ -52,8 +52,8 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
     onData(newData);
   }
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
 
     try {
       setError('');

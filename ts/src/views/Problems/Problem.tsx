@@ -8,6 +8,27 @@ import ProblemForm from './ProblemForm';
 import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
 
+export const FUEL_TYPE_TEXTS = [
+  'bensiini',
+  'diesel',
+  'bensiinihybridi',
+  'dieselhybridi',
+  'kaasu',
+  'sähkö'
+];
+
+export enum ProblemStatus {
+  Open,
+  Solved,
+  Unsolved
+}
+
+export const STATUS_TEXTS = [
+  'avoin',
+  'ratkaistu',
+  'ratkaisematon'
+];
+
 interface State {
   problem: any,
   replyId: number | null,
@@ -51,48 +72,48 @@ export default class Problem extends UserComponent<{}, State> {
     await this.loadData();
   }
 
-  handleShowModal = () => {
+  private readonly handleShowModal = () => {
     this.setState({ showModal: true });
   }
 
-  handleHideModal = () => {
+  private readonly handleHideModal = () => {
     this.setState({ showModal: false });
   }
 
-  handleSubmitModal = async () => {
+  private readonly handleSubmitModal = async () => {
     await this.loadData();
 
     this.setState({ showModal: false });
   }
 
-  handleShowSolutionModal = (row: any) => {
+  private readonly handleShowSolutionModal = (row: any) => {
     this.setState({ showSolutionModal: true, replyId: row.Id });
   }
 
-  handleHideSolutionModal = () => {
+  private readonly handleHideSolutionModal = () => {
     this.setState({ showSolutionModal: false });
   }
 
-  handleSubmitSolutionModal = async () => {
+  private readonly handleSubmitSolutionModal = async () => {
     await this.loadData();
 
     this.setState({ showSolutionModal: false });
   }
 
-  handleAttachmentEdited = async () => {
+  private readonly handleAttachmentEdited = async () => {
     await this.loadData();
   }
 
-  handleAttachmentDelete = async (reply: any) => {
+  private readonly handleAttachmentDelete = async (reply: any) => {
     await http.delete('/problemattachments/' + reply.Id);
     await this.loadData();
   }
 
-  handleReplyEdited = async () => {
+  private readonly handleReplyEdited = async () => {
     await this.loadData();
   }
 
-  handleReplyDelete = async (reply: any) => {
+  private readonly handleReplyDelete = async (reply: any) => {
     await http.delete('/problemreplies/' + reply.Id);
     await this.loadData();
   }
@@ -179,7 +200,7 @@ export default class Problem extends UserComponent<{}, State> {
         {showModal && this.renderModal()}
         {showSolutionModal && this.renderSolutionModal()}
         {this.renderAttachments()}
-        {(problem.Status === 0 || ((this.user !== null) && this.user.isPowerOrAdmin)) && this.renderReplies()}
+        {(problem.Status === ProblemStatus.Open || ((this.user !== null) && this.user.isPowerOrAdmin)) && this.renderReplies()}
       </Container>
     );
   }

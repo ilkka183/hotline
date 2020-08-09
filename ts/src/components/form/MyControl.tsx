@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -11,10 +11,10 @@ export interface ControlProps {
   error: string,
   asRow: boolean,
   required?: boolean,
-  onChange: (e: any) => void
+  onChange: (event: any) => void
 }
 
-export default abstract class MyControl<P> extends Component<P & ControlProps> {
+export default abstract class MyControl<P> extends React.Component<P & ControlProps> {
   protected renderLabel(): JSX.Element | null {
     const { label, required } = this.props;
 

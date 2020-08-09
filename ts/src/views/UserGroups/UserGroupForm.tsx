@@ -1,7 +1,11 @@
 import BaseForm from '../BaseForm';
+import { API_USER_GROUPS } from './UserGroupsTable';
 
-export default class UserGroupForm extends BaseForm<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class UserGroupForm extends BaseForm<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -22,7 +26,7 @@ export default class UserGroupForm extends BaseForm<{}> {
   }
 
   protected getApiName(): string {
-    return 'usergroups';
+    return API_USER_GROUPS;
   }
 
   protected getNewTitle(): string {

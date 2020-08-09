@@ -16,7 +16,7 @@ const SolvedProblems: React.FC<{}> = () => {
       title="Uusimmat ratkaisut"
       status={1}
       showSearchBox={true}
-      paginate={false}
+      paginate={true}
       creatable={false}
       editable={editable}
       deletable={deletable}

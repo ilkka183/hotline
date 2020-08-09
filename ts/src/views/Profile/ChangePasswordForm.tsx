@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default class ChangePasswordForm extends FieldsForm<Props> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     
     this.addField('password',     'Nykyinen salasana',       'password', { minLength: 5, required: true });
@@ -20,7 +20,7 @@ export default class ChangePasswordForm extends FieldsForm<Props> {
     return 'Vaihda salasana';
   }
 
-  handleSubmitModal = async () => {
+  protected readonly handleSubmitModal = async () => {
     const { onSubmitModal } = this.props;
 
     if (this.hasErrors())
@@ -40,7 +40,7 @@ export default class ChangePasswordForm extends FieldsForm<Props> {
         }
         catch (ex) {
           if (ex.response && ex.response.status === 401) {
-            const errors = { ...this.state.errors };
+            const errors: any = { ...this.state.errors };
             errors.password = 'Nykyinen salasana ei ole oikea';
 
             this.setState({ errors });
@@ -48,7 +48,7 @@ export default class ChangePasswordForm extends FieldsForm<Props> {
         }
       }
       else {
-        const errors = { ...this.state.errors };
+        const errors: any = { ...this.state.errors };
         errors.newPassword1 = 'Salasanat eivät täsmää';
         errors.newPassword2 = 'Salasanat eivät täsmää';
 
@@ -57,7 +57,7 @@ export default class ChangePasswordForm extends FieldsForm<Props> {
     }
     catch (ex) {
       if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {
-        const errors = { ...this.state.errors };
+        const errors: any = { ...this.state.errors };
         errors.password = ex.response.data;
 
         this.setState({ errors });

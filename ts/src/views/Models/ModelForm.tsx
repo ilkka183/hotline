@@ -1,8 +1,12 @@
 import BaseForm from '../BaseForm';
-import { FUEL_TYPES } from '../Problems/ProblemsTable';
+import { FUEL_TYPE_TEXTS } from '../Problems/Problem';
+import { API_MODELS } from './ModelsTable';
 
-export default class ModelForm extends BaseForm<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class ModelForm extends BaseForm<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -10,7 +14,7 @@ export default class ModelForm extends BaseForm<{}> {
     this.addField('Name',          'Malli',                'text',   { required: true });
     this.addField('BeginYear',     'Vuodesta',             'number', { required: true });
     this.addField('EndYear',       'Vuoteen',              'number');
-    this.addField('FuelType',      'Käyttövoima',          'number', { required: true, enums: FUEL_TYPES });
+    this.addField('FuelType',      'Käyttövoima',          'number', { required: true, enums: FUEL_TYPE_TEXTS });
     this.addField('EngineSize',    'Kuutiotilavuus (cm3)', 'number', { required: true });
     this.addField('CylinderCount', 'Sylinterimäärä',       'number', { required: true });
     this.addField('EnginePower',   'Teho (kW)',            'number', { required: true });
@@ -23,7 +27,7 @@ export default class ModelForm extends BaseForm<{}> {
   }
 
   protected getApiName(): string {
-    return 'models';
+    return API_MODELS;
   }
 
   protected getNewTitle(): string {

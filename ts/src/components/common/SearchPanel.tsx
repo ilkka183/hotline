@@ -7,7 +7,7 @@ import { Field } from './Fields';
 
 interface Props {
   table: any,
-  onChange: (e: any) => void,
+  onChange: (event: any) => void,
   onClear: () => void,
   onSearch: () => void
 }

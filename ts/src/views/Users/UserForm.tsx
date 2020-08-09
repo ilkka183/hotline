@@ -1,8 +1,12 @@
 import BaseForm from '../BaseForm';
-import { USER_ROLES } from './UsersTable';
+import { USER_ROLES } from '../../services/authService';
+import { API_USERS } from './UsersTable';
 
-export default class UserForm extends BaseForm<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class UserForm extends BaseForm<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -30,7 +34,7 @@ export default class UserForm extends BaseForm<{}> {
   }
 
   protected getApiName(): string {
-    return 'users';
+    return API_USERS;
   }
 
   protected getNewTitle(): string {

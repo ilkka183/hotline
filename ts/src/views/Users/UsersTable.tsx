@@ -1,10 +1,14 @@
 import BaseTable from '../BaseTable';
 import UserForm from './UserForm';
+import { USER_ROLES } from '../../services/authService';
 
-export const USER_ROLES = ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'];
+export const API_USERS = 'users';
 
-export default class UsersTable extends BaseTable<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class UsersTable extends BaseTable<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -27,10 +31,10 @@ export default class UsersTable extends BaseTable<{}> {
   }
 
   protected getApiName(): string {
-    return 'users';
+    return API_USERS;
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return UserForm;
   }
 }

@@ -1,9 +1,14 @@
 import BaseTable from '../BaseTable';
 import ModelForm from './ModelForm';
-import { FUEL_TYPES } from '../Problems/ProblemsTable';
+import { FUEL_TYPE_TEXTS } from '../Problems/Problem';
 
-export default class ModelsTable extends BaseTable<{}> {
-  constructor(props: any) {
+export const API_MODELS = 'models';
+
+interface Props {
+}
+
+export default class ModelsTable extends BaseTable<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId(false);
@@ -11,7 +16,7 @@ export default class ModelsTable extends BaseTable<{}> {
     this.addField('Name',          'Malli',                'text',   { editLink: true});
     this.addField('BeginYear',     'Vuodesta',             'number');
     this.addField('EndYear',       'Vuoteen',              'number');
-    this.addField('FuelType',      'Käyttövoima',          'number', { enums: FUEL_TYPES });
+    this.addField('FuelType',      'Käyttövoima',          'number', { enums: FUEL_TYPE_TEXTS });
     this.addField('EngineSize',    'Kuutiotilavuus (cm3)', 'number');
     this.addField('CylinderCount', 'Sylinterimäärä',       'number');
     this.addField('EnginePower',   'Teho (kW)',            'number');
@@ -25,10 +30,10 @@ export default class ModelsTable extends BaseTable<{}> {
   }
 
   protected getApiName(): string {
-    return 'models';
+    return API_MODELS;
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return ModelForm;
   }  
 }

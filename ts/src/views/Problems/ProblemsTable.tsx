@@ -1,36 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FieldsTableProps } from '../../components/common/FieldsTable';
 import BaseTable from '../BaseTable';
 import ProblemForm from './ProblemForm';
 import NewProblemModal from './New/NewProblemModal';
-
-export const FUEL_TYPES = ['bensiini', 'diesel', 'bensiinihybridi', 'dieselhybridi', 'kaasu', 'sähkö'];
-export const STATUSES = ['avoin', 'ratkaistu', 'ratkaisematon'];
-
-function lastWhiteSpaceOf(str: string): number {
-  for (let i = str.length - 1; i >= 0; i--)
-    if (' \t\n\r\v'.indexOf(str[i]) > -1)
-      return i;
-
-  return -1;
-}
-
-function truncate(str: string, n = 80, useWordBoundary = true): string {
-  if (str.length <= n)
-    return str;
-
-  const subString = str.substr(0, n - 1); // the original check
-
-  return (useWordBoundary ? subString.substr(0, lastWhiteSpaceOf(subString)) : subString) + '...';
-}
+import { ProblemStatus, FUEL_TYPE_TEXTS, STATUS_TEXTS } from './Problem';
 
 interface Props {
-  status?: number
+  status?: number,
+  userId?: number
 }
 
 export default class ProblemsTable extends BaseTable<Props> {
-  constructor(props: FieldsTableProps) {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -39,7 +20,7 @@ export default class ProblemsTable extends BaseTable<Props> {
     this.addField('Make',        'Merkki',               'text',     { search: true });
     this.addField('Model',       'Malli',                'text',     { search: true });
     this.addField('ModelYear',   'Vuosimalli',           'number');
-    this.addField('FuelType',    'Käyttövoima',          'number',   { enums: FUEL_TYPES });
+    this.addField('FuelType',    'Käyttövoima',          'number',   { enums: FUEL_TYPE_TEXTS });
     this.addField('EngineCode',  'Moottorin tunnus',     'text',     { visible: false, search: true });
 //    this.addField('Title',       'Otsikko',              'text',     { search: true, link: item => '/problem/' + item.Id });
     this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { search: true, render: this.renderDescription });
@@ -54,20 +35,25 @@ export default class ProblemsTable extends BaseTable<Props> {
     return 'problems';
   }
 
-  public getForm(): any {
+  public getModalForm(): any {
     return ProblemForm;
   }  
 
   protected getItemsQuery(query: any): void {
-//    if (this.props.status !== undefined)
-//      query.Status = this.props.status;
+    const { status, userId } = this.props;
+
+    if (status !== undefined)
+      query.Status = status;
+
+    if (userId !== undefined)
+      query.UserId = userId;
   }
 
-  canDelete(row: any) {
+  protected canDelete(row: any) {
     return (this.user !== null) && (this.user.isPowerOrAdmin || row.UserId === this.user.id);
   }
 
-  renderDescription(row: any) {
+  private renderDescription(row: any): JSX.Element {
     return (
       <>
         <Link to={'/problem/' + row.Id}>{row.Title}</Link>
@@ -80,26 +66,26 @@ export default class ProblemsTable extends BaseTable<Props> {
     );
   }
 
-  renderStatus(row: any) {
-    const text = STATUSES[row.Status];
-    const className = row.Status === 0 ? 'open' : 'solved';
+  private renderStatus(row: any): JSX.Element {
+    const className: string = row.Status === ProblemStatus.Open ? 'open' : 'solved';
+    const text: string = STATUS_TEXTS[row.Status];
 
     return (
       <span className={className}>{text}</span>
     );
   }
 
-  showNewModal() {
+  protected showNewModal() {
     this.setState({ showNewModal: true });
   }
 
-  handleSubmitNewModal = async () => {
+  private readonly handleSubmitNewModal = async () => {
     await this.fetchItems({});
 
     this.setState({ showNewModal: false });
   }
 
-  handleHideNewModal = () => {
+  private readonly handleHideNewModal = () => {
     this.setState({ showNewModal: false });
   }
 
@@ -116,4 +102,21 @@ export default class ProblemsTable extends BaseTable<Props> {
       />
     );
   }
+}
+
+function lastWhiteSpaceOf(str: string): number {
+  for (let i: number = str.length - 1; i >= 0; i--)
+    if (' \t\n\r\v'.indexOf(str[i]) > -1)
+      return i;
+
+  return -1;
+}
+
+function truncate(str: string, n = 80, useWordBoundary = true): string {
+  if (str.length <= n)
+    return str;
+
+  const subString = str.substr(0, n - 1); // the original check
+
+  return (useWordBoundary ? subString.substr(0, lastWhiteSpaceOf(subString)) : subString) + '...';
 }

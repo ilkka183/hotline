@@ -1,8 +1,11 @@
 import FieldsForm from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
-export default class LoginForm extends FieldsForm<{}> {
-  constructor(props: any) {
+interface Props {
+}
+
+export default class LoginForm extends FieldsForm<Props> {
+  constructor(props: Props) {
     super(props);
     
     this.addField('email',    'Sähköposti', 'email',    { required: true });

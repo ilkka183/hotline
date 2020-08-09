@@ -3,7 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
-import { FUEL_TYPES } from './ProblemsTable';
+import { FUEL_TYPE_TEXTS } from './Problem';
 
 interface Props {
   data: any,
@@ -22,7 +22,7 @@ const ProblemSummary: React.FC<Props> = ({ className, data }) => {
           <Col>{data.RegistrationNumber}</Col>
         </Row>
         <Row>
-          <Col>{FUEL_TYPES[data.FuelType]}</Col>
+          <Col>{FUEL_TYPE_TEXTS[data.FuelType]}</Col>
           <Col>{data.EngineSize} cm3</Col>
           <Col>{data.EnginePower} kW</Col>
           <Col>{data.EngineCode}</Col>

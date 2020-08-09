@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import ProblemForm from './ProblemForm';
 import http from '../../services/httpService';
+import { ProblemStatus } from './Problem';
 
 interface Props {
   showProblem: boolean,
@@ -18,7 +19,7 @@ interface State {
   reply: any
 }
 
-export default class ProblemSolutionModal extends Component<Props, State> {
+export default class ProblemSolutionModal extends React.Component<Props, State> {
   public state: State = {
     problem: {},
     reply: {}
@@ -42,7 +43,7 @@ export default class ProblemSolutionModal extends Component<Props, State> {
     }
   }
 
-  private handleChange = ({ currentTarget }: any) => {
+  private readonly handleChange = ({ currentTarget }: any) => {
     const problem = {...this.state.problem}
 
     problem[currentTarget.name] = currentTarget.value;
@@ -50,13 +51,13 @@ export default class ProblemSolutionModal extends Component<Props, State> {
     this.setState({ problem });
   }
 
-  private handleSubmit = async (e: any) => {
-    e.preventDefault();
+  private readonly handleSubmit = async (event: any) => {
+    event.preventDefault();
 
     const { onSubmit } = this.props;
     const { problem, reply } = this.state;
 
-    await http.put('/problems/' + problem.Id, { Solution: problem.Solution, Status: 1 });
+    await http.put('/problems/' + problem.Id, { Solution: problem.Solution, Status: ProblemStatus.Solved });
     await http.put('/problemreplies/' + reply.Id, { Solution: true });
     
     onSubmit();

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default class ProblemRepliessTable extends BaseTable<Props> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -29,7 +29,7 @@ export default class ProblemRepliessTable extends BaseTable<Props> {
     return 'problemreplies';
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return ProblemReplyForm;
   }
 

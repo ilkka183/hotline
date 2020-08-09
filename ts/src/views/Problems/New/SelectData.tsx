@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FieldSelect from './FieldSelect';
 import Required from '../../../components/form/Required';
-import { FUEL_TYPES } from './../ProblemsTable';
+import { FUEL_TYPE_TEXTS } from './../Problem';
 import http from '../../../services/httpService';
 
 interface Props {
@@ -48,7 +48,7 @@ const SelectData: React.FC<Props> = ({ data, onData, options, onOptions, onNext 
       '&modelYear=' + newData.ModelYear);
 
     const newOptions: any = {...options};
-    newOptions.fuelTypes = items.map((value: any) => ({ value, text: FUEL_TYPES[value] }));
+    newOptions.fuelTypes = items.map((value: any) => ({ value, text: FUEL_TYPE_TEXTS[value] }));
 
     onOptions(newOptions);
   }
@@ -149,8 +149,8 @@ const SelectData: React.FC<Props> = ({ data, onData, options, onOptions, onNext 
     onData(newData);
   }
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
 
     if (onNext)
       onNext();

@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default class ProfileForm extends BaseForm<Props> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
     
     this.addId();

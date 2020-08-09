@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
-import { FUEL_TYPES } from './../ProblemsTable';
+import { FUEL_TYPE_TEXTS } from './../Problem';
 import { LEON, GOLF, FOCUS } from './Cars';
 
 interface Props {
@@ -47,8 +47,8 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
     onData(newData);
   }
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
 
     if (onNext)
       onNext();
@@ -107,7 +107,7 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
         {renderInputText('Make', 'Merkki')}
         {renderInputText('Model', 'Malli')}
         {renderInputText('ModelYear', 'Mallivuosi')}
-        {renderSelectEnum('FuelType', 'Käyttövoima', FUEL_TYPES)}
+        {renderSelectEnum('FuelType', 'Käyttövoima', FUEL_TYPE_TEXTS)}
         {renderInputText('EngineSize', 'Kuutiotilavuus')}
         {renderInputText('EnginePower', 'Teho (kW)')}
         {renderInputText('EngineCode', 'Moottorin tunnus')}

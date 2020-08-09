@@ -74,7 +74,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
       else if (field.enums) {
         const lookup: LookupPair[] = [{ value: null, text: '' }];
 
-        let value = 0;
+        let value: number = 0;
 
         for (const text of field.enums) {
           lookup.push({ value, text });

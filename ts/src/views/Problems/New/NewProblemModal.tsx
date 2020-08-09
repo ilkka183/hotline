@@ -9,6 +9,7 @@ import EnterData from './EnterData'
 import ComposeTitle, { GROUPS } from './ComposeTitle'
 import ComposeDescription, { TESTERS } from './ComposeDescription'
 import ProblemForm from '../ProblemForm'
+import { ProblemStatus } from '../Problem'
 import UserComponent from '../../UserComponent';
 import Lines from '../../../lib/Lines';
 import http from '../../../services/httpService';
@@ -55,7 +56,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     description: null
   }
 
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
 
     this.state.data = {
@@ -75,7 +76,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
       GrossWeight: '',
       Title: '',
       Description: '',
-      Status: 0
+      Status: ProblemStatus.Open
     };
 
     this.state.title = {
@@ -149,19 +150,19 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     return false;
   }
 
-  private handleData = (data: any) => {
+  private readonly handleData = (data: any) => {
     this.setState({ data });
   }
 
-  private handleOptions = (options: any) => {
+  private readonly handleOptions = (options: any) => {
     this.setState({ options });
   }
 
-  private handleTabSelect = (activeKey: any) => {
+  private readonly handleTabSelect = (activeKey: any) => {
     this.setState({ activeKey });
   }
 
-  private handleTitleChange = ({ currentTarget: input }: any) => {
+  private readonly handleTitleChange = ({ currentTarget: input }: any) => {
     const title = {...this.state.title}
 
     title[input.name] = input.value;
@@ -169,7 +170,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     this.setState({ title });
   }
 
-  private handleDescriptionChange = ({ currentTarget: target }: any) => {
+  private readonly handleDescriptionChange = ({ currentTarget: target }: any) => {
     const description: any = {...this.state.description}
 
     description[target.name] = target.value;
@@ -177,7 +178,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     this.setState({ description });
   }
 
-  private handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }: any) => {
+  private readonly handleDescriptionChangeCheckboxGroup = ({ currentTarget: target }: any) => {
     const description: any = {...this.state.description}
 
     description[target.name][target.id - 1] = target.checked;
@@ -185,13 +186,13 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     this.setState({ description });
   }
 
-  private handlePrev = () => {
+  private readonly handlePrev = () => {
     const step: number = this.state.step - 1;
 
     this.setState({ step });
   }
 
-  private handleNext = () => {
+  private readonly handleNext = () => {
     const step: number = this.state.step + 1;
 
     this.setState({ step });
@@ -206,7 +207,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
       this.setState({ data });
     }
     else if (step === 3) {
-      const lines = new Lines();
+      const lines: Lines = new Lines();
 
       const { description, appearance, diagnostic, testers, history, text } = this.state.description;
 
@@ -235,7 +236,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     }
   }
 
-  private handleSubmit = () => {
+  private readonly handleSubmit = () => {
     const { onSubmit }: any = this.props;
 
     try {

@@ -20,7 +20,7 @@ export const GROUPS = [
 interface Props {
   data: any,
   title: any,
-  onChange: (e: any) => void
+  onChange: (event: any) => void
 }
 
 const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {

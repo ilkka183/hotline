@@ -86,18 +86,18 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     modalDataId: undefined
   }
 
-  protected abstract getForm(): any;
+  protected abstract getModalForm(): any;
   protected abstract getApiName(): string;
 
   public getUseModals(): boolean {
     return true;
   }
 
-  public canEdit(row: any): boolean {
+  protected canEdit(row: any): boolean {
     return true;
   }
 
-  public canDelete(row: any): boolean {
+  protected canDelete(row: any): boolean {
     return true;
   }
 
@@ -160,7 +160,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  private handlePageChange = async (pageIndex: number) => {
+  private readonly handlePageChange = async (pageIndex: number) => {
     if (this.props.rows) {
       this.setState({ pageIndex });
     }
@@ -169,7 +169,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  private handleSortField = async (name: string) => {
+  private readonly handleSortField = async (name: string) => {
     const sortFields: SortField[] = [...this.state.sortFields];
 
     const index: number = sortFields.findIndex(field => field.name === name);
@@ -193,18 +193,18 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  private handleSearch = () => {
+  private readonly handleSearch = () => {
     this.setState({ pageIndex: 0 });
   }
 
-  private handleSearchFieldChange = ({ currentTarget }: any ) => {
+  private readonly handleSearchFieldChange = ({ currentTarget }: any ) => {
     const searchValues: any = {...this.state.searchValues};
     searchValues[currentTarget.name] = currentTarget.value;
 
     this.setState({ searchValues });
   }
 
-  private handleSearchClear = () => {
+  private readonly handleSearchClear = () => {
     const searchValues: any = {...this.state.searchValues};
 
     for (const name in searchValues)
@@ -213,7 +213,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ searchValues });
   }
 
-  private handleToggleSearchPanel = () => {
+  private readonly handleToggleSearchPanel = () => {
     const searchPanel = !this.state.searchPanel;
 
     this.setState({ searchPanel });
@@ -227,18 +227,18 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ showEditModal: true, modalDataId: row.Id });
   }
 
-  private handleShowEditModal = (row: any) => {
+  private readonly handleShowEditModal = (row: any) => {
     if (row)
       this.showEditModal(row);
     else
       this.showNewModal();
   }
 
-  private handleHideEditModal = () => {
+  private readonly handleHideEditModal = () => {
     this.setState({ showEditModal: false, modalDataId: undefined });
   }
 
-  private handleSubmitEditModal = async () => {
+  private readonly handleSubmitEditModal = async () => {
     const { onEdited } = this.props;
 
     if (this.props.rows) {
@@ -252,15 +252,15 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.handleHideEditModal();
   }
 
-  private handleShowDeleteModal = (row: any) => {
+  private readonly handleShowDeleteModal = (row: any) => {
     this.setState({ showDeleteModal: true, deleteRow: row });
   }
 
-  private handleHideDeleteModal = () => {
+  private readonly handleHideDeleteModal = () => {
     this.setState({ showDeleteModal: false, deleteRow: undefined });
   }
 
-  private handleSubmitDeleteModal = async () => {
+  private readonly handleSubmitDeleteModal = async () => {
     const { onDelete } = this.props;
     const { deleteRow } = this.state;
 
@@ -318,11 +318,11 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return rows;
   }
 
-  private paginateRows(rows: any[], pageIndex: number, pageSize: number) {
-    const offset = pageIndex*pageSize;
-    const result = [];
+  private paginateRows(rows: any[], pageIndex: number, pageSize: number): any[] {
+    const offset: number = pageIndex*pageSize;
+    const result: any[] = [];
   
-    for (let i = 0; i < pageSize; i++) {
+    for (let i: number = 0; i < pageSize; i++) {
       const index = offset + i;
   
       if (index >= rows.length)
@@ -483,14 +483,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private renderEditModal(): JSX.Element | null {
-    const Form = this.getForm();
+    const Form: any = this.getModalForm();
 
     if (!Form)
       return null;
 
     const { showEditModal, modalDataId } = this.state;
 
-    const action = modalDataId ? 'edit' : 'new';
+    const action: string = modalDataId ? 'edit' : 'new';
 
     return (
       <Form
@@ -506,14 +506,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private renderDeleteModal(): JSX.Element | null {
-    const Form = this.getForm();
+    const Form: any = this.getModalForm();
 
     if (!Form)
       return null;
 
     const { showDeleteModal, deleteRow } = this.state;
 
-    const dataId = deleteRow ? deleteRow.Id : null;
+    const dataId: number | null = deleteRow ? deleteRow.Id : null;
 
     return (
       <Form

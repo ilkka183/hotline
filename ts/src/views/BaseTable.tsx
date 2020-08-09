@@ -27,7 +27,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     if (sortFields.length > 0) {
       query.sortFields = sortFields.length;
 
-      let number = 1;
+      let number: number = 1;
   
       for (const sortField of sortFields) {
         query['sortName' + number] = sortField.name;
@@ -39,7 +39,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
       }
     }
 
-    let endpoint = this.apiPath;
+    let endpoint: string = this.apiPath;
 
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
@@ -50,7 +50,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected async deleteItem(row: any): Promise<void> {
-    const endpoint = this.apiPath + '/' + row.Id;
+    const endpoint: string = this.apiPath + '/' + row.Id;
 
     await http.delete(endpoint);
   }

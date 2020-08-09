@@ -1,8 +1,13 @@
 import BaseTable from '../BaseTable';
 import UserGroupForm from './UserGroupForm';
 
-export default class UserGroupsTable extends BaseTable<{}> {
-  constructor(props: any) {
+export const API_USER_GROUPS = 'usergroups';
+
+interface Props {
+}
+
+export default class UserGroupsTable extends BaseTable<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();
@@ -23,10 +28,10 @@ export default class UserGroupsTable extends BaseTable<{}> {
   }
 
   protected getApiName(): string {
-    return 'usergroups';
+    return API_USER_GROUPS;
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return UserGroupForm;
   }
 }

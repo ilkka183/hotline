@@ -1,8 +1,13 @@
 import BaseTable from '../BaseTable';
 import MakeForm from './MakeForm';
 
-export default class MakesTable extends BaseTable<{}> {
-  constructor(props: any) {
+export const API_MAKES = 'makes';
+
+interface Props {
+}
+
+export default class MakesTable extends BaseTable<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId(false);
@@ -16,10 +21,10 @@ export default class MakesTable extends BaseTable<{}> {
   }
 
   protected getApiName(): string {
-    return 'makes';
+    return API_MAKES;
   }
 
-  protected getForm(): any {
+  protected getModalForm(): any {
     return MakeForm;
   }
 }

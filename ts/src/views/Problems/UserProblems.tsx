@@ -2,7 +2,7 @@ import React from 'react';
 import ProblemsTable from './ProblemsTable';
 import auth, { User } from '../../services/authService';
 
-const OpenProblems: React.FC<{}> = () => {
+const UserProblems: React.FC<{}> = () => {
   const user: User | null = auth.getCurrentUser();
 
   const editable: boolean = true;
@@ -13,8 +13,8 @@ const OpenProblems: React.FC<{}> = () => {
 
   return (
     <ProblemsTable
-      title="Avoimet vikatapaukset"
-      status={0}
+      title="Omat vikatapaukset"
+      userId={user!.id}
       showSearchBox={true}
       paginate={true}
       creatable={false}
@@ -24,4 +24,4 @@ const OpenProblems: React.FC<{}> = () => {
   );
 }
 
-export default OpenProblems;
+export default UserProblems;

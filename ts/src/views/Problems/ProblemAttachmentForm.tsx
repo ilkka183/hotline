@@ -1,7 +1,11 @@
 import BaseForm from '../BaseForm';
 
-export default class ProblemAttachmentForm extends BaseForm<{}> {
-  constructor(props: any) {
+interface Props {
+  parentId: number
+}
+
+export default class ProblemAttachmentForm extends BaseForm<Props> {
+  constructor(props: Props) {
     super(props);
 
     this.addId();

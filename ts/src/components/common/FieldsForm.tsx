@@ -119,9 +119,9 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   protected doSubmit(): void {
   }
   
-  protected handleSubmit = (e: any) => {
-    if (e)
-      e.preventDefault();
+  protected readonly handleSubmit = (event: any) => {
+    if (event)
+      event.preventDefault();
 
     if (this.hasErrors())
       return;
@@ -129,7 +129,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     this.doSubmit();
   }
 
-  protected handleSubmitModal = (e: any) => {
+  protected readonly handleSubmitModal = () => {
     const { action, onSubmitModal } = this.props;
 
     if (action !== 'delete') {
@@ -143,7 +143,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       onSubmitModal();
   }
 
-  protected handleChange = (event: any) => {
+  protected readonly handleChange = (event: any) => {
     const { currentTarget } = event;
 
     const errors: any = {...this.state.errors}
@@ -320,7 +320,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       return null;
 
     if (field.isLookup) {
-      let autofocus = false;
+      let autofocus: boolean = false;
 
       if (!field.readonly && !this.autofocusSet) {
         autofocus = true;

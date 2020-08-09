@@ -8,6 +8,13 @@ export enum UserRole {
   Demo
 }
 
+export const USER_ROLES = [
+  'pääkäyttäjä',
+  'tehokäyttäjä',
+  'käyttäjä',
+  'demokäyttäjä'
+];
+
 interface IUser {
   id: number,
   firstName: string,
@@ -43,8 +50,8 @@ export class User implements IUser {
   }
 }
 
-const apiEndpoint = '/auth';
-const tokenKey = 'token';
+const apiEndpoint: string = '/auth';
+const tokenKey: string = 'token';
 
 const jwt: string | null = getJwt();
 http.setJwt(jwt);

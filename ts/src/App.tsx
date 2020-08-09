@@ -17,6 +17,7 @@ import ProblemsTable from './views/Problems/ProblemsTable';
 import Problem from './views/Problems/Problem';
 import OpenProblems from './views/Problems/OpenProblems';
 import SolvedProblems from './views/Problems/SolvedProblems';
+import UserProblems from './views/Problems/UserProblems';
 
 import Profile from './views/Profile/Profile';
 
@@ -52,6 +53,7 @@ export default class App extends React.Component<{}, State> {
             <ProtectedRoute path="/problem/:id" component={Problem} />
             <ProtectedRoute path="/problems/open" component={OpenProblems} />
             <ProtectedRoute path="/problems/solved" component={SolvedProblems} />
+            <ProtectedRoute path="/problems/user" component={UserProblems} />
             <ProtectedRoute path="/problems" component={ProblemsTable} />
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={UserRole.Power} />

@@ -50,7 +50,7 @@ async function getProblems(req, res) {
       row.Replies = replies.filter(reply => reply.ProblemId === row.Id);
 
     const response = {
-      count: rows.length,
+      rowCount: rows.length,
       rows
     }
 
