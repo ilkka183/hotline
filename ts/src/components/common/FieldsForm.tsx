@@ -62,7 +62,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   public getEmptyData(): any {
     const data: any = {}
 
-    for (let field of this.fields)
+    for (const field of this.fields)
       data[field.name] = '';
 
     return data;
@@ -71,7 +71,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   public getDefaultData(): any {
     const data: any = {}
 
-    for (let field of this.fields)
+    for (const field of this.fields)
       data[field.name] = field.defaultValue;
 
     return data;
@@ -80,7 +80,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   public jsonToData(row: any): any {
     const data: any = {}
 
-    for (let field of this.fields)
+    for (const field of this.fields)
       data[field.name] = field.jsonToData(row[field.name]);
 
     return data;
@@ -105,18 +105,22 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
 
   protected hasErrors(): any {
-    const errors = this.validate();
+    const errors: any = this.validate();
     this.setState({ errors: errors || {} });
 
     return errors;
   }
 
-  private validateField({ name, value }: any): any {
-    const field = this.findField(name);
-    return field && field.validate(value);
+  private validateField(name: string, value: any): string | null {
+    const field: Field | null = this.findField(name);
+
+    if (field)
+      return field.validate(value);
+
+    return null;
   }
 
-  protected doSubmit(): void {
+  protected doSubmit() {
   }
   
   protected readonly handleSubmit = (event: any) => {
@@ -147,7 +151,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     const { currentTarget } = event;
 
     const errors: any = {...this.state.errors}
-    const errorMessage = this.validateField(currentTarget);
+    const errorMessage: string | null = this.validateField(currentTarget.name, currentTarget.value);
 
     if (errorMessage)
       errors[currentTarget.name] = errorMessage;
@@ -162,9 +166,9 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       console.log(event.target.files);
       console.log(currentTarget.value);
 
-      const file = event.target.files[0];
+      const file: any = event.target.files[0];
 
-      const info = {
+      const info: any = {
         name: file.name,
         size: file.size,
         type: file.type
@@ -185,7 +189,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     return true;
   }
 
-  public goBack(): void {
+  public goBack() {
 /*    const { history } = this.props;
     
     if (history)
@@ -415,15 +419,17 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     if (!field.visible)
       return null;
 
-    const data = this.getData();
-    const value = data[field.name];
+    const data: any = this.getData();
+    const value: any = data[field.name];
 
     let text: JSX.Element | string | null = field.formatValue(value);
 
     if (!text)
       return null;
       
-    if (field.preformatted)
+    if (field.isCode)
+      text = <code>{text}</code>
+    else if (field.preformatted)
       text = <pre>{text}</pre>
 
     return (

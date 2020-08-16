@@ -57,7 +57,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     return '';
   }
 
-  private async populateLookups(): Promise<void> {
+  private async populateLookups() {
     for (const field of this.fields) {
       if (field.lookupUrl) {
         const { data: { rows } } = await this.http.get('/' + field.lookupUrl);
@@ -88,7 +88,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     }
   }
 
-  private async populateData(): Promise<void> {
+  private async populateData() {
     const errors: any = {};
 
     if (this.dataId) {
@@ -128,12 +128,12 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     }
   }
 
-  public async componentDidMount(): Promise<void> {
+  public async componentDidMount() {
     await this.populateLookups();
     await this.populateData();
   }
 
-  protected async doSubmit(): Promise<void> {
+  protected async doSubmit() {
     const data: any = this.state.data;
 
     if (data.Id) {
@@ -142,9 +142,9 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
 
       const row: any = {};
       
-      for (let field of this.fields) {
-        const value = data[field.name];
-        const savedValue = savedData[field.name];
+      for (const field of this.fields) {
+        const value: any = data[field.name];
+        const savedValue: any = savedData[field.name];
 
         if (value !== savedValue)
           row[field.name] = field.dataToJson(value);
@@ -168,8 +168,8 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
       try {
         const row: any = {};
         
-        for (let field of this.fields) {
-          const value = data[field.name];
+        for (const field of this.fields) {
+          const value: any = data[field.name];
 
           if (value !== null && value !== '')
             row[field.name] = field.dataToJson(value);
@@ -185,6 +185,6 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     }
   }
 
-  protected afterSubmit(): void {
+  protected afterSubmit() {
   }
 }

@@ -36,7 +36,6 @@ export interface FieldsTableProps {
   autoHide?: boolean,
   rows?: any[],
   showTitle?: boolean,
-  showSearchBox?: boolean,
   title?: string,
   readOnly?: boolean,
   searchPanel?: boolean,
@@ -126,7 +125,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   protected abstract async getItems(options: SearchOptions): Promise<Rows>;
   protected abstract async deleteItem(row: any): Promise<void>;
 
-  protected async fetchItems(options: SearchOptions): Promise<void> {
+  protected async fetchItems(options: SearchOptions) {
     let { searchValues, pageIndex, sortFields } = options;
 
     if (searchValues === undefined)
@@ -143,7 +142,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ rowCount, rows, searchValues, sortFields, pageIndex });
   }
 
-  public async componentDidMount(): Promise<void> {
+  public async componentDidMount() {
     const searchValues: any = {};
 
     for (const field of this.fields)
@@ -153,7 +152,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       this.setState({ searchValues });
     }
     else {
-      const pageIndex = 0;
+      const pageIndex: number = 0;
       const sortFields: SortField[] = []
 
       await this.fetchItems({ pageIndex, sortFields });
@@ -175,7 +174,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     const index: number = sortFields.findIndex(field => field.name === name);
 
     if (index !== -1) {
-      const sortField = sortFields[index];
+      const sortField: SortField = sortFields[index];
 
       if (sortField.order === SortOrder.Asc)
         sortField.order = SortOrder.Desc;
@@ -291,7 +290,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     const searchValues: any = this.state.searchValues;
 
     for (const name in searchValues) {
-      const value = searchValues[name];
+      const value: any = searchValues[name];
 
       if (value)
         rows = rows.filter(row => row[name].toLowerCase().startsWith(value.toLowerCase()));
@@ -301,7 +300,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       const sortField: SortField = sortFields[0];
       
       rows.sort((a, b) => {
-        let result = 0;
+        let result: number = 0;
   
         if (a[sortField.name] > b[sortField.name])
           result = 1;
@@ -342,7 +341,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (!showTitle)
       return null;
 
-    const text = title ? title : this.getTitle();
+    const text: string = title ? title! : this.getTitle();
 
     return <h2>{text}</h2>;
   }
@@ -350,8 +349,8 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   private renderToggleSearchButton(): JSX.Element {
     const { searchPanel } = this.state;
 
-    const variant = this.hasSearchValues() ? 'secondary' : 'light';
-    const text = searchPanel ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
+    const variant: string = this.hasSearchValues() ? 'secondary' : 'light';
+    const text: string = searchPanel ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
 
     return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
   }
@@ -362,8 +361,8 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (readOnly || !creatable)
       return null;
 
-    const variant = newButtonAsLink ? 'link' : 'primary';
-    const text = newButtonText ? newButtonText : 'Lisää uusi';
+    const variant: string = newButtonAsLink ? 'link' : 'primary';
+    const text: string = newButtonText ? newButtonText! : 'Lisää uusi';
 
     if (this.getUseModals())
       return <Button className="mb-2" variant={variant} onClick={() => this.handleShowEditModal(null)}>{text}</Button>
@@ -454,7 +453,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (column.link)
       return <Link to={column.link(row)}>{text}</Link>
 
-    if (column.code)
+    if (column.isCode)
       return <code>{text}</code>
 
     return text;

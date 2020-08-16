@@ -14,6 +14,13 @@ import UserComponent from '../../UserComponent';
 import Lines from '../../../lib/Lines';
 import http from '../../../services/httpService';
 
+enum ProblemStep {
+  Data,
+  Title,
+  Description,
+  Problem
+}
+
 interface Props {
   onSubmit: () => void,
   onHide: () => void
@@ -21,7 +28,7 @@ interface Props {
 
 interface State {
   activeKey: any,
-  step: number,
+  step: ProblemStep,
   stepReady: boolean[],
   data: any,
   options: {
@@ -40,7 +47,7 @@ interface State {
 export default class NewProblemForm extends UserComponent<Props, State> {
   public state: State = {
     activeKey: undefined,
-    step: 0,
+    step: ProblemStep.Data,
     stepReady: [false, false, false, false],
     data: null,
     options: {
@@ -103,7 +110,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     }
   }
 
-  async componentDidMount() {
+  public async componentDidMount() {
     const { data } = await http.get('/data/makes');
 
     const options: any = {...this.state.options};
@@ -141,10 +148,10 @@ export default class NewProblemForm extends UserComponent<Props, State> {
     const { step } = this.state;
 
     switch (step) {
-      case 0: return this.isDataReady();
-      case 1: return this.isTitleReady();
-      case 2: return this.isDescriptionReady();
-      case 3: return this.isProblemReady();
+      case ProblemStep.Data: return this.isDataReady();
+      case ProblemStep.Title: return this.isTitleReady();
+      case ProblemStep.Description: return this.isDescriptionReady();
+      case ProblemStep.Problem: return this.isProblemReady();
     }
 
     return false;
@@ -187,55 +194,62 @@ export default class NewProblemForm extends UserComponent<Props, State> {
   }
 
   private readonly handlePrev = () => {
-    const step: number = this.state.step - 1;
+    const step: ProblemStep = this.state.step - 1;
 
     this.setState({ step });
   }
 
   private readonly handleNext = () => {
-    const step: number = this.state.step + 1;
+    const { step } = this.state;
+    const data: any = {...this.state.data}
 
-    this.setState({ step });
+    switch (step) {
+      case ProblemStep.Title:
+        data.Title = this.formatTitle();
+        break;
 
-    if (step === 2) {
-      const { group, groupOther, title } = this.state.title;
-
-      const data = {...this.state.data}
-      const groupName = (group === GROUPS[GROUPS.length - 1]) ? groupOther : group;
-      data.Title = groupName.toUpperCase() + ': ' + title;
-
-      this.setState({ data });
+      case ProblemStep.Description:
+        data.Description = this.formatDescription();
+        break;
     }
-    else if (step === 3) {
-      const lines: Lines = new Lines();
 
-      const { description, appearance, diagnostic, testers, history, text } = this.state.description;
-
-      if (description)
-        lines.addText('Asiakkaan viankuvaus:', description);
-
-      if (appearance)
-        lines.addText('Vian esiintyminen:', appearance);
-
-      if (diagnostic)
-        lines.addText('Itsediagnostiikka:', diagnostic);
-
-      if (testers)
-        lines.addTexts('Käytettyt testilaitteet:', testers, TESTERS);
-
-      if (history)
-        lines.addText('Korjaushistoria:', history);
-
-      if (text)
-        lines.addText('Vapaa teksti:', text);
-
-      const data: any = {...this.state.data}
-      data.Description = lines.toString;
-
-      this.setState({ data });
-    }
+    this.setState({ step: step + 1, data });
   }
 
+  private formatTitle(): string {
+    const { group, groupOther, title } = this.state.title;
+    
+    const groupName: string = (group === GROUPS[GROUPS.length - 1]) ? groupOther : group;
+
+    return groupName.toUpperCase() + ': ' + title;
+  }
+  
+  private formatDescription(): string {
+    const { description, appearance, diagnostic, testers, history, text } = this.state.description;
+
+    const lines = new Lines();
+
+    if (description)
+      lines.addText('Asiakkaan viankuvaus:', description);
+
+    if (appearance)
+      lines.addText('Vian esiintyminen:', appearance);
+
+    if (diagnostic)
+      lines.addText('Itsediagnostiikka:', diagnostic);
+
+    if (testers)
+      lines.addTexts('Käytettyt testilaitteet:', testers, TESTERS);
+
+    if (history)
+      lines.addText('Korjaushistoria:', history);
+
+    if (text)
+      lines.addText('Vapaa teksti:', text);
+
+    return lines.toString;
+  }
+  
   private readonly handleSubmit = () => {
     const { onSubmit }: any = this.props;
 
@@ -331,18 +345,18 @@ export default class NewProblemForm extends UserComponent<Props, State> {
         </Modal.Header>
 
         <Modal.Body>
-          {step === 0 && this.renderData()}
-          {step === 1 && this.renderTitle()}
-          {step === 2 && this.renderDescription()}
-          {step === 3 && this.renderProblemForm()}
+          {step === ProblemStep.Data && this.renderData()}
+          {step === ProblemStep.Title && this.renderTitle()}
+          {step === ProblemStep.Description && this.renderDescription()}
+          {step === ProblemStep.Problem && this.renderProblemForm()}
         </Modal.Body>
 
         <Modal.Footer>
           <div className="mr-auto" >
-            {(step > 0) && <Button variant="primary" className="mr-2" onClick={this.handlePrev}>Edellinen</Button>}
-            {(step < 3) && <Button variant="primary" disabled={!this.isStepReady()} onClick={this.handleNext}>Seuraava</Button>}
+            {(step > ProblemStep.Data) && <Button variant="primary" className="mr-2" onClick={this.handlePrev}>Edellinen</Button>}
+            {(step < ProblemStep.Problem) && <Button variant="primary" disabled={!this.isStepReady()} onClick={this.handleNext}>Seuraava</Button>}
           </div>
-          {(step === 3) && <Button variant="primary" onClick={this.handleSubmit}>Tallenna</Button>}
+          {(step === ProblemStep.Problem) && <Button variant="primary" onClick={this.handleSubmit}>Tallenna</Button>}
           <Button variant="secondary" onClick={onHide}>Peru</Button>
         </Modal.Footer>
       </Modal>      

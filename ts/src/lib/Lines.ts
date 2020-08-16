@@ -6,7 +6,7 @@ export default class Lines {
     return this.lines;
   }
 
-  public addText(title: string, text: string): void {
+  public addText(title: string, text: string) {
     if (this.index > 0)
       this.lines += '\n\n';
 
@@ -17,7 +17,7 @@ export default class Lines {
     this.index++;
   }
 
-  public addTexts(title: string, flags: any[], texts: string[]): void {
+  public addTexts(title: string, flags: any[], texts: string[]) {
     if (this.index > 0)
       this.lines += '\n\n';
 

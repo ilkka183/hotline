@@ -1,26 +1,11 @@
-import React from 'react';
-import ProblemsTable from './Problems/ProblemsTable';
-import auth, { User } from '../services/authService';
+import Problems from './Problems/Problems';
 
-const Home: React.FC<{}> = () => {
-  const user: User | null = auth.getCurrentUser();
+export default class Home extends Problems {
+  protected getTitle(): string {
+    return 'Vikatapaukset';
+  }
 
-  const editable: boolean = true;
-  const deletable: boolean = (user !== null) && user.isPowerOrAdmin;
-
-  if (!user)
-    return null;
-
-  return (
-    <ProblemsTable
-      newButtonAsLink={true}
-      newButtonText="Lisää uusi vikatapaus"
-      paginate={false}
-      creatable={true}
-      editable={editable}
-      deletable={deletable}
-    />
-  );
+  protected getCreatable(): boolean {
+    return true;
+  }
 }
-
-export default Home;

@@ -11,7 +11,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return '/' + this.getApiName();
   }
 
-  protected getItemsQuery(query: any): void {
+  protected getItemsQuery(query: any) {
   }
 
   protected async getItems(options: SearchOptions): Promise<Rows> {
@@ -49,7 +49,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return response.data;
   }
 
-  protected async deleteItem(row: any): Promise<void> {
+  protected async deleteItem(row: any) {
     const endpoint: string = this.apiPath + '/' + row.Id;
 
     await http.delete(endpoint);

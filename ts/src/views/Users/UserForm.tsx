@@ -23,7 +23,7 @@ export default class UserForm extends BaseForm<Props> {
     this.addField('PostOffice',   'Postitoimipaikka', 'text');
     this.addField('Country',      'Maa',              'text');
     this.addField('Phone',        'Puhelin',          'phone');
-    this.addField('Website',      'Nettisivut',       'text');
+    this.addField('Website',      'Nettisivut',       'url');
     this.addField('LicenseBegin', 'Lisenssi alku',    'date');
     this.addField('LicenseEnd',   'Lisenssi loppu',   'date');
     this.addField('MaxOpenProblemCount', 'Avoimia vikatapauksia enintään', 'number');

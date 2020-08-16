@@ -1,27 +1,12 @@
-import React from 'react';
-import ProblemsTable from './ProblemsTable';
-import auth, { User } from '../../services/authService';
+import Problems from './Problems';
+import { ProblemStatus } from './Problem';
 
-const SolvedProblems: React.FC<{}> = () => {
-  const user: User | null = auth.getCurrentUser();
+export default class SolvedProblems extends Problems {
+  protected getTitle(): string {
+    return 'Uusimmat ratkaisut';
+  }
 
-  const editable: boolean = true;
-  const deletable: boolean = (user !== null) && user.isPowerOrAdmin;
-
-  if (!user)
-    return null;
-
-  return (
-    <ProblemsTable
-      title="Uusimmat ratkaisut"
-      status={1}
-      showSearchBox={true}
-      paginate={true}
-      creatable={false}
-      editable={editable}
-      deletable={deletable}
-    />
-  );
+  protected getStatus(): ProblemStatus | undefined {
+    return ProblemStatus.Solved;
+  }
 }
-
-export default SolvedProblems;

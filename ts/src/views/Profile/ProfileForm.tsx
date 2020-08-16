@@ -13,6 +13,7 @@ export default class ProfileForm extends BaseForm<Props> {
     this.addField('LastName',     'Sukunimi',         'text',   { required: true, readonly: true });
     this.addField('Role',         'Rooli',            'number', { required: true, readonly: true, enums: ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'] });
     this.addField('GroupId',      'Ryhmä',            'number', { required: true, readonly: true, lookupUrl: 'UserGroups' });
+    this.addField('Email',        'Sähköposti',       'email',  { required: true });
     this.addField('BusinessId',   'Y-tunnus',         'text');
     this.addField('Title',        'Toimenkuva',       'text');
     this.addField('Address',      'Osoite',           'text');

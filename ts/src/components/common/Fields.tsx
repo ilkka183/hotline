@@ -139,6 +139,10 @@ export class Field {
     return this.lookupUrl !== undefined || this.enums !== undefined;
   }
 
+  public get isCode(): boolean {
+    return (this.code && this.code!) || this.type === 'email' || this.type === 'url';
+  }
+
   public get defaultValue(): any {
     if (this.getDefaultValue)
       return this.getDefaultValue();

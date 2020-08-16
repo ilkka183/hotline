@@ -1,27 +1,11 @@
-import React from 'react';
-import ProblemsTable from './ProblemsTable';
-import auth, { User } from '../../services/authService';
+import Problems from './Problems';
 
-const UserProblems: React.FC<{}> = () => {
-  const user: User | null = auth.getCurrentUser();
+export default class UserProblems extends Problems {
+  protected getTitle(): string {
+    return 'Omat vikatapaukset';
+  }
 
-  const editable: boolean = true;
-  const deletable: boolean = (user !== null) && user.isPowerOrAdmin;
-
-  if (!user)
-    return null;
-
-  return (
-    <ProblemsTable
-      title="Omat vikatapaukset"
-      userId={user!.id}
-      showSearchBox={true}
-      paginate={true}
-      creatable={false}
-      editable={editable}
-      deletable={deletable}
-    />
-  );
+  protected getUserId(): number | undefined {
+    return this.user!.id;
+  }
 }
-
-export default UserProblems;

@@ -6,7 +6,7 @@ import NewProblemModal from './New/NewProblemModal';
 import { ProblemStatus, FUEL_TYPE_TEXTS, STATUS_TEXTS } from './Problem';
 
 interface Props {
-  status?: number,
+  status?: ProblemStatus,
   userId?: number
 }
 
@@ -39,7 +39,7 @@ export default class ProblemsTable extends BaseTable<Props> {
     return ProblemForm;
   }  
 
-  protected getItemsQuery(query: any): void {
+  protected getItemsQuery(query: any) {
     const { status, userId } = this.props;
 
     if (status !== undefined)
@@ -49,7 +49,7 @@ export default class ProblemsTable extends BaseTable<Props> {
       query.UserId = userId;
   }
 
-  protected canDelete(row: any) {
+  protected canDelete(row: any): boolean {
     return (this.user !== null) && (this.user.isPowerOrAdmin || row.UserId === this.user.id);
   }
 
@@ -112,7 +112,7 @@ function lastWhiteSpaceOf(str: string): number {
   return -1;
 }
 
-function truncate(str: string, n = 80, useWordBoundary = true): string {
+function truncate(str: string, n = 80, useWordBoundary: boolean = true): string {
   if (str.length <= n)
     return str;
 

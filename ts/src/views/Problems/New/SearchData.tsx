@@ -5,11 +5,12 @@ import Form from 'react-bootstrap/Form'
 import ProblemSummary from '../ProblemSummary'
 import http from '../../../services/httpService';
 import { LEON, GOLF, FOCUS } from './Cars';
+import { FuelType } from '../Problem';
 
-function getFuelType(text: string): number {
+function getFuelType(text: string): FuelType {
   switch (text) {
-    case 'bensiini': return 0;
-    case 'diesel': return 1;
+    case 'bensiini': return FuelType.Petrol;
+    case 'diesel': return FuelType.Diesel;
   }
 
   return 0;

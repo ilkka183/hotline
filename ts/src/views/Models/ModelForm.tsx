@@ -2,11 +2,8 @@ import BaseForm from '../BaseForm';
 import { FUEL_TYPE_TEXTS } from '../Problems/Problem';
 import { API_MODELS } from './ModelsTable';
 
-interface Props {
-}
-
-export default class ModelForm extends BaseForm<Props> {
-  constructor(props: Props) {
+export default class ModelForm extends BaseForm<{}> {
+  constructor(props: any) {
     super(props);
 
     this.addId();

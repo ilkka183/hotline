@@ -1,27 +1,13 @@
-import React from 'react';
-import ProblemsTable from './ProblemsTable';
-import auth, { User } from '../../services/authService';
+import Problems from './Problems';
+import { ProblemStatus } from './Problem';
 
-const OpenProblems: React.FC<{}> = () => {
-  const user: User | null = auth.getCurrentUser();
+export default class OpenProblems extends Problems {
 
-  const editable: boolean = true;
-  const deletable: boolean = (user !== null) && user.isPowerOrAdmin;
+  protected getTitle(): string {
+    return 'Avoimet vikatapaukset';
+  }
 
-  if (!user)
-    return null;
-
-  return (
-    <ProblemsTable
-      title="Avoimet vikatapaukset"
-      status={0}
-      showSearchBox={true}
-      paginate={true}
-      creatable={false}
-      editable={editable}
-      deletable={deletable}
-    />
-  );
+  protected getStatus(): ProblemStatus | undefined {
+    return ProblemStatus.Open;
+  }
 }
-
-export default OpenProblems;

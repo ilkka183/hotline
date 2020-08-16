@@ -22,39 +22,35 @@ export default class Profile extends UserComponent<{}, State> {
     passwordChanged: false
   }
 
-  private get userId(): number | undefined {
-    return this.user !== null ? this.user.id : undefined;
-  }
-
   async componentDidMount() {
     const { data: user } = await http.get('/users/' + this.userId);
 
     this.setState({ user });
   }
 
-  private showModal = () => {
+  private readonly showModal = () => {
     this.setState({ showModal: true });
   }
 
-  private hideModal = () => {
+  private readonly hideModal = () => {
     this.setState({ showModal: false });
   }
 
-  private handleSubmit = async () => {
+  private readonly handleSubmit = async () => {
     const { data: user } = await http.get('/users/' + this.userId);
 
     this.setState({ user, showModal: false });
   }
 
-  private showChangePasswordModal = () => {
+  private readonly showChangePasswordModal = () => {
     this.setState({ showChangePasswordModal: true, passwordChanged: false });
   }
 
-  private hideChangePasswordModal = () => {
+  private readonly hideChangePasswordModal = () => {
     this.setState({ showChangePasswordModal: false, passwordChanged: false });
   }
 
-  private handleChangePasswordSubmit = async () => {
+  private readonly handleChangePasswordSubmit = async () => {
     this.setState({ showChangePasswordModal: false, passwordChanged: true });
   }
 

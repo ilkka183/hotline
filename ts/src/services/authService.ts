@@ -89,7 +89,7 @@ export async function changePassword(email: string, password: string, newPasswor
   await http.post(apiEndpoint + '/changepassword', { email, password, newPassword });
 }
 
-export function logout(): void {
+export function logout() {
   localStorage.removeItem(tokenKey);
 }
 

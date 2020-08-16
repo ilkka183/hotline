@@ -1,4 +1,5 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import ProblemSolutionModal from './ProblemSolutionModal';
@@ -7,6 +8,15 @@ import ProblemAttachmentsTable from './ProblemAttachmentsTable'
 import ProblemForm from './ProblemForm';
 import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
+
+export enum FuelType {
+  Petrol,
+  Diesel,
+  PetrolHybrid,
+  DieselHybrid,
+  Methane,
+  Electricity
+}
 
 export const FUEL_TYPE_TEXTS = [
   'bensiini',
@@ -29,6 +39,10 @@ export const STATUS_TEXTS = [
   'ratkaisematon'
 ];
 
+interface Params {
+  id?: string;
+}
+
 interface State {
   problem: any,
   replyId: number | null,
@@ -38,7 +52,7 @@ interface State {
   replies: any[]
 }
 
-export default class Problem extends UserComponent<{}, State> {
+export default class Problem extends UserComponent<RouteComponentProps<Params>, State> {
   public state: State = {
     problem: {},
     replyId: null,
@@ -48,12 +62,11 @@ export default class Problem extends UserComponent<{}, State> {
     replies: []
   }
 
-  get problemId() {
-//    return this.props.match.params.id;
-    return 1;
+  public get problemId(): string | undefined{
+    return this.props.match.params.id;
   }
 
-  async loadData() {
+  private async loadData() {
     try {
       const { data: problem } = await http.get('/problems/open/' + this.problemId);
       const { data: { rows: attachments } } = await http.get('/problemattachments?ProblemId=' + this.problemId);
@@ -62,13 +75,12 @@ export default class Problem extends UserComponent<{}, State> {
       this.setState({ problem, attachments, replies });
     }
     catch (ex) {
-      if (ex.response && ex.response.status === 404) {
-//        this.props.history.replace('/not-found');
-      }
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace('/not-found');
     }
   }
 
-  async componentDidMount() {
+  public async componentDidMount() {
     await this.loadData();
   }
 
@@ -118,7 +130,7 @@ export default class Problem extends UserComponent<{}, State> {
     await this.loadData();
   }
 
-  renderModal() {
+  private renderModal(): JSX.Element {
     const { problem } = this.state;
 
     return (
@@ -133,7 +145,7 @@ export default class Problem extends UserComponent<{}, State> {
     );
   }
 
-  renderSolutionModal() {
+  private renderSolutionModal(): JSX.Element {
     const { problem, replyId } = this.state;
 
     return (
@@ -147,7 +159,7 @@ export default class Problem extends UserComponent<{}, State> {
     );
   }
 
-  renderAttachments() {
+  private renderAttachments(): JSX.Element | null {
     const { problem, attachments } = this.state;
 
     if (attachments.length === 0)
@@ -160,7 +172,6 @@ export default class Problem extends UserComponent<{}, State> {
           rows={attachments}
           problemId={problem.Id}
           showTitle={false}
-          showSearchBox={false}
           autoHide={true}
           onEdited={this.handleAttachmentEdited}
           onDelete={this.handleAttachmentDelete}
@@ -169,7 +180,7 @@ export default class Problem extends UserComponent<{}, State> {
     );
   }
 
-  renderReplies() {
+  private renderReplies(): JSX.Element {
     const { problem, replies } = this.state;
 
     return (
@@ -179,7 +190,6 @@ export default class Problem extends UserComponent<{}, State> {
           rows={replies}
           problemId={problem.Id}
           showTitle={false}
-          showSearchBox={false}
           onSolution={this.handleShowSolutionModal}
           onEdited={this.handleReplyEdited}
           onDelete={this.handleReplyDelete}
@@ -188,7 +198,7 @@ export default class Problem extends UserComponent<{}, State> {
     );
   }
 
-  render() {
+  public render(): JSX.Element {
     const { problem, showModal, showSolutionModal } = this.state;
     const editable = (this.user !== null) && (this.user.isPowerOrAdmin || problem.UserId === this.user.id);
 

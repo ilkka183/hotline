@@ -22,12 +22,12 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     return this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
 
-  public addTimestamps(): void {
+  public addTimestamps() {
     this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true });
     this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true });
   }
 
-  protected afterSubmit(): void {
+  protected afterSubmit() {
     const { onSubmitted } = this.props;
 
     if (onSubmitted)
