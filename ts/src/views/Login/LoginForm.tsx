@@ -1,4 +1,4 @@
-import FieldsForm from '../../components/common/FieldsForm';
+import FieldsForm, { FormErrors } from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
 interface Props {
@@ -26,19 +26,17 @@ export default class LoginForm extends FieldsForm<Props> {
     return false;
   }
 
-  protected async doSubmit() {
+  protected async doSubmit(): Promise<FormErrors | null> {
     try {
       const { email, password } = this.state.data;
       await auth.login(email, password);
       window.location.replace('/');
     }
     catch (ex) {
-      if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {
-        const errors = { ...this.state.errors };
-        errors.email = ex.response.data;
-
-        this.setState({ errors });
-      }
+      if (ex.response && (ex.response.status === 400 || ex.response.status === 401))
+        return { errorText: ex.response.data };
     }
+
+    return null;
   }
 }

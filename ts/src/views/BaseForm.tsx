@@ -26,13 +26,4 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true });
     this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true });
   }
-
-  protected afterSubmit() {
-    const { onSubmitted } = this.props;
-
-    if (onSubmitted)
-      onSubmitted();
-
-    this.goBack();
-  }
 }

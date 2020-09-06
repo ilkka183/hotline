@@ -27,6 +27,6 @@ export default class MakeForm extends BaseForm<{}> {
   }
 
   protected getDeleteTitle(): string {
-    return 'Poista automerkki';
+    return 'Poistetaanko automerkki?';
   }
 }

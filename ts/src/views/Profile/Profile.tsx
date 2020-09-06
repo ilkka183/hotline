@@ -73,7 +73,7 @@ export default class Profile extends UserComponent<{}, State> {
           action="edit"
           userId={this.userId}
           showModal={true}
-          onSubmitModal={this.handleSubmit}
+          onModalSubmitted={this.handleSubmit}
           onHideModal={this.hideModal}
         />}
         {showChangePasswordModal && <ChangePasswordForm
@@ -81,7 +81,7 @@ export default class Profile extends UserComponent<{}, State> {
           submitButtonText="Vaihda salasana"
           user={this.user}
           showModal={true}
-          onSubmitModal={this.handleChangePasswordSubmit}
+          onModalSubmitted={this.handleChangePasswordSubmit}
           onHideModal={this.hideChangePasswordModal}
         />}
       </Container>

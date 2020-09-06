@@ -1,4 +1,4 @@
-import FieldsForm from '../../components/common/FieldsForm';
+import FieldsForm, { FormErrors } from '../../components/common/FieldsForm';
 import auth, { User, UserRole } from '../../services/authService';
 
 interface Props {
@@ -28,7 +28,7 @@ export default class RegisterForm extends FieldsForm<Props> {
     return false;
   }
 
-  protected async doSubmit() {
+  protected async doSubmit(): Promise<FormErrors | null> {
     try {
       const user: User = new User({
         id: 1,
@@ -43,12 +43,10 @@ export default class RegisterForm extends FieldsForm<Props> {
       window.location.replace('/');
     }
     catch (ex) {
-      if (ex.response && ex.response.status === 400) {
-        const errors = { ...this.state.errors };
-        errors.email = ex.response.data.sqlMessage;
-
-        this.setState({ errors });
-      }
+      if (ex.response && ex.response.status === 400)
+        return { errorText: ex.response.data };
     }
+
+    return null;
   }
 }

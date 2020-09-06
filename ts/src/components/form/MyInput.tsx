@@ -1,20 +1,20 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import MyControl, { ControlProps } from './MyControl'
+import MyAutoFocusControl, { AutoFocusControlProps } from './MyAutoFocusControl'
 
-interface Props extends ControlProps {
+interface Props extends AutoFocusControlProps {
   type: string,
   value: string,
-  autofocus?: boolean,
   disabled?: boolean
 }
 
-export default class MyInput extends MyControl<Props> {
+export default class MyInput extends MyAutoFocusControl<Props> {
   protected renderControl(): JSX.Element {
     const { autofocus, disabled, name, type, value, onChange } = this.props;
 
     return (
       <Form.Control
+        ref={this.innerRef}
         type={type}
         name={name}
         disabled={disabled}

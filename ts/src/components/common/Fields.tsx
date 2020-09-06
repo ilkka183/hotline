@@ -11,6 +11,10 @@ export interface LookupPair {
   text: string
 }
 
+interface FormatOptions {
+  dateTime?: boolean
+}
+
 interface FieldOptions {
   order?: SortOrder,
   link?: LinkFunc,
@@ -22,6 +26,7 @@ interface FieldOptions {
   primaryKey?: boolean,
   editLink?: boolean,
   required?: boolean,
+  trim?: boolean,
   readonly?: boolean,
   visible?: boolean,
   search?: boolean,
@@ -45,6 +50,7 @@ export class Field {
   public visible: boolean = true;
   public readonly: boolean = false;
   public readonly required: boolean = false;
+  public readonly trim: boolean = true;
   public readonly preformatted: boolean = false;
   public readonly search: boolean = false;
   public rows?: number;
@@ -94,6 +100,9 @@ export class Field {
 
       if (options.required !== undefined)
         this.required = options.required;
+
+      if (options.trim !== undefined)
+        this.trim = options.trim;
 
       if (options.readonly !== undefined)
         this.readonly = options.readonly;
@@ -192,7 +201,7 @@ export class Field {
     return null;
   }
 
-  public formatValue(value: any): string | null {
+  public formatValue(value: any, options: FormatOptions = {}): string | null {
     if (this.enums)
       return this.enums[value];
 
@@ -201,18 +210,27 @@ export class Field {
 
     switch (this.type) {
       case 'boolean': return this.formatBoolean(value);
-      case 'date': return this.formatDate(value);
-      case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
-      case 'time': return this.formatTime(value);
     }
+
+    if (options.dateTime)
+      switch (this.type) {
+        case 'date': return this.formatDate(value);
+        case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);
+        case 'time': return this.formatTime(value);
+      }
     
     return value;
   }
 
   public validate(value: any): string | null {
     if (this.visible && !this.readonly) {
-      if (this.required && this.type !== 'boolean' && value === '')
-        return this.label + ' ei voi olla tyhjä';
+
+      if (this.required && this.type !== 'boolean') {
+        const trimmedValue = this.trim && value ? value.trim() : value;
+
+        if (trimmedValue === '')
+          return this.label + ' ei voi olla tyhjä';
+      }
 
       if (value) {
         if (this.min !== undefined && value < this.min)

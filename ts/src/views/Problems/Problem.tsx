@@ -139,7 +139,7 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
         action="edit"
         showModal={true}
         dataId={problem.Id}
-        onSubmitModal={this.handleSubmitModal}
+        onModalSubmitted={this.handleSubmitModal}
         onHideModal={this.handleHideModal}
       />      
     );

@@ -25,7 +25,7 @@ export default class ProblemForm extends BaseForm<Props> {
     this.addField('EngineCode',         'Moottorin tunnus',     'text');
     this.addField('MID',                'MID',                  'text');
     this.addField('VIN',                'VIN',                  'text');
-    this.addField('KType',              'TecDoc numero',        'number');
+    this.addField('TypeNumber',         'Tyyppinumero',         'number');
     this.addField('NetWeight',          'Omamassa (kg)',        'number');
     this.addField('GrossWeight',        'Kokonaismassa (kg)',   'number');
     this.addField('Info',               'Lisätietoja',          'textarea', { rows: 3 });

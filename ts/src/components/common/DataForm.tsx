@@ -1,12 +1,10 @@
-import { toast } from 'react-toastify';
 import { LookupPair } from './Fields';
-import FieldsForm from './FieldsForm';
+import FieldsForm, { FormErrors } from './FieldsForm';
 
 interface Props {
   dataId?: number,
   data?: any,
-  defaultData?: any,
-  onSubmitted?: () => void
+  defaultData?: any
 }
 
 export default abstract class DataForm<P> extends FieldsForm<P & Props> {
@@ -51,7 +49,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     switch (action) {
       case 'new': return this.getNewTitle();
       case 'edit': return this.getEditTitle();
-      case 'delete': return this.getDeleteTitle() + '?';
+      case 'delete': return this.getDeleteTitle();
     }
 
     return '';
@@ -96,6 +94,8 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
       try {
         const { data: item } = await this.http.get(this.apiEndpointOf(this.dataId));
   
+        console.log(item);
+
         const savedData: any = this.jsonToData(item);
         const data: any = this.jsonToData(item);
 
@@ -133,7 +133,7 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     await this.populateData();
   }
 
-  protected async doSubmit() {
+  protected async doSubmit(): Promise<FormErrors | null> {
     const data: any = this.state.data;
 
     if (data.Id) {
@@ -154,14 +154,13 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
         try {
           console.log('put', row);
           await this.http.put(this.apiEndpointOf(data.Id), row);
-          this.afterSubmit();
         }
         catch (ex) {
-          toast.error(ex.response.data.sqlMessage);
+          return {
+            errorText: ex.response.data.sqlMessage
+          };
         }
       }
-      else
-        this.afterSubmit();
     }
     else {
       // POST
@@ -177,14 +176,14 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
 
         console.log('post', row);
         await this.http.post(this.apiEndpoint, row);
-        this.afterSubmit();
       }
       catch (ex) {
-        toast.error(ex.response.data.sqlMessage);
+        return {
+          errorText: ex.response.data.sqlMessage
+        };
       }
     }
-  }
 
-  protected afterSubmit() {
+    return null;
   }
 }

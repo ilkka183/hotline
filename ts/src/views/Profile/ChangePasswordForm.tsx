@@ -1,4 +1,4 @@
-import FieldsForm from '../../components/common/FieldsForm';
+import FieldsForm, { FormErrors } from '../../components/common/FieldsForm';
 import auth from '../../services/authService';
 
 interface Props {
@@ -20,48 +20,38 @@ export default class ChangePasswordForm extends FieldsForm<Props> {
     return 'Vaihda salasana';
   }
 
-  protected readonly handleSubmitModal = async () => {
-    const { onSubmitModal } = this.props;
-
-    if (this.hasErrors())
-      return;
-
+  protected async doSubmit(): Promise<FormErrors | null> {
     try {
       const { password, newPassword1, newPassword2 } = this.state.data;
 
       if (newPassword1 === newPassword2) {
         try {
-          console.log(this.props);
+          console.log(this.state.data);
 
           await auth.changePassword(this.props.user.email, password, newPassword1);
-
-          if (onSubmitModal)
-            onSubmitModal();
         }
         catch (ex) {
           if (ex.response && ex.response.status === 401) {
-            const errors: any = { ...this.state.errors };
+            const errors: any = {};
             errors.password = 'Nykyinen salasana ei ole oikea';
 
-            this.setState({ errors });
+            return { errors };
           }
         }
       }
       else {
-        const errors: any = { ...this.state.errors };
+        const errors: any = {};
         errors.newPassword1 = 'Salasanat eivät täsmää';
         errors.newPassword2 = 'Salasanat eivät täsmää';
 
-        this.setState({ errors });
+        return { errors };
       }
     }
     catch (ex) {
-      if (ex.response && (ex.response.status === 400 || ex.response.status === 401)) {
-        const errors: any = { ...this.state.errors };
-        errors.password = ex.response.data;
-
-        this.setState({ errors });
-      }
+      if (ex.response && (ex.response.status === 400 || ex.response.status === 401))
+        return { errorText: ex.response.data };
     }
+
+    return null;
   }
 }

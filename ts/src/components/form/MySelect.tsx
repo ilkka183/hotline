@@ -1,16 +1,15 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import MyControl, { ControlProps } from './MyControl'
+import MyAutoFocusControl, { AutoFocusControlProps } from './MyAutoFocusControl'
 import { LookupPair } from '../common/Fields';
 
-interface Props extends ControlProps {
+interface Props extends AutoFocusControlProps {
   value: any,
   options?: LookupPair[],
-  autofocus?: boolean,
   disabled?: boolean
 }
 
-export default class MySelect extends MyControl<Props> {
+export default class MySelect extends MyAutoFocusControl<Props> {
   protected renderControl(): JSX.Element {
     const { autofocus, disabled, name, options, value, onChange } = this.props;
 

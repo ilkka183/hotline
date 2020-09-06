@@ -12,6 +12,11 @@ import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
+export interface FormErrors {
+  errors?: any,
+  errorText?: string
+}
+
 export interface FieldsFormProps {
   asTable?: boolean,
   showTitle?: boolean,
@@ -23,16 +28,17 @@ export interface FieldsFormProps {
   action?: string,
   showModal?: boolean,
   onHideModal?: () => void,
-  onPrev?: () => void,
-  onSubmitModal?: () => void
+  onSubmitted?: () => void,
+  onModalSubmitted?: () => void,
+  onPrev?: () => void
 }
 
 interface State {
   savedData: any,
   data: any,
   errors: any,
-  successText: string,
-  errorText: string
+  errorText: string | undefined,
+  successText: string | undefined
 }
 
 export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFormProps, State> {
@@ -49,8 +55,8 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     savedData: {},
     data: {},
     errors: {},
-    successText: '',
-    errorText: ''
+    successText: undefined,
+    errorText: undefined
   }
 
   private autofocusSet: boolean = false;
@@ -86,8 +92,8 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     return data;
   }
 
-  private validate(): any {
-    const errors: any = {}
+  private validate(breakOnFirst: boolean): any {
+    let errors: any = undefined;
 
     for (const field of this.fields) {
       const data: any = this.state.data;
@@ -96,16 +102,22 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       const error: string | null = field.validate(value);
 
       if (error) {
+        if (!errors)
+          errors = {};
+
         errors[field.name] = error;
-        break;
+
+        if (breakOnFirst)
+          break;
       }
     }
 
-    return Object.keys(errors).length === 0 ? null : errors;
+    return errors;
   }
 
-  protected hasErrors(): any {
-    const errors: any = this.validate();
+  protected hasErrors(breakOnFirst: boolean = true): boolean {
+    const errors = this.validate(breakOnFirst);
+    
     this.setState({ errors: errors || {} });
 
     return errors;
@@ -120,31 +132,58 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     return null;
   }
 
-  protected doSubmit() {
+  protected async doSubmit(): Promise<FormErrors | null> {
+    return null;
   }
   
-  protected readonly handleSubmit = (event: any) => {
+  protected afterSubmit() {
+    const { onSubmitted } = this.props;
+
+    if (onSubmitted)
+      onSubmitted();
+  }
+
+  private handleErrors(response: FormErrors) {
+    const errors: any = response.errors || {};
+
+    this.setState({
+      errors,
+      errorText: response.errorText
+    });
+  }
+
+  protected readonly handleSubmit = async (event: any) => {
     if (event)
       event.preventDefault();
 
     if (this.hasErrors())
       return;
 
-    this.doSubmit();
+    const response = await this.doSubmit();
+
+    if (response) {
+      this.handleErrors(response);
+    } else {
+      this.afterSubmit();
+    }
   }
 
-  protected readonly handleSubmitModal = () => {
-    const { action, onSubmitModal } = this.props;
+  protected readonly handleSubmitModal = async () => {
+    const { action, onModalSubmitted } = this.props;
 
-    if (action !== 'delete') {
-      if (this.hasErrors())
-        return;
+    if (this.hasErrors() && (action !== 'delete'))
+      return;
+
+    const response = await this.doSubmit();
+
+    if (response) {
+      this.handleErrors(response);
+    } else {
+      this.afterSubmit();
+
+      if (onModalSubmitted)
+        onModalSubmitted();
     }
-
-    this.doSubmit();
-
-    if (onSubmitModal)
-      onSubmitModal();
   }
 
   protected readonly handleChange = (event: any) => {
@@ -187,13 +226,6 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
 
   protected getAsRow(): boolean {
     return true;
-  }
-
-  public goBack() {
-/*    const { history } = this.props;
-    
-    if (history)
-      history.goBack(); */
   }
 
   protected renderInput(field: Field, autofocus: boolean = false): JSX.Element {
@@ -301,10 +333,10 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   protected renderSubmitButton(text: string): JSX.Element {
     return (
       <Button
-        className="mr-2"
+        className="mr-2 mb-2"
         variant="primary"
         type="submit"
-        disabled={this.validate() && false}
+        disabled={/*this.validate() &&*/ false}
       >
         {text}
       </Button>
@@ -346,7 +378,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       autofocus = true;
       this.autofocusSet = true;
     }
-
+    
     return this.renderInput(field, autofocus);
   }
 
@@ -391,11 +423,13 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   
   private renderModal(): JSX.Element {
     const { showTitle, showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
+    const { errorText } = this.state;
 
     return (
       <Modal
         size="xl"
         backdrop="static"
+        autoFocus={false}
         show={showModal}
         onHide={onHideModal}
       >
@@ -409,8 +443,13 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
 
         <Modal.Footer>
           <Button variant={submitButtonVariant} onClick={this.handleSubmitModal}>{submitButtonText}</Button>
-         <Button variant="secondary" onClick={onHideModal}>{cancelButtonText}</Button>
+          <Button variant="secondary" onClick={onHideModal}>{cancelButtonText}</Button>
         </Modal.Footer>
+
+        {errorText &&
+          <Modal.Footer>
+            <Alert variant="danger">{errorText}</Alert>
+          </Modal.Footer>}
       </Modal>      
     );
   }
