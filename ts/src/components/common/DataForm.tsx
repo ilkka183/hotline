@@ -39,6 +39,10 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
       return this.state.data;
   }
 
+  protected formatDateTimes(): boolean {
+    return this.props.data !== undefined;
+  }
+
   protected abstract getNewTitle(): string;
   protected abstract getEditTitle(): string;
   protected abstract getDeleteTitle(): string;
@@ -98,6 +102,8 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
 
         const savedData: any = this.jsonToData(item);
         const data: any = this.jsonToData(item);
+
+        console.log(data);
 
         this.setState({ savedData, data, errors });
       }

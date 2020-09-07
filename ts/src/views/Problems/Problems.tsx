@@ -15,7 +15,7 @@ export default abstract class Problems extends UserComponent<{}, {}> {
   }
 
   protected getDeletable(): boolean {
-    return (this.user !== null) && this.user.isPowerOrAdmin;
+    return (this.user !== null) && this.user?.isPowerOrAdmin;
   }
 
   protected getStatus(): ProblemStatus | undefined {

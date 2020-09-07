@@ -5,6 +5,8 @@ import ProblemReplyForm from './ProblemReplyForm';
 
 interface Props {
   problemId: number,
+  problemUserId: number,
+  problem: any,
   onSolution: (row: any) => void
 }
 
@@ -37,8 +39,15 @@ export default class ProblemRepliessTable extends BaseTable<Props> {
     return this.props.problemId;
   }
 
-  private renderSolutionButton(row: any): JSX.Element {
-    const { onSolution } = this.props;
+  protected getParent(): any {
+    return this.props.problem;
+  }
+
+  private renderSolutionButton(row: any): JSX.Element | null {
+    const { problemUserId, onSolution } = this.props;
+
+    if (!this.owns(problemUserId))
+      return null;
 
     const variant = row.Solution ? 'success' : 'warning';
 

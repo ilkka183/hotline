@@ -7,7 +7,7 @@ export default abstract class BaseForm<P> extends DataForm<P> {
   protected readonly user: User | null = auth.getCurrentUser();
 
   public get hasPowerRights(): boolean {
-    return this.user ? this.user.isPowerOrAdmin : false;
+    return (this.user !== null) && this.user.isPowerOrAdmin;
   }
 
   public getHttp(): any {

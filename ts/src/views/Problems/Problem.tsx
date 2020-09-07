@@ -165,6 +165,8 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
     if (attachments.length === 0)
       return null;
 
+    const readOnly = !this.user?.owns(problem.UserId);
+
     return (
       <>
         <h4>Liitteet</h4>
@@ -173,6 +175,7 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
           problemId={problem.Id}
           showTitle={false}
           autoHide={true}
+          readOnly={readOnly}
           onEdited={this.handleAttachmentEdited}
           onDelete={this.handleAttachmentDelete}
         />
@@ -188,7 +191,9 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
         <h4>Vastaukset</h4>
         <ProblemRepliesTable
           rows={replies}
+          problem={problem}
           problemId={problem.Id}
+          problemUserId={problem.UserId}
           showTitle={false}
           onSolution={this.handleShowSolutionModal}
           onEdited={this.handleReplyEdited}
@@ -200,7 +205,7 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
 
   public render(): JSX.Element {
     const { problem, showModal, showSolutionModal } = this.state;
-    const editable = (this.user !== null) && (this.user.isPowerOrAdmin || problem.UserId === this.user.id);
+    const editable = this.user?.owns(problem.UserId);
 
     return (
       <Container>
@@ -210,7 +215,7 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
         {showModal && this.renderModal()}
         {showSolutionModal && this.renderSolutionModal()}
         {this.renderAttachments()}
-        {(problem.Status === ProblemStatus.Open || ((this.user !== null) && this.user.isPowerOrAdmin)) && this.renderReplies()}
+        {(problem.Status === ProblemStatus.Open || this.user?.isPowerOrAdmin) && this.renderReplies()}
       </Container>
     );
   }

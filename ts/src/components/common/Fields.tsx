@@ -3,7 +3,7 @@ import React from 'react';
 export enum SortOrder { Asc, Desc }
 
 type LinkFunc = (row: any) => string;
-type RenderFunc = (row: any) => JSX.Element;
+type RenderFunc = (row: any) => JSX.Element | null;
 type DefaultValueFunc = () => any;
 
 export interface LookupPair {
@@ -50,7 +50,7 @@ export class Field {
   public visible: boolean = true;
   public readonly: boolean = false;
   public readonly required: boolean = false;
-  public readonly trim: boolean = true;
+  public readonly trim: boolean = false;
   public readonly preformatted: boolean = false;
   public readonly search: boolean = false;
   public rows?: number;
@@ -201,7 +201,7 @@ export class Field {
     return null;
   }
 
-  public formatValue(value: any, options: FormatOptions = {}): string | null {
+  public formatValue(value: any, formatDateTime: boolean = false): string | null {
     if (this.enums)
       return this.enums[value];
 
@@ -212,7 +212,7 @@ export class Field {
       case 'boolean': return this.formatBoolean(value);
     }
 
-    if (options.dateTime)
+    if (formatDateTime)
       switch (this.type) {
         case 'date': return this.formatDate(value);
         case 'datetime': return this.displayFormat === 'date' ? this.formatDate(value) : this.formatDateTime(value);

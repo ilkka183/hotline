@@ -11,6 +11,10 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return '/' + this.getApiName();
   }
 
+  protected owns(userId: number): boolean {
+    return (this.user !== null) && this.user.owns(userId);
+  }
+
   protected getItemsQuery(query: any) {
   }
 

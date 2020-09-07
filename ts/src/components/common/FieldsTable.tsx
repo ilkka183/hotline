@@ -439,7 +439,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (column.render)
       return column.render(row);
 
-    const text: string | null = column.formatValue(row[column.name], { dateTime: true });
+    const text: string | null = column.formatValue(row[column.name], true);
 
     const { readOnly, editable } = this.props;
 
@@ -481,6 +481,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return null;
   }
 
+  protected getParent(): any {
+    return undefined;
+  }
+
   private renderEditModal(): JSX.Element | null {
     const Form: any = this.getModalForm();
 
@@ -497,6 +501,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
         action={action}
         dataId={modalDataId}
         parentId={this.getParentId()}
+        parent={this.getParent()}
         showModal={showEditModal}
         onModalSubmitted={this.handleSubmitEditModal}
         onHideModal={this.handleHideEditModal}

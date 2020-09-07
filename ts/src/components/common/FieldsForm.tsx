@@ -438,6 +438,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         </Modal.Header>
 
         <Modal.Body>
+          {this.renderInfo()}
           {this.renderModalFields()}
         </Modal.Body>
 
@@ -454,6 +455,10 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     );
   }
 
+  protected formatDateTimes(): boolean {
+    return false;
+  }
+
   private renderTableRow(field: Field): JSX.Element | null {
     if (!field.visible)
       return null;
@@ -461,7 +466,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     const data: any = this.getData();
     const value: any = data[field.name];
 
-    let text: JSX.Element | string | null = field.formatValue(value);
+    let text: JSX.Element | string | null = field.formatValue(value, this.formatDateTimes());
 
     if (!text)
       return null;

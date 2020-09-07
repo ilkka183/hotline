@@ -3,7 +3,7 @@ import BaseForm from '../BaseForm';
 import ProblemSummary from './ProblemSummary';
 
 interface Props {
-  problem: any
+  parent: any
 }
 
 export default class ProblemReplyForm extends BaseForm<Props> {
@@ -11,7 +11,7 @@ export default class ProblemReplyForm extends BaseForm<Props> {
     super(props);
 
     this.addId();
-    this.addField('ProblemId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: true, getDefaultValue: () => props.problem.Id });
+    this.addField('ProblemId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: true, getDefaultValue: () => props.parent.Id });
     this.addField('Date',      'Pvm',        'datetime', { required: true, readonly: true });
     this.addField('UserId',    'Lähettäjä',  'number',   { required: true, readonly: true, lookupUrl: 'Users', getDefaultValue: () => this.user ? this.user.id : null });
     this.addField('Message',   'Viesti',     'textarea', { required: true, rows: 5 });
@@ -37,7 +37,9 @@ export default class ProblemReplyForm extends BaseForm<Props> {
   }
 
   protected renderInfo(): JSX.Element {
-    const { problem } = this.props;
+    const { parent: problem } = this.props;
+
+    console.log(problem);
 
     return <ProblemSummary data={problem} />
   }

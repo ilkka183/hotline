@@ -48,6 +48,10 @@ export class User implements IUser {
   public get isPowerOrAdmin(): boolean {
     return this.role <= UserRole.Power;
   }
+
+  public owns(userId: number): boolean {
+    return userId === this.id || this.isPowerOrAdmin;
+  }
 }
 
 const apiEndpoint: string = '/auth';

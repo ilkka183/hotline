@@ -50,7 +50,7 @@ export default class ProblemsTable extends BaseTable<Props> {
   }
 
   protected canDelete(row: any): boolean {
-    return (this.user !== null) && (this.user.isPowerOrAdmin || row.UserId === this.user.id);
+    return this.owns(row.UserId);
   }
 
   private renderDescription(row: any): JSX.Element {

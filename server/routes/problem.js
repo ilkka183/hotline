@@ -36,7 +36,7 @@ async function getProblems(req, res) {
     if (field !== 'pageIndex' && field !== 'pageSize')
       sql += 'AND ' + field + ' = ' + req.query[field] + ' ';
 
-  sql += 'ORDER BY Problem.Id DESC';
+  sql += 'ORDER BY Problem.Date DESC';
 
   const replySql = 'SELECT Id, Date, ProblemId, UserId, Message, Solution FROM ProblemReply ORDER BY ProblemId, Id';
 
