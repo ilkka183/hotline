@@ -2,7 +2,7 @@ import BaseTable from '../BaseTable';
 import ProblemAttachmentForm from './ProblemAttachmentForm';
 
 interface Props {
-  problemId: number
+  problem: any
 }
 
 export default class ProblemAttachmentsTable extends BaseTable<Props> {
@@ -29,7 +29,7 @@ export default class ProblemAttachmentsTable extends BaseTable<Props> {
     return ProblemAttachmentForm;
   }
 
-  protected getParentId(): number | null {
-    return this.props.problemId;
+  protected getParent(): any {
+    return this.props.problem;
   }
 }

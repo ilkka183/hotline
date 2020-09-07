@@ -16,7 +16,7 @@ export default class ProblemsTable extends BaseTable<Props> {
 
     this.addId();
     this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
-    this.addField('UserName',    'Lähettäjä',            'text',     { visible: false });
+    this.addField('UserName',    'Lähettäjä',            'text',     { visible: (this.user !== null) && this.user.isPowerOrAdmin });
     this.addField('Make',        'Merkki',               'text',     { search: true });
     this.addField('Model',       'Malli',                'text',     { search: true });
     this.addField('ModelYear',   'Vuosimalli',           'number');

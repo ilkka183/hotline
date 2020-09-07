@@ -39,8 +39,6 @@ export default class ProblemReplyForm extends BaseForm<Props> {
   protected renderInfo(): JSX.Element {
     const { parent: problem } = this.props;
 
-    console.log(problem);
-
     return <ProblemSummary data={problem} />
   }
 }

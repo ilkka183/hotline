@@ -251,14 +251,17 @@ export default class NewProblemForm extends UserComponent<Props, State> {
   }
   
   private readonly handleSubmit = () => {
-    const { onSubmit }: any = this.props;
-
     try {
       (this.refs.problemForm as any).handleSubmit();
-      onSubmit();
     }
     catch (ex) {
     }
+  }
+
+  private readonly handleSubmitted = () => {
+    const { onSubmit } = this.props;
+
+    onSubmit();
   }
 
   private renderData(): JSX.Element {
@@ -323,7 +326,7 @@ export default class NewProblemForm extends UserComponent<Props, State> {
           showTitle={false}
           showSubmitButton={false}
           onPrev={this.handlePrev}
-          onSubmitted={this.handleSubmit}
+          onSubmitted={this.handleSubmitted}
         />
       </>
     );

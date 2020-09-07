@@ -171,8 +171,8 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
       <>
         <h4>Liitteet</h4>
         <ProblemAttachmentsTable
+          problem={problem}
           rows={attachments}
-          problemId={problem.Id}
           showTitle={false}
           autoHide={true}
           readOnly={readOnly}
@@ -190,10 +190,8 @@ export default class Problem extends UserComponent<RouteComponentProps<Params>, 
       <>
         <h4>Vastaukset</h4>
         <ProblemRepliesTable
-          rows={replies}
           problem={problem}
-          problemId={problem.Id}
-          problemUserId={problem.UserId}
+          rows={replies}
           showTitle={false}
           onSolution={this.handleShowSolutionModal}
           onEdited={this.handleReplyEdited}

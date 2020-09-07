@@ -1,7 +1,7 @@
 import BaseForm from '../BaseForm';
 
 interface Props {
-  parentId: number
+  parent: any
 }
 
 export default class ProblemAttachmentForm extends BaseForm<Props> {
@@ -9,7 +9,7 @@ export default class ProblemAttachmentForm extends BaseForm<Props> {
     super(props);
 
     this.addId();
-    this.addField('ProblemId',   'Vikatapaus',   'number',   { required: true, readonly: true, visible: false, getDefaultValue: () => props.parentId });
+    this.addField('ProblemId',   'Vikatapaus',   'number',   { required: true, readonly: true, visible: false, getDefaultValue: () => props.parent.Id });
     this.addField('FileName',    'Tiedostonimi', 'text',     { required: true, readonly: true });
     this.addField('FileSize',    'Koko',         'number',   { required: true, readonly: true });
     this.addField('FileType',    'Tyyppi',       'text',     { required: true, readonly: true });

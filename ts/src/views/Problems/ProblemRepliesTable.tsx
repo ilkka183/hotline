@@ -4,8 +4,6 @@ import BaseTable from '../BaseTable';
 import ProblemReplyForm from './ProblemReplyForm';
 
 interface Props {
-  problemId: number,
-  problemUserId: number,
   problem: any,
   onSolution: (row: any) => void
 }
@@ -35,18 +33,18 @@ export default class ProblemRepliessTable extends BaseTable<Props> {
     return ProblemReplyForm;
   }
 
-  protected getParentId(): number | null {
-    return this.props.problemId;
-  }
-
   protected getParent(): any {
     return this.props.problem;
   }
 
-  private renderSolutionButton(row: any): JSX.Element | null {
-    const { problemUserId, onSolution } = this.props;
+  protected canDelete(row: any): boolean {
+    return this.owns(row.UserId);
+  }
 
-    if (!this.owns(problemUserId))
+  private renderSolutionButton(row: any): JSX.Element | null {
+    const { problem, onSolution } = this.props;
+
+    if (!this.owns(problem.UserId))
       return null;
 
     const variant = row.Solution ? 'success' : 'warning';

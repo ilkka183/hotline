@@ -20,8 +20,8 @@ const sql =
 router.get('', async (req, res) => { await getProblems(req, res) });
 router.get('/open/:Id', async (req, res) => { await http.getRow(req, res, sql + req.params.Id) });
 router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });
-router.post('', [auth, power], async (req, res) => { await http.postRow(req, res, table) });
-router.put('/:Id', [auth, power], async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) });
+router.post('', [auth], async (req, res) => { await http.postRow(req, res, table) });
+router.put('/:Id', [auth], async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) });
 router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
 async function getProblems(req, res) {

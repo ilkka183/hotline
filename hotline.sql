@@ -311,7 +311,7 @@ INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 3, 'Lisää öljy
 
 
 INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
-  VALUES(NOW() - INTERVAL 4 DAY, 1, 'Volkswagen', 'Golf Variant 1.6', 2005, 'ISI-560', 0, 1596, 74, 'CHZD', 'WF0WXXGCDW5B88909', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.');
+  VALUES(NOW() - INTERVAL 4 DAY, 4, 'Volkswagen', 'Golf Variant 1.6', 2005, 'ISI-560', 0, 1596, 74, 'CHZD', 'WF0WXXGCDW5B88909', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.');
 
 INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
 INSERT INTO ProblemAttachment(ProblemId, FileName, FileSize, FileType, Content, Description) VALUES(2, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
