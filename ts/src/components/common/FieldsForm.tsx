@@ -27,10 +27,9 @@ export interface FieldsFormProps {
   variant?: string,
   action?: string,
   showModal?: boolean,
-  onHideModal?: () => void,
   onSubmitted?: () => void,
   onModalSubmitted?: () => void,
-  onPrev?: () => void
+  onHideModal?: () => void
 }
 
 interface State {

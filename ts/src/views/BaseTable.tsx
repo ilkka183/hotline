@@ -59,7 +59,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     await http.delete(endpoint);
   }
 
-  protected addId(visible: boolean = false): Field {
+  protected addId(visible: boolean = true): Field {
     return this.addField('Id', 'No', 'number', { editLink: true, visible });
   }
 

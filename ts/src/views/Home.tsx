@@ -1,6 +1,6 @@
-import Problems from './Problems/Problems';
+import Questions from './Questions/Questions';
 
-export default class Home extends Problems {
+export default class Home extends Questions {
   protected getTitle(): string {
     return 'Vikatapaukset';
   }

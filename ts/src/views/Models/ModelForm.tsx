@@ -1,5 +1,5 @@
 import BaseForm from '../BaseForm';
-import { FUEL_TYPE_TEXTS } from '../Problems/Problem';
+import { FUEL_TYPE_TEXTS } from '../Questions/Question';
 import { API_MODELS } from './ModelsTable';
 
 export default class ModelForm extends BaseForm<{}> {

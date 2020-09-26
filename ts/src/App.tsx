@@ -13,11 +13,11 @@ import ModelsTable from './views/Models/ModelsTable';
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UsersTable from './views/Users/UsersTable';
 
-import ProblemsTable from './views/Problems/ProblemsTable';
-import Problem from './views/Problems/Problem';
-import OpenProblems from './views/Problems/OpenProblems';
-import SolvedProblems from './views/Problems/SolvedProblems';
-import UserProblems from './views/Problems/UserProblems';
+import QuestionsTable from './views/Questions/QuestionsTable';
+import Question from './views/Questions/Question';
+import OpenQuestions from './views/Questions/OpenQuestions';
+import SolvedQuestions from './views/Questions/SolvedQuestions';
+import UserQuestions from './views/Questions/UserQuestions';
 
 import Profile from './views/Profile/Profile';
 
@@ -50,11 +50,11 @@ export default class App extends React.Component<{}, State> {
         <Container fluid>
           <Switch>
             <Route path="/home" component={Home} />
-            <ProtectedRoute path="/problem/:id" component={Problem} />
-            <ProtectedRoute path="/problems/open" component={OpenProblems} />
-            <ProtectedRoute path="/problems/solved" component={SolvedProblems} />
-            <ProtectedRoute path="/problems/user" component={UserProblems} />
-            <ProtectedRoute path="/problems" component={ProblemsTable} />
+            <ProtectedRoute path="/question/:id" component={Question} />
+            <ProtectedRoute path="/questions/open" component={OpenQuestions} />
+            <ProtectedRoute path="/questions/solved" component={SolvedQuestions} />
+            <ProtectedRoute path="/questions/user" component={UserQuestions} />
+            <ProtectedRoute path="/questions" component={QuestionsTable} />
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={UserRole.Power} />

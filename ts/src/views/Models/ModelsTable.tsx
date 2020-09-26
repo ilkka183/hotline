@@ -1,6 +1,6 @@
 import BaseTable from '../BaseTable';
 import ModelForm from './ModelForm';
-import { FUEL_TYPE_TEXTS } from '../Problems/Problem';
+import { FUEL_TYPE_TEXTS } from '../Questions/Question';
 
 export const API_MODELS = 'models';
 

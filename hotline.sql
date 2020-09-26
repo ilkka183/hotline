@@ -99,7 +99,7 @@ CREATE TABLE User
   Info TEXT,
   LicenseBegin DATE,
   LicenseEnd DATE,
-  MaxOpenProblemCount INTEGER NOT NULL DEFAULT 2,
+  MaxOpenQuestionCount INTEGER NOT NULL DEFAULT 2,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -161,7 +161,7 @@ CREATE TABLE Model
 CREATE UNIQUE INDEX ModelIndex ON Model(Id);
 
 
-CREATE TABLE Problem
+CREATE TABLE Question
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -194,25 +194,25 @@ CREATE TABLE Problem
 );
 
 
-CREATE TABLE ProblemReply
+CREATE TABLE Answer
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  ProblemId BIGINT UNSIGNED NOT NULL,
+  QuestionId BIGINT UNSIGNED NOT NULL,
   Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UserId BIGINT UNSIGNED NOT NULL,
   Message TEXT NOT NULL,
   Data JSON,
   Solution BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (Id),
-  FOREIGN KEY (ProblemId) REFERENCES Problem(Id),
+  FOREIGN KEY (QuestionId) REFERENCES Question(Id),
   FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 
-CREATE TABLE ProblemAttachment
+CREATE TABLE QuestionAttachment
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  ProblemId BIGINT UNSIGNED NOT NULL,
+  QuestionId BIGINT UNSIGNED NOT NULL,
   FileName VARCHAR(80) NOT NULL,
   FileSize INTEGER UNSIGNED  NOT NULL,
   FileType VARCHAR(80) NOT NULL,
@@ -220,13 +220,13 @@ CREATE TABLE ProblemAttachment
   Description TEXT,
   Data JSON,
   PRIMARY KEY (Id),
-  FOREIGN KEY (ProblemId) REFERENCES Problem(Id)
+  FOREIGN KEY (QuestionId) REFERENCES Question(Id)
 );
 
 
-CREATE TABLE ProblemReplyAttachment
+CREATE TABLE AnswerAttachment
 (
-  ReplyId BIGINT UNSIGNED NOT NULL,
+  AnswerId BIGINT UNSIGNED NOT NULL,
   Id INTEGER UNSIGNED NOT NULL,
   FileName VARCHAR(80) NOT NULL,
   FileSize INTEGER UNSIGNED  NOT NULL,
@@ -234,24 +234,24 @@ CREATE TABLE ProblemReplyAttachment
   Content LONGBLOB NOT NULL,
   Description TEXT,
   Data JSON,
-  PRIMARY KEY (ReplyId, Id),
-  FOREIGN KEY (ReplyId) REFERENCES ProblemReply(Id)
+  PRIMARY KEY (AnswerId, Id),
+  FOREIGN KEY (AnswerId) REFERENCES Answer(Id)
 );
 
 
 /* Käyttäjät */
-INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
-INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
-INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Prodiags', NULL, 'http://www.prodiags.com');
-INSERT INTO UserGroup(Name, ContactPerson, Website) VALUES('Matin autohuolto', NULL, 'http://www.maikalainen.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(4, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(3, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(2, 'Prodiags', NULL, 'http://www.prodiags.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(1, 'Matin autohuolto', NULL, 'http://www.maikalainen.com');
 
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(5, 2, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 4, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(17, 4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
 /* Merkit ja mallit */
@@ -302,37 +302,37 @@ INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, Cylind
 
 
 /* Vikatapaukset */
-INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
+INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 5 DAY, 1, 'Seat', 'Leon ST 1.0 TSI', 2017, 'ZLP-833', 0, 999, 85, 'CHZD', 'VSSZZZ5FZHR046587', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.');
 
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 1, 'Käännä virta-avainta');
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 2, 'Käytä huollossa');
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(1, 3, 'Lisää öljyä');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(1, 1, 'Käännä virta-avainta');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(1, 2, 'Käytä huollossa');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(1, 3, 'Lisää öljyä');
 
 
-INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
+INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 4 DAY, 4, 'Volkswagen', 'Golf Variant 1.6', 2005, 'ISI-560', 0, 1596, 74, 'CHZD', 'WF0WXXGCDW5B88909', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.');
 
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
-INSERT INTO ProblemAttachment(ProblemId, FileName, FileSize, FileType, Content, Description) VALUES(2, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
+INSERT INTO QuestionAttachment(QuestionId, FileName, FileSize, FileType, Content, Description) VALUES(2, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
 
 
-INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
+INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 3 DAY, 2, 'Seat', 'Leon ST 1.0 TSI', 2017, 'ZLP-833', 0, 999, 85, 'CHZD', 'VSSZZZ5FZHR046587', 'Kuluttaa paljon', 'Auto on alkanut kuluttaa normaalia enemmän bensaa.');
 
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 1, 'Aja tarkemmin');
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 2, 'Tarkista renkaiden ilmanpaineet');
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(3, 3, 'Käytä huollossa');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(3, 1, 'Aja tarkemmin');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(3, 2, 'Tarkista renkaiden ilmanpaineet');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(3, 3, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
+INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 2 DAY, 2, 'Ford', 'Focus 1.8 TDCi', 2008, 'SIO-913', 1, 1769, 85, 'HWDA', 'WVWZZZ1JZ5W079439', 'Kulkee huonosti', 'Auto ei kulje hyvin.');
 
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(4, 1, 'Käytä huollossa');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(4, 1, 'Käytä huollossa');
 
 
-INSERT INTO Problem(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
+INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.');
 
-INSERT INTO ProblemReply(ProblemId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
-INSERT INTO ProblemAttachment(ProblemId, FileName, FileSize, FileType, Content, Description) VALUES(5, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
+INSERT INTO QuestionAttachment(QuestionId, FileName, FileSize, FileType, Content, Description) VALUES(5, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
+INSERT INTO Answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');

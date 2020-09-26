@@ -3,9 +3,9 @@ const express = require('express');
 const auth = require('./routes/auth');
 const make = require('./routes/make');
 const model = require('./routes/model');
-const problem = require('./routes/problem');
-const problemattachment = require('./routes/problemattachment');
-const problemreply = require('./routes/problemreply');
+const question = require('./routes/question');
+const questionattachment = require('./routes/questionattachment');
+const answer = require('./routes/answer');
 const usergroup = require('./routes/usergroup');
 const user = require('./routes/user');
 const traficom = require('./routes/traficom');
@@ -42,9 +42,9 @@ app.use(apiPath + 'auth', auth);
 
 app.use(apiPath + 'Makes', make);
 app.use(apiPath + 'Models', model);
-app.use(apiPath + 'Problems', problem);
-app.use(apiPath + 'ProblemAttachments', problemattachment);
-app.use(apiPath + 'ProblemReplies', problemreply);
+app.use(apiPath + 'Questions', question);
+app.use(apiPath + 'QuestionAttachments', questionattachment);
+app.use(apiPath + 'Answers', answer);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
 
