@@ -59,7 +59,8 @@ SET default_storage_engine=INNODB;
 CREATE TABLE UserGroup
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  Name VARCHAR(80) NOT NULL UNIQUE,
+  Tunnus VARCHAR(50),
+  Name VARCHAR(80) NOT NULL,
   BusinessId VARCHAR(20),
   ContactPerson VARCHAR(80),
   Address VARCHAR(160),
@@ -68,13 +69,19 @@ CREATE TABLE UserGroup
   Country VARCHAR(40),
   Phone VARCHAR(20),
   Email VARCHAR(80),
-  Website VARCHAR(80),
+  Url VARCHAR(80),
   Logo LONGBLOB,
+  LogoText VARCHAR(50),
+  LogoFile VARCHAR(50),
   Info TEXT,
+  LicenseBegin DATE,
+  LicenseEnd DATE,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
   Data JSON,
+  Class VARCHAR(255),
+  ChangeBy VARCHAR(10),
   PRIMARY KEY (Id)
 );
 
@@ -86,8 +93,8 @@ CREATE TABLE User
   Role SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=powerUser, 2=user, 3=demoUser */
   Email VARCHAR(80) NOT NULL UNIQUE,
   Password VARCHAR(20) NOT NULL,
-  FirstName VARCHAR(40) NOT NULL,
-  LastName VARCHAR(40) NOT NULL,
+  FirstName VARCHAR(50) NOT NULL,
+  LastName VARCHAR(50) NOT NULL,
   Title VARCHAR(40),
   BusinessId VARCHAR(20),
   Address VARCHAR(160),
@@ -95,7 +102,7 @@ CREATE TABLE User
   PostOffice VARCHAR(40),
   Country VARCHAR(40),
   Phone VARCHAR(20),
-  Website VARCHAR(80),
+  Url VARCHAR(80),
   Info TEXT,
   LicenseBegin DATE,
   LicenseEnd DATE,
@@ -171,7 +178,7 @@ CREATE TABLE Question
   ModelYear SMALLINT UNSIGNED,
   ModelBeginYear SMALLINT UNSIGNED,
   ModelEndYear SMALLINT UNSIGNED,
-  RegistrationYear SMALLINT UNSIGNED NOT NULL,
+  RegistrationYear SMALLINT UNSIGNED,
   RegistrationNumber VARCHAR(7),
   FuelType SMALLINT UNSIGNED, /* 0=petrol, 1=diesel, 2=petrol hybrid, 3=diesel hybrid, 4=methane, 5=electricity */
   CylinderCount SMALLINT UNSIGNED,
@@ -240,18 +247,17 @@ CREATE TABLE AnswerAttachment
 
 
 /* Käyttäjät */
-INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(4, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
-INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(3, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
-INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(2, 'Prodiags', NULL, 'http://www.prodiags.com');
-INSERT INTO UserGroup(Id, Name, ContactPerson, Website) VALUES(1, 'Matin autohuolto', NULL, 'http://www.maikalainen.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(1, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(2, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(3, 'Prodiags', NULL, 'http://www.prodiags.com');
 
 INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
 INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(5, 2, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 4, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(17, 4, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(17, 3, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
 /* Merkit ja mallit */

@@ -39,6 +39,19 @@ class Connection {
 
     return promise;
   }
+
+  insert(tableName, values) {
+    const promise = new Promise((resolve, reject) => {
+      this.connection.query('INSERT INTO ' + tableName + ' SET ?', values, (error, results, fields) => {
+        if (error)
+          reject(error);
+    
+        resolve({ results, fields });
+      });
+    });
+
+    return promise;
+  }
 }
 
 

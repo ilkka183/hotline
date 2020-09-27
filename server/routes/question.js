@@ -25,6 +25,8 @@ router.put('/:Id', [auth], async (req, res) => { await http.putRow(req, res, tab
 router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
 async function getQuestions(req, res) {
+  let countSql = 'SELECT COUNT(*) AS Count FROM Question';
+
   let sql = 
     'SELECT Question.Id, Question.Date, Question.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Question.RegistrationYear, Question.RegistrationNumber, ' +
     'Question.Make, Question.Model, Question.ModelYear, Question.FuelType, Question.EngineCode, Question.EnginePower, Question.CylinderCount, ' +
@@ -38,11 +40,26 @@ async function getQuestions(req, res) {
 
   sql += 'ORDER BY Question.Date DESC';
 
+  const pageIndex = req.query.pageIndex;
+  const pageSize = req.query.pageSize;
+
+  if (pageSize) {
+    sql += ' LIMIT ';
+
+    if (pageIndex) {
+      const offset = pageIndex*pageSize;
+      sql += offset + ', ';
+    }
+
+    sql += pageSize;
+  }
+
   const answerSql = 'SELECT Id, Date, QuestionId, UserId, Message, Solution FROM Answer ORDER BY QuestionId, Id';
 
   console.log(http.trim(sql));
 
   try {
+    const { results: count } = await connection.query(countSql);
     const { results: rows } = await connection.query(sql);
     const { results: replies } = await connection.query(answerSql);
 
@@ -50,7 +67,7 @@ async function getQuestions(req, res) {
       row.Replies = replies.filter(answer => answer.QuestionId === row.Id);
 
     const response = {
-      rowCount: rows.length,
+      rowCount: count[0].Count,
       rows
     }
 
