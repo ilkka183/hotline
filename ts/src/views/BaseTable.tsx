@@ -19,14 +19,13 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected async getItems(options: SearchOptions): Promise<Rows> {
-    const { pageSize } = this.state;
     const { pageIndex } = options;
     const sortFields: any = options.sortFields;
 
     let query: any = {}
     this.getItemsQuery(query);
     query.pageIndex = pageIndex;
-    query.pageSize = pageSize;
+    query.pageSize = this.getPageSize();
 
     if (sortFields.length > 0) {
       query.sortFields = sortFields.length;

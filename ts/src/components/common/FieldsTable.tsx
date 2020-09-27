@@ -49,7 +49,6 @@ export interface FieldsTableState {
   searchValues: object,
   searchPanel: boolean,
   pageIndex: number,
-  pageSize: number,
   sortFields: SortField[],
   showNewModal: boolean,
   showEditModal: boolean,
@@ -76,13 +75,16 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     searchValues: {},
     searchPanel: false,
     pageIndex: 0,
-    pageSize: 10,
     sortFields: [],
     showNewModal: false,
     showEditModal: false,
     showDeleteModal: false,
     deleteRow: undefined,
     modalDataId: undefined
+  }
+
+  public getPageSize(): number {
+    return 10;
   }
 
   protected abstract getModalForm(): any;
@@ -400,14 +402,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private renderPagination(rowCount: number): JSX.Element {
-    const { pageIndex, pageSize } = this.state;
+    const { pageIndex } = this.state;
 
     return (
       <div>
         <DataPagination
           rowCount={rowCount}
           pageIndex={pageIndex}
-          pageSize={pageSize}
+          pageSize={this.getPageSize()}
           onPageChange={this.handlePageChange}
         />
       </div>
@@ -541,14 +543,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
 
   private getRows(): Rows {
     const { paginate } = this.props;
-    const { pageIndex, pageSize } = this.state;
+    const { pageIndex } = this.state;
 
     if (this.props.rows) {
       const filteredRows = this.filterRows(this.props.rows!);
 
       return {
         rowCount: filteredRows.length,
-        rows: paginate ? this.paginateRows(filteredRows, pageIndex, pageSize) : filteredRows
+        rows: paginate ? this.paginateRows(filteredRows, pageIndex, this.getPageSize()) : filteredRows
       }
     }
     else

@@ -24,10 +24,28 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
       onPageChange(index);
   }
 
-  return (
-    <Pagination>
-      <Pagination.Prev onClick={() => changePage(pageIndex - 1)}>Edellinen</Pagination.Prev>
-      {pages.map(index => (
+  function renderPage(index: number) {
+    const WIDTH = 20;
+    const leftOffset = pageIndex;
+    const rightOffset = pageCount - pageIndex;
+    
+    let left;
+    let right;
+
+    if (leftOffset < rightOffset) {
+      left = Math.min(leftOffset, WIDTH/2);
+      right = WIDTH - left;
+    } else {
+      right = Math.min(rightOffset, WIDTH/2);
+      left = WIDTH - right;
+    }
+
+    const visible = (index === 0) ||
+      (index === pageCount - 1) ||
+      ((index > pageIndex - left) && (index < pageIndex + right))
+
+    if (visible)
+      return (
         <Pagination.Item
           key={index}
           active={index === pageIndex}
@@ -35,8 +53,20 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
         >
           {index + 1}
         </Pagination.Item>
-      ))}
-      <Pagination.Next onClick={() => changePage(pageIndex + 1)}>Seuraava</Pagination.Next>
+      );
+    else if ((index === pageIndex - left) || (index === pageIndex + right))
+      return <Pagination.Ellipsis />
+    else
+      return null;
+  }
+
+  return (
+    <Pagination>
+      <Pagination.First onClick={() => changePage(0)} />
+      <Pagination.Prev onClick={() => changePage(pageIndex - 1)} />
+      {pages.map(index => renderPage(index))}
+      <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
+      <Pagination.Last onClick={() => changePage(pageCount - 1)} />
       <div className="pagination-rows">{rowCount} riviä</div>
     </Pagination>
   );

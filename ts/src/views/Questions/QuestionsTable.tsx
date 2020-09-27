@@ -27,6 +27,10 @@ export default class QuestionsTable extends BaseTable<Props> {
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
   }
 
+  public getPageSize(): number {
+    return 5;
+  }
+
   public getTitle(): string {
     return 'Vikatapaukset';
   }

@@ -24,8 +24,28 @@ router.post('', [auth], async (req, res) => { await http.postRow(req, res, table
 router.put('/:Id', [auth], async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) });
 router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) });
 
+function getFilter(req, counter) {
+  let sql = '';
+
+  for (const field in req.query)
+    if (field !== 'pageIndex' && field !== 'pageSize') {
+      if (counter === 0)
+        sql += ' WHERE ';
+      else
+        sql += ' AND ';
+
+      sql += field + ' = ' + req.query[field] + ' ';
+      counter++;
+    }
+
+  return sql;
+}
+
 async function getQuestions(req, res) {
   let countSql = 'SELECT COUNT(*) AS Count FROM Question';
+  countSql += getFilter(req, 0);
+
+  console.log(countSql);
 
   let sql = 
     'SELECT Question.Id, Question.Date, Question.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Question.RegistrationYear, Question.RegistrationNumber, ' +
@@ -34,10 +54,7 @@ async function getQuestions(req, res) {
     'FROM Question, User ' +
     'WHERE Question.UserId = User.Id ';
 
-  for (const field in req.query)
-    if (field !== 'pageIndex' && field !== 'pageSize')
-      sql += 'AND ' + field + ' = ' + req.query[field] + ' ';
-
+  sql += getFilter(req, 1);
   sql += 'ORDER BY Question.Date DESC';
 
   const pageIndex = req.query.pageIndex;
