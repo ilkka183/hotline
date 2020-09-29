@@ -4,6 +4,7 @@ export enum SortOrder { Asc, Desc }
 
 type LinkFunc = (row: any) => string;
 type RenderFunc = (row: any) => JSX.Element | null;
+type RenderTextFunc = (text: string) => JSX.Element | null;
 type DefaultValueFunc = () => any;
 
 export interface LookupPair {
@@ -19,6 +20,7 @@ interface FieldOptions {
   order?: SortOrder,
   link?: LinkFunc,
   render?: RenderFunc,
+  renderText?: RenderTextFunc,
   getDefaultValue?: DefaultValueFunc,
   lookupUrl?: string,
   enums?: Array<string>,
@@ -60,6 +62,7 @@ export class Field {
   public order?: SortOrder;
   public readonly link?: LinkFunc;
   public readonly render?: RenderFunc;
+  public readonly renderText?: RenderTextFunc;
   public getDefaultValue?: DefaultValueFunc;
   public displayFormat?: string;
   public lookupUrl?: string;
@@ -79,6 +82,9 @@ export class Field {
     if (options) {
       if (options.render !== undefined)
         this.render = options.render;
+
+      if (options.renderText !== undefined)
+        this.renderText = options.renderText;
 
       if (options.link !== undefined)
         this.link = options.link;

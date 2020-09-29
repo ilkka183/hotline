@@ -14,9 +14,9 @@ export default class AnswersTable extends BaseTable<Props> {
 
     this.addId();
     this.addField('QuestionId', 'Vikatapaus', 'number',   { visible: false });
-    this.addField('Date',       'Pvm',        'datetime', { displayFormat: 'date' });
-    this.addField('UserName',   'Lähettäjä',  'text');
-    this.addField('Message',    'Viesti',     'textarea', { editLink: true, rows: 5 });
+    this.addField('Date',       'Pvm',        'datetime', { editLink: true, displayFormat: 'date' });
+    this.addField('UserName',   'Lähettäjä',  'text',     { editLink: true });
+    this.addField('Message',    'Viesti',     'textarea');
 //    this.addField('Solution',  'Ratkaisu',   'boolean');
     this.addField('Mark',       '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }

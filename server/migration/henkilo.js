@@ -17,8 +17,19 @@ function insertHenkilot(destination, koulut, henkilot) {
     if (!koulu)
       GroupId = 159234761;
   
-    const FirstName = item.O_NIMI;
-    const LastName = item.O_NIMI;
+    const names = item.O_NIMI.split(' ');
+    let FirstName = '';
+    let LastName = '';
+
+    if (names.length > 0)
+      FirstName = names[0];
+  
+    for (let i = 1; i < names.length; i++) {
+      if (i > 1)
+        LastName += ' ';
+
+      LastName += names[i];
+    }
   
     const row = {
       Id,

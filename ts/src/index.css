@@ -34,3 +34,11 @@ body {
   align-items: center;
 }
 
+.question-section {
+  font-weight: bold;
+}
+
+.question-text {
+  margin-bottom: 0.5em;
+}
+

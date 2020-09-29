@@ -470,7 +470,9 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     if (!text)
       return null;
       
-    if (field.isCode)
+    if (field.renderText)
+      text = field.renderText(text);
+    else if (field.isCode)
       text = <code>{text}</code>
     else if (field.preformatted)
       text = <pre>{text}</pre>

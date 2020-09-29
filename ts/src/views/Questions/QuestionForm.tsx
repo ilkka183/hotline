@@ -1,3 +1,4 @@
+import React from 'react';
 import BaseForm from '../BaseForm';
 import { FUEL_TYPE_TEXTS, STATUS_TEXTS } from './Question';
 
@@ -30,8 +31,8 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('GrossWeight',        'Kokonaismassa (kg)',   'number');
     this.addField('Info',               'Lisätietoja',          'textarea', { rows: 3 });
     this.addField('Title',              'Otsikko',              'text',     { required: true });
-    this.addField('Description',        'Kuvaus',               'textarea', { required: true, preformatted: true, rows: 10 });
-    this.addField('Solution',           'Ratkaisu',             'textarea', { preformatted: true, rows: 10 });
+    this.addField('Description',        'Kuvaus',               'textarea', { required: true, renderText: text => this.renderText(text), rows: 10 });
+    this.addField('Solution',           'Ratkaisu',             'textarea', { rows: 10 });
     this.addField('Status',             'Tila',                 'number',   { required: true, getDefaultValue: () => 0, enums: STATUS_TEXTS });
 
     this.state.data = this.getEmptyData();
@@ -51,5 +52,38 @@ export default class QuestionForm extends BaseForm<Props> {
 
   protected getDeleteTitle(): string {
     return 'Poista vikatapaus';
+  }
+
+  private renderText(text: string): JSX.Element | null {
+    function addLine() {
+      if (line.length > 0) {
+        if (heading)
+          buffer.push(<div className="question-section">{line}</div>);
+        else
+          buffer.push(<div className="question-text">{line}</div>);
+      }
+    }
+
+    const buffer: JSX.Element[] = [];
+
+    let line = '';
+    let heading = false;
+
+    for (let i = 0; i< text.length; i++) {
+      const c = text[i];
+
+      if ((c === '\r') || (c === '\n')) {
+        addLine();
+        line = '';
+        heading = false;
+      } else {
+        heading = c === ':';
+        line += c;
+      }
+    }
+
+    addLine();
+
+    return <div>{buffer}</div>;
   }
 }
