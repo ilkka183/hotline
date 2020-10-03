@@ -55,7 +55,7 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
         </Pagination.Item>
       );
     else if ((index === pageIndex - left) || (index === pageIndex + right))
-      return <Pagination.Ellipsis />
+      return <Pagination.Ellipsis key={index} />
     else
       return null;
   }

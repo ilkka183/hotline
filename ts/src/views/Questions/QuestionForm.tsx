@@ -17,7 +17,7 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('ModelYear',          'Vuosimalli',           'number');
     this.addField('ModelBeginYear',     'Vuodesta',             'number');
     this.addField('ModelEndYear',       'Vuoteen',              'number');
-    this.addField('RegistrationYear',   'Rekisteröintivuosi',   'number',   { required: true });
+    this.addField('RegistrationYear',   'Rekisteröintivuosi',   'number');
     this.addField('RegistrationNumber', 'Rekisterinumero',      'text',     { visible: this.hasPowerRights });
     this.addField('FuelType',           'Käyttövoima',          'number',   { enums: FUEL_TYPE_TEXTS });
     this.addField('CylinderCount',      'Sylinterimäärä',       'number');

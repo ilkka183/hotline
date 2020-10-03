@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default class MakesTable extends BaseTable<Props> {
-  constructor(props: Props) {
+  constructor(props: any) {
     super(props);
 
     this.addId(false);

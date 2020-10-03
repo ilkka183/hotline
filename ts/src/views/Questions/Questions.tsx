@@ -1,9 +1,23 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import QuestionsTable from './QuestionsTable';
 import UserComponent from '../UserComponent';
 import { QuestionStatus } from './Question';
 
-export default abstract class Questions extends UserComponent<{}, {}> {
+function parseQuery(queryString: string) {
+  var query: any = {};
+  var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+
+  for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+
+  return query;
+}
+
+export default abstract class Questions extends UserComponent<RouteComponentProps<{}>, {}> {
+
   protected abstract getTitle(): string;
 
   protected getCreatable(): boolean {
@@ -30,6 +44,9 @@ export default abstract class Questions extends UserComponent<{}, {}> {
     if (!this.user)
       return null;
 
+    const query = parseQuery(this.props.location.search);
+    const page: number = query.page ? parseInt(query.page) : 1;
+
     return (
       <QuestionsTable
         title={this.getTitle()}
@@ -38,6 +55,10 @@ export default abstract class Questions extends UserComponent<{}, {}> {
         newButtonAsLink={true}
         newButtonText="Lisää uusi vikatapaus"
         paginate={true}
+        routedPages={true}
+        history={this.props.history}
+        location={this.props.location}
+        pageIndex={page - 1}
         creatable={this.getCreatable()}
         editable={this.getEditable()}
         deletable={this.getDeletable()}

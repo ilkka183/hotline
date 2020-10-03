@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default class QuestionAttachmentsTable extends BaseTable<Props> {
-  constructor(props: Props) {
+  constructor(props: any) {
     super(props);
 
     this.addId();

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default class ModelsTable extends BaseTable<Props> {
-  constructor(props: Props) {
+  constructor(props: any) {
     super(props);
 
     this.addId(false);

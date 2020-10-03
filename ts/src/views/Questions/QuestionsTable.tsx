@@ -6,8 +6,9 @@ import NewQuestionModal from './New/NewQuestionModal';
 import { QuestionStatus, FUEL_TYPE_TEXTS, STATUS_TEXTS } from './Question';
 
 interface Props {
-  status?: QuestionStatus,
-  userId?: number
+  status?: QuestionStatus;
+  userId?: number;
+  id?: string;
 }
 
 export default class QuestionsTable extends BaseTable<Props> {
@@ -27,7 +28,7 @@ export default class QuestionsTable extends BaseTable<Props> {
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
   }
 
-  public getPageSize(): number {
+  protected getPageSize(): number {
     return 5;
   }
 
