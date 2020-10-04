@@ -20,8 +20,9 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
     pages.push(i);
 
   function changePage(index: number) {
-    if ((index >= 0) && (index < pageCount))
+    if ((index >= 0) && (index < pageCount)) {
       onPageChange(index);
+    }
   }
 
   function renderPage(index: number) {

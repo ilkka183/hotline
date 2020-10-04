@@ -13,7 +13,7 @@
   mysql -u hotline -p < hotline.sql
   mysql --user=root --password=ohion330!
   mysql --user=root --password=ohion330! < hotline.sql
-  mysqldump --user=root --password=ohion330! hotline > hotline_backup.sql
+  mysqldump --user=root --password=ohion330! suoritac_hotline1 > hotline_backup.sql
 
   Kysymyksiä
   - tarkista tarvittavat taulut ja kentät
@@ -146,14 +146,20 @@ CREATE TABLE Model
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   MakeId BIGINT UNSIGNED  NOT NULL,
-  Name VARCHAR(80) NOT NULL,
-  BeginYear SMALLINT UNSIGNED NOT NULL,
+  Name VARCHAR(50) NOT NULL,
+  Grouping VARCHAR(50),
+  AdditionalInfo VARCHAR(50),
+  Sequence VARCHAR(50),
+  Tune VARCHAR(50),
+  StartYear SMALLINT UNSIGNED NOT NULL,
   EndYear SMALLINT UNSIGNED,
   FuelType SMALLINT UNSIGNED NOT NULL, /* 0=petrol, 1=diesel, 2=gas, 3=electricity */
-  CylinderCount SMALLINT UNSIGNED NOT NULL,
+  VehicleType SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  CylinderCount SMALLINT UNSIGNED,
   EngineSize SMALLINT UNSIGNED NOT NULL,
-  EnginePower SMALLINT UNSIGNED NOT NULL,
-  EngineCode VARCHAR(10),
+  EnginePower SMALLINT UNSIGNED,
+  EnginePowerAt SMALLINT UNSIGNED,
+  EngineCode VARCHAR(50),
   MID VARCHAR(10),
   NetWeight SMALLINT UNSIGNED,
   GrossWeight SMALLINT UNSIGNED,
@@ -248,20 +254,21 @@ CREATE TABLE AnswerAttachment
 
 
 /* Käyttäjät */
-INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(1, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
-INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(2, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
-INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(3, 'Prodiags', NULL, 'http://www.prodiags.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url, Enabled) VALUES(1, 'Tuntematon', '', '', False);
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(2, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(3, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
+INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(4, 'Prodiags', NULL, 'http://www.prodiags.com');
 
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(1, 1, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(2, 2, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 3, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(5, 2, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(17, 3, 3, 'Maija', 'Meikäläinen', 'maija.meikalainen@iki.fi',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd, Enabled) VALUES(1, 1, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', NULL, NULL, False);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(2, 2, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 4, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(5, 4, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
 /* Merkit ja mallit */
+/*
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Volkswagen');
@@ -287,28 +294,27 @@ INSERT INTO Make(Name) VALUES('Tesla');
 INSERT INTO Make(Name) VALUES('Toyota');
 INSERT INTO Make(Name) VALUES('Volvo');
 
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ateca', 2017, NULL, 0,  999, 3,  85, 'CHZD');
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ateca', 2017, NULL, 0, 1399, 4, 110);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ateca', 2018, NULL, 0, 1499, 4, 110);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  70, 'CHZB');
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  85, 'CHZD');
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ibiza', 2018, NULL, 0, 1499, 4, 110);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Leon',  2013, 2020, 0,  999, 3,  85, 'CHZD');
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2019, 0, 1399, 4, 110);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2020, 0, 1499, 4, 110);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2017, 1, 1599, 4,  81);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2017, 2020, 1, 1599, 4,  85);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ateca', 2017, NULL, 0,  999, 3,  85, 'CHZD');
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ateca', 2017, NULL, 0, 1399, 4, 110);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ateca', 2018, NULL, 0, 1499, 4, 110);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  70, 'CHZB');
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Ibiza', 2018, NULL, 0,  999, 3,  85, 'CHZD');
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Ibiza', 2018, NULL, 0, 1499, 4, 110);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower, EngineCode) VALUES(1, 'Leon',  2013, 2020, 0,  999, 3,  85, 'CHZD');
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2019, 0, 1399, 4, 110);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2020, 0, 1499, 4, 110);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2013, 2017, 1, 1599, 4,  81);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(1, 'Leon',  2017, 2020, 1, 1599, 4,  85);
 
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Fabia',   2013, 2020, 0, 999, 3, 81);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Scala',   2019, NULL, 0, 999, 3, 70);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Scala',   2019, NULL, 0, 999, 3, 85);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Octavia', 2013, 2020, 0, 999, 3, 85);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Fabia',   2013, 2020, 0, 999, 3, 81);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Scala',   2019, NULL, 0, 999, 3, 70);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Scala',   2019, NULL, 0, 999, 3, 85);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(2, 'Octavia', 2013, 2020, 0, 999, 3, 85);
 
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 81);
-INSERT INTO Model(MakeId, Name, BeginYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 85);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 81);
+INSERT INTO Model(MakeId, Name, StartYear, EndYear, FuelType, EngineSize, CylinderCount, EnginePower) VALUES(3, 'Golf', 2013, 2020, 0, 999, 3, 85);
 
 
-/* Vikatapaukset */
 INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 5 DAY, 1, 'Seat', 'Leon ST 1.0 TSI', 2017, 'ZLP-833', 0, 999, 85, 'CHZD', 'VSSZZZ5FZHR046587', 'Ei käynnisty', 'Auto ei käynnisty pitkään seistyään.');
 
@@ -343,3 +349,4 @@ INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNu
 
 INSERT INTO QuestionAttachment(QuestionId, FileName, FileSize, FileType, Content, Description) VALUES(5, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
 INSERT INTO Answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
+*/

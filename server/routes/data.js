@@ -6,14 +6,15 @@ const router = express.Router();
 
 router.get('/makes', async (req, res) => {
   const sql =
-    'SELECT DISTINCT Make.Name FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'ORDER BY Make.Name';
+    'SELECT DISTINCT make.Name FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'ORDER BY make.Name';
 
   try {
     const { results } = await connection.query(sql);
 
     const list = results.map(item => item.Name);
+    console.log(list);
 
     res.send(list);
   }
@@ -28,9 +29,9 @@ router.get('/modelYears', async (req, res) => {
   const make = req.query.make;
 
   const sql =
-    'SELECT MIN(Model.BeginYear) AS BeginYear, MAX(Model.EndYear) AS EndYear FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'AND Make.Name = "' + make + '"';
+    'SELECT MIN(model.StartYear) AS StartYear, MAX(model.EndYear) AS EndYear FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'AND make.Name = "' + make + '"';
 
   try {
     const { results } = await connection.query(sql);
@@ -42,7 +43,7 @@ router.get('/modelYears', async (req, res) => {
 
     const list = [];
 
-    for (let year = endYear; year >= result.BeginYear; year--)
+    for (let year = endYear; year >= result.StartYear; year--)
       list.push(year);
 
     res.send(list);
@@ -59,12 +60,12 @@ router.get('/fuelTypes', async (req, res) => {
   const modelYear = req.query.modelYear;
 
   const sql =
-    'SELECT DISTINCT Model.FuelType FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'AND Make.Name = "' + make + '" ' +
-    'AND Model.BeginYear <= ' + modelYear + ' ' +
-    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
-    'ORDER BY Model.FuelType';
+    'SELECT DISTINCT model.FuelType FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'AND make.Name = "' + make + '" ' +
+    'AND model.StartYear <= ' + modelYear + ' ' +
+    'AND (model.EndYear >= ' + modelYear + ' OR model.EndYear IS NULL) ' +
+    'ORDER BY model.FuelType';
 
   try {
     const { results } = await connection.query(sql);
@@ -86,13 +87,13 @@ router.get('/models', async (req, res) => {
   const fuelType = req.query.fuelType;
 
   const sql =
-    'SELECT DISTINCT Model.Name FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'AND Make.Name = "' + make + '" ' +
-    'AND Model.BeginYear <= ' + modelYear + ' ' +
-    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
-    'AND Model.FuelType = ' + fuelType + ' ' +
-    'ORDER BY Model.Name';
+    'SELECT DISTINCT model.Name FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'AND make.Name = "' + make + '" ' +
+    'AND model.StartYear <= ' + modelYear + ' ' +
+    'AND (model.EndYear >= ' + modelYear + ' OR model.EndYear IS NULL) ' +
+    'AND model.FuelType = ' + fuelType + ' ' +
+    'ORDER BY model.Name';
 
   try {
     const { results } = await connection.query(sql);
@@ -115,14 +116,14 @@ router.get('/engineSizes', async (req, res) => {
   const model = req.query.model;
 
   const sql =
-    'SELECT DISTINCT Model.EngineSize FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'AND Make.Name = "' + make + '" ' +
-    'AND Model.BeginYear <= ' + modelYear + ' ' +
-    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
-    'AND Model.FuelType = ' + fuelType + ' ' +
-    'AND Model.Name = "' + model + '" ' +
-    'ORDER BY Model.EngineSize';
+    'SELECT DISTINCT model.EngineSize FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'AND make.Name = "' + make + '" ' +
+    'AND model.StartYear <= ' + modelYear + ' ' +
+    'AND (model.EndYear >= ' + modelYear + ' OR model.EndYear IS NULL) ' +
+    'AND model.FuelType = ' + fuelType + ' ' +
+    'AND model.Name = "' + model + '" ' +
+    'ORDER BY model.EngineSize';
 
   try {
     const { results } = await connection.query(sql);
@@ -146,15 +147,15 @@ router.get('/engineTypes', async (req, res) => {
   const engineSize = req.query.engineSize;
 
   const sql =
-    'SELECT Model.EnginePower, Model.EngineCode FROM Model, Make ' +
-    'WHERE Model.MakeId = Make.Id ' +
-    'AND Make.Name = "' + make + '" ' +
-    'AND Model.BeginYear <= ' + modelYear + ' ' +
-    'AND (Model.EndYear >= ' + modelYear + ' OR Model.EndYear IS NULL) ' +
-    'AND Model.FuelType = ' + fuelType + ' ' +
-    'AND Model.Name = "' + model + '" ' +
-    'AND Model.EngineSize = ' + engineSize + ' ' +
-    'ORDER BY Model.EnginePower, Model.EngineCode';
+    'SELECT model.EnginePower, model.EngineCode FROM model, make ' +
+    'WHERE model.MakeId = make.Id ' +
+    'AND make.Name = "' + make + '" ' +
+    'AND model.StartYear <= ' + modelYear + ' ' +
+    'AND (model.EndYear >= ' + modelYear + ' OR model.EndYear IS NULL) ' +
+    'AND model.FuelType = ' + fuelType + ' ' +
+    'AND model.Name = "' + model + '" ' +
+    'AND model.EngineSize = ' + engineSize + ' ' +
+    'ORDER BY model.EnginePower, model.EngineCode';
 
   try {
     const { results } = await connection.query(sql);

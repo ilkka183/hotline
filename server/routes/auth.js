@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
+  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM user WHERE Email=?';
 
   try {
     const { results } = await connection.queryValues(sql, [email]);
@@ -56,7 +56,7 @@ router.post('/changepassword', async (req, res) => {
   const password = req.body.password;
   const newPassword = req.body.newPassword;
 
-  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM User WHERE Email=?';
+  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM user WHERE Email=?';
 
   try {
     const { results } = await connection.queryValues(sql, [email]);

@@ -182,9 +182,11 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private readonly handlePageChange = async (pageIndex: number) => {
-    if (this.props.routedPages) {
-      if (this.props.history && this.props.location)
-        this.props.history.replace(this.props.location.pathname + '?page=' + (pageIndex + 1));
+    const { routedPages, history, location } = this.props;
+
+    if (routedPages) {
+      if (history && location)
+        history.replace(location.pathname + '?page=' + (pageIndex + 1));
     } else {
       this.setState({ pageIndex });
 
@@ -343,22 +345,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
 
     return rows;
   }
-
-  private paginateRows(rows: any[], pageIndex: number, pageSize: number): any[] {
-    const offset: number = pageIndex*pageSize;
-    const result: any[] = [];
-  
-    for (let i: number = 0; i < pageSize; i++) {
-      const index = offset + i;
-  
-      if (index >= rows.length)
-        break;
-  
-        result.push(rows[index]);
-    }
-  
-    return result;
-  }  
 
   protected abstract getTitle(): string;
 
@@ -563,6 +549,22 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   protected renderModals(): JSX.Element | null {
     return null;
   }
+
+  private paginateRows(rows: any[], pageIndex: number, pageSize: number): any[] {
+    const offset: number = pageIndex*pageSize;
+    const result: any[] = [];
+  
+    for (let i: number = 0; i < pageSize; i++) {
+      const index = offset + i;
+  
+      if (index >= rows.length)
+        break;
+  
+        result.push(rows[index]);
+    }
+  
+    return result;
+  }  
 
   private getRows(): Rows {
     const { paginate } = this.props;

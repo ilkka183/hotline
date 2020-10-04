@@ -10,7 +10,7 @@ export default class MakesTable extends BaseTable<Props> {
   constructor(props: any) {
     super(props);
 
-    this.addId(false);
+    this.addId(true);
     this.addName();
     this.addField('Info', 'Info', 'textarea');
     this.addEnabled();

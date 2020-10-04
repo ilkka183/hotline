@@ -6,15 +6,15 @@ const user = require('../middleware/user');
 
 const router = express.Router();
 
-const table = 'User';
+const table = 'user';
 
 const sql =
-  'SELECT User.Id, User.GroupId, UserGroup.Name AS GroupName, User.Role, User.Email, User.Password, ' + 
-  'User.FirstName, User.LastName, CONCAT(User.FirstName, " ", User.LastName) AS Name, User.Title, ' +
-  'User.Address, User.PostalCode, User.PostOffice, User.Country, User.Phone, User.Url, ' +
-  'User.Info, User.LicenseBegin, User.LicenseEnd, User.Enabled ' +
-  'FROM User, UserGroup ' +
-  'WHERE User.GroupId = UserGroup.Id';
+  'SELECT user.Id, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Password, ' + 
+  'user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.Title, ' +
+  'user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, ' +
+  'user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled ' +
+  'FROM user, usergroup ' +
+  'WHERE user.GroupId = usergroup.Id';
 
 router.get('', async (req, res) => { await http.getRows(req, res, sql) });
 router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });

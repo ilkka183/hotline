@@ -6,16 +6,16 @@ const power = require('../middleware/power');
 
 const router = express.Router();
 
-const table = 'Question';
+const table = 'question';
 
 const sql = 
-  'SELECT Question.Id, Question.Date, Question.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Question.RegistrationYear, Question.RegistrationNumber, ' +
-  'Question.Make, Question.Model, Question.ModelYear, Question.FuelType, Question.EngineCode, Question.EnginePower, Question.CylinderCount, ' +
-  'Question.VIN, Question.TypeNumber, ' +
-  'Question.Title, Question.Description, Question.Solution, Question.Status ' +
-  'FROM Question, User ' +
-  'WHERE Question.UserId = User.Id ' +
-  'AND Question.Id = ';
+  'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
+  'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
+  'question.VIN, question.TypeNumber, ' +
+  'question.Title, question.Description, question.Solution, question.Status ' +
+  'FROM question, user ' +
+  'WHERE question.UserId = user.Id ' +
+  'AND question.Id = ';
 
 router.get('', async (req, res) => { await getQuestions(req, res) });
 router.get('/open/:Id', async (req, res) => { await http.getRow(req, res, sql + req.params.Id) });
@@ -42,20 +42,20 @@ function getFilter(req, counter) {
 }
 
 async function getQuestions(req, res) {
-  let countSql = 'SELECT COUNT(*) AS Count FROM Question';
+  let countSql = 'SELECT COUNT(*) AS Count FROM question';
   countSql += getFilter(req, 0);
 
   console.log(countSql);
 
   let sql = 
-    'SELECT Question.Id, Question.Date, Question.UserId, CONCAT(User.FirstName, " ", User.LastName) AS UserName, Question.RegistrationYear, Question.RegistrationNumber, ' +
-    'Question.Make, Question.Model, Question.ModelYear, Question.FuelType, Question.EngineCode, Question.EnginePower, Question.CylinderCount, ' +
-    'Question.Title, Question.Description, Question.Solution, Question.Status ' +
-    'FROM Question, User ' +
-    'WHERE Question.UserId = User.Id ';
+    'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
+    'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
+    'question.Title, question.Description, question.Solution, question.Status ' +
+    'FROM question, user ' +
+    'WHERE question.UserId = user.Id ';
 
   sql += getFilter(req, 1);
-  sql += 'ORDER BY Question.Date DESC';
+  sql += 'ORDER BY question.Date DESC';
 
   const pageIndex = req.query.pageIndex;
   const pageSize = req.query.pageSize;
@@ -71,7 +71,7 @@ async function getQuestions(req, res) {
     sql += pageSize;
   }
 
-  const answerSql = 'SELECT Id, Date, QuestionId, UserId, Message, Solution FROM Answer ORDER BY QuestionId, Id';
+  const answerSql = 'SELECT Id, Date, QuestionId, UserId, Message, Solution FROM answer ORDER BY QuestionId, Id';
 
   console.log(http.trim(sql));
 

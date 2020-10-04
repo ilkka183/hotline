@@ -2,13 +2,14 @@
   "name": "migrate",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "migrate.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ilkka Salmenius",
   "license": "MIT",
   "dependencies": {
+    "mysql": "^2.18.1",
     "node-adodb": "^5.0.3"
   }
 }

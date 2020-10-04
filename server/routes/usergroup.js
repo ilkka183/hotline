@@ -5,13 +5,13 @@ const power = require('../middleware/power');
 
 const router = express.Router();
 
-const table = 'UserGroup';
+const table = 'usergroup';
 
 const sql = 
   'SELECT Id, Tunnus, Name, ContactPerson,' +
   'Address, PostalCode, PostOffice, Country, Phone, Email, Url, ' +
   'Logo, Info, LicenseBegin, LicenseEnd, Enabled ' +
-  'FROM UserGroup';
+  'FROM usergroup';
 
 router.get('', async (req, res) => { await http.getRows(req, res, sql) });
 router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });

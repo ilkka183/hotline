@@ -303,7 +303,6 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         required={required}
         options={lookup}
         disabled={readonly}
-        autofocus={autofocus}
         value={data[name]}
         error={errors[name]}
         onChange={this.handleChange}
