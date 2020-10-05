@@ -18,7 +18,7 @@ export default class LoginForm extends FieldsForm<Props> {
     return 'Kirjaudu';
   }
 
-  protected getButtonLabel(): string {
+  protected getSubmitButtonText(): string | undefined {
     return 'Kirjaudu';
   }
 

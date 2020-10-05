@@ -31,7 +31,7 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('GrossWeight',        'Kokonaismassa (kg)',   'number');
     this.addField('Info',               'Lisätietoja',          'textarea', { rows: 3 });
     this.addField('Title',              'Otsikko',              'text',     { required: true });
-    this.addField('Description',        'Kuvaus',               'textarea', { required: true, renderText: text => this.renderText(text), rows: 10 });
+    this.addField('Description',        'Kuvaus',               'textarea', { required: true, renderText: text => QuestionForm.renderText(text), rows: 10 });
     this.addField('Solution',           'Ratkaisu',             'textarea', { rows: 10 });
     this.addField('Status',             'Tila',                 'number',   { required: true, getDefaultValue: () => 0, enums: STATUS_TEXTS });
 
@@ -54,7 +54,7 @@ export default class QuestionForm extends BaseForm<Props> {
     return 'Poista vikatapaus';
   }
 
-  private renderText(text: string): JSX.Element | null {
+  public static renderText(text: string): JSX.Element | null {
     function addLine() {
       if (line.length > 0) {
         if (heading)

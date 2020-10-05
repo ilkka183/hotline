@@ -81,13 +81,13 @@ async function copyAnswers(source, destination) {
 }
 
 async function migrate() {
-  await copyMerkit(source, destination);
-  await copyMallit(source, destination);
+//  await copyMerkit(source, destination);
+//  await copyMallit(source, destination);
 
   await copyKoulut(source, destination);
   await copyHenkilot(source, destination);
-  await copyQuestions(source, destination);
-  await copyAnswers(source, destination);
+//  await copyQuestions(source, destination);
+//  await copyAnswers(source, destination);
 
   console.log('Done');
 }

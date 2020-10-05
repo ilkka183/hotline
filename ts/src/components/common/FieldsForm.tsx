@@ -58,6 +58,28 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     errorText: undefined
   }
 
+  private get submitButtonText(): string {
+    const { submitButtonText } = this.props;
+    const text = this.getSubmitButtonText();
+
+    return text ? text : submitButtonText!;
+  }
+
+  private get cancelButtonText(): string {
+    const { cancelButtonText } = this.props;
+    const text = this.getCancelButtonText();
+
+    return text ? text : cancelButtonText!;
+  }
+
+  protected getSubmitButtonText(): string | undefined {
+    return undefined;
+  }
+
+  protected getCancelButtonText(): string | undefined {
+    return undefined;
+  }
+
   private autofocusSet: boolean = false;
 
   public getData(): any {
@@ -385,7 +407,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
 
   private renderForm(): JSX.Element {
-    const { showTitle, submitButtonText, showSubmitButton} = this.props;
+    const { showTitle, showSubmitButton} = this.props;
     const { successText, errorText } = this.state;
 
     this.autofocusSet = false;
@@ -396,7 +418,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         {this.renderInfo()}
         <Form onSubmit={this.handleSubmit}>
           {this.fields.map(field => this.renderField(field))}
-          {showSubmitButton && this.renderSubmitButton(submitButtonText!)}
+          {showSubmitButton && this.renderSubmitButton(this.submitButtonText)}
           {successText && <Alert variant="success">{successText}</Alert>}
           {errorText && <Alert variant="danger">{errorText}</Alert>}
         </Form>
@@ -420,7 +442,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
   
   private renderModal(): JSX.Element {
-    const { showTitle, showModal, submitButtonVariant, submitButtonText, cancelButtonText, onHideModal } = this.props;
+    const { showTitle, showModal, submitButtonVariant, onHideModal } = this.props;
     const { errorText } = this.state;
 
     return (
@@ -441,8 +463,8 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant={submitButtonVariant} onClick={this.handleSubmitModal}>{submitButtonText}</Button>
-          <Button variant="secondary" onClick={onHideModal}>{cancelButtonText}</Button>
+          <Button variant={submitButtonVariant} onClick={this.handleSubmitModal}>{this.submitButtonText}</Button>
+          <Button variant="secondary" onClick={onHideModal}>{this.cancelButtonText}</Button>
         </Modal.Footer>
 
         {errorText &&

@@ -10,12 +10,12 @@ export default class UserForm extends BaseForm<Props> {
     super(props);
 
     this.addId();
-    this.addField('FirstName',    'Etunimi',          'text',   { required: true });
-    this.addField('LastName',     'Sukunimi',         'text',   { required: true });
-    this.addField('Role',         'Rooli',            'number', { required: true, enums: USER_ROLES });
-    this.addField('GroupId',      'Ryhmä',            'number', { required: true, lookupUrl: 'UserGroups' });
-    this.addField('Email',        'Sähköposti',       'email',  { required: true });
-    this.addField('Password',     'Salasana',         'text',   { required: true });
+    this.addField('FirstName',    'Etunimi',          'text',     { required: true });
+    this.addField('LastName',     'Sukunimi',         'text',     { required: true });
+    this.addField('Role',         'Rooli',            'number',   { required: true, enums: USER_ROLES });
+    this.addField('GroupId',      'Ryhmä',            'number',   { required: true, lookupUrl: 'UserGroups' });
+    this.addField('Email',        'Sähköposti',       'email',    { required: true });
+    this.addField('Password',     'Salasana',         'password', { required: true });
     this.addField('Title',        'Toimenkuva',       'text');
     this.addField('BusinessId',   'Y-tunnus',         'text');
     this.addField('Address',      'Osoite',           'text');

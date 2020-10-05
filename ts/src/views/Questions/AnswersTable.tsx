@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button'
 import BaseTable from '../BaseTable';
 import AnswerForm from './AnswerForm';
+import QuestionForm from './QuestionForm';
 
 interface Props {
   question: any,
@@ -14,9 +15,9 @@ export default class AnswersTable extends BaseTable<Props> {
 
     this.addId();
     this.addField('QuestionId', 'Vikatapaus', 'number',   { visible: false });
-    this.addField('Date',       'Pvm',        'datetime', { editLink: true, displayFormat: 'date' });
-    this.addField('UserName',   'Lähettäjä',  'text',     { editLink: true });
-    this.addField('Message',    'Viesti',     'textarea');
+    this.addField('Date',       'Pvm',        'datetime', { editLink: this.isPowerOrAdmin, displayFormat: 'date' });
+    this.addField('UserName',   'Lähettäjä',  'text',     { editLink: true, visible: this.isPowerOrAdmin });
+    this.addField('Message',    'Viesti',     'textarea', { render: row => QuestionForm.renderText(row.Message) });
 //    this.addField('Solution',  'Ratkaisu',   'boolean');
     this.addField('Mark',       '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }

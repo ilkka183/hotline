@@ -3,6 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
+import QuestionForm from './QuestionForm';
 import { FUEL_TYPE_TEXTS } from './Question';
 
 interface Props {
@@ -11,6 +12,11 @@ interface Props {
 }
 
 const QuestionSummary: React.FC<Props> = ({ className, data }) => {
+
+  function renderDescription() {
+    return QuestionForm.renderText(data.Description);
+  }
+
   return (
     <Alert className={className} variant="success">
       <Container>
@@ -23,8 +29,8 @@ const QuestionSummary: React.FC<Props> = ({ className, data }) => {
         </Row>
         <Row>
           <Col>{FUEL_TYPE_TEXTS[data.FuelType]}</Col>
-          <Col>{data.EngineSize} cm3</Col>
-          <Col>{data.EnginePower} kW</Col>
+          {data.EngineSize && <Col>{data.EngineSize} cm3</Col>}
+          {data.EnginePower && <Col>{data.EnginePower} kW</Col>}
           <Col>{data.EngineCode}</Col>
           <Col>{data.VIN}</Col>
         </Row>
@@ -32,7 +38,7 @@ const QuestionSummary: React.FC<Props> = ({ className, data }) => {
           <Col>{data.Title}</Col>
         </Row>
         <Row>
-          <Col><pre>{data.Description}</pre></Col>
+          <Col>{renderDescription()}</Col>
         </Row>
       </Container>
     </Alert>

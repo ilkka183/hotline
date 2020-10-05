@@ -488,10 +488,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return null;
   }
 
-  protected getParentId(): number | null {
-    return null;
-  }
-
   protected getParent(): any {
     return undefined;
   }
@@ -511,7 +507,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
         variant='modal'
         action={action}
         dataId={modalDataId}
-        parentId={this.getParentId()}
         parent={this.getParent()}
         showModal={showEditModal}
         onModalSubmitted={this.handleSubmitEditModal}
@@ -535,7 +530,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
         variant='modal'
         action='delete'
         dataId={dataId}
-        parentId={this.getParentId()}
+        parent={this.getParent()}
         showModal={showDeleteModal}
         submitButtonVariant="danger"
         submitButtonText="Kyllä"
@@ -611,6 +606,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
               </tr>))}
           </tbody>
         </table>
+        {paginate && this.renderPagination(rowCount)}
         {showEditModal && this.renderEditModal()}
         {showDeleteModal && this.renderDeleteModal()}
         {this.renderModals()}

@@ -37,6 +37,11 @@
   - siirrä uudet FTP:llä
 
 
+  Migrate
+  =======
+  - Odota min 1 min, että kaikki Answer on tallentunut Done:n jälkeen
+
+
   version 1, 25.10.2020
 
 */
@@ -95,13 +100,16 @@ CREATE TABLE User
   Password VARCHAR(20) NOT NULL,
   FirstName VARCHAR(50) NOT NULL,
   LastName VARCHAR(50) NOT NULL,
+  CompanyName VARCHAR(50),
   Title VARCHAR(40),
   BusinessId VARCHAR(20),
   Address VARCHAR(160),
-  PostalCode VARCHAR(20),
-  PostOffice VARCHAR(40),
-  Country VARCHAR(40),
-  Phone VARCHAR(20),
+  PostOfficeBox VARCHAR(50),
+  PostalCode VARCHAR(50),
+  PostOffice VARCHAR(50),
+  Country VARCHAR(50),
+  Phone VARCHAR(50),
+  Fax VARCHAR(50),
   Url VARCHAR(80),
   Info TEXT,
   LicenseBegin DATE,

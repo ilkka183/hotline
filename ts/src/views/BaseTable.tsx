@@ -11,6 +11,10 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return '/' + this.getApiName();
   }
 
+  protected get isPowerOrAdmin(): boolean {
+    return (this.user !== null) && this.user.isPowerOrAdmin;
+  }
+
   protected owns(userId: number): boolean {
     return (this.user !== null) && this.user.owns(userId);
   }
@@ -58,7 +62,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected addId(visible: boolean = true): Field {
-    return this.addField('Id', 'No', 'number', { editLink: true, visible });
+    return this.addField('Id', 'No', 'number', { editLink: this.isPowerOrAdmin, visible });
   }
 
   protected addName(name: string = 'Name', label: string = 'Nimi'): Field {

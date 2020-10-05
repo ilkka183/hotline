@@ -14,7 +14,7 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     return http;
   }
 
-  public addId(visible: boolean = false): Field {
+  public addId(visible: boolean = true): Field {
     return this.addField('Id', 'No', 'number',  { primaryKey: true, readonly: true, visible });
   }
 

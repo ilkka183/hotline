@@ -34,11 +34,20 @@ function insertHenkilot(destination, koulut, henkilot) {
     const row = {
       Id,
       GroupId,
-      Role: role(item.O_ID),
+      Role: role(item.O_TYPE),
       Email: item.O_USER,
       Password: item.O_PSW,
       FirstName,
-      LastName
+      LastName,
+      CompanyName: item.O_CNAME,
+      Title: item.O_TITLE,
+      Address: item.O_STREET,
+      PostOfficeBox: item.O_BOX,
+      PostalCode: item.O_ZIP,
+      PostOffice: item.O_CITY,
+      Country: item.O_COUNTRY,
+      Phone: item.O_PHONE,
+      Fax: item.O_FAX
     }
   
     destination.insert('User', row);

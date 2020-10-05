@@ -20,7 +20,7 @@ export default class RegisterForm extends FieldsForm<Props> {
     return 'Rekisteröidy';
   }
 
-  protected getButtonLabel(): string {
+  protected getSubmitButtonText(): string | undefined {
     return 'Rekisteröidy';
   }
 
