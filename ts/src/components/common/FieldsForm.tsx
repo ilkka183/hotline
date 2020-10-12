@@ -372,7 +372,7 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     if (!field.visible)
       return null;
 
-    if (field.readonly && (!value && !field.isLookup))
+    if (field.readonly && !value)
       return null;
 
     if (field.isLookup) {

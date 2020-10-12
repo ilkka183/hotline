@@ -14,13 +14,16 @@ export default class UsersTable extends BaseTable<Props> {
     this.addId();
     this.addName('FirstName',     'Etunimi');
     this.addName('LastName',      'Sukunimi');
+    this.addField('Username',     'Käyttäjätunnus',   'text',   { visible: false });
     this.addField('Role',         'Rooli',            'number', { enums: USER_ROLES });
     this.addField('GroupName',    'Ryhmä',            'text');
+    this.addField('CompanyName',  'Yritys',           'text');
     this.addField('Title',        'Toimenkuva',       'text');
     this.addField('Address',      'Osoite',           'text');
     this.addField('PostalCode',   'Postinumero',      'text');
     this.addField('PostOffice',   'Postitoimipaikka', 'text');
-    this.addField('Country',      'Maa',              'text');
+    this.addField('Email',        'Sähköposti',       'email', { visible: false });
+    this.addField('Phone',        'Puhelin',          'tel',   { visible: false });
     this.addField('LicenseBegin', 'Lisenssi alku',    'date');
     this.addField('LicenseEnd',   'Lisenssi loppu',   'date');
     this.addEnabled();

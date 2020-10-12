@@ -22,13 +22,11 @@ export default class ModelsTable extends BaseTable<Props> {
     this.addField('FuelType',      'Käyttövoima',          'number', { enums: FUEL_TYPE_TEXTS });
     this.addField('VehicleType',   'Ajoneuvotyyppi',       'number');
     this.addField('EngineSize',    'Kuutiotilavuus (cm3)', 'number');
-    this.addField('CylinderCount', 'Sylinterimäärä',       'number');
     this.addField('Tune',          'Katalysaattori',       'text');
     this.addField('EnginePower',   'Teho (kW)',            'number');
     this.addField('EnginePowerAt', 'Teho (r/min)',         'number');
     this.addField('EngineCode',    'Moottorin koodi',      'text');
     this.addField('MID',           'MID',                  'text');
-    this.addEnabled();
   }
 
   protected getTitle(): string {

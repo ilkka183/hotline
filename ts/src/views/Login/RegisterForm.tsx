@@ -8,10 +8,11 @@ export default class RegisterForm extends FieldsForm<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.addField('email',     'Sähköposti', 'email', { required: true });
-    this.addField('password',  'Salasana',   'text',  { min: 5, required: true });
-    this.addField('firstName', 'Etunimi',    'text',  { required: true });
-    this.addField('lastName',  'Sukunimi',   'text',  { required: true });
+    this.addField('username',  'Käyttäjätunnus', 'text',  { min: 5, required: true });
+    this.addField('password',  'Salasana',       'text',  { min: 5, required: true });
+    this.addField('firstName', 'Etunimi',        'text',  { required: true });
+    this.addField('lastName',  'Sukunimi',       'text',  { required: true });
+    this.addField('email',     'Sähköposti',     'email', { required: true });
 
     this.state.data = this.getEmptyData();
   }
@@ -32,6 +33,7 @@ export default class RegisterForm extends FieldsForm<Props> {
     try {
       const user: User = new User({
         id: 1,
+        username: this.state.data.username,
         firstName: this.state.data.firstName,
         lastName: this.state.data.lastName,
         email: this.state.data.email,

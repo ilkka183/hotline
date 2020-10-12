@@ -23,16 +23,16 @@ function insert(destination, items) {
       Grouping: item.T_4,
       AdditionalInfo: item.T_5,
       Sequence: item.T_6,
+      EngineSize: 1000*parseFloat(item.T_7.replace(',', '.')),
+      EngineCode: item.T_8,
+      EnginePower: power ? power.value : undefined,
+      EnginePowerAt: power ? power.at : undefined,
       Tune: item.T_10,
       StartYear: parseInt(item.T_11),
       EndYear: parseInt(item.T_12),
-      FuelType: item.T_14 === 'D' ? 1 : 0,
+      MID: item.T_13,
+      FuelType: item.T_14 === 'P' ? 0 : 1,
       VehicleType: parseInt(item.T_15),
-      EngineSize: 1000*parseFloat(item.T_7.replace(',', '.')),
-      EnginePower: power ? power.value : undefined,
-      EnginePowerAt: power ? power.at : undefined,
-      EngineCode: item.T_8,
-      MID: item.T_13
     }
 
     destination.insert('Model', row);

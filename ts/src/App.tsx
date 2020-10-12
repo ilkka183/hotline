@@ -12,6 +12,7 @@ import MakesTable from './views/Makes/MakesTable';
 import ModelsTable from './views/Models/ModelsTable';
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UsersTable from './views/Users/UsersTable';
+import UserSessionsTable from './views/UserSessions/UserSessionsTable';
 
 import Question from './views/Questions/Question';
 import OpenQuestions from './views/Questions/OpenQuestions';
@@ -27,25 +28,20 @@ import Logout from './views/Login/Logout';
 import { User, UserRole } from './services/authService';
 import auth from './services/authService';
 
-interface State {
-  user: User | null
-}
+export default class App extends React.Component<{}> {
+  private get root(): string {
+//    const user: User | null = auth.getCurrentUser();
 
-export default class App extends React.Component<{}, State> {
-  public state = {
-    user: null
-  };
-
-  public componentDidMount() {
-    const user: User | null = auth.getCurrentUser();
-    
-    this.setState({ user });
+    return '/home';
+//    return user ? '/home' : '/login';
   }
 
   public render(): JSX.Element {
+    const user: User | null = auth.getCurrentUser();
+
     return (
       <>
-        <AppNavbar user={this.state.user} />
+        <AppNavbar user={user} />
         <Container fluid>
           <Switch>
             <Route path="/home" component={Home} />
@@ -55,6 +51,7 @@ export default class App extends React.Component<{}, State> {
             <ProtectedRoute path="/questions/user" component={UserQuestions} />
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/usersessions" component={UserSessionsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/about" component={About} />
@@ -63,7 +60,7 @@ export default class App extends React.Component<{}, State> {
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />
-            <Redirect from="/" exact to="/home" />
+            <Redirect from="/" exact to={this.root} />
             <Redirect to="/not-found" />
           </Switch>
         </Container>

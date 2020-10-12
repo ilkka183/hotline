@@ -14,9 +14,13 @@ export default class ModelForm extends BaseForm<{}> {
     this.addField('FuelType',      'Käyttövoima',          'number', { required: true, enums: FUEL_TYPE_TEXTS });
     this.addField('EngineSize',    'Kuutiotilavuus (cm3)', 'number', { required: true });
     this.addField('CylinderCount', 'Sylinterimäärä',       'number');
+    this.addField('Tune',          'Katalysaattori',       'text');
     this.addField('EnginePower',   'Teho (kW)',            'number');
+    this.addField('EnginePowerAt', 'Teho (r/min)',         'number');
     this.addField('EngineCode',    'Moottorin koodi',      'text');
     this.addField('MID',           'MID',                  'text');
+    this.addField('NetWeight',     'Omamassa (kg)',        'number');
+    this.addField('GrossWeight',   'Kokinaismassa (kg)',   'number');
     this.addEnabled();
     this.addTimestamps();
     

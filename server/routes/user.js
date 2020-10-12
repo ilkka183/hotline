@@ -9,12 +9,13 @@ const router = express.Router();
 const table = 'user';
 
 const sql =
-  'SELECT user.Id, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Password, ' + 
-  'user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.Title, ' +
+  'SELECT user.Id, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, ' + 
+  'user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, ' +
   'user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, ' +
   'user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled ' +
   'FROM user, usergroup ' +
-  'WHERE user.GroupId = usergroup.Id';
+  'WHERE user.GroupId = usergroup.Id ' +
+  'ORDER BY user.Id';
 
 router.get('', async (req, res) => { await http.getRows(req, res, sql) });
 router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });

@@ -83,7 +83,9 @@ CREATE TABLE UserGroup
   LicenseEnd DATE,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CreatedBy BIGINT UNSIGNED,
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  UpdatedBy BIGINT UNSIGNED,
   Data JSON,
   Class VARCHAR(255),
   ChangeBy VARCHAR(10),
@@ -96,10 +98,12 @@ CREATE TABLE User
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   GroupId BIGINT UNSIGNED  NOT NULL,
   Role SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=powerUser, 2=user, 3=demoUser */
-  Email VARCHAR(80) NOT NULL UNIQUE,
+  Email VARCHAR(80) NOT NULL /* UNIQUE */,
+  Username VARCHAR(20) NOT NULL UNIQUE,
   Password VARCHAR(20) NOT NULL,
   FirstName VARCHAR(50) NOT NULL,
   LastName VARCHAR(50) NOT NULL,
+  Language VARCHAR(50),
   CompanyName VARCHAR(50),
   Title VARCHAR(40),
   BusinessId VARCHAR(20),
@@ -112,22 +116,29 @@ CREATE TABLE User
   Fax VARCHAR(50),
   Url VARCHAR(80),
   Info TEXT,
+  LastLogin DATETIME,
+  LastLogout DATETIME,
   LicenseBegin DATE,
   LicenseEnd DATE,
   MaxOpenQuestionCount INTEGER NOT NULL DEFAULT 2,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CreatedBy BIGINT UNSIGNED,
   UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  UpdatedBy BIGINT UNSIGNED,
   Data JSON,
+  Class VARCHAR(255),
   PRIMARY KEY (Id),
   FOREIGN KEY (GroupId) REFERENCES UserGroup(Id)
 );
 
 
-CREATE TABLE UserLogin
+CREATE TABLE UserSession
 (
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   UserId BIGINT UNSIGNED NOT NULL,
-  Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  LoginTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  LogoutTime DATETIME,
   IPAddress VARCHAR(40) NOT NULL,
   Data JSON,
   FOREIGN KEY (UserId) REFERENCES User(Id)
@@ -167,6 +178,8 @@ CREATE TABLE Model
   EngineSize SMALLINT UNSIGNED NOT NULL,
   EnginePower SMALLINT UNSIGNED,
   EnginePowerAt SMALLINT UNSIGNED,
+  EngineTorque SMALLINT UNSIGNED,
+  EngineTorqueAt SMALLINT UNSIGNED,
   EngineCode VARCHAR(50),
   MID VARCHAR(10),
   NetWeight SMALLINT UNSIGNED,
@@ -267,12 +280,12 @@ INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(2, 'Juniper Code', 'I
 INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(3, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
 INSERT INTO UserGroup(Id, Name, ContactPerson, Url) VALUES(4, 'Prodiags', NULL, 'http://www.prodiags.com');
 
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd, Enabled) VALUES(1, 1, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi',       'weber', NULL, NULL, False);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(2, 2, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(4, 4, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(5, 4, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd, Enabled) VALUES(1, 1, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi', 'tuntematon', 'weber', NULL, NULL, False);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(2, 2, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'ilkka183', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'jormaTesti',  'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(4, 4, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'artoTesti',   'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(5, 4, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'jarmoTesti',  'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'janTesti',    'weber', CURDATE() - INTERVAL 1 DAY, NULL);
 
 
 /* Merkit ja mallit */

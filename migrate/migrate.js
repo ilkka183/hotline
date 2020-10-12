@@ -20,9 +20,8 @@ let henkilot = [];
 let questions = [];
 let answers = [];
 
-async function copyMerkit(source, destination) {
+async function copyMerkit(destination) {
   try {
-    merkit = await source.query('SELECT * FROM Merkki')
     console.log('Merkki', merkit.length);
     insertMerkit(destination, merkit);
   } catch (error) {
@@ -30,9 +29,8 @@ async function copyMerkit(source, destination) {
   }
 }
 
-async function copyMallit(source, destination) {
+async function copyMallit(destination) {
   try {
-    mallit = await source.query('SELECT * FROM Malli')
     console.log('Malli', mallit.length);
     insertMallit(destination, mallit);
   } catch (error) {
@@ -40,19 +38,17 @@ async function copyMallit(source, destination) {
   }
 }
 
-async function copyKoulut(source, destination) {
+async function copyKoulut(destination) {
   try {
-    koulut = await source.query('SELECT * FROM Koulu')
     console.log('Koulu', koulut.length);
-    insertKoulut(destination, koulut);
+    insertKoulut(destination, koulut, henkilot);
   } catch (error) {
     console.error(error);
   }
 }
 
-async function copyHenkilot(source, destination) {
+async function copyHenkilot(destination) {
   try {
-    henkilot = await source.query('SELECT * FROM Henkilo')
     console.log('Henkilo', henkilot.length);
     insertHenkilot(destination, koulut, henkilot);
   } catch (error) {
@@ -81,13 +77,18 @@ async function copyAnswers(source, destination) {
 }
 
 async function migrate() {
-//  await copyMerkit(source, destination);
-//  await copyMallit(source, destination);
+  merkit = await source.query('SELECT * FROM Merkki')
+  mallit = await source.query('SELECT * FROM Malli')
+  koulut = await source.query('SELECT * FROM Koulu')
+  henkilot = await source.query('SELECT * FROM Henkilo')
 
-  await copyKoulut(source, destination);
-  await copyHenkilot(source, destination);
-//  await copyQuestions(source, destination);
-//  await copyAnswers(source, destination);
+  await copyMerkit(destination);
+  await copyMallit(destination);
+  await copyKoulut(destination);
+  await copyHenkilot(destination);
+  
+/*  await copyQuestions(source, destination);
+  await copyAnswers(source, destination); */
 
   console.log('Done');
 }

@@ -368,10 +368,21 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
   }
   
+  protected showNewButton(): boolean {
+    return this.getModalForm();
+  }
+
+  protected showDeleteButton(): boolean {
+    return this.getModalForm();
+  }
+
   private renderNewButton(): JSX.Element | null {
     const { readOnly, creatable, newButtonAsLink, newButtonText } = this.props;
 
     if (readOnly || !creatable)
+      return null;
+
+    if (!this.showNewButton())
       return null;
 
     const variant: string = newButtonAsLink ? 'link' : 'primary';
@@ -579,8 +590,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       }
   }
 
+  private get showRowDeleteButton(): boolean {
+    const { readOnly, deletable } = this.props;
+
+    return !readOnly! && deletable! && this.showDeleteButton();
+  }
+
   public render(): JSX.Element {
-    const { readOnly, deletable, paginate } = this.props;
+    const { paginate } = this.props;
     const { showEditModal, showDeleteModal } = this.state;
 
     const { rowCount, rows } = this.getRows();
@@ -595,14 +612,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
           <thead>
             <tr>
               {columns.map(column => this.renderColumn(column))}
-              {!readOnly && deletable && <th></th>}
+              {this.showRowDeleteButton && <th></th>}
             </tr>
           </thead>
           <tbody>
             {rows.map(row => (
               <tr key={row.Id}>
                 {columns.map(column => this.renderCell(row, column))}
-                {!readOnly && deletable &&<td>{this.renderDeleteButton(row)}</td>}
+                {this.showRowDeleteButton &&<td>{this.renderDeleteButton(row)}</td>}
               </tr>))}
           </tbody>
         </table>

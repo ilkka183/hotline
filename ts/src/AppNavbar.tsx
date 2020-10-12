@@ -26,6 +26,7 @@ const AppNavbar: React.FC<Props> = ({ user }) => {
             {user.isPowerOrAdmin && <NavDropdown title="Asetukset" id="basic-nav-dropdown">
               <NavItemLink to="/usergroups">Käyttäjäryhmät</NavItemLink>
               <NavItemLink to="/users">Käyttäjät</NavItemLink>
+              <NavItemLink to="/usersessions">Kirjautumiset</NavItemLink>
               <NavItemLink to="/makes">Automerkit</NavItemLink>
               <NavItemLink to="/models">Automallit</NavItemLink>
             </NavDropdown>}

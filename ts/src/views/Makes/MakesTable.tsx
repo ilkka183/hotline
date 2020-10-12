@@ -13,7 +13,6 @@ export default class MakesTable extends BaseTable<Props> {
     this.addId(true);
     this.addName();
     this.addField('Info', 'Info', 'textarea');
-    this.addEnabled();
   }
 
   protected getTitle(): string {

@@ -18,21 +18,22 @@ router.get('/me', auth, (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-  const email = req.body.email;
+  const username = req.body.username;
   const password = req.body.password;
 
-  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM user WHERE Email=?';
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Email, Phone FROM user WHERE Username=?';
 
   try {
-    const { results } = await connection.queryValues(sql, [email]);
+    const { results } = await connection.queryValues(sql, [username]);
 
     if ((results.length == 0) || (password !== results[0].Password))
-      return res.status(401).send('Invalid email or password.');
+      return res.status(401).send('Invalid username or password.');
 
     const row = results[0];
   
     const payload = {
       id: row.Id,
+      username: row.Username,
       firstName: row.FirstName,
       lastName: row.LastName,
       email: row.Email,
@@ -41,6 +42,14 @@ router.post('/login', async (req, res) => {
     }
 
     const token = generateToken(payload);
+
+    const updateSql = 'UPDATE User SET LastLogin=NOW() WHERE Username=?';
+    await connection.queryValues(updateSql, [username]);
+
+    const ipAddress = '0.0.0.0';
+
+    const insertSql = 'INSERT INTO UserSession (UserId, IPAddress) VALUES(?, ?)';
+    await connection.queryValues(insertSql, [row.Id, ipAddress]);
 
     res.send(token);
   }
@@ -51,21 +60,41 @@ router.post('/login', async (req, res) => {
 });
 
 
+router.post('/logout', async (req, res) => {
+  const username = req.body.username;
+
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Phone FROM user WHERE Username=?';
+
+  try {
+    await connection.queryValues(sql, [username]);
+
+    const updateSql = 'UPDATE User SET LastLogout=NOW() WHERE Username=?';
+    await connection.queryValues(updateSql, [username]);
+
+    res.send('OK');
+  }
+  catch (ex) {
+    console.error(ex);
+    res.status(500).send(ex);
+  }
+});
+
+
 router.post('/changepassword', async (req, res) => {
-  const email = req.body.email;
+  const username = req.body.username;
   const password = req.body.password;
   const newPassword = req.body.newPassword;
 
-  const sql = 'SELECT Id, Email, Password, Role, FirstName, LastName, Phone FROM user WHERE Email=?';
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Phone FROM user WHERE Username=?';
 
   try {
-    const { results } = await connection.queryValues(sql, [email]);
+    const { results } = await connection.queryValues(sql, [username]);
 
     if ((results.length == 0) || (password !== results[0].Password))
       return res.status(401).send('Invalid password.');
 
-    const updateSql = 'UPDATE User SET Password=? WHERE Email=?';
-    await connection.queryValues(updateSql, [newPassword, email]);
+    const updateSql = 'UPDATE User SET Password=? WHERE Username=?';
+    await connection.queryValues(updateSql, [newPassword, username]);
 
     res.send('OK');
   }
@@ -77,7 +106,7 @@ router.post('/changepassword', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-  let sql = 'INSERT INTO User (GroupId, Role, FirstName, LastName, Email, Password, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  let sql = 'INSERT INTO User (GroupId, Role, FirstName, LastName, Username, Password, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const values = [];
 
   for (const column in req.body) 

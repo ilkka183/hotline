@@ -8,6 +8,7 @@ const questionattachment = require('./routes/questionattachment');
 const answer = require('./routes/answer');
 const usergroup = require('./routes/usergroup');
 const user = require('./routes/user');
+const usersession = require('./routes/usersession');
 const traficom = require('./routes/traficom');
 const tecdoc = require('./routes/tecdoc');
 const data = require('./routes/data');
@@ -47,6 +48,7 @@ app.use(apiPath + 'QuestionAttachments', questionattachment);
 app.use(apiPath + 'Answers', answer);
 app.use(apiPath + 'UserGroups', usergroup);
 app.use(apiPath + 'Users', user);
+app.use(apiPath + 'UserSessions', usersession);
 
 app.use(apiPath + 'traficom', traficom);
 app.use(apiPath + 'tecdoc', tecdoc);

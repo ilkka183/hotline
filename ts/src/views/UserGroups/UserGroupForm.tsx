@@ -26,7 +26,7 @@ export default class UserGroupForm extends BaseForm<Props> {
     this.addField('LicenseBegin',  'Lisenssi alku',    'date');
     this.addField('LicenseEnd',    'Lisenssi loppu',   'date');
     this.addEnabled();
-    this.addTimestamps();
+    this.addTimestamps(true);
 
     this.state.data = this.getEmptyData();
   }

@@ -8,8 +8,8 @@ export default class LoginForm extends FieldsForm<Props> {
   constructor(props: Props) {
     super(props);
     
-    this.addField('email',    'Sähköposti', 'email',    { required: true });
-    this.addField('password', 'Salasana',   'password', { min: 5, required: true });
+    this.addField('username', 'Käyttäjätunnus', 'text',     { required: true });
+    this.addField('password', 'Salasana',       'password', { min: 5, required: true });
 
     this.state.data = this.getEmptyData();
   }
@@ -28,8 +28,8 @@ export default class LoginForm extends FieldsForm<Props> {
 
   protected async doSubmit(): Promise<FormErrors | null> {
     try {
-      const { email, password } = this.state.data;
-      await auth.login(email, password);
+      const { username, password } = this.state.data;
+      await auth.login(username, password);
       window.location.replace('/');
     }
     catch (ex) {

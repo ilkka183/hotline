@@ -22,8 +22,15 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     return this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
 
-  public addTimestamps() {
-    this.addField('CreatedAt', 'Luotu',    'datetime', { required: true, readonly: true });
-    this.addField('UpdatedAt', 'Muokattu', 'datetime', { readonly: true });
+  public addTimestamps(by: boolean = false) {
+    this.addField('CreatedAt', 'Luotu', 'datetime', { required: true, readonly: true });
+
+    if (by)
+      this.addField('CreatedBy', 'Luoja', 'number', { readonly: true, lookupUrl: 'Users' });
+
+    this.addField('UpdatedAt', 'Muokattu',  'datetime', { readonly: true });
+
+    if (by)
+      this.addField('UpdatedBy', 'Muokkaaja', 'number', { readonly: true, lookupUrl: 'Users' });
   }
 }

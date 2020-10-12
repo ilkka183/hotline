@@ -17,6 +17,7 @@ export const USER_ROLES = [
 
 interface IUser {
   id: number,
+  username: string,
   firstName: string,
   lastName: string,
   email: string,
@@ -26,6 +27,7 @@ interface IUser {
 
 export class User implements IUser {
   public readonly id: number;
+  public readonly username: string;
   public readonly firstName: string;
   public readonly lastName: string;
   public readonly email: string;
@@ -34,6 +36,7 @@ export class User implements IUser {
 
   constructor(user: IUser) {
     this.id = user.id;
+    this.username = user.username;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.email = user.email;
@@ -84,17 +87,22 @@ export async function register(user: User) {
   localStorage.setItem(tokenKey, jwt);
 }
 
-export async function login(email: string, password: string) {
-  const { data: jwt } = await http.post(apiEndpoint + '/login', { email, password });
+export async function login(username: string, password: string) {
+  const { data: jwt } = await http.post(apiEndpoint + '/login', { username, password });
   localStorage.setItem(tokenKey, jwt);
 }
 
-export async function changePassword(email: string, password: string, newPassword: string) {
-  await http.post(apiEndpoint + '/changepassword', { email, password, newPassword });
+export async function logout() {
+  const user: User | null = getCurrentUser();
+
+  if (user)
+    await http.post(apiEndpoint + '/logout', { username: user.username });
+
+  localStorage.removeItem(tokenKey);
 }
 
-export function logout() {
-  localStorage.removeItem(tokenKey);
+export async function changePassword(username: string, password: string, newPassword: string) {
+  await http.post(apiEndpoint + '/changepassword', { username, password, newPassword });
 }
 
 export default {
@@ -102,6 +110,6 @@ export default {
   getJwt,
   register,
   login,
-  changePassword,
-  logout
+  logout,
+  changePassword
 }
