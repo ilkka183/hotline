@@ -20,28 +20,29 @@ import SolvedQuestions from './views/Questions/SolvedQuestions';
 import UserQuestions from './views/Questions/UserQuestions';
 
 import Profile from './views/Profile/Profile';
-
-import LoginForm from './views/Login/LoginForm';
-import RegisterForm from './views/Login/RegisterForm';
 import Logout from './views/Login/Logout';
 
 import { User, UserRole } from './services/authService';
 import auth from './services/authService';
 
-export default class App extends React.Component<{}> {
-  private get root(): string {
-//    const user: User | null = auth.getCurrentUser();
+interface State {
+  user: User | null
+}
+export default class App extends React.Component<{}, State> {
+  public state = {
+    user: null
+  };
 
-    return '/home';
-//    return user ? '/home' : '/login';
+  public componentDidMount() {
+    const user: User | null = auth.getCurrentUser();
+
+    this.setState({ user });
   }
 
   public render(): JSX.Element {
-    const user: User | null = auth.getCurrentUser();
-
     return (
       <>
-        <AppNavbar user={user} />
+        <AppNavbar user={this.state.user} />
         <Container fluid>
           <Switch>
             <Route path="/home" component={Home} />
@@ -56,11 +57,9 @@ export default class App extends React.Component<{}> {
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={Profile} />
-            <Route path="/register" component={RegisterForm} />
-            <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
             <Route path="/not-found" component={NotFound} />
-            <Redirect from="/" exact to={this.root} />
+            <Redirect from="/" exact to="/home" />
             <Redirect to="/not-found" />
           </Switch>
         </Container>

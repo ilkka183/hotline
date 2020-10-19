@@ -25,6 +25,8 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   protected async getItems(options: SearchOptions): Promise<Rows> {
     const sortFields: any = options.sortFields;
 
+    console.log(options);
+
     let query: any = {}
     this.getItemsQuery(query);
     query.pageIndex = options.pageIndex;
@@ -45,10 +47,20 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
       }
     }
 
+    if (options.searchValues) {
+      const searchValues: any = options.searchValues;
+
+      for (const key in searchValues)
+        if (searchValues[key])
+          query[key] = searchValues[key];
+    }
+
     let endpoint: string = this.apiPath;
 
     if (Object.keys(query).length > 0)
       endpoint += '?' + queryString.stringify(query);
+
+    console.log(endpoint);
 
     const response: any = await http.get(endpoint);
 
@@ -66,7 +78,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected addName(name: string = 'Name', label: string = 'Nimi'): Field {
-    return this.addField(name, label, 'text', { editLink: true });
+    return this.addField(name, label, 'text', { editLink: true, search: true });
   }
 
   protected addEnabled(): Field {

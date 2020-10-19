@@ -10,6 +10,8 @@ function role(type) {
   switch (type) {
     case '-1': return 0;
     case '0': return 1;
+    case '1': return 1;
+    case '1.5': return 1;
   }
 
   return 2;

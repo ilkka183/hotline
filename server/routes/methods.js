@@ -17,7 +17,21 @@ function trim(sql) {
   return sql
 }
 
-function getCountSql(sql) {
+function getFilter(req) {
+  let sql = '';
+
+  for (const key in req.query)
+    if (key !== 'pageIndex' && key !== 'pageSize') {
+      if (sql.length > 0)
+        sql += ' AND ';
+
+      sql += key + ' LIKE "%' + req.query[key] + '%"';
+    }
+
+  return sql;
+}
+
+function getCountSql(req, sql) {
   const fromIndex = sql.indexOf('FROM ');
 
   if (fromIndex !== -1) {
@@ -27,6 +41,19 @@ function getCountSql(sql) {
 
     if (orderByIndex !== -1)
       sql = sql.substring(0, orderByIndex);
+
+    const filterSql = getFilter(req);
+
+    if (filterSql) {
+      const whereIndex = sql.indexOf('WHERE');
+
+      if (whereIndex !== -1)
+        sql += " AND ";
+      else
+        sql += " WHERE ";
+
+      sql += filterSql;
+    }
 
     return 'SELECT COUNT(*) AS Count ' + sql;
   }
@@ -56,7 +83,20 @@ async function getRows(req, res, sql) {
     const pageIndex = req.query.pageIndex;
     const pageSize = req.query.pageSize;
 
-    const countSql = pageSize ? getCountSql(sql) : null;
+    const countSql = pageSize ? getCountSql(req, sql) : null;
+
+    const filterSql = getFilter(req);
+
+    if (filterSql) {
+      const whereIndex = sql.indexOf('WHERE');
+
+      if (whereIndex !== -1)
+        sql += " AND ";
+      else
+        sql += " WHERE ";
+
+      sql += filterSql;
+    }
 
     const sortFields = req.query.sortFields;
 

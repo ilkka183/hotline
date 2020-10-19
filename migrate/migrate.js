@@ -87,8 +87,8 @@ async function migrate() {
   await copyKoulut(destination);
   await copyHenkilot(destination);
   
-/*  await copyQuestions(source, destination);
-  await copyAnswers(source, destination); */
+  await copyQuestions(source, destination);
+  await copyAnswers(source, destination);
 
   console.log('Done');
 }

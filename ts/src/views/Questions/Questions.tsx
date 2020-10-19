@@ -40,10 +40,7 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
     return undefined;
   }
 
-  public render(): JSX.Element | null {
-    if (!this.user)
-      return null;
-
+  protected renderTable(): JSX.Element {
     const query = parseQuery(this.props.location.search);
     const page: number = query.page ? parseInt(query.page) : 1;
 
@@ -64,5 +61,12 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
         deletable={this.getDeletable()}
       />
     );
+  }
+
+  public render(): JSX.Element | null {
+    if (this.user)
+      return this.renderTable();
+
+    return null;
   }
 }

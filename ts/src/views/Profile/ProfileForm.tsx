@@ -11,8 +11,8 @@ export default class ProfileForm extends BaseForm<Props> {
     this.addId();
     this.addField('FirstName',    'Etunimi',          'text',   { required: true, readonly: true });
     this.addField('LastName',     'Sukunimi',         'text',   { required: true, readonly: true });
-    this.addField('Role',         'Rooli',            'number', { required: true, readonly: true, enums: ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'] });
     this.addField('GroupId',      'Ryhmä',            'number', { required: true, readonly: true, lookupUrl: 'UserGroups' });
+    this.addField('Role',         'Rooli',            'number', { required: true, readonly: true, enums: ['pääkäyttäjä', 'tehokäyttäjä', 'käyttäjä', 'demokäyttäjä'] });
     this.addField('Email',        'Sähköposti',       'email',  { required: true });
     this.addField('BusinessId',   'Y-tunnus',         'text');
     this.addField('Title',        'Toimenkuva',       'text');
@@ -21,9 +21,11 @@ export default class ProfileForm extends BaseForm<Props> {
     this.addField('PostOffice',   'Postitoimipaikka', 'text');
     this.addField('Country',      'Maa',              'text');
     this.addField('Phone',        'Puhelin',          'phone');
-    this.addField('LicenseBegin', 'Lisenssi alku',    'date',  { readonly: true });
-    this.addField('LicenseEnd',   'Lisenssi loppu',   'date',  { readonly: true });
-    this.addField('MaxOpenProblemCount', 'Avoimia vikatapauksia enintään', 'number', { readonly: true });
+    this.addField('MaxOpenQuestionCount', 'Avoimia vikatapauksia enintään', 'number',   { readonly: true });
+    this.addField('LicenseBegin',         'Lisenssi alku',                  'date',     { readonly: true });
+    this.addField('LicenseEnd',           'Lisenssi loppu',                 'date',     { readonly: true });
+    this.addField('LastLogin',            'Viimeinen sisäänkirjautuminen',  'datetime', { readonly: true });
+    this.addField('LastLogout',           'Viimeinen uloskirjautuminen',    'datetime', { readonly: true });
 
     this.state.data = this.getEmptyData();
   }

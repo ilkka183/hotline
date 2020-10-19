@@ -220,9 +220,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
   }
 
-  private readonly handleSearch = () => {
-    if (!this.props.routedPages)
-      this.setState({ pageIndex: 0 });
+  private readonly handleSearch = async () => {
+    const { searchValues } = this.state;
+
+    await this.fetchItems({ pageIndex: 0, searchValues });
   }
 
   private readonly handleSearchFieldChange = ({ currentTarget }: any ) => {
@@ -365,7 +366,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     const variant: string = this.hasSearchValues() ? 'secondary' : 'light';
     const text: string = searchPanel ? 'Sulje hakupaneeli' : 'Avaa hakupaneeli';
 
-    return <Button className="mb-2 mr-2" variant={variant} size="sm" onClick={this.handleToggleSearchPanel}>{text}</Button>
+    return <Button className="mb-2 mr-2" variant={variant} onClick={this.handleToggleSearchPanel}>{text}</Button>
   }
   
   protected showNewButton(): boolean {

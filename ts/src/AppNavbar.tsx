@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import NavItemLink from './components/common/NavItemLink';
 import { User } from './services/authService';
@@ -34,11 +34,6 @@ const AppNavbar: React.FC<Props> = ({ user }) => {
           </Nav>
         }
         <Nav className="ml-auto">
-          {!user &&
-            <>
-              <NavItemLink to="/login">Kirjaudu</NavItemLink>
-            </>
-          }
           {user &&
             <>
               <NavDropdown title={user.firstName + ' ' + user.lastName} id="basic-nav-dropdown">

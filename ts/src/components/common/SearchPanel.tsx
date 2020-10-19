@@ -16,7 +16,7 @@ const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) =>
 
   function renderTextInput(field: Field): JSX.Element {
     const searchValues: any = table.state.searchValues;
-    
+
     return (
       <Form.Group key={field.name} as={Row}>
         <Form.Label column sm="2">{field.label}</Form.Label>

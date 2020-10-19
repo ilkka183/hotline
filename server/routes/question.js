@@ -34,7 +34,7 @@ function getFilter(req, counter) {
       else
         sql += ' AND ';
 
-      sql += field + ' = ' + req.query[field] + ' ';
+      sql += field + ' LIKE "%' + req.query[field] + '%" ';
       counter++;
     }
 

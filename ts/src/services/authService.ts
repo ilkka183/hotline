@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode';
 import http from './httpService';
 
 export enum UserRole {
-  Admin,
+  Admin = 0,
   Power,
   User,
   Demo
@@ -95,10 +95,10 @@ export async function login(username: string, password: string) {
 export async function logout() {
   const user: User | null = getCurrentUser();
 
-  if (user)
-    await http.post(apiEndpoint + '/logout', { username: user.username });
-
   localStorage.removeItem(tokenKey);
+  
+  if (user)
+    await http.post(apiEndpoint + '/logout', { userId: user.id });
 }
 
 export async function changePassword(username: string, password: string, newPassword: string) {

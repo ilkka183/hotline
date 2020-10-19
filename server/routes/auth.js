@@ -43,13 +43,11 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken(payload);
 
-    const updateSql = 'UPDATE User SET LastLogin=NOW() WHERE Username=?';
+    const updateSql = 'UPDATE user SET LastLogin=NOW() WHERE Username=?';
     await connection.queryValues(updateSql, [username]);
 
-    const ipAddress = '0.0.0.0';
-
-    const insertSql = 'INSERT INTO UserSession (UserId, IPAddress) VALUES(?, ?)';
-    await connection.queryValues(insertSql, [row.Id, ipAddress]);
+    const insertSql = 'INSERT INTO usersession (UserId) VALUES(?)';
+    await connection.queryValues(insertSql, [row.Id]);
 
     res.send(token);
   }
@@ -61,15 +59,18 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/logout', async (req, res) => {
-  const username = req.body.username;
-
-  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Phone FROM user WHERE Username=?';
+  const userId = req.body.userId;
+  
+  const sql = 'SELECT Id, Username, Password, Role, FirstName, LastName, Phone FROM user WHERE Id=?';
 
   try {
-    await connection.queryValues(sql, [username]);
+    await connection.queryValues(sql, [userId]);
 
-    const updateSql = 'UPDATE User SET LastLogout=NOW() WHERE Username=?';
-    await connection.queryValues(updateSql, [username]);
+    let updateSql = 'UPDATE user SET LastLogout=NOW() WHERE Id=?';
+    await connection.queryValues(updateSql, [userId]);
+
+    updateSql = 'UPDATE usersession SET LogoutTime=NOW() WHERE UserId=? ORDER BY Id DESC LIMIT 1';
+    await connection.queryValues(updateSql, [userId]);
 
     res.send('OK');
   }
@@ -93,7 +94,7 @@ router.post('/changepassword', async (req, res) => {
     if ((results.length == 0) || (password !== results[0].Password))
       return res.status(401).send('Invalid password.');
 
-    const updateSql = 'UPDATE User SET Password=? WHERE Username=?';
+    const updateSql = 'UPDATE user SET Password=? WHERE Username=?';
     await connection.queryValues(updateSql, [newPassword, username]);
 
     res.send('OK');
