@@ -15,7 +15,6 @@ export default class AnswerForm extends BaseForm<Props> {
     this.addField('Date',       'Pvm',        'datetime', { required: true, readonly: true });
     this.addField('UserId',     'Lähettäjä',  'number',   { required: true, readonly: true, lookupUrl: 'Users', getDefaultValue: () => this.user ? this.user.id : null });
     this.addField('Message',    'Viesti',     'textarea', { required: true, rows: 5 });
-    this.addField('Solution',   'Ratkaisu',   'boolean',  { required: true, getDefaultValue: () => false });
 
     this.state.data = this.getEmptyData();
   }

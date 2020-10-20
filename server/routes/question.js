@@ -71,7 +71,7 @@ async function getQuestions(req, res) {
     sql += pageSize;
   }
 
-  const answerSql = 'SELECT Id, Date, QuestionId, UserId, Message, Solution FROM answer ORDER BY QuestionId, Id';
+  const answerSql = 'SELECT Id, Date, QuestionId, UserId, Message FROM answer ORDER BY QuestionId, Id';
 
   console.log(http.trim(sql));
 

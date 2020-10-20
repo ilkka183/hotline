@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import QuestionSolutionModal from './QuestionSolutionModal';
 import AnswersTable from './AnswersTable'
-import QuestionAttachmentsTable from './QuestionAttachmentsTable'
 import QuestionForm from './QuestionForm';
 import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
@@ -48,7 +47,6 @@ interface State {
   answerId: number | null,
   showModal: boolean,
   showSolutionModal: boolean,
-  attachments: any[],
   answers: any[]
 }
 
@@ -58,7 +56,6 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
     answerId: null,
     showModal: false,
     showSolutionModal: false,
-    attachments: [],
     answers: []
   }
 
@@ -69,10 +66,9 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
   private async loadData() {
     try {
       const { data: question } = await http.get('/questions/open/' + this.questionId);
-      const { data: { rows: attachments } } = await http.get('/questionattachments?QuestionId=' + this.questionId);
       const { data: { rows: answers } } = await http.get('/answers?QuestionId=' + this.questionId);
 
-      this.setState({ question, attachments, answers });
+      this.setState({ question, answers });
     }
     catch (ex) {
       if (ex.response && ex.response.status === 404)
@@ -110,15 +106,6 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
     await this.loadData();
 
     this.setState({ showSolutionModal: false });
-  }
-
-  private readonly handleAttachmentEdited = async () => {
-    await this.loadData();
-  }
-
-  private readonly handleAttachmentDelete = async (answer: any) => {
-    await http.delete('/questionattachments/' + answer.Id);
-    await this.loadData();
   }
 
   private readonly handleAnswerEdited = async () => {
@@ -159,30 +146,6 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
     );
   }
 
-  private renderAttachments(): JSX.Element | null {
-    const { question, attachments } = this.state;
-
-    if (attachments.length === 0)
-      return null;
-
-    const readOnly = !this.user?.owns(question.UserId);
-
-    return (
-      <>
-        <h4>Liitteet</h4>
-        <QuestionAttachmentsTable
-          question={question}
-          rows={attachments}
-          showTitle={false}
-          autoHide={true}
-          readOnly={readOnly}
-          onEdited={this.handleAttachmentEdited}
-          onDelete={this.handleAttachmentDelete}
-        />
-      </>
-    );
-  }
-
   private renderAnswers(): JSX.Element {
     const { question, answers } = this.state;
 
@@ -212,7 +175,6 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
         <QuestionForm variant="table" showTitle={false} data={question} />
         {showModal && this.renderModal()}
         {showSolutionModal && this.renderSolutionModal()}
-        {this.renderAttachments()}
         {(question.Status === QuestionStatus.Open || this.user?.isPowerOrAdmin) && this.renderAnswers()}
       </Container>
     );

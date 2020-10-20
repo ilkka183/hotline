@@ -63,7 +63,10 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
     try {
       setError('');
 
-      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber + '?source=file');
+      let source = 'test';
+      source = 'regCheckFile';
+
+      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber + '?source=' + source);
 
       const newData: any = {...data};
 

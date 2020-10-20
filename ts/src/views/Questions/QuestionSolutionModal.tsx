@@ -58,7 +58,6 @@ export default class QuestionSolutionModal extends React.Component<Props, State>
     const { question, answer } = this.state;
 
     await http.put('/questions/' + question.Id, { Solution: question.Solution, Status: QuestionStatus.Solved });
-    await http.put('/answers/' + answer.Id, { Solution: true });
     
     onSubmit();
   }

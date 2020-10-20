@@ -206,7 +206,7 @@ CREATE TABLE Question
   ModelBeginYear SMALLINT UNSIGNED,
   ModelEndYear SMALLINT UNSIGNED,
   RegistrationYear SMALLINT UNSIGNED,
-  RegistrationNumber VARCHAR(7),
+  RegistrationNumber VARCHAR(10),
   FuelType SMALLINT UNSIGNED, /* 0=petrol, 1=diesel, 2=petrol hybrid, 3=diesel hybrid, 4=methane, 5=electricity */
   CylinderCount SMALLINT UNSIGNED,
   EngineSize SMALLINT UNSIGNED,
@@ -220,7 +220,10 @@ CREATE TABLE Question
   Info TEXT,
   Title VARCHAR(250) NOT NULL,
   Description TEXT NOT NULL,
+  DescriptionFile VARCHAR(250),
   Solution TEXT,
+  SolutionFile VARCHAR(250),
+  SolutionDate DATETIME,
   Status SMALLINT UNSIGNED NOT NULL DEFAULT 0, /* 0=open, 1=solved, 2=unsolved */
   Data JSON,
   PRIMARY KEY (Id),
@@ -237,40 +240,9 @@ CREATE TABLE Answer
   Message TEXT NOT NULL,
   File VARCHAR(250),
   Data JSON,
-  Solution BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (Id),
   FOREIGN KEY (QuestionId) REFERENCES Question(Id),
   FOREIGN KEY (UserId) REFERENCES User(Id)
-);
-
-
-CREATE TABLE QuestionAttachment
-(
-  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
-  QuestionId BIGINT UNSIGNED NOT NULL,
-  FileName VARCHAR(80) NOT NULL,
-  FileSize INTEGER UNSIGNED  NOT NULL,
-  FileType VARCHAR(80) NOT NULL,
-  Content LONGBLOB NOT NULL,
-  Description TEXT,
-  Data JSON,
-  PRIMARY KEY (Id),
-  FOREIGN KEY (QuestionId) REFERENCES Question(Id)
-);
-
-
-CREATE TABLE AnswerAttachment
-(
-  AnswerId BIGINT UNSIGNED NOT NULL,
-  Id INTEGER UNSIGNED NOT NULL,
-  FileName VARCHAR(80) NOT NULL,
-  FileSize INTEGER UNSIGNED  NOT NULL,
-  FileType VARCHAR(80) NOT NULL,
-  Content LONGBLOB NOT NULL,
-  Description TEXT,
-  Data JSON,
-  PRIMARY KEY (AnswerId, Id),
-  FOREIGN KEY (AnswerId) REFERENCES Answer(Id)
 );
 
 

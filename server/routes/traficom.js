@@ -87,10 +87,9 @@ async function parseXml(data) {
   return promise;
 }
 
-async function getJson(registrationNumber, raw) {
+async function parseRegCheck(registrationNumber, raw) {
   const data = await parseXml(raw);
-  const json = data.Vehicle.vehicleJson;
-  const source = JSON.parse(json);
+  const source = JSON.parse(data.Vehicle.vehicleJson);
 
   const vehicle = {
     registrationNumber
@@ -123,27 +122,24 @@ async function getJson(registrationNumber, raw) {
   return vehicle;
 }
 
-async function getApi(registrationNumber) {
+async function getRegCheckApi(registrationNumber) {
   const host = 'https://www.regcheck.org.uk';
   const username = 'Ilkka183';
-  
   const url = host + '/api/reg.asmx/CheckFinland?RegistrationNumber=' + registrationNumber + '&username=' + username;
 
   const { data } = await axios.get(url);
-  return await getJson(registrationNumber, data);
+  return await parseRegCheck(registrationNumber, data);
 }
 
-async function getFile(registrationNumber) {
-  const data = await readFile('./api/data.xml');
-  return await getJson(registrationNumber, data);
+async function getRegCheckFile(registrationNumber) {
+  const data = await readFile('./api/regCheck/' + registrationNumber + '.xml');
+  return await parseRegCheck(registrationNumber, data);
 }
 
 async function getVehicle(registrationNumber, source) {
-  console.log(source);
-
   switch (source) {
-    case 'api': return await getApi(registrationNumber);
-    case 'file':  return await getFile(registrationNumber);
+    case 'regCheckApi': return await getRegCheckApi(registrationNumber);
+    case 'regCheckFile':  return await getRegCheckFile(registrationNumber);
   }
 
   return getTest(registrationNumber);
@@ -152,10 +148,8 @@ async function getVehicle(registrationNumber, source) {
 router.get('/:registrationNumber', async (req, res) => {
   try {
     const vehicle = await getVehicle(req.params.registrationNumber, req.query.source);
-    console.log(vehicle);
     return res.send(vehicle);
   } catch (error) {
-    console.log(error);
     res.status(404).send(error);
   }
 });
