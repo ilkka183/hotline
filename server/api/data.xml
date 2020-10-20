@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Vehicle xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://regcheck.org.uk">
+  <vehicleJson>{
+  "Description": "Seat LEON ST",
+  "RegistrationYear": "2017",
+  "CarMake": {
+    "CurrentTextValue": "Seat"
+  },
+  "CarModel": {
+    "CurrentTextValue": "LEON ST"
+  },
+  "EngineSize": {
+    "CurrentTextValue": "999"
+  },
+  "FuelType": {
+    "CurrentTextValue": "Bensiini"
+  },
+  "MakeDescription": {
+    "CurrentTextValue": "Seat"
+  },
+  "ModelDescription": {
+    "CurrentTextValue": "LEON ST"
+  },
+  "BodyStyle": {
+    "CurrentTextValue": "Car"
+  },
+  "InsuranceCompany": "Turva",
+  "VechileIdentificationNumber": "VSSZZZ5FZHR046587",
+  "TowBar": true,
+  "RegistrationDate": "22/05/2017",
+  "Axles": "",
+  "Power": "85",
+  "Turbo": "No",
+  "NetWeight": "1236",
+  "EngineCode": "CHZD",
+  "ImageUrl": "http://www.rekisterinumeroapi.com/image.aspx/@U2VhdCBMRU9OIFNU"
+}</vehicleJson>
+  <vehicleData>
+    <Description>Seat LEON ST</Description>
+    <RegistrationYear>2017</RegistrationYear>
+    <CarMake>
+      <CurrentTextValue>Seat</CurrentTextValue>
+    </CarMake>
+    <CarModel>LEON ST</CarModel>
+    <BodyStyle>
+      <CurrentTextValue>Car</CurrentTextValue>
+    </BodyStyle>
+    <EngineSize>
+      <CurrentTextValue>999</CurrentTextValue>
+    </EngineSize>
+    <FuelType>
+      <CurrentTextValue>Bensiini</CurrentTextValue>
+    </FuelType>
+  </vehicleData>
+</Vehicle>

@@ -27,7 +27,6 @@ export interface SearchOptions {
 }
 
 export interface FieldsTableProps {
-  newButtonAsLink?: boolean,
   newButtonText?: string,
   paginate?: boolean,
   routedPages?: boolean,
@@ -66,7 +65,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   static defaultProps = {
     showTitle: true,
     searchPanel: true,
-    newButtonAsLink: false,
     paginate: true,
     routedPages: false,
     pageIndex: 0,
@@ -252,15 +250,12 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     this.setState({ showEditModal: true, modalDataId: null });
   }
 
-  protected showEditModal(row: any) {
-    this.setState({ showEditModal: true, modalDataId: row.Id });
+  private readonly handleShowNewModal = () => {
+    this.showNewModal();
   }
 
   private readonly handleShowEditModal = (row: any) => {
-    if (row)
-      this.showEditModal(row);
-    else
-      this.showNewModal();
+    this.setState({ showEditModal: true, modalDataId: row.Id });
   }
 
   private readonly handleHideEditModal = () => {
@@ -378,7 +373,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private renderNewButton(): JSX.Element | null {
-    const { readOnly, creatable, newButtonAsLink, newButtonText } = this.props;
+    const { readOnly, creatable, newButtonText } = this.props;
 
     if (readOnly || !creatable)
       return null;
@@ -386,13 +381,12 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (!this.showNewButton())
       return null;
 
-    const variant: string = newButtonAsLink ? 'link' : 'primary';
     const text: string = newButtonText ? newButtonText! : 'Lisää uusi';
 
     if (this.getUseModals())
-      return <Button className="mb-2" variant={variant} onClick={() => this.handleShowEditModal(null)}>{text}</Button>
+      return <Button className="mb-2" variant="primary" onClick={() => this.handleShowNewModal()}>{text}</Button>
     else
-      return <LinkButton className="mb-2" variant={variant} size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
+      return <LinkButton className="mb-2" variant="primary" size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
   }
   
   private renderHeader(): JSX.Element {
@@ -408,7 +402,9 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   private renderSearchPanel(): JSX.Element | null {
-    if (!this.props.searchPanel)
+    const { newButtonText, searchPanel } = this.props;
+
+    if (!searchPanel)
       return null;
 
     if (!this.state.searchPanel)
@@ -417,8 +413,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return (
       <SearchPanel
         table={this}
+        newButtonText={newButtonText}
         onChange={this.handleSearchFieldChange}
         onClear={this.handleSearchClear}
+        onNew={this.handleShowNewModal}
         onSearch={this.handleSearch}
       />
     );

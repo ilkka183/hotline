@@ -42,7 +42,7 @@ function getCountSql(req, sql) {
     if (orderByIndex !== -1)
       sql = sql.substring(0, orderByIndex);
 
-    const filterSql = getFilter(req);
+/*    const filterSql = getFilter(req);
 
     if (filterSql) {
       const whereIndex = sql.indexOf('WHERE');
@@ -53,7 +53,7 @@ function getCountSql(req, sql) {
         sql += " WHERE ";
 
       sql += filterSql;
-    }
+    } */
 
     return 'SELECT COUNT(*) AS Count ' + sql;
   }
@@ -85,7 +85,7 @@ async function getRows(req, res, sql) {
 
     const countSql = pageSize ? getCountSql(req, sql) : null;
 
-    const filterSql = getFilter(req);
+/*    const filterSql = getFilter(req);
 
     if (filterSql) {
       const whereIndex = sql.indexOf('WHERE');
@@ -96,7 +96,7 @@ async function getRows(req, res, sql) {
         sql += " WHERE ";
 
       sql += filterSql;
-    }
+    } */
 
     const sortFields = req.query.sortFields;
 

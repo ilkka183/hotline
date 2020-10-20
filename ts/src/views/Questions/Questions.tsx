@@ -49,14 +49,13 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
         title={this.getTitle()}
         status={this.getStatus()}
         userId={this.getUserId()}
-        newButtonAsLink={true}
         newButtonText="Lisää uusi vikatapaus"
         paginate={true}
         routedPages={true}
         history={this.props.history}
         location={this.props.location}
         pageIndex={page - 1}
-        creatable={this.getCreatable()}
+        creatable={this.getCreatable() && false}
         editable={this.getEditable()}
         deletable={this.getDeletable()}
       />

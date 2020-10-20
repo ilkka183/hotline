@@ -7,12 +7,14 @@ import { Field } from './Fields';
 
 interface Props {
   table: any,
+  newButtonText?: string,
   onChange: (event: any) => void,
   onClear: () => void,
+  onNew: () => void,
   onSearch: () => void
 }
 
-const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) => {
+const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear, onNew, onSearch }) => {
 
   function renderTextInput(field: Field): JSX.Element {
     const searchValues: any = table.state.searchValues;
@@ -41,7 +43,8 @@ const SearchPanel: React.FC<Props> = ({ table, onChange, onClear, onSearch }) =>
         <Col sm="2"></Col>
         <Col sm="10">
           <Button className="mr-2" onClick={onSearch}>Hae</Button>
-          <Button onClick={onClear}>Tyhjennä</Button>
+          <Button className="mr-2" onClick={onClear}>Tyhjennä</Button>
+          <Button onClick={onNew}>{newButtonText}</Button>
         </Col>
       </Row>
     </Form>

@@ -7,7 +7,11 @@ import http from '../../../services/httpService';
 import { LEON, GOLF, FOCUS } from './Cars';
 import { FuelType } from '../Question';
 
-function getFuelType(text: string): FuelType {
+function valueOf(value: any): any {
+  return value ? value : '';
+}
+
+function fuelTypeOf(text: string): FuelType {
   switch (text) {
     case 'bensiini': return FuelType.Petrol;
     case 'diesel': return FuelType.Diesel;
@@ -59,22 +63,22 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
     try {
       setError('');
 
-      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber);
+      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber + '?source=file');
 
       const newData: any = {...data};
 
-      newData.Make = info.carMake;
-      newData.Model = info.carModel;
-      newData.RegistrationYear = info.registrationYear;
-      newData.RegistrationNumber = info.registrationNumber;
-      newData.FuelType = getFuelType(info.fuelType);
-      newData.EnginePower = info.power;
-      newData.CylinderCount = info.cylinderCount;
-      newData.EngineCode = info.engineCode;
-      newData.EngineSize = info.engineSize;
-      newData.VIN = info.vechileIdentificationNumber;
-      newData.NetWeight = info.netWeight;
-      newData.GrossWeight = info.grossWeight;
+      newData.Make = valueOf(info.carMake);
+      newData.Model = valueOf(info.carModel);
+      newData.RegistrationYear = valueOf(info.registrationYear);
+      newData.RegistrationNumber = valueOf(info.registrationNumber);
+      newData.FuelType = fuelTypeOf(info.fuelType);
+      newData.EnginePower = valueOf(info.power);
+      newData.CylinderCount = valueOf(info.cylinderCount);
+      newData.EngineCode = valueOf(info.engineCode);
+      newData.EngineSize = valueOf(info.engineSize);
+      newData.VIN = valueOf(info.vechileIdentificationNumber);
+      newData.NetWeight = valueOf(info.netWeight);
+      newData.GrossWeight = valueOf(info.grossWeight);
   
       onData(newData);
     }
