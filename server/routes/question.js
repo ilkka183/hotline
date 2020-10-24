@@ -11,8 +11,8 @@ const table = 'question';
 const sql = 
   'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
   'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
-  'question.VIN, question.TypeNumber, ' +
-  'question.Title, question.Description, question.Solution, question.Status ' +
+  'question.VIN, question.MID, question.TypeNumber, question.Info, ' +
+  'question.Title, question.Description, question.DescriptionFile, question.Solution, question.SolutionFile, question.SolutionDate, question.Status ' +
   'FROM question, user ' +
   'WHERE question.UserId = user.Id ' +
   'AND question.Id = ';

@@ -72,12 +72,9 @@ export default class QuestionsTable extends BaseTable<Props> {
   }
 
   private renderStatus(row: any): JSX.Element {
-    const className: string = row.Status === QuestionStatus.Open ? 'open' : 'solved';
-    const text: string = STATUS_TEXTS[row.Status];
-
-    return (
-      <span className={className}>{text}</span>
-    );
+    const classNames = ['open', 'solved', 'unsolved'];
+    
+    return <span className={classNames[row.Status]}>{STATUS_TEXTS[row.Status]}</span>
   }
 
   protected showNewModal() {

@@ -68,7 +68,7 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
       {pages.map(index => renderPage(index))}
       <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
       <Pagination.Last onClick={() => changePage(pageCount - 1)} />
-      <div className="pagination-rows">{rowCount} riviä</div>
+      <div className="pagination-rows">{rowCount} tietuetta</div>
     </Pagination>
   );
 }

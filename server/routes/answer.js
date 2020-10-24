@@ -9,7 +9,7 @@ const table = 'answer';
 
 const sql = 
   'SELECT answer.Id, answer.Date, answer.QuestionId, answer.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, ' +
-  'answer.Message ' +
+  'answer.Message, answer.File ' +
   'FROM answer, user ' +
   'WHERE answer.UserId = user.Id ' +
   'AND answer.QuestionId = ';

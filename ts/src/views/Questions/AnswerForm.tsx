@@ -23,11 +23,11 @@ export default class AnswerForm extends BaseForm<Props> {
     return 'answers';
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi vastaus';
+  protected getInsertTitle(): string {
+    return 'Lisää uusi vastaus';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa vastausta';
   }
 

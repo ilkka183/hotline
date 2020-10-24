@@ -27,13 +27,14 @@ export default class UserForm extends BaseForm<Props> {
     this.addField('Country',      'Maa',              'text');
     this.addField('Phone',        'Puhelin',          'phone');
     this.addField('Url',          'Nettisivut',       'url');
+    this.addField('Class',        'Luokka',           'text');
     this.addField('MaxOpenQuestionCount', 'Avoimia vikatapauksia enintään', 'number');
     this.addField('LicenseBegin',         'Lisenssi alku',                  'date');
     this.addField('LicenseEnd',           'Lisenssi loppu',                 'date');
     this.addField('LastLogin',            'Viimeinen sisäänkirjautuminen',  'datetime', { readonly: true });
     this.addField('LastLogout',           'Viimeinen uloskirjautuminen',    'datetime', { readonly: true });
-    this.addEnabled();
     this.addTimestamps(true);
+    this.addEnabled();
 
     this.state.data = this.getEmptyData();
   }
@@ -42,11 +43,11 @@ export default class UserForm extends BaseForm<Props> {
     return API_USERS;
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi käyttäjä';
+  protected getInsertTitle(): string {
+    return 'Lisää uusi käyttäjä';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa käyttäjää';
   }
 

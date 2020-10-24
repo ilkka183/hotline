@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
@@ -9,6 +8,7 @@ import FieldsComponent, { Field, SortOrder } from './Fields';
 import LinkButton from './LinkButton';
 import SearchPanel from './SearchPanel';
 import SortIcon from './SortIcon';
+import { EditMode } from './FieldsForm';
 
 interface SortField {
   name: string,
@@ -55,9 +55,8 @@ export interface FieldsTableState {
   searchPanel: boolean,
   sortFields: SortField[],
   showNewModal: boolean,
-  showEditModal: boolean,
-  showDeleteModal: boolean,
-  deleteRow: any,
+  editMode: EditMode | undefined,
+  editRow: any,
   modalDataId: any
 }
 
@@ -82,9 +81,8 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     searchPanel: false,
     sortFields: [],
     showNewModal: false,
-    showEditModal: false,
-    showDeleteModal: false,
-    deleteRow: undefined,
+    editMode: undefined,
+    editRow: undefined,
     modalDataId: undefined
   }
 
@@ -138,7 +136,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   protected abstract async getItems(options: SearchOptions): Promise<Rows>;
-  protected abstract async deleteItem(row: any): Promise<void>;
 
   protected async fetchItems(options: SearchOptions) {
     let { pageIndex, searchValues, sortFields } = options;
@@ -247,19 +244,19 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   protected showNewModal() {
-    this.setState({ showEditModal: true, modalDataId: null });
+    this.setState({ editMode: EditMode.Insert, modalDataId: null });
   }
 
   private readonly handleShowNewModal = () => {
     this.showNewModal();
   }
 
-  private readonly handleShowEditModal = (row: any) => {
-    this.setState({ showEditModal: true, modalDataId: row.Id });
+  private readonly handleShowEditModal = (editMode: EditMode, row: any) => {
+    this.setState({ editMode, modalDataId: row.Id, editRow: row });
   }
 
   private readonly handleHideEditModal = () => {
-    this.setState({ showEditModal: false, modalDataId: undefined });
+    this.setState({ editMode: undefined, modalDataId: undefined, editRow: undefined });
   }
 
   private readonly handleSubmitEditModal = async () => {
@@ -274,40 +271,6 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
 
     this.handleHideEditModal();
-  }
-
-  private readonly handleShowDeleteModal = (row: any) => {
-    this.setState({ showDeleteModal: true, deleteRow: row });
-  }
-
-  private readonly handleHideDeleteModal = () => {
-    this.setState({ showDeleteModal: false, deleteRow: undefined });
-  }
-
-  private readonly handleSubmitDeleteModal = async () => {
-    const { onDelete } = this.props;
-    const { deleteRow } = this.state;
-
-    if (this.props.rows) {
-      if (onDelete)
-        onDelete(deleteRow);
-    }
-    else {
-      try {
-        await this.deleteItem(deleteRow);
-
-        if (this.props.rows) {
-        }
-        else {
-          await this.fetchItems({});
-        }
-      }
-      catch (ex) {
-        toast.error(ex.response.data.sqlMessage);
-      }
-    }
-
-    this.handleHideDeleteModal();
   }
 
   private filterRows(rows: any[]) {
@@ -466,7 +429,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
 
     if (column.editLink && !readOnly && editable && this.canEdit(row)) {
       if (this.getUseModals())
-        return <Button variant="link" size="sm" onClick={() => this.handleShowEditModal(row)}>{text}</Button>
+        return <Button variant="link" size="sm" onClick={() => this.handleShowEditModal(EditMode.Update, row)}>{text}</Button>
       else
         return <Link to={'/' + this.getApiName() + '/' + row.Id}>{text}</Link>
     }
@@ -493,7 +456,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
 
   private renderDeleteButton(row: any): JSX.Element | null {
     if (this.canDelete(row))
-      return <Button variant="danger" size="sm" onClick={() => this.handleShowDeleteModal(row)}>Poista</Button>;
+      return <Button variant="danger" size="sm" onClick={() => this.handleShowEditModal(EditMode.Delete, row)}>Poista</Button>;
 
     return null;
   }
@@ -508,45 +471,17 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (!Form)
       return null;
 
-    const { showEditModal, modalDataId } = this.state;
-
-    const action: string = modalDataId ? 'edit' : 'new';
+    const { editMode, modalDataId } = this.state;
 
     return (
       <Form
         variant='modal'
-        action={action}
+        editMode={editMode}
         dataId={modalDataId}
         parent={this.getParent()}
-        showModal={showEditModal}
+        showModal={editMode !== undefined}
         onModalSubmitted={this.handleSubmitEditModal}
         onHideModal={this.handleHideEditModal}
-      />
-    );
-  }
-
-  private renderDeleteModal(): JSX.Element | null {
-    const Form: any = this.getModalForm();
-
-    if (!Form)
-      return null;
-
-    const { showDeleteModal, deleteRow } = this.state;
-
-    const dataId: number | null = deleteRow ? deleteRow.Id : null;
-
-    return (
-      <Form
-        variant='modal'
-        action='delete'
-        dataId={dataId}
-        parent={this.getParent()}
-        showModal={showDeleteModal}
-        submitButtonVariant="danger"
-        submitButtonText="Kyllä"
-        cancelButtonText="Ei"
-        onModalSubmitted={this.handleSubmitDeleteModal}
-        onHideModal={this.handleHideDeleteModal}
       />
     );
   }
@@ -597,7 +532,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
 
   public render(): JSX.Element {
     const { paginate } = this.props;
-    const { showEditModal, showDeleteModal } = this.state;
+    const { editMode } = this.state;
 
     const { rowCount, rows } = this.getRows();
     const columns = this.fields.filter(column => column.visible);
@@ -623,8 +558,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
           </tbody>
         </table>
         {paginate && this.renderPagination(rowCount)}
-        {showEditModal && this.renderEditModal()}
-        {showDeleteModal && this.renderDeleteModal()}
+        {(editMode !== undefined) && this.renderEditModal()}
         {this.renderModals()}
       </>
     );

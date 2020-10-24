@@ -1,9 +1,37 @@
 function date(value) {
-  return value.substring(0, 10);
+  const date = value.substring(0, 10);
+
+  return date !== '1899-12-31' ? date : undefined;
 }
 
 function int(value) {
-  value && !isNaN(value) ? parseInt(value) : undefined;
+  return (value && !isNaN(value)) ? parseInt(value) : undefined;
+}
+
+function text(value) {
+  return value ? value : undefined;
+}
+
+function getEngineSize(value) {
+  let comma = false;
+  let str = '';
+
+  for (const c of value) {
+    if (c === '.' || c === ',')
+      comman = true;
+    else if (c >= '0' && c <= '9')
+      str += c;
+  }
+
+  if (str === '')
+    return undefined;
+
+  const number = parseInt(str);
+
+  if (comma)
+    number *= 100;
+
+  return number;
 }
 
 function insertQuestions(destination, henkilot, questions) {
@@ -16,7 +44,7 @@ function insertQuestions(destination, henkilot, questions) {
 
     let Date = date(item.HQ_DATE1);
 
-    if (Date === '1899-12-31')
+    if (!Date)
       Date = '2000-01-01';
   
     const row = {
@@ -26,18 +54,18 @@ function insertQuestions(destination, henkilot, questions) {
       Make: item.HQ_MERKKI,
       Model: item.HQ_MALLI,
       ModelYear: int(item.HQ_VUOSIMALLI),
-      RegistrationNumber: item.HQ_REKNRO,
-      VIN: item.HQ_ALNRO,
-      MID: item.HQ_MID,
-      EngineSize: int(item.HQ_CM3),
+      RegistrationNumber: text(item.HQ_REKNRO),
+      VIN: text(item.HQ_ALNRO),
+      MID: text(item.HQ_MID),
+      EngineSize: getEngineSize(item.HQ_CM3),
       FuelType: item.HQ_KVOIMA ? (item.HQ_KVOIMA === 'D' ? 1 : 0) : undefined,
-      Info: item.HQ_ERITYIS,
+      Info: text(item.HQ_ERITYIS),
       Title: item.HQ_TITLE,
       Description: item.HQ_ONGELMA,
-      DescriptionFile: item.HQ_FILE1,
-      Solution: item.HQ_RATKAISU,
-      SolutionFile: item.HQ_FILE2,
-      SolutionDate: item.HQ_DATE2 ? date(item.HQ_DATE2) : undefined,
+      DescriptionFile: text(item.HQ_FILE1),
+      Solution: text(item.HQ_RATKAISU),
+      SolutionFile: text(item.HQ_FILE2),
+      SolutionDate: date(item.HQ_DATE2),
       Status: item.HQ_STATUS
     }
 

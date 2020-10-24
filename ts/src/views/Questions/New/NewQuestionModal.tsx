@@ -13,6 +13,7 @@ import { QuestionStatus } from '../Question'
 import UserComponent from '../../UserComponent';
 import Lines from '../../../lib/Lines';
 import http from '../../../services/httpService';
+import { EditMode } from '../../../components/common/FieldsForm';
 
 enum QuestionStep {
   Data,
@@ -323,6 +324,7 @@ export default class NewQuestionForm extends UserComponent<Props, State> {
         <QuestionForm
           ref="questionForm"
           defaultData={this.state.data}
+          editMode={EditMode.Insert}
           showTitle={false}
           showSubmitButton={false}
           onSubmitted={this.handleSubmitted}

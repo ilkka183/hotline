@@ -24,6 +24,10 @@ body {
   color: green;
 }
 
+.unsolved {
+  color: gray;
+}
+
 .description {
   font-weight: bold;
 }

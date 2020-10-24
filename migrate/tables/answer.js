@@ -2,6 +2,10 @@ function date(value) {
   return value.substring(0, 10);
 }
 
+function text(value) {
+  return value ? value : undefined;
+}
+
 function insertAnswers(destination, henkilot, questions, answers) {
   for (const item of answers) {
     const question = questions.find(q => q.HQ_ID === item.HQ_ID);
@@ -26,7 +30,7 @@ function insertAnswers(destination, henkilot, questions, answers) {
       UserId,
       Date,
       Message: item.HA_VASTAUS,
-      File: item.HA_FILE2
+      File: text(item.HA_FILE2)
     }
 
     destination.insert('Answer', row);

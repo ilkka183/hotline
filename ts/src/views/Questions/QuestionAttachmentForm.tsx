@@ -23,11 +23,11 @@ export default class QuestionAttachmentForm extends BaseForm<Props> {
     return 'questionattachments';
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi liite';
+  protected getInsertTitle(): string {
+    return 'Lisää liite';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa liitettä';
   }
 

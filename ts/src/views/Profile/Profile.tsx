@@ -6,6 +6,7 @@ import ProfileForm from './ProfileForm';
 import ChangePasswordForm from './ChangePasswordForm';
 import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
+import { EditMode } from '../../components/common/FieldsForm';
 
 interface State {
   user: any,
@@ -70,7 +71,7 @@ export default class Profile extends UserComponent<{}, State> {
         {passwordChanged && <Alert variant="success">Salasana vaihdettu.</Alert>}
         {showModal && <ProfileForm
           variant="modal"
-          action="edit"
+          editMode={EditMode.Update}
           userId={this.userId}
           showModal={true}
           onModalSubmitted={this.handleSubmit}

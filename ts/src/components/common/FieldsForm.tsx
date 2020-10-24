@@ -12,6 +12,12 @@ import MyInput from '../form/MyInput';
 import MySelect from '../form/MySelect';
 import MyTextArea from '../form/MyTextArea';
 
+export enum EditMode {
+  Insert,
+  Update,
+  Delete
+}
+
 export interface FormErrors {
   errors?: any,
   errorText?: string
@@ -20,12 +26,11 @@ export interface FormErrors {
 export interface FieldsFormProps {
   asTable?: boolean,
   showTitle?: boolean,
-  submitButtonVariant?: string,
   submitButtonText?: string,
   cancelButtonText?: string,
   showSubmitButton?: boolean,
   variant?: string,
-  action?: string,
+  editMode?: EditMode,
   showModal?: boolean,
   onSubmitted?: () => void,
   onModalSubmitted?: () => void,
@@ -45,7 +50,6 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
     asTable: false,
     showTitle: true,
     showSubmitButton: true,
-    submitButtonVariant: 'primary',
     submitButtonText: 'Tallenna',
     cancelButtonText: 'Peru'
   }
@@ -190,9 +194,9 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
 
   protected readonly handleSubmitModal = async () => {
-    const { action, onModalSubmitted } = this.props;
+    const { editMode, onModalSubmitted } = this.props;
 
-    if (this.hasErrors() && (action !== 'delete'))
+    if (this.hasErrors() && (editMode !== EditMode.Delete))
       return;
 
     const response = await this.doSubmit();
@@ -427,9 +431,9 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
 
   private renderModalFields(): (JSX.Element | null)[] | JSX.Element | null {
-    const { action } = this.props;
+    const { editMode } = this.props;
 
-    if (action === 'delete')
+    if (editMode === EditMode.Delete)
       return (
         <Table size="sm">
           <tbody>
@@ -442,8 +446,12 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
   }
   
   private renderModal(): JSX.Element {
-    const { showTitle, showModal, submitButtonVariant, onHideModal } = this.props;
+    const { showTitle, showModal, editMode, onHideModal } = this.props;
     const { errorText } = this.state;
+
+    const submitVariant = editMode === EditMode.Delete ? 'danger' : 'primary';
+    const submitText = editMode === EditMode.Delete ? 'Poista' : this.submitButtonText;
+    const cancelText = this.cancelButtonText;
 
     return (
       <Modal
@@ -463,8 +471,8 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant={submitButtonVariant} onClick={this.handleSubmitModal}>{this.submitButtonText}</Button>
-          <Button variant="secondary" onClick={onHideModal}>{this.cancelButtonText}</Button>
+          <Button variant={submitVariant} onClick={this.handleSubmitModal}>{submitText}</Button>
+          <Button variant="secondary" onClick={onHideModal}>{cancelText}</Button>
         </Modal.Footer>
 
         {errorText &&

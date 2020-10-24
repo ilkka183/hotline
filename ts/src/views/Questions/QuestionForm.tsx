@@ -32,7 +32,10 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('Info',               'Lisätietoja',          'textarea', { rows: 3 });
     this.addField('Title',              'Otsikko',              'text',     { required: true });
     this.addField('Description',        'Kuvaus',               'textarea', { required: true, renderText: text => QuestionForm.renderText(text), rows: 10 });
+    this.addField('DescriptionFile',    'Liite',                'tex',      { readonly: true });
     this.addField('Solution',           'Ratkaisu',             'textarea', { rows: 10 });
+    this.addField('SolutionFile',       'Liite',                'tex',      { readonly: true });
+    this.addField('SolutionDate',       'Pvm',                  'datetime', { readonly: true, visible: this.hasPowerRights });
     this.addField('Status',             'Tila',                 'number',   { required: true, getDefaultValue: () => 0, enums: STATUS_TEXTS });
 
     this.state.data = this.getEmptyData();
@@ -42,11 +45,11 @@ export default class QuestionForm extends BaseForm<Props> {
     return 'questions';
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi vikatapaus';
+  protected getInsertTitle(): string {
+    return 'Lisää vikatapaus';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa vikatapausta';
   }
 

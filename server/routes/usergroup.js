@@ -10,7 +10,7 @@ const table = 'usergroup';
 const sql = 
   'SELECT Id, Tunnus, Name, ContactPerson,' +
   'Address, PostalCode, PostOffice, Country, Phone, Email, Url, ' +
-  'Logo, Info, LicenseBegin, LicenseEnd, Enabled ' +
+  'Logo, Info, Class, LicenseBegin, LicenseEnd, Enabled ' +
   'FROM usergroup';
 
 router.get('', async (req, res) => { await http.getRows(req, res, sql) });

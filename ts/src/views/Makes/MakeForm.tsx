@@ -8,8 +8,8 @@ export default class MakeForm extends BaseForm<{}> {
     this.addId();
     this.addField('Name', 'Nimi', 'text',     { required: true });
     this.addField('Info', 'Info', 'textarea', { rows: 5 });
-    this.addEnabled();
     this.addTimestamps();
+    this.addEnabled();
     
     this.state.data = this.getEmptyData();
   }
@@ -18,15 +18,15 @@ export default class MakeForm extends BaseForm<{}> {
     return API_MAKES;
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi automerkki';
+  protected getInsertTitle(): string {
+    return 'Lisää uusi automerkki';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa automerkkiä';
   }
 
   protected getDeleteTitle(): string {
-    return 'Poistetaanko automerkki?';
+    return 'Poista automerkki';
   }
 }

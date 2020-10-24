@@ -67,12 +67,6 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return response.data;
   }
 
-  protected async deleteItem(row: any) {
-    const endpoint: string = this.apiPath + '/' + row.Id;
-
-    await http.delete(endpoint);
-  }
-
   protected addId(visible: boolean = true): Field {
     return this.addField('Id', 'No', 'number', { editLink: this.isPowerOrAdmin, visible });
   }

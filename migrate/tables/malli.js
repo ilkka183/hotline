@@ -1,3 +1,7 @@
+function text(value) {
+  return value ? value : undefined;
+}
+
 function getPower(text) {
   const values = text.split(' ');
 
@@ -19,18 +23,18 @@ function insert(destination, items) {
     const row = {
       Id: item.T_ID,
       MakeId: item.M_ID,
-      Name: item.T_3,
-      Grouping: item.T_4,
-      AdditionalInfo: item.T_5,
-      Sequence: item.T_6,
+      Name: text(item.T_3),
+      Grouping: text(item.T_4),
+      AdditionalInfo: text(item.T_5),
+      Sequence: text(item.T_6),
       EngineSize: 1000*parseFloat(item.T_7.replace(',', '.')),
-      EngineCode: item.T_8,
+      EngineCode: text(item.T_8),
       EnginePower: power ? power.value : undefined,
       EnginePowerAt: power ? power.at : undefined,
-      Tune: item.T_10,
+      Tune: text(item.T_10),
       StartYear: parseInt(item.T_11),
       EndYear: parseInt(item.T_12),
-      MID: item.T_13,
+      MID: text(item.T_13),
       FuelType: item.T_14 === 'P' ? 0 : 1,
       VehicleType: parseInt(item.T_15),
     }

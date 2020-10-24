@@ -7,6 +7,7 @@ import AnswersTable from './AnswersTable'
 import QuestionForm from './QuestionForm';
 import UserComponent from '../UserComponent';
 import http from '../../services/httpService';
+import { EditMode } from '../../components/common/FieldsForm';
 
 export enum FuelType {
   Petrol,
@@ -123,7 +124,7 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
     return (
       <QuestionForm
         variant="modal"
-        action="edit"
+        editMode={EditMode.Update}
         showModal={true}
         dataId={question.Id}
         onModalSubmitted={this.handleSubmitModal}

@@ -55,7 +55,7 @@ export default class QuestionSolutionModal extends React.Component<Props, State>
     event.preventDefault();
 
     const { onSubmit } = this.props;
-    const { question, answer } = this.state;
+    const { question } = this.state;
 
     await http.put('/questions/' + question.Id, { Solution: question.Solution, Status: QuestionStatus.Solved });
     

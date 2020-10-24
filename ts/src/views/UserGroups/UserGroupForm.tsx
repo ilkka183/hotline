@@ -25,8 +25,8 @@ export default class UserGroupForm extends BaseForm<Props> {
     this.addField('LogoFile',      'Logo tiedosto',    'text');
     this.addField('LicenseBegin',  'Lisenssi alku',    'date');
     this.addField('LicenseEnd',    'Lisenssi loppu',   'date');
-    this.addEnabled();
     this.addTimestamps(true);
+    this.addEnabled();
 
     this.state.data = this.getEmptyData();
   }
@@ -35,11 +35,11 @@ export default class UserGroupForm extends BaseForm<Props> {
     return API_USER_GROUPS;
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi käyttäjäryhmä';
+  protected getInsertTitle(): string {
+    return 'Lisää uusi käyttäjäryhmä';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa käyttäjäryhmää';
   }
 

@@ -34,11 +34,11 @@ export default class ProfileForm extends BaseForm<Props> {
     return 'users';
   }
 
-  protected getNewTitle(): string {
-    return 'Uusi oma tieto';
+  protected getInsertTitle(): string {
+    return 'Lisää oma tieto';
   }
 
-  protected getEditTitle(): string {
+  protected getUpdateTitle(): string {
     return 'Muokkaa omia tietoja';
   }
 

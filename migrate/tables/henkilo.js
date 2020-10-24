@@ -1,9 +1,18 @@
 function date(value) {
-  return value.substring(0, 10);
+  const date = value.substring(0, 10);
+
+  return date !== '1899-12-31' ? date : undefined;
 }
 
 function datetime(value) {
-  return value.substring(0, 10) + ' ' + value.substring(11, 19);
+  const date = value.substring(0, 10);
+  const time = value.substring(11, 19);
+
+  return date !== '1899-12-31' ? date + ' ' + time : undefined;
+}
+
+function text(value) {
+  return value ? value : undefined;
 }
 
 function role(type) {
@@ -41,9 +50,6 @@ function insertHenkilot(destination, koulut, henkilot) {
       LastName += names[i];
     }
 
-    const pvm1 = date(item.O_PVM1);
-    const pvm2 = date(item.O_PVM2);
-
     const henkilo = henkilot.find(h => h.O_USER === item.CHNGBY);
   
     const row = {
@@ -52,25 +58,25 @@ function insertHenkilot(destination, koulut, henkilot) {
       FirstName,
       LastName,
       Email: item.O_EMAIL,
+      Info: text(item.O_MEMO),
       Username: item.O_USER,
       Password: item.O_PSW,
-      Info: item.O_MEMO,
       Role: role(item.O_TYPE),
       LastLogin: datetime(item.O_LOGIN),
       LastLogout: datetime(item.O_LOGOUT),
-      Language: item.O_LANGUAGE,
-      CompanyName: item.O_CNAME,
-      Title: item.O_TITLE,
-      Address: item.O_STREET,
-      PostOfficeBox: item.O_BOX,
-      PostalCode: item.O_ZIP,
-      PostOffice: item.O_CITY,
-      Country: item.O_COUNTRY,
-      Phone: item.O_PHONE,
-      Fax: item.O_FAX,
-      Class: item.O_CLASS,
-      LicenseBegin: pvm1 !== '1899-12-31' ? pvm1 : undefined,
-      LicenseEnd: pvm2 !== '1899-12-31' ? pvm2 : undefined,
+      Language: text(item.O_LANGUAGE),
+      CompanyName: text(item.O_CNAME),
+      Title: text(item.O_TITLE),
+      Address: text(item.O_STREET),
+      PostOfficeBox: text(item.O_BOX),
+      PostalCode: text(item.O_ZIP),
+      PostOffice: text(item.O_CITY),
+      Country: text(item.O_COUNTRY),
+      Phone: text(item.O_PHONE),
+      Fax: text(item.O_FAX),
+      Class: text(item.O_CLASS),
+      LicenseBegin: date(item.O_PVM1),
+      LicenseEnd: date(item.O_PVM2),
       UpdatedBy: henkilo ? henkilo.O_ID : undefined,
       UpdatedAt: date(item.CHNGDATE)
     }

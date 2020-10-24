@@ -1,5 +1,5 @@
 import { LookupPair } from './Fields';
-import FieldsForm, { FormErrors } from './FieldsForm';
+import FieldsForm, { FormErrors, EditMode } from './FieldsForm';
 
 interface Props {
   dataId?: number,
@@ -43,17 +43,17 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     return this.props.data !== undefined;
   }
 
-  protected abstract getNewTitle(): string;
-  protected abstract getEditTitle(): string;
+  protected abstract getInsertTitle(): string;
+  protected abstract getUpdateTitle(): string;
   protected abstract getDeleteTitle(): string;
 
   public getTitle(): string {
-    const { action } = this.props;
+    const { editMode } = this.props;
 
-    switch (action) {
-      case 'new': return this.getNewTitle();
-      case 'edit': return this.getEditTitle();
-      case 'delete': return this.getDeleteTitle();
+    switch (editMode) {
+      case EditMode.Insert: return this.getInsertTitle();
+      case EditMode.Update: return this.getUpdateTitle();
+      case EditMode.Delete: return this.getDeleteTitle();
     }
 
     return '';
@@ -139,55 +139,79 @@ export default abstract class DataForm<P> extends FieldsForm<P & Props> {
     await this.populateData();
   }
 
-  protected async doSubmit(): Promise<FormErrors | null> {
-    const data: any = this.state.data;
-
-    if (data.Id) {
-      // PUT
-      const savedData: any = this.state.savedData;
-
+  private async postData(data: any): Promise<FormErrors | null> {
+    try {
       const row: any = {};
       
       for (const field of this.fields) {
         const value: any = data[field.name];
-        const savedValue: any = savedData[field.name];
 
-        if (value !== savedValue)
+        if (value !== null && value !== '')
           row[field.name] = field.dataToJson(value);
       }
 
-      if (Object.keys(row).length > 0) {
-        try {
-          console.log('put', row);
-          await this.http.put(this.apiEndpointOf(data.Id), row);
-        }
-        catch (ex) {
-          return {
-            errorText: ex.response.data.sqlMessage
-          };
-        }
-      }
+      console.log('post', row);
+      await this.http.post(this.apiEndpoint, row);
     }
-    else {
-      // POST
+    catch (ex) {
+      return {
+        errorText: ex.response.data.sqlMessage
+      };
+    }
+
+    return null;
+  }
+
+  private async putData(data: any): Promise<FormErrors | null> {
+    const savedData: any = this.state.savedData;
+
+    const row: any = {};
+    
+    for (const field of this.fields) {
+      const value: any = data[field.name];
+      const savedValue: any = savedData[field.name];
+
+      if (value !== savedValue)
+        row[field.name] = field.dataToJson(value);
+    }
+
+    if (Object.keys(row).length > 0) {
       try {
-        const row: any = {};
-        
-        for (const field of this.fields) {
-          const value: any = data[field.name];
-
-          if (value !== null && value !== '')
-            row[field.name] = field.dataToJson(value);
-        }
-
-        console.log('post', row);
-        await this.http.post(this.apiEndpoint, row);
+        console.log('put', row);
+        await this.http.put(this.apiEndpointOf(data.Id), row);
       }
       catch (ex) {
         return {
           errorText: ex.response.data.sqlMessage
         };
       }
+    }
+
+    return null;
+  }
+
+  private async deleteData(data: any): Promise<FormErrors | null> {
+    try {
+      console.log('delete', data.Id);
+      await this.http.delete(this.apiEndpointOf(data.Id));
+    }
+    catch (ex) {
+      return {
+        errorText: ex.response.data.sqlMessage
+      };
+    }
+    
+    return null;
+  }
+
+  protected async doSubmit(): Promise<FormErrors | null> {
+    const { editMode } = this.props;
+    const { data } = this.state;
+
+    switch (editMode) {
+      case EditMode.Insert: return this.postData(data);
+      case EditMode.Update: return this.putData(data);
+      case EditMode.Delete: return this.deleteData(data);
     }
 
     return null;

@@ -11,16 +11,13 @@ export default class UserGroupsTable extends BaseTable<Props> {
     super(props);
 
     this.addId();
-    this.addField('Tunnus',        'Tunnus',           'text');
     this.addName();
+    this.addField('Tunnus',        'Tunnus',           'text');
     this.addField('ContactPerson', 'Yhteyshenkilö',    'text');
     this.addField('Address',       'Osoite',           'text');
     this.addField('PostalCode',    'Postinumero',      'text');
     this.addField('PostOffice',    'Postitoimipaikka', 'text');
-    this.addField('Country',       'Maa',              'text');
-    this.addField('Osoite',        'Osoite',           'text');
     this.addField('Phone',         'Puhelin',          'phone');
-    this.addField('Email',         'Sähköposti',       'email');
     this.addField('Url',           'Nettisivut',       'url');
     this.addField('LicenseBegin',  'Lisenssi alku',    'date');
     this.addField('LicenseEnd',    'Lisenssi loppu',   'date');

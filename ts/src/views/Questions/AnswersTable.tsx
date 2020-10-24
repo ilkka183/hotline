@@ -18,7 +18,7 @@ export default class AnswersTable extends BaseTable<Props> {
     this.addField('Date',       'Pvm',        'datetime', { editLink: this.isPowerOrAdmin, displayFormat: 'date' });
     this.addField('UserName',   'Lähettäjä',  'text',     { editLink: true, visible: this.isPowerOrAdmin });
     this.addField('Message',    'Viesti',     'textarea', { render: row => QuestionForm.renderText(row.Message) });
-//    this.addField('Solution',  'Ratkaisu',   'boolean');
+    this.addField('File',       'Liite',      'text');
     this.addField('Mark',       '',           'custom',   { render: row => this.renderSolutionButton(row) });
   }
 
