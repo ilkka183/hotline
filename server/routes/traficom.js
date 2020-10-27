@@ -123,23 +123,92 @@ async function parseRegCheck(registrationNumber, raw) {
 }
 
 async function getRegCheckApi(registrationNumber) {
-  const host = 'https://www.regcheck.org.uk';
-  const username = 'Ilkka183';
-  const url = host + '/api/reg.asmx/CheckFinland?RegistrationNumber=' + registrationNumber + '&username=' + username;
+  const url = 'https://www.regcheck.org.uk/api/reg.asmx/CheckFinland' +
+    '?RegistrationNumber=' + registrationNumber +
+    '&username=Ilkka183';
 
   const { data } = await axios.get(url);
   return await parseRegCheck(registrationNumber, data);
 }
 
 async function getRegCheckFile(registrationNumber) {
-  const data = await readFile('./api/regCheck/' + registrationNumber + '.xml');
+  const data = await readFile('./api/RegCheck/' + registrationNumber + '.xml');
   return await parseRegCheck(registrationNumber, data);
+}
+
+async function parseBovSoft(registrationNumber, response) {
+  const data = response.data;
+
+  if (data.datacar.length === 0)
+    return null;
+
+  const car = data.datacar[0];
+  console.log(car);
+
+  const vehicle = {
+    registrationNumber
+  }
+
+  if (car.manufCar)
+    vehicle.carMake = car.manufCar;
+
+  if (car.modelCar)
+    vehicle.carModel = car.modelCar;
+
+  if (car.ccmCar)
+    vehicle.engineSize = car.ccmCar;
+
+  if (car.fuelSystem)
+    vehicle.fuelType = car.fuelSystem;
+
+  if (car.listEngines) {
+    const codes = car.listEngines.split(';');
+
+    if (codes.length > 0)
+      vehicle.engineCode = codes[0];
+  }
+
+  if (car.kwCar)
+    vehicle.power = car.kwCar;
+
+  if (car.vin)
+    vehicle.vin = car.vin;
+
+  if (car.ktype)
+    vehicle.ktype = car.ktype;
+
+  console.log(vehicle);
+
+  return vehicle;
+}
+
+async function getBovSoftApi(registrationNumber) {
+  const id = 55;
+  const seccode = '43fc50aaeef3dfc95caebb365b974d55';
+  
+  const url = 'http://webservice.bovsoft.com:150/bovsoft.regnum.run' +
+    '?id=' + id +
+    '&seccode=' + seccode +
+    '&nameservice=getktypefornumplatefinland' +
+    '&regnum=' + registrationNumber +
+    '&contenttype=JSON';
+
+  const { data } = await axios.get(url);
+  return parseBovSoft(registrationNumber, data);
+}
+
+async function getBovSoftFile(registrationNumber) {
+  const raw = await readFile('./api/BovSoft/' + registrationNumber + '.json');
+  const data = JSON.parse(raw);  
+  return parseBovSoft(registrationNumber, data);
 }
 
 async function getVehicle(registrationNumber, source) {
   switch (source) {
-    case 'regCheckApi': return await getRegCheckApi(registrationNumber);
-    case 'regCheckFile':  return await getRegCheckFile(registrationNumber);
+    case 'BovSoftApi': return await getBovSoftApi(registrationNumber);
+    case 'BovSoftFile':  return await getBovSoftFile(registrationNumber);
+    case 'RegCheckApi': return await getRegCheckApi(registrationNumber);
+    case 'RegCheckFile':  return await getRegCheckFile(registrationNumber);
   }
 
   return getTest(registrationNumber);

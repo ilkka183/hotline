@@ -15,8 +15,8 @@ export default class AnswersTable extends BaseTable<Props> {
 
     this.addId();
     this.addField('QuestionId', 'Vikatapaus', 'number',   { visible: false });
-    this.addField('Date',       'Pvm',        'datetime', { editLink: this.isPowerOrAdmin, displayFormat: 'date' });
-    this.addField('UserName',   'Lähettäjä',  'text',     { editLink: true, visible: this.isPowerOrAdmin });
+    this.addField('Date',       'Pvm',        'datetime', { displayFormat: 'date' });
+    this.addField('UserName',   'Lähettäjä',  'text',     { show: row => this.showUser(row) });
     this.addField('Message',    'Viesti',     'textarea', { render: row => QuestionForm.renderText(row.Message) });
     this.addField('File',       'Liite',      'text');
     this.addField('Mark',       '',           'custom',   { render: row => this.renderSolutionButton(row) });
@@ -38,7 +38,15 @@ export default class AnswersTable extends BaseTable<Props> {
     return this.props.question;
   }
 
-  protected canDelete(row: any): boolean {
+  protected canUpdateRow(row: any): boolean {
+    return this.owns(row.UserId);
+  }
+
+  protected canDeleteRow(row: any): boolean {
+    return this.owns(row.UserId);
+  }
+
+  private showUser(row: any): boolean {
     return this.owns(row.UserId);
   }
 
@@ -48,10 +56,8 @@ export default class AnswersTable extends BaseTable<Props> {
     if (!this.owns(question.UserId))
       return null;
 
-    const variant = row.Solution ? 'success' : 'warning';
-
     return (
-      <Button variant={variant} onClick={() => onSolution(row)}>Ratkaisu</Button>
+      <Button variant="warning" size="sm" onClick={() => onSolution(row)}>Ratkaisu</Button>
     );
   }
 }

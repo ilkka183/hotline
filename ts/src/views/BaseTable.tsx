@@ -19,6 +19,10 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return (this.user !== null) && this.user.owns(userId);
   }
 
+  protected isRowDisabled(row: any): boolean {
+    return row.Enabled !== undefined ? !row.Enabled : false;
+  }  
+
   protected getItemsQuery(query: any) {
   }
 
@@ -67,12 +71,12 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     return response.data;
   }
 
-  protected addId(visible: boolean = true): Field {
-    return this.addField('Id', 'No', 'number', { editLink: this.isPowerOrAdmin, visible });
+  protected addId(visible: boolean = false): Field {
+    return this.addField('Id', 'No', 'number', { visible });
   }
 
   protected addName(name: string = 'Name', label: string = 'Nimi'): Field {
-    return this.addField(name, label, 'text', { editLink: true, search: true });
+    return this.addField(name, label, 'text', { search: true });
   }
 
   protected addEnabled(): Field {

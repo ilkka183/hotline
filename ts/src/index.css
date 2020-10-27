@@ -28,6 +28,10 @@ body {
   color: gray;
 }
 
+.disabled {
+  color: #D3D3D3;
+}
+
 .description {
   font-weight: bold;
 }

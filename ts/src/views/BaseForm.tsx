@@ -6,8 +6,12 @@ import http from '../services/httpService';
 export default abstract class BaseForm<P> extends DataForm<P> {
   protected readonly user: User | null = auth.getCurrentUser();
 
-  public get hasPowerRights(): boolean {
+  protected get isPowerOrAdmin(): boolean {
     return (this.user !== null) && this.user.isPowerOrAdmin;
+  }
+
+  protected owns(userId: number): boolean {
+    return (this.user !== null) && this.user.owns(userId);
   }
 
   public getHttp(): any {

@@ -12,10 +12,10 @@ export default class ModelsTable extends BaseTable<Props> {
     super(props);
 
     this.addId(true);
-    this.addField('MakeName',       'Merkki',               'text',   { editLink: true});
-    this.addField('Name',           'Malli',                'text',   { editLink: true});
-    this.addField('AdditionalInfo', 'Tarkenne',             'text',   { editLink: true});
-    this.addField('Grouping',       'Ryhmitys',             'text',   { editLink: true});
+    this.addField('MakeName',       'Merkki',               'text');
+    this.addField('Name',           'Malli',                'text');
+    this.addField('AdditionalInfo', 'Tarkenne',             'text');
+    this.addField('Grouping',       'Ryhmitys',             'text');
     this.addField('Sequence',       'Jakso',                'text');
     this.addField('Tune',           'Katalysaattori',       'text');
     this.addField('StartYear',      'Vuodesta',             'number');

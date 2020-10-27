@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Alert from 'react-bootstrap/Alert'
+import Spinner from 'react-bootstrap/Spinner'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import QuestionSummary from '../QuestionSummary'
 import http from '../../../services/httpService';
 import { LEON, GOLF, FOCUS } from './Cars';
+import { TESTING } from '../Questions';
 import { FuelType } from '../Question';
 
 function valueOf(value: any): any {
@@ -12,7 +14,7 @@ function valueOf(value: any): any {
 }
 
 function fuelTypeOf(text: string): FuelType {
-  switch (text) {
+  switch (text.toLowerCase()) {
     case 'bensiini': return FuelType.Petrol;
     case 'diesel': return FuelType.Diesel;
   }
@@ -27,6 +29,7 @@ interface Props {
 
 const SearchData: React.FC<Props> = ({ data, onData }) => {
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = ({ currentTarget: input }: any) => {
     const newData: any = {...data};
@@ -62,11 +65,9 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
 
     try {
       setError('');
+      setLoading(true);
 
-      let source = 'test';
-      source = 'regCheckFile';
-
-      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber + '?source=' + source);
+      const { data: info } = await http.get('/traficom/' + data.RegistrationNumber + '?source=BovSoftApi');
 
       const newData: any = {...data};
 
@@ -79,21 +80,36 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
       newData.CylinderCount = valueOf(info.cylinderCount);
       newData.EngineCode = valueOf(info.engineCode);
       newData.EngineSize = valueOf(info.engineSize);
-      newData.VIN = valueOf(info.vechileIdentificationNumber);
+      newData.VIN = valueOf(info.vin);
+      newData.KType = valueOf(info.ktype);
       newData.NetWeight = valueOf(info.netWeight);
       newData.GrossWeight = valueOf(info.grossWeight);
   
+      setLoading(false);
+
       onData(newData);
     }
     catch (ex) {
+      setLoading(false);
+
       if (ex.response && ex.response.status === 404) {
-        setError('Rekisterinumerolla ei löytynyt ajoneuvoa');
+        setError('Rekisterinumerolla ' + data.RegistrationNumber + ' ei löytynyt ajoneuvoa!');
       }
     }
   }
 
   function renderFillButton(car: any): JSX.Element {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
+  }
+
+  function renderTestButtons(): JSX.Element {
+    return (
+      <>
+        {renderFillButton(LEON)}
+        {renderFillButton(GOLF)}
+        {renderFillButton(FOCUS)}
+      </>
+    );
   }
 
   function isNull(): boolean {
@@ -113,14 +129,13 @@ const SearchData: React.FC<Props> = ({ data, onData }) => {
           placeholder="Rekisterinumero"
           value={data.RegistrationNumber}
           onChange={handleChange}
-        />          
+        />
         <Button className="mr-2" type="submit" disabled={!data.RegistrationNumber}>Hae</Button>
         <Button className="mr-2" disabled={isNull()} onClick={handleClear}>Tyhjennä</Button>
-        {renderFillButton(LEON)}
-        {renderFillButton(GOLF)}
-        {renderFillButton(FOCUS)}
+        {TESTING && renderTestButtons()}
+        {loading && <Spinner animation="border" />}
       </Form>
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert className="mt-2" variant="danger">{error}</Alert>}
       {isReady() && <QuestionSummary className="mt-3" data={data} />}
     </>
   );

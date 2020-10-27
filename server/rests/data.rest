@@ -1,4 +1,4 @@
 //@host = http://localhost:3000
-@host = http://suorita.com
+@host = http://autotechsystems.fi
 
 GET {{host}}/hotline/api/data/brands

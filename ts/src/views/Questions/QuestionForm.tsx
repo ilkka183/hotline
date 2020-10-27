@@ -10,15 +10,15 @@ export default class QuestionForm extends BaseForm<Props> {
     super(props);
 
     this.addId();
-    this.addField('Date',               'Pvm',                  'datetime', { required: true, readonly: true, visible: this.hasPowerRights });
-    this.addField('UserId',             'Lähettäjä',            'number',   { required: true, readonly: true, visible: this.hasPowerRights, lookupUrl: 'Users' });
+    this.addField('Date',               'Pvm',                  'datetime', { required: true, readonly: true, visible: this.isPowerOrAdmin });
+    this.addField('UserId',             'Lähettäjä',            'number',   { required: true, readonly: true, lookupUrl: 'Users', show: row => this.showUser(row) });
     this.addField('Make',               'Merkki',               'text',     { required: true });
     this.addField('Model',              'Malli',                'text',     { required: true });
     this.addField('ModelYear',          'Vuosimalli',           'number');
     this.addField('ModelBeginYear',     'Vuodesta',             'number');
     this.addField('ModelEndYear',       'Vuoteen',              'number');
     this.addField('RegistrationYear',   'Rekisteröintivuosi',   'number');
-    this.addField('RegistrationNumber', 'Rekisterinumero',      'text',     { visible: this.hasPowerRights });
+    this.addField('RegistrationNumber', 'Rekisterinumero',      'text',     { visible: this.isPowerOrAdmin });
     this.addField('FuelType',           'Käyttövoima',          'number',   { enums: FUEL_TYPE_TEXTS });
     this.addField('CylinderCount',      'Sylinterimäärä',       'number');
     this.addField('EnginePower',        'Teho (kW)',            'number');
@@ -35,7 +35,7 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('DescriptionFile',    'Liite',                'tex',      { readonly: true });
     this.addField('Solution',           'Ratkaisu',             'textarea', { rows: 10 });
     this.addField('SolutionFile',       'Liite',                'tex',      { readonly: true });
-    this.addField('SolutionDate',       'Pvm',                  'datetime', { readonly: true, visible: this.hasPowerRights });
+    this.addField('SolutionDate',       'Pvm',                  'datetime', { readonly: true, visible: this.isPowerOrAdmin });
     this.addField('Status',             'Tila',                 'number',   { required: true, getDefaultValue: () => 0, enums: STATUS_TEXTS });
 
     this.state.data = this.getEmptyData();
@@ -55,6 +55,10 @@ export default class QuestionForm extends BaseForm<Props> {
 
   protected getDeleteTitle(): string {
     return 'Poista vikatapaus';
+  }
+
+  private showUser(row: any): boolean {
+    return this.owns(row.UserId);
   }
 
   public static renderText(text: string): JSX.Element | null {

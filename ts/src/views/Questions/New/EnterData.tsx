@@ -3,7 +3,8 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
-import { FUEL_TYPE_TEXTS } from './../Question';
+import { TESTING } from '../Questions';
+import { FUEL_TYPE_TEXTS } from '../Question';
 import { LEON, GOLF, FOCUS } from './Cars';
 
 interface Props {
@@ -96,6 +97,16 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
     return <Button className="mr-2" variant="light" onClick={() => handleFill(car)}>{car.Model}</Button>
   }
 
+  function renderTestButtons(): JSX.Element {
+    return (
+      <>
+        {renderFillButton(LEON)}
+        {renderFillButton(GOLF)}
+        {renderFillButton(FOCUS)}
+      </>
+    );
+  }
+
   function isNull(): boolean {
     return !data.Make && !data.Model && !data.ModelYear;
   }
@@ -114,9 +125,7 @@ const EnterData: React.FC<Props> = ({ data, onData, onNext }) => {
         {renderInputText('VIN', 'VIN')}
         {renderInputText('RegistrationNumber', 'Rekisterinumero')}
         <Button className="mr-2" disabled={isNull()} onClick={handleClear}>Tyhjennä</Button>
-        {renderFillButton(LEON)}
-        {renderFillButton(GOLF)}
-        {renderFillButton(FOCUS)}
+        {TESTING && renderTestButtons()}
       </Form>
     </>
   );

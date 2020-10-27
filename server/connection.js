@@ -57,7 +57,7 @@ class Connection {
 
 class LocalConnection extends Connection {
   constructor() {
-    super('suoritac_root', 'OhiOn330!', 'suoritac_hotline1');
+    super('autotech_root', 'OhiOn330!', 'autotech_hotline1');
   }
 }
 

@@ -13,7 +13,7 @@
   mysql -u hotline -p < hotline.sql
   mysql --user=root --password=ohion330!
   mysql --user=root --password=ohion330! < hotline.sql
-  mysqldump --user=root --password=ohion330! suoritac_hotline1 > hotline_backup.sql
+  mysqldump --user=root --password=ohion330! autotech_hotline1 > hotline_backup.sql
 
   Kysymyksiä
   - tarkista tarvittavat taulut ja kentät
@@ -47,15 +47,15 @@
 */
 
 
-DROP DATABASE suoritac_hotline1;
-CREATE DATABASE suoritac_hotline1 CHARACTER SET utf8mb4;
-CONNECT suoritac_hotline1;
+DROP DATABASE autotech_hotline1;
+CREATE DATABASE autotech_hotline1 CHARACTER SET utf8mb4;
+CONNECT autotech_hotline1;
 SET NAMES 'utf8';
 
 
-DROP USER 'suoritac_root'@'localhost';
-CREATE USER 'suoritac_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
-GRANT ALL PRIVILEGES ON *.* TO 'suoritac_root'@'localhost';
+DROP USER 'autotech_root'@'localhost';
+CREATE USER 'autotech_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
+GRANT ALL PRIVILEGES ON *.* TO 'autotech_root'@'localhost';
 
 /* Tästä asti FactCometin phpMyAdmin paneelissa */
 SET default_storage_engine=INNODB;
@@ -262,7 +262,6 @@ INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Passwo
 
 
 /* Merkit ja mallit */
-/*
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Volkswagen');
@@ -320,7 +319,6 @@ INSERT INTO Answer(QuestionId, UserId, Message) VALUES(1, 3, 'Lisää öljyä');
 INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 4 DAY, 4, 'Volkswagen', 'Golf Variant 1.6', 2005, 'ISI-560', 0, 1596, 74, 'CHZD', 'WF0WXXGCDW5B88909', 'Jarrut rahisevat', 'Jarrut rahisevat oikealle käännettäessä.');
 
-INSERT INTO QuestionAttachment(QuestionId, FileName, FileSize, FileType, Content, Description) VALUES(2, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
 INSERT INTO Answer(QuestionId, UserId, Message) VALUES(2, 3, 'Vaihda jarrulevyt');
 
 
@@ -341,6 +339,4 @@ INSERT INTO Answer(QuestionId, UserId, Message) VALUES(4, 1, 'Käytä huollossa'
 INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
   VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.');
 
-INSERT INTO QuestionAttachment(QuestionId, FileName, FileSize, FileType, Content, Description) VALUES(5, 'kuva,jpg', 1024, 'jpeg', 'JPEG', 'Kaavio');
 INSERT INTO Answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
-*/

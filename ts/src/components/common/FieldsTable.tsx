@@ -105,12 +105,16 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return true;
   }
 
-  protected canEdit(row: any): boolean {
+  protected canUpdateRow(row: any): boolean {
     return true;
   }
 
-  protected canDelete(row: any): boolean {
+  protected canDeleteRow(row: any): boolean {
     return true;
+  }
+
+  protected isRowDisabled(row: any): boolean {
+    return false;
   }
 
   public getNewButtonLink(): string {
@@ -331,6 +335,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     return this.getModalForm();
   }
 
+  protected showUpdateButton(): boolean {
+    return this.getModalForm();
+  }
+
   protected showDeleteButton(): boolean {
     return this.getModalForm();
   }
@@ -347,7 +355,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     const text: string = newButtonText ? newButtonText! : 'Lisää uusi';
 
     if (this.getUseModals())
-      return <Button className="mb-2" variant="primary" onClick={() => this.handleShowNewModal()}>{text}</Button>
+      return <Button className="mb-2" variant="success" onClick={() => this.handleShowNewModal()}>{text}</Button>
     else
       return <LinkButton className="mb-2" variant="primary" size="sm" to={this.getNewButtonLink()}>{text}</LinkButton>
   }
@@ -423,11 +431,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (column.render)
       return column.render(row);
 
+    if (column.show && !column.show(row))
+      return null;
+
     const text: string | null = column.formatValue(row[column.name], true);
 
     const { readOnly, editable } = this.props;
 
-    if (column.editLink && !readOnly && editable && this.canEdit(row)) {
+    if (column.editLink && !readOnly && editable && this.canUpdateRow(row)) {
       if (this.getUseModals())
         return <Button variant="link" size="sm" onClick={() => this.handleShowEditModal(EditMode.Update, row)}>{text}</Button>
       else
@@ -454,8 +465,15 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     );
   }
 
-  private renderDeleteButton(row: any): JSX.Element | null {
-    if (this.canDelete(row))
+  private renderRowUpdateButton(row: any): JSX.Element | null {
+    if (this.canUpdateRow(row))
+      return <Button variant="primary" size="sm" onClick={() => this.handleShowEditModal(EditMode.Update, row)}>Muokkaa</Button>;
+
+    return null;
+  }
+
+  private renderRowDeleteButton(row: any): JSX.Element | null {
+    if (this.canDeleteRow(row))
       return <Button variant="danger" size="sm" onClick={() => this.handleShowEditModal(EditMode.Delete, row)}>Poista</Button>;
 
     return null;
@@ -524,10 +542,20 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       }
   }
 
+  private get showRowUpdateButton(): boolean {
+    const { readOnly, editable } = this.props;
+
+    return !readOnly! && editable! && this.showUpdateButton();
+  }
+
   private get showRowDeleteButton(): boolean {
     const { readOnly, deletable } = this.props;
 
     return !readOnly! && deletable! && this.showDeleteButton();
+  }
+
+  private rowClassName(row: any): string | undefined {
+    return this.isRowDisabled(row) ? 'disabled' : undefined;
   }
 
   public render(): JSX.Element {
@@ -546,14 +574,16 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
           <thead>
             <tr>
               {columns.map(column => this.renderColumn(column))}
+              {this.showRowUpdateButton && <th></th>}
               {this.showRowDeleteButton && <th></th>}
             </tr>
           </thead>
           <tbody>
             {rows.map(row => (
-              <tr key={row.Id}>
+              <tr className={this.rowClassName(row)} key={row.Id}>
                 {columns.map(column => this.renderCell(row, column))}
-                {this.showRowDeleteButton &&<td>{this.renderDeleteButton(row)}</td>}
+                {this.showRowUpdateButton &&<td>{this.renderRowUpdateButton(row)}</td>}
+                {this.showRowDeleteButton &&<td>{this.renderRowDeleteButton(row)}</td>}
               </tr>))}
           </tbody>
         </table>

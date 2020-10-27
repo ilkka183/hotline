@@ -44,7 +44,7 @@ const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear,
         <Col sm="10">
           <Button className="mr-2" onClick={onSearch}>Hae</Button>
           <Button className="mr-2" onClick={onClear}>Tyhjennä</Button>
-          <Button onClick={onNew}>{newButtonText ? newButtonText : 'Lisää uusi'}</Button>
+          <Button variant="success" onClick={onNew}>{newButtonText ? newButtonText : 'Lisää uusi'}</Button>
         </Col>
       </Row>
     </Form>

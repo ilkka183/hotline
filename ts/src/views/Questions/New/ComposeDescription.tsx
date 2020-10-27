@@ -1,9 +1,11 @@
 import React from 'react';
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import QuestionSummary from '../QuestionSummary'
 import Required from '../../../components/form/Required';
+import { TESTING } from '../Questions';
 
 const APPEARANCES = [
   'Jatkuva',
@@ -33,10 +35,11 @@ interface Props {
   data: any,
   description: any,
   onChange: (event: any) => void,
-  onChangeCheckboxGroup: (event: any) => void
+  onChangeCheckboxGroup: (event: any) => void,
+  onFill: (description: any) => void
 }
 
-const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onChangeCheckboxGroup }) => {
+const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onChangeCheckboxGroup, onFill }) => {
 
   function renderDescription(): JSX.Element {
     return (
@@ -168,6 +171,17 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
     );
   }
 
+  const handleFill = () => {
+    const newDescription = {...description}
+    newDescription.description = 'Ei toimi';
+
+    onFill(newDescription);
+  }
+
+  function renderTestButton(): JSX.Element {
+    return <Button className="mr-2" variant="light" onClick={handleFill}>Testi</Button>
+  }
+
   return (
     <>
       <QuestionSummary data={data} />
@@ -181,6 +195,7 @@ const ComposeDescription: React.FC<Props> = ({ data, description, onChange, onCh
         {renderHistory()}
         {renderText()}
       </Form>
+      {TESTING && renderTestButton()}
     </>
   );
 }

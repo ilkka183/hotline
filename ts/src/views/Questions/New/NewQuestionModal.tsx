@@ -178,11 +178,19 @@ export default class NewQuestionForm extends UserComponent<Props, State> {
     this.setState({ title });
   }
 
+  private readonly handleTitleFill = (title: any) => {
+    this.setState({ title });
+  }
+
   private readonly handleDescriptionChange = ({ currentTarget: target }: any) => {
     const description: any = {...this.state.description}
 
     description[target.name] = target.value;
 
+    this.setState({ description });
+  }
+
+  private readonly handleDescriptionFill = (description: any) => {
     this.setState({ description });
   }
 
@@ -302,6 +310,7 @@ export default class NewQuestionForm extends UserComponent<Props, State> {
         data={this.state.data}
         title={this.state.title}
         onChange={this.handleTitleChange}
+        onFill={this.handleTitleFill}
       />
     );
   }
@@ -313,6 +322,7 @@ export default class NewQuestionForm extends UserComponent<Props, State> {
         description={this.state.description}
         onChange={this.handleDescriptionChange}
         onChangeCheckboxGroup={this.handleDescriptionChangeCheckboxGroup}
+        onFill={this.handleDescriptionFill}
       />
     );
   }

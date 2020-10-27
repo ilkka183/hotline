@@ -33,7 +33,7 @@ export default class UserSessionsTable extends BaseTable<Props> {
     return undefined;
   }
 
-  protected canEdit(row: any): boolean {
+  protected canUpdateRow(row: any): boolean {
     return false;
   }
 }

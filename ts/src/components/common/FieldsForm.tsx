@@ -492,6 +492,10 @@ export default abstract class FieldsForm<P> extends FieldsComponent<P & FieldsFo
       return null;
 
     const data: any = this.getData();
+
+    if (field.show && !field.show(data))
+      return null;
+
     const value: any = data[field.name];
 
     let text: JSX.Element | string | null = field.formatValue(value, this.formatDateTimes());

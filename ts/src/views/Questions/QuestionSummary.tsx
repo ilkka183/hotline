@@ -21,18 +21,24 @@ const QuestionSummary: React.FC<Props> = ({ className, data }) => {
     <Alert className={className} variant="success">
       <Container>
         <Row>
-          <Col>{data.Make}</Col>
-          <Col>{data.Model}</Col>
-          <Col>{data.ModelYear}</Col>
-          <Col>{data.RegistrationYear}</Col>
-          <Col>{data.RegistrationNumber}</Col>
+          <Col>Merkki: {data.Make}</Col>
+          <Col>Malli: {data.Model}</Col>
+          <Col>Mallivuosi: {data.ModelYear}</Col>
         </Row>
         <Row>
-          <Col>{FUEL_TYPE_TEXTS[data.FuelType]}</Col>
-          {data.EngineSize && <Col>{data.EngineSize} cm3</Col>}
-          {data.EnginePower && <Col>{data.EnginePower} kW</Col>}
-          <Col>{data.EngineCode}</Col>
-          <Col>{data.VIN}</Col>
+          <Col>Rekisteröintivuosi: {data.RegistrationYear}</Col>
+          <Col>Rekisterinumero: {data.RegistrationNumber}</Col>
+          <Col>KType: {data.KType}</Col>
+        </Row>
+        <Row>
+          <Col>Käyttövoima: {FUEL_TYPE_TEXTS[data.FuelType]}</Col>
+          <Col>Kuutiotilavuus: {data.EngineSize && <>{data.EngineSize} cm3</>}</Col>
+          <Col>Teho: {data.EnginePower && <>{data.EnginePower} kW</>}</Col>
+        </Row>
+        <Row>
+          <Col>Moottorin koodi: {data.EngineCode}</Col>
+          <Col>VIN: {data.VIN}</Col>
+          <Col></Col>
         </Row>
         <Row>
           <Col>{data.Title}</Col>

@@ -11,14 +11,14 @@ export const LEON = {
 }
 
 export const GOLF = {
-  RegistrationNumber: 'ISI-561',
+  RegistrationNumber: 'ISI-651',
   Make: 'VW',
   Model: 'Golf',
   ModelYear: 2005,
   FuelType: 0,
-  EngineSize: 1596,
-  EnginePower: 74,
-  EngineCode: 'CHZD',
+  EngineSize: 1598,
+  EnginePower: 77,
+  EngineCode: 'ATN',
   VIN: 'WF0WXXGCDW5B88909'
 }
 

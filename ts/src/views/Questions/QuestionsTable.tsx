@@ -54,7 +54,11 @@ export default class QuestionsTable extends BaseTable<Props> {
       query.UserId = userId;
   }
 
-  protected canDelete(row: any): boolean {
+  protected canUpdateRow(row: any): boolean {
+    return this.owns(row.UserId);
+  }
+
+  protected canDeleteRow(row: any): boolean {
     return this.owns(row.UserId);
   }
 
@@ -66,7 +70,7 @@ export default class QuestionsTable extends BaseTable<Props> {
           {truncate(row.Description)}
         </div>
         {row.Solution && <div>{truncate(row.Solution)}</div>}
-        {!row.Solution && row.Replies.map((reply: any, index: number) => <div key={index}>- {truncate(reply.Message)}</div>)}
+        {!row.Solution && row.Answers.map((reply: any, index: number) => <div key={index}>- {truncate(reply.Message)}</div>)}
       </>
     );
   }

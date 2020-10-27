@@ -1,0 +1,47 @@
+{
+  "data": {
+    "datacar": [
+      {
+        "vin": null,
+        "hpCar": "115",
+        "ktype": 115143,
+        "kwCar": "85",
+        "manID": 104,
+        "modID": 11484,
+        "ccmCar": "999",
+        "colour": "",
+        "bodyCar": "StW",
+        "typeCar": "1.0 TSI",
+        "doorsCar": "",
+        "manufCar": "SEAT",
+        "modelCar": "LEON ST (5F8)",
+        "tyresCar": "",
+        "widthCar": "",
+        "brakeType": "",
+        "driveType": "Etuveto",
+        "fuelSuply": "Suoraruiskutus",
+        "heightCar": "",
+        "lengthCar": "",
+        "colourCode": "",
+        "descEngine": "31351",
+        "fuelSystem": "Bensiini",
+        "typeEngine": "Bensiinimoottori",
+        "brakeSystem": "",
+        "listEngines": "CHZD;DKRF",
+        "co2RatingCar": "",
+        "shortNameCar": "SEAT LEON ST (5F8) 1.0 TSI",
+        "valvesEngine": "12",
+        "typeToYearCar": "",
+        "catalystSystem": "",
+        "cylindersEngine": "3",
+        "typeFromYearCar": "201505",
+        "transmissionType": "",
+        "dateOfLastRegistration": "",
+        "dateOfFirstRegistration": ""
+      }
+    ]
+  },
+  "status": 200,
+  "statusText": "",
+  "countFREERequests": 29
+}

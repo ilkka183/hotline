@@ -3,12 +3,9 @@ import LoginForm from './Login/LoginForm';
 import Questions from './Questions/Questions';
 
 export default class Home extends Questions {
+  
   protected getTitle(): string {
     return 'Vikatapaukset';
-  }
-
-  protected getCreatable(): boolean {
-    return true;
   }
 
   public renderLogin(): JSX.Element {

@@ -1,6 +1,8 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import QuestionSummary from '../QuestionSummary'
+import { TESTING } from '../Questions';
 
 export const GROUPS = [
   'Alusta',
@@ -20,10 +22,11 @@ export const GROUPS = [
 interface Props {
   data: any,
   title: any,
-  onChange: (event: any) => void
+  onChange: (event: any) => void,
+  onFill: (title: any) => void
 }
 
-const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
+const ComposeTitle: React.FC<Props> = ({ data, title, onChange, onFill }) => {
 
   function renderGroups(): JSX.Element {
     return (
@@ -61,6 +64,18 @@ const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
     );
   }
 
+  const handleFill = () => {
+    const newTitle = {...title}
+    newTitle.group = GROUPS[0];
+    newTitle.title = 'Ei toimi';
+    
+    onFill(newTitle);
+  }
+
+  function renderTestButton(): JSX.Element {
+    return <Button className="mr-2" variant="light" onClick={handleFill}>Testi</Button>
+  }
+
   return (
     <>
       <QuestionSummary data={data} />
@@ -69,6 +84,7 @@ const ComposeTitle: React.FC<Props> = ({ data, title, onChange }) => {
         {renderGroups()}
         {renderTitle()}
       </Form>
+      {TESTING && renderTestButton()}
     </>
   );
 }

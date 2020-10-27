@@ -3,6 +3,7 @@ import React from 'react';
 export enum SortOrder { Asc, Desc }
 
 type LinkFunc = (row: any) => string;
+type ShowFunc = (row: any) => boolean;
 type RenderFunc = (row: any) => JSX.Element | null;
 type RenderTextFunc = (text: string) => JSX.Element | null;
 type DefaultValueFunc = () => any;
@@ -19,6 +20,7 @@ interface FormatOptions {
 interface FieldOptions {
   order?: SortOrder,
   link?: LinkFunc,
+  show?: ShowFunc,
   render?: RenderFunc,
   renderText?: RenderTextFunc,
   getDefaultValue?: DefaultValueFunc,
@@ -61,6 +63,7 @@ export class Field {
   public readonly minLength?: number;
   public order?: SortOrder;
   public readonly link?: LinkFunc;
+  public readonly show?: ShowFunc;
   public readonly render?: RenderFunc;
   public readonly renderText?: RenderTextFunc;
   public getDefaultValue?: DefaultValueFunc;
@@ -80,6 +83,9 @@ export class Field {
       this.default = '';
 
     if (options) {
+      if (options.show !== undefined)
+        this.show = options.show;
+
       if (options.render !== undefined)
         this.render = options.render;
 

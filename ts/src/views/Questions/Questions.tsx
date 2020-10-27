@@ -4,6 +4,8 @@ import QuestionsTable from './QuestionsTable';
 import UserComponent from '../UserComponent';
 import { QuestionStatus } from './Question';
 
+export const TESTING = true;
+
 function parseQuery(queryString: string) {
   var query: any = {};
   var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
@@ -21,7 +23,7 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
   protected abstract getTitle(): string;
 
   protected getCreatable(): boolean {
-    return false;
+    return TESTING;
   }
 
   protected getEditable(): boolean {
@@ -55,7 +57,7 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
         history={this.props.history}
         location={this.props.location}
         pageIndex={page - 1}
-        creatable={this.getCreatable() && false}
+        creatable={this.getCreatable()}
         editable={this.getEditable()}
         deletable={this.getDeletable()}
       />

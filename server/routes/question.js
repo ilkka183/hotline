@@ -27,16 +27,22 @@ router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(
 function getFilter(req, counter) {
   let sql = '';
 
-  for (const field in req.query)
-    if (field !== 'pageIndex' && field !== 'pageSize') {
-      if (counter === 0)
-        sql += ' WHERE ';
-      else
-        sql += ' AND ';
+  for (const field in req.query) {
+    if (field === 'pageIndex' || field === 'pageSize')
+      continue;
 
+    if (counter === 0)
+      sql += ' WHERE ';
+    else
+      sql += ' AND ';
+
+    if (field === 'Status' || field === 'UserId')
+      sql += field + ' = ' + req.query[field] + ' ';
+    else
       sql += field + ' LIKE "%' + req.query[field] + '%" ';
-      counter++;
-    }
+
+    counter++;
+  }
 
   return sql;
 }
@@ -78,10 +84,10 @@ async function getQuestions(req, res) {
   try {
     const { results: count } = await connection.query(countSql);
     const { results: rows } = await connection.query(sql);
-    const { results: replies } = await connection.query(answerSql);
+    const { results: answers } = await connection.query(answerSql);
 
     for (const row of rows)
-      row.Replies = replies.filter(answer => answer.QuestionId === row.Id);
+      row.Answers = answers.filter(answer => answer.QuestionId === row.Id).reverse();
 
     const response = {
       rowCount: count[0].Count,
