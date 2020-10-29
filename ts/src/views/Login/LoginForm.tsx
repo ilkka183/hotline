@@ -29,7 +29,9 @@ export default class LoginForm extends FieldsForm<Props> {
   protected async doSubmit(): Promise<FormErrors | null> {
     try {
       const { username, password } = this.state.data;
+      console.log('login1');
       await auth.login(username, password);
+      console.log('login2');
       window.location.replace('/');
     }
     catch (ex) {

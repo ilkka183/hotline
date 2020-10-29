@@ -1,6 +1,6 @@
-@host = http://localhost:4000
+@endPoint = http://autotechsystems.fi/hotline/api/UserGroups
 
-GET {{host}}/hotline/api/UserGroups
+GET {{endPoint}}
 ###
 GET {{host}}/hotline/api/UserGroup/1
 ###

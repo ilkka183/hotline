@@ -36,6 +36,13 @@
   - tuhoa kaikki vanhat tiedosto palvelimelta
   - siirrä uudet FTP:llä
 
+You can change the cPanel login password via your client's area ( my.fascomet.com ) on the home page, scroll to the hosting account in question, click Manage and then Change Password.
+
+The Master password it will ask for is your client's area password.  
+
+ns1.am5.fcomet.com
+ns2.am5.fcomet.com
+
 
   Migrate
   =======
@@ -262,6 +269,7 @@ INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Passwo
 
 
 /* Merkit ja mallit */
+/*
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Volkswagen');
@@ -337,6 +345,7 @@ INSERT INTO Answer(QuestionId, UserId, Message) VALUES(4, 1, 'Käytä huollossa'
 
 
 INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNumber, FuelType, EngineSize, EnginePower, EngineCode, VIN, Title, Description)
-  VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa', 'Ohjaus ravistaa kiihdytyksessä.');
+  VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa pahasti', 'Ohjaus ravistaa kiihdytyksessä.');
 
 INSERT INTO Answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
+*/

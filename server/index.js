@@ -28,11 +28,9 @@ const port = production ? 0 : 4000;
 app.use(express.json());
 
 app.use(function(req, res, next) {
-  if (!production)
-    res.header("Access-Control-Allow-Origin", "*");
-
-  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Accept, Content-Type, Origin, X-Auth-Token, X-Requested-With');
 
   next();
 });

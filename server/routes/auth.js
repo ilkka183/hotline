@@ -12,6 +12,11 @@ function generateToken(payload) {
 }
 
 
+router.get('/test', (req, res) => {
+  res.send('OK');
+});
+
+
 router.get('/me', auth, (req, res) => {
   res.send(req.user);
 });
