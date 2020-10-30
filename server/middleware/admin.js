@@ -1,7 +1,7 @@
-const config = require('./config');
+const config = require('config');
 
 module.exports = function (req, res, next) {
-  if (!config.requiresAuth)
+  if (!config.get('requiresAuth'))
     return next();
 
   if (req.user.role > 0)

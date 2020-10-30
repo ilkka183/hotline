@@ -1,14 +1,14 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 const connection = require('../connection');
-const config = require('../middleware/config');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
 
 
 function generateToken(payload) {
-  return jwt.sign(payload, config.jwtPrivateKey);
+  return jwt.sign(payload, config.get('jwtPrivateKey'));
 }
 
 

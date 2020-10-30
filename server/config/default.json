@@ -1,0 +1,8 @@
+{
+  "name": "Hotline",
+  "db": {
+    "user": "autotec1_root",
+    "database": "autotec1_hotline1"
+  },
+  "requiresAuth": true
+}

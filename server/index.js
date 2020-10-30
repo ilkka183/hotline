@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('config');
 
 const auth = require('./routes/auth');
 const make = require('./routes/make');
@@ -15,15 +16,15 @@ const data = require('./routes/data');
 
 const app = express();
 
-/*
 if (!process.env.hotline_jwtPrivateKey) {
-  console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  console.error('FATAL ERROR: hotline_jwtPrivateKey environment variable is not defined.');
   process.exit(1);
 }
-*/
 
-const production = process.env.PORT == '0';
-const port = production ? 0 : 4000;
+if (!process.env.hotline_databasePassword) {
+  console.error('FATAL ERROR: hotline_databasePassword environment variable is not defined.');
+  process.exit(1);
+}
 
 app.use(express.json());
 
@@ -58,5 +59,7 @@ app.use(function(err, req, res, next) {
 
 const connection = require('./connection');
 connection.connect();
+
+const port = process.env.NODE_ENV === 'production' ? 0 : 4000;
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));

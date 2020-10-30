@@ -13,7 +13,7 @@
   mysql -u hotline -p < hotline.sql
   mysql --user=root --password=ohion330!
   mysql --user=root --password=ohion330! < hotline.sql
-  mysqldump --user=root --password=ohion330! autotech_hotline1 > hotline_backup.sql
+  mysqldump --user=root --password=ohion330! autotec1_hotline1 > hotline_backup.sql
 
   Kysymyksiä
   - tarkista tarvittavat taulut ja kentät
@@ -54,15 +54,15 @@ ns2.am5.fcomet.com
 */
 
 
-DROP DATABASE autotech_hotline1;
-CREATE DATABASE autotech_hotline1 CHARACTER SET utf8mb4;
-CONNECT autotech_hotline1;
+DROP DATABASE autotec1_hotline1;
+CREATE DATABASE autotec1_hotline1 CHARACTER SET utf8mb4;
+CONNECT autotec1_hotline1;
 SET NAMES 'utf8';
 
 
-DROP USER 'autotech_root'@'localhost';
-CREATE USER 'autotech_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
-GRANT ALL PRIVILEGES ON *.* TO 'autotech_root'@'localhost';
+DROP USER 'autotec1_root'@'localhost';
+CREATE USER 'autotec1_root'@'localhost' IDENTIFIED BY 'OhiOn330!';
+GRANT ALL PRIVILEGES ON *.* TO 'autotec1_root'@'localhost';
 
 /* Tästä asti FactCometin phpMyAdmin paneelissa */
 SET default_storage_engine=INNODB;
@@ -269,7 +269,6 @@ INSERT INTO User(Id, GroupId, Role, FirstName, LastName, Email, Username, Passwo
 
 
 /* Merkit ja mallit */
-/*
 INSERT INTO Make(Name) VALUES('SEAT');
 INSERT INTO Make(Name) VALUES('Skoda');
 INSERT INTO Make(Name) VALUES('Volkswagen');
@@ -348,4 +347,3 @@ INSERT INTO Question(Date, UserId, Make, Model, RegistrationYear, RegistrationNu
   VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa pahasti', 'Ohjaus ravistaa kiihdytyksessä.');
 
 INSERT INTO Answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
-*/

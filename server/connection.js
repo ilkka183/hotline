@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const config = require('config');
 
 class Connection {
   constructor(user, password, database) {
@@ -57,7 +58,10 @@ class Connection {
 
 class LocalConnection extends Connection {
   constructor() {
-    super('autotech_root', 'OhiOn330!', 'autotech_hotline1');
+    super(
+      config.get('db.user'),
+      config.get('db.password'),
+      config.get('db.database'));
   }
 }
 

@@ -1,0 +1,6 @@
+{
+  "db": {
+    "password": "hotline_databasePassword"
+  },
+  "jwtPrivateKey": "hotline_jwtPrivateKey"
+}
