@@ -1,6 +1,13 @@
 {
+  "jwtPrivateKey": "hotline_jwtPrivateKey",
   "db": {
     "password": "hotline_databasePassword"
   },
-  "jwtPrivateKey": "hotline_jwtPrivateKey"
+  "bovsoft": {
+    "id": "bovsoft_id",
+    "seccode": "bovsoft_seccode"
+  },
+  "regcheck": {
+    "username": "regcheck_username"
+  }
 }

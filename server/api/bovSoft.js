@@ -1,4 +1,5 @@
 const axios = require('axios');
+const config = require('config');
 const utils = require('./utils');
 
 async function parse(registrationNumber, response) {
@@ -45,8 +46,8 @@ async function parse(registrationNumber, response) {
 }
 
 async function getApi(registrationNumber) {
-  const id = 55;
-  const seccode = '43fc50aaeef3dfc95caebb365b974d55';
+  const id = config.get('bovsoft.id');
+  const seccode = config.get('bovsoft.seccode');
   
   const url =
     'http://webservice.bovsoft.com:150/bovsoft.regnum.run' +

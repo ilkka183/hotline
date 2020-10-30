@@ -1,4 +1,5 @@
 const axios = require('axios');
+const config = require('config');
 const utils = require('./utils');
 
 async function parse(registrationNumber, response) {
@@ -37,7 +38,7 @@ async function parse(registrationNumber, response) {
 }
 
 async function getApi(registrationNumber) {
-  const username = 'Ilkka183';
+  const username = config.get('regcheck.username');
 
   const url =
     'https://www.regcheck.org.uk/api/reg.asmx/CheckFinland' +
