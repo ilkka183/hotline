@@ -1,0 +1,512 @@
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  label: 'right meow!',
+  timestamp: '2020-10-31T08:18:12.352Z'
+}
+{
+  level: 'error',
+  message: 'Cound not get the users Cound not get the users',
+  stack: 'Error: Cound not get the users\n' +
+    '    at D:\\JC\\React\\hotline\\server\\routes\\user.js:20:60\n' +
+    '    at D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:13\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:137:13)\n' +
+    '    at Route.dispatch (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:281:22\n' +
+    '    at Function.process_params (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:335:12)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:275:10)\n' +
+    '    at Function.handle (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:174:3)',
+  label: 'right meow!',
+  timestamp: '2020-10-31T08:21:34.123Z'
+}
+{
+  level: 'error',
+  message: 'Could not get the users. Could not get the users.',
+  stack: 'Error: Could not get the users.\n' +
+    '    at D:\\JC\\React\\hotline\\server\\routes\\user.js:20:60\n' +
+    '    at D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:13\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:137:13)\n' +
+    '    at Route.dispatch (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:281:22\n' +
+    '    at Function.process_params (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:335:12)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:275:10)\n' +
+    '    at Function.handle (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:174:3)',
+  label: 'right meow!',
+  timestamp: '2020-10-31T08:22:58.542Z'
+}
+{
+  level: 'error',
+  message: 'Could not get the users. Could not get the users.',
+  stack: 'Error: Could not get the users.\n' +
+    '    at D:\\JC\\React\\hotline\\server\\routes\\user.js:20:60\n' +
+    '    at D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:13\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:137:13)\n' +
+    '    at Route.dispatch (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:281:22\n' +
+    '    at Function.process_params (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:335:12)\n' +
+    '    at next (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:275:10)\n' +
+    '    at Function.handle (D:\\JC\\React\\hotline\\server\\node_modules\\express\\lib\\router\\index.js:174:3)',
+  timestamp: '2020-10-31T08:24:45.039Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T08:50:07.384Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T08:50:44.680Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T08:52:31.245Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:16:41.071Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:16:43.426Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:17:26.983Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:19:00.299Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:20:15.908Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:20:42.255Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:21:31.548Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:23:33.418Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:24:07.681Z'
+}
+{
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlMessage: "Unknown column 'user.Ids' in 'field list'",
+  sqlState: '42S22',
+  index: 0,
+  sql: 'SELECT user.Ids, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled FROM user, usergroup WHERE user.GroupId = usergroup.Id LIMIT 0, 10',
+  level: 'error',
+  message: "ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list' ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'",
+  stack: "Error: ER_BAD_FIELD_ERROR: Unknown column 'user.Ids' in 'field list'\n" +
+    '    at Query.Sequence._packetToError (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:47:14)\n' +
+    '    at Query.ErrorPacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:77:18)\n' +
+    '    at Protocol._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n' +
+    '    at Parser._parsePacket (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n' +
+    '    at Parser.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n' +
+    '    at Protocol.write (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:91:28)\n' +
+    '    at Socket.<anonymous> (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:525:10)\n' +
+    '    at Socket.emit (events.js:210:5)\n' +
+    '    at addChunk (_stream_readable.js:308:12)\n' +
+    '    --------------------\n' +
+    '    at Protocol._enqueue (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\protocol\\Protocol.js:144:48)\n' +
+    '    at Connection.query (D:\\JC\\React\\hotline\\server\\node_modules\\mysql\\lib\\Connection.js:201:25)\n' +
+    '    at D:\\JC\\React\\hotline\\server\\connection.js:20:23\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at LocalConnection.query (D:\\JC\\React\\hotline\\server\\connection.js:19:21)\n' +
+    '    at Object.getRows (D:\\JC\\React\\hotline\\server\\routes\\methods.js:133:48)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:93:5)\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\routes\\user.js:20:54\n' +
+    '    at async D:\\JC\\React\\hotline\\server\\middleware\\async.js:4:7',
+  timestamp: '2020-10-31T09:25:40.777Z'
+}
+{
+  level: 'error',
+  message: 'Something failed Something failed',
+  stack: 'Error: Something failed\n' +
+    '    at Object.<anonymous> (D:\\JC\\React\\hotline\\server\\index.js:31:7)\n' +
+    '    at Module._compile (internal/modules/cjs/loader.js:956:30)\n' +
+    '    at Object.Module._extensions..js (internal/modules/cjs/loader.js:973:10)\n' +
+    '    at Module.load (internal/modules/cjs/loader.js:812:32)\n' +
+    '    at Function.Module._load (internal/modules/cjs/loader.js:724:14)\n' +
+    '    at Function.Module.runMain (internal/modules/cjs/loader.js:1025:10)\n' +
+    '    at internal/main/run_main_module.js:17:11',
+  timestamp: '2020-10-31T09:44:48.075Z'
+}

@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('./methods');
+const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();
 
@@ -13,6 +14,6 @@ const sql =
   'AND usergroup.Id = user.GroupId ' +
   'ORDER BY usersession.Id DESC';
 
-router.get('', async (req, res) => { await http.getRows(req, res, sql) });
+router.get('', asyncMiddleware(async (req, res) => { await http.getRows(req, res, sql) }));
 
 module.exports = router;

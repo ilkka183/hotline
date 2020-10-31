@@ -3,6 +3,7 @@ const http = require('./methods');
 const connection = require('../connection');
 const auth = require('../middleware/auth');
 const power = require('../middleware/power');
+const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();
 
@@ -17,12 +18,12 @@ const sql =
   'WHERE question.UserId = user.Id ' +
   'AND question.Id = ';
 
-router.get('', async (req, res) => { await getQuestions(req, res) });
-router.get('/open/:Id', async (req, res) => { await http.getRow(req, res, sql + req.params.Id) });
-router.get('/:Id', async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) });
-router.post('', [auth], async (req, res) => { await http.postRow(req, res, table) });
-router.put('/:Id', [auth], async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) });
-router.delete('/:Id', [auth, power], async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) });
+router.get('', asyncMiddleware(async (req, res) => { await getQuestions(req, res) }));
+router.get('/open/:Id', asyncMiddleware(async (req, res) => { await http.getRow(req, res, sql + req.params.Id) }));
+router.get('/:Id', asyncMiddleware(async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) }));
+router.post('', [auth], asyncMiddleware(async (req, res) => { await http.postRow(req, res, table) }));
+router.put('/:Id', [auth], asyncMiddleware(async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) }));
+router.delete('/:Id', [auth, power], asyncMiddleware(async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) }));
 
 function getFilter(req, counter) {
   let sql = '';
@@ -81,25 +82,19 @@ async function getQuestions(req, res) {
 
   console.log(http.trim(sql));
 
-  try {
-    const { results: count } = await connection.query(countSql);
-    const { results: rows } = await connection.query(sql);
-    const { results: answers } = await connection.query(answerSql);
+  const { results: count } = await connection.query(countSql);
+  const { results: rows } = await connection.query(sql);
+  const { results: answers } = await connection.query(answerSql);
 
-    for (const row of rows)
-      row.Answers = answers.filter(answer => answer.QuestionId === row.Id).reverse();
+  for (const row of rows)
+    row.Answers = answers.filter(answer => answer.QuestionId === row.Id).reverse();
 
-    const response = {
-      rowCount: count[0].Count,
-      rows
-    }
-
-    res.send(response);
+  const response = {
+    rowCount: count[0].Count,
+    rows
   }
-  catch (ex) {
-    console.log(error);        
-    res.status(500).send(error);
-  }
+
+  res.send(response);
 }
 
 module.exports = router;

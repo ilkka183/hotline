@@ -64,104 +64,92 @@ function getCountSql(req, sql) {
 async function getRow(req, res, sql) {
   console.log(trim(sql));
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    if (results.length === 0)
-      return sendNotFound(res);
+  if (results.length === 0)
+    return sendNotFound(res);
 
-    res.send(results[0]);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
+  res.send(results[0]);
 }
 
 async function getRows(req, res, sql) {
-  try {
-    const pageIndex = req.query.pageIndex;
-    const pageSize = req.query.pageSize;
+  const pageIndex = req.query.pageIndex;
+  const pageSize = req.query.pageSize;
 
-    const countSql = pageSize ? getCountSql(req, sql) : null;
+  const countSql = pageSize ? getCountSql(req, sql) : null;
 
 /*    const filterSql = getFilter(req);
 
-    if (filterSql) {
-      const whereIndex = sql.indexOf('WHERE');
+  if (filterSql) {
+    const whereIndex = sql.indexOf('WHERE');
 
-      if (whereIndex !== -1)
-        sql += " AND ";
-      else
-        sql += " WHERE ";
+    if (whereIndex !== -1)
+      sql += " AND ";
+    else
+      sql += " WHERE ";
 
-      sql += filterSql;
-    } */
+    sql += filterSql;
+  } */
 
-    const sortFields = req.query.sortFields;
+  const sortFields = req.query.sortFields;
 
-    if (sortFields) {
-      sql += ' ORDER BY';
+  if (sortFields) {
+    sql += ' ORDER BY';
 
-      const count = parseInt(sortFields);
+    const count = parseInt(sortFields);
 
-      for (let i = 1; i <= count; i++) {
-        if (i > 1)
-          sql += ',';
+    for (let i = 1; i <= count; i++) {
+      if (i > 1)
+        sql += ',';
 
+      sql += ' ';
+
+      const sortName = req.query['sortName' + i];
+      const sortOrder = req.query['sortOrder' + i];
+
+      sql += sortName;
+
+      if (sortOrder) {
         sql += ' ';
-
-        const sortName = req.query['sortName' + i];
-        const sortOrder = req.query['sortOrder' + i];
-  
-        sql += sortName;
-  
-        if (sortOrder) {
-          sql += ' ';
-          sql += sortOrder.toUpperCase();
-        }
+        sql += sortOrder.toUpperCase();
       }
-    }
-
-    if (pageSize) {
-      sql += ' LIMIT ';
-
-      if (pageIndex) {
-        const offset = pageIndex*pageSize;
-        sql += offset + ', ';
-      }
-
-      sql += pageSize;
-
-      console.log(countSql);
-      console.log(trim(sql));
-
-      const { results: count } = await connection.query(countSql);
-      const { results: rows } = await connection.query(sql);
-
-      const response = {
-        rowCount: count[0].Count,
-        rows
-      }
-
-      res.send(response);
-    }
-    else {
-      console.log(trim(sql));
-
-      const { results: rows } = await connection.query(sql);
-
-      const response = {
-        rowCount: rows.length,
-        rows
-      }
-
-      res.send(response);
     }
   }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
+
+  if (pageSize) {
+    sql += ' LIMIT ';
+
+    if (pageIndex) {
+      const offset = pageIndex*pageSize;
+      sql += offset + ', ';
+    }
+
+    sql += pageSize;
+
+    console.log(countSql);
+    console.log(trim(sql));
+
+    const { results: count } = await connection.query(countSql);
+    const { results: rows } = await connection.query(sql);
+
+    const response = {
+      rowCount: count[0].Count,
+      rows
+    }
+
+    res.send(response);
+  }
+  else {
+    console.log(trim(sql));
+
+    const { results: rows } = await connection.query(sql);
+
+    const response = {
+      rowCount: rows.length,
+      rows
+    }
+
+    res.send(response);
   }
 }
 
@@ -202,20 +190,14 @@ async function postRow(req, res, tableName) {
   console.log(sql);
   console.log(inserts);
 
-  try {
-    const { results, fields } = await connection.queryValues(sql, inserts);
+  const { results, fields } = await connection.queryValues(sql, inserts);
 
-    const response = {
-      Id: results.insertId,
-      ...fields
-    }
+  const response = {
+    Id: results.insertId,
+    ...fields
+  }
 
-    res.status(201).send(response);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
+  res.status(201).send(response);
 }
 
 async function putRow(req, res, tableName, keys) {
@@ -253,20 +235,14 @@ async function putRow(req, res, tableName, keys) {
   console.log(sql);
   console.log(inserts);
 
-  try {
-    const { results, fields } = await connection.queryValues(sql, inserts);
+  const { results, fields } = await connection.queryValues(sql, inserts);
 
-    if (results.affectedRows === 0)
-      return sendNotFound(res);
+  if (results.affectedRows === 0)
+    return sendNotFound(res);
 
-    const response = { ...fields }
+  const response = { ...fields }
 
-    res.send(response);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
+  res.send(response);
 }
 
 async function deleteRow(req, res, tableName, keys) {
@@ -291,18 +267,12 @@ async function deleteRow(req, res, tableName, keys) {
   console.log(sql);
   console.log(inserts);
 
-  try {
-    const { results } = await connection.queryValues(sql, inserts);
+  const { results } = await connection.queryValues(sql, inserts);
 
-    if (results.affectedRows === 0)
-      return sendNotFound(res);
+  if (results.affectedRows === 0)
+    return sendNotFound(res);
 
-    res.send('Success');
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
+  res.send('Success');
 }
 
 

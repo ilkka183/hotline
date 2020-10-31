@@ -13,6 +13,7 @@ import ModelsTable from './views/Models/ModelsTable';
 import UserGroupsTable from './views/UserGroups/UserGroupsTable';
 import UsersTable from './views/Users/UsersTable';
 import UserSessionsTable from './views/UserSessions/UserSessionsTable';
+import SystemLogTable from './views/SystemLog/SystemLogTable';
 
 import Question from './views/Questions/Question';
 import OpenQuestions from './views/Questions/OpenQuestions';
@@ -53,6 +54,7 @@ export default class App extends React.Component<{}, State> {
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/usersessions" component={UserSessionsTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/systemlog" component={SystemLogTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/about" component={About} />

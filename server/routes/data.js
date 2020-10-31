@@ -1,31 +1,26 @@
 const express = require('express');
 const connection = require('../connection');
+const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();
 
 
-router.get('/makes', async (req, res) => {
+router.get('/makes', asyncMiddleware(async (req, res) => {
   const sql =
     'SELECT DISTINCT make.Name FROM model, make ' +
     'WHERE model.MakeId = make.Id ' +
     'ORDER BY make.Name';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const list = results.map(item => item.Name);
-    console.log(list);
+  const list = results.map(item => item.Name);
+  console.log(list);
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
-router.get('/modelYears', async (req, res) => {
+router.get('/modelYears', asyncMiddleware(async (req, res) => {
   const make = req.query.make;
 
   const sql =
@@ -33,29 +28,23 @@ router.get('/modelYears', async (req, res) => {
     'WHERE model.MakeId = make.Id ' +
     'AND make.Name = "' + make + '"';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const date = new Date();
-    const endYear = date.getFullYear();
+  const date = new Date();
+  const endYear = date.getFullYear();
 
-    const result = results[0];
+  const result = results[0];
 
-    const list = [];
+  const list = [];
 
-    for (let year = endYear; year >= result.StartYear; year--)
-      list.push(year);
+  for (let year = endYear; year >= result.StartYear; year--)
+    list.push(year);
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
-router.get('/fuelTypes', async (req, res) => {
+router.get('/fuelTypes', asyncMiddleware(async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
 
@@ -67,21 +56,15 @@ router.get('/fuelTypes', async (req, res) => {
     'AND (model.EndYear >= ' + modelYear + ' OR model.EndYear IS NULL) ' +
     'ORDER BY model.FuelType';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const list = results.map(item => item.FuelType);
+  const list = results.map(item => item.FuelType);
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
-router.get('/models', async (req, res) => {
+router.get('/models', asyncMiddleware(async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -95,21 +78,15 @@ router.get('/models', async (req, res) => {
     'AND model.FuelType = ' + fuelType + ' ' +
     'ORDER BY model.Name';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const list = results.map(item => item.Name);
+  const list = results.map(item => item.Name);
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
-router.get('/engineSizes', async (req, res) => {
+router.get('/engineSizes', asyncMiddleware(async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -125,21 +102,15 @@ router.get('/engineSizes', async (req, res) => {
     'AND model.Name = "' + model + '" ' +
     'ORDER BY model.EngineSize';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const list = results.map(item => item.EngineSize);
+  const list = results.map(item => item.EngineSize);
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
-router.get('/engineTypes', async (req, res) => {
+router.get('/engineTypes', asyncMiddleware(async (req, res) => {
   const make = req.query.make;
   const modelYear = req.query.modelYear;
   const fuelType = req.query.fuelType;
@@ -157,18 +128,12 @@ router.get('/engineTypes', async (req, res) => {
     'AND model.EngineSize = ' + engineSize + ' ' +
     'ORDER BY model.EnginePower, model.EngineCode';
 
-  try {
-    const { results } = await connection.query(sql);
+  const { results } = await connection.query(sql);
 
-    const list = results.map(item => ({ power: item.EnginePower, code: item.EngineCode }));
+  const list = results.map(item => ({ power: item.EnginePower, code: item.EngineCode }));
 
-    res.send(list);
-  }
-  catch (ex) {
-    console.error(ex);
-    res.status(500).send(ex);
-  }
-});
+  res.send(list);
+}));
 
 
 module.exports = router;

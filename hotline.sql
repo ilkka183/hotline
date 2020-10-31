@@ -105,8 +105,8 @@ CREATE TABLE User
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   GroupId BIGINT UNSIGNED  NOT NULL,
   Role SMALLINT UNSIGNED NOT NULL, /* 0=administrator, 1=powerUser, 2=user, 3=demoUser */
-  Email VARCHAR(80) NOT NULL /* UNIQUE */,
-  Username VARCHAR(20) NOT NULL UNIQUE,
+  Email VARCHAR(80) NOT NULL,
+  Username VARCHAR(80) NOT NULL UNIQUE,
   Password VARCHAR(20) NOT NULL,
   FirstName VARCHAR(50) NOT NULL,
   LastName VARCHAR(50) NOT NULL,
@@ -238,6 +238,8 @@ CREATE TABLE Question
   FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
+CREATE UNIQUE INDEX QuestionIndex ON Question(Id);
+
 
 CREATE TABLE Answer
 (
@@ -252,6 +254,22 @@ CREATE TABLE Answer
   FOREIGN KEY (QuestionId) REFERENCES Question(Id),
   FOREIGN KEY (UserId) REFERENCES User(Id)
 );
+
+CREATE UNIQUE INDEX AnswerIndex ON Answer(Id);
+
+
+CREATE TABLE SystemLog
+(
+  Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+  Level VARCHAR(16) NOT NULL,
+  Message VARCHAR(512) NOT NULL,
+  Timestamp DATETIME NOT NULL,
+  Stack TEXT,
+  Data JSON,
+  PRIMARY KEY (Id)
+);
+
+CREATE UNIQUE INDEX SystemLogIndex ON SystemLog(Id);
 
 
 /* Käyttäjät */
