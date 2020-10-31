@@ -1,6 +1,5 @@
 const { createLogger, format, transports } = require('winston');
 const Transport = require('winston-transport');
-const { combine, timestamp, label, prettyPrint } = format;
 
 const connection = require('../connection');
 
@@ -36,9 +35,9 @@ class DatabaseTransport extends Transport {
 
 
 const logger = createLogger({
-  format: combine(
-    timestamp(),
-    prettyPrint()
+  format: format.combine(
+    format.timestamp(),
+    format.prettyPrint()
   ),  
   transports: [
     new transports.Console(),
