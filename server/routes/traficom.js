@@ -2,6 +2,7 @@ const express = require('express');
 const bovSoft = require('../api/bovSoft');
 const regCheck = require('../api/regCheck');
 const test = require('../api/test');
+const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();
 
@@ -16,13 +17,9 @@ async function getVehicle(registrationNumber, source) {
   return test.getTest(registrationNumber);
 }
 
-router.get('/:registrationNumber', async (req, res) => {
-  try {
-    const vehicle = await getVehicle(req.params.registrationNumber, req.query.source);
-    return res.send(vehicle);
-  } catch (error) {
-    res.status(404).send(error);
-  }
-});
+router.get('/:registrationNumber', asyncMiddleware(async (req, res) => {
+  const vehicle = await getVehicle(req.params.registrationNumber, req.query.source);
+  res.send(vehicle);
+}));
 
 module.exports = router;

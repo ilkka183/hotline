@@ -1,6 +1,6 @@
-@endPoint = http://localhost:4000/hotline/api/auth
-@endPoint2 = http://autotechsystems.fi/hotline/api/auth
-@endPoint3= http://suorita.com/hotline/api/auth
+@host1 = http://localhost:4000
+@host = http://autotechsystems.fi
+@endPoint = {{host}}/hotline/api/auth
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJpbGtrYTE4MyIsImZpcnN0TmFtZSI6Iklsa2thIiwibGFzdE5hbWUiOiJTYWxtZW5pdXMiLCJlbWFpbCI6Imlsa2thLnNhbG1lbml1c0Bpa2kuZmkiLCJwaG9uZSI6bnVsbCwicm9sZSI6MCwiaWF0IjoxNjAzOTczNjI2fQ.5HcT19zUgw2pzdzW2gMQyZulpAHF0v55vtqBLF0TpD4
 
 GET {{endPoint}}/test

@@ -11,8 +11,8 @@ class Connection {
     });
   }
 
-  connect() {
-    this.connection.connect();
+  connect(callback) {
+    this.connection.connect(callback);
   }
 
   query(sql) {

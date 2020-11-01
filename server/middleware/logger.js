@@ -10,7 +10,7 @@ class DatabaseTransport extends Transport {
   }
 
   async insert(info) {
-    let sql = 'INSERT INTO SystemLog (Level, Message, Timestamp, Stack) VALUES (?, ?, ?, ?)';
+    let sql = 'INSERT INTO systemlog (Level, Message, Timestamp, Stack) VALUES (?, ?, ?, ?)';
 
     const values = [
       info.level,

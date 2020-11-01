@@ -1,25 +1,31 @@
-@endPoint = http://autotechsystems.fi/hotline/api/UserGroups
+@host = http://localhost:4000
+@host2 = http://autotechsystems.fi
+@endPoint = {{host}}/hotline/api/usergroups
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJpbGtrYTE4MyIsImZpcnN0TmFtZSI6Iklsa2thIiwibGFzdE5hbWUiOiJTYWxtZW5pdXMiLCJlbWFpbCI6Imlsa2thLnNhbG1lbml1c0Bpa2kuZmkiLCJwaG9uZSI6bnVsbCwicm9sZSI6MCwiaWF0IjoxNjAzOTczNjI2fQ.5HcT19zUgw2pzdzW2gMQyZulpAHF0v55vtqBLF0TpD4
 
 GET {{endPoint}}
 ###
-GET {{host}}/hotline/api/UserGroup/1
+GET {{endPoint}}/1
 ###
-POST {{host}}/hotline/api/UserGroup
+POST {{endPoint}}
+x-auth-token: {{token}}
 content-type: application/json
 
 {
-    "name": "K-Kaara Oys ja",
+    "name": "K-Kaara Oy",
     "phone": "050 61698",
     "email": "ilkka.salmenius@gmail.com",
     "enabled": true
 }
 ###
-PUT {{host}}/hotline/api/UserGroup/1
+PUT {{endPoint}}/5
+x-auth-token: {{token}}
 content-type: application/json
 
 {
-    "country": "Sweden",
-    "enabled": true
+    "postOffice": "Lahti",
+    "enabled": false
 }
 ###
-DELETE {{host}}/hotline/api/UserGroup/4
+DELETE {{endPoint}}/5
+x-auth-token: {{token}}

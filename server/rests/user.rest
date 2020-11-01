@@ -1,23 +1,29 @@
-@endPoint = http://autotechsystems.fi/hotline/api/Users
+@host = http://localhost:4000
+@host2 = http://autotechsystems.fi
+@endPoint = {{host}}/hotline/api/users
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJpbGtrYTE4MyIsImZpcnN0TmFtZSI6Iklsa2thIiwibGFzdE5hbWUiOiJTYWxtZW5pdXMiLCJlbWFpbCI6Imlsa2thLnNhbG1lbml1c0Bpa2kuZmkiLCJwaG9uZSI6bnVsbCwicm9sZSI6MCwiaWF0IjoxNjAzOTczNjI2fQ.5HcT19zUgw2pzdzW2gMQyZulpAHF0v55vtqBLF0TpD4
 
 GET {{endPoint}}
 ###
 GET {{endPoint}}/5
 ###
 POST {{endPoint}}
+x-auth-token: {{token}}
 content-type: application/json
 
 {
     "groupId": 2,
     "role": 1,
-    "firstName": "Matti",
-    "lastName": "Meikäläinen",
-    "email": "matti.maikalainen@gmail.com",
+    "email": "maija.maikalainen@gmail.com",
+    "username": "maija",
     "password": "huuhaa",
+    "firstName": "Maija",
+    "lastName": "Meikäläinen",
     "enabled": true
 }
 ###
-PUT {{endPoint}}/5
+PUT {{endPoint}}/9
+x-auth-token: {{token}}
 content-type: application/json
 
 {
@@ -25,4 +31,5 @@ content-type: application/json
     "enabled": false
 }
 ###
-DELETE {{endPoint}}/18
+DELETE {{endPoint}}/7
+x-auth-token: {{token}}
