@@ -26,6 +26,10 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     return this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
 
+  public addConverted(): Field {
+    return this.addField('Converted', 'Konvertoitu', 'boolean', { required: true, getDefaultValue: () => false });
+  }
+
   public addTimestamps(by: boolean = false) {
     this.addField('CreatedAt', 'Luotu', 'datetime', { required: true, readonly: true });
 

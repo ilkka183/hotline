@@ -37,6 +37,7 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('SolutionFile',       'Liite',                'tex',      { readonly: true });
     this.addField('SolutionDate',       'Pvm',                  'datetime', { readonly: true, visible: this.isPowerOrAdmin });
     this.addField('Status',             'Tila',                 'number',   { required: true, getDefaultValue: () => 0, enums: STATUS_TEXTS });
+    this.addConverted();
 
     this.state.data = this.getEmptyData();
   }

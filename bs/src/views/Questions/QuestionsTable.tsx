@@ -26,6 +26,7 @@ export default class QuestionsTable extends BaseTable<Props> {
 //    this.addField('Title',       'Otsikko',              'text',     { search: true, link: item => '/question/' + item.Id });
     this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { search: true, render: this.renderDescription });
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
+    this.addConverted();
   }
 
   protected getPageSize(): number {

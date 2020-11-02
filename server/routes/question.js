@@ -1,6 +1,6 @@
 const express = require('express');
 const http = require('./methods');
-const connection = require('../connection');
+const connection = require('../localConnection');
 const auth = require('../middleware/auth');
 const power = require('../middleware/power');
 const asyncMiddleware = require('../middleware/async');
@@ -57,7 +57,7 @@ async function getQuestions(req, res) {
   let sql = 
     'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
     'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
-    'question.Title, question.Description, question.Solution, question.Status ' +
+    'question.Title, question.Description, question.Solution, question.Status, question.Converted ' +
     'FROM question, user ' +
     'WHERE question.UserId = user.Id ';
 

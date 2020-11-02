@@ -15,11 +15,11 @@ export default class LoginForm extends FieldsForm<Props> {
   }
 
   public getTitle(): string {
-    return 'Kirjaudu';
+    return 'Kirjautuminen';
   }
 
   protected getSubmitButtonText(): string | undefined {
-    return 'Kirjaudu';
+    return 'Kirjaudu sisään';
   }
 
   protected getAsRow(): boolean {

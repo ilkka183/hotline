@@ -1,4 +1,4 @@
-const connection = require('../connection');
+const connection = require('../localConnection');
 
 function sendNotFound(res) {
   return res.status(404).send('Item not found');

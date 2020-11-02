@@ -54,6 +54,7 @@ function insertQuestions(destination, henkilot, questions) {
       Make: item.HQ_MERKKI,
       Model: item.HQ_MALLI,
       ModelYear: int(item.HQ_VUOSIMALLI),
+      EngineCode: item.HQ_MTYYPPI,
       RegistrationNumber: text(item.HQ_REKNRO),
       VIN: text(item.HQ_ALNRO),
       MID: text(item.HQ_MID),

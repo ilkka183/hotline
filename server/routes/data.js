@@ -1,5 +1,5 @@
 const express = require('express');
-const connection = require('../connection');
+const connection = require('../localConnection');
 const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();

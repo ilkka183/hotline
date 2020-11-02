@@ -82,4 +82,8 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   protected addEnabled(): Field {
     return this.addField('Enabled', 'Voimassa', 'boolean', { required: true, getDefaultValue: () => true });
   }
+
+  protected addConverted(): Field {
+    return this.addField('Converted', 'Konvertoitu', 'boolean', { required: true, visible: this.isPowerOrAdmin, getDefaultValue: () => false });
+  }
 }

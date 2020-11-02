@@ -1,4 +1,5 @@
 const ADODB = require('node-adodb');
+const Connection = require('../server/connection');
 
 const insertMerkit = require('./tables/merkki');
 const insertMallit = require('./tables/malli');
@@ -9,7 +10,7 @@ const insertAnswers = require('./tables/answer');
 
 const source = ADODB.open('Provider=Microsoft.Jet.OLEDB.4.0;Data Source=hotline.mdb;');
 
-const destination = require('../server/connection');
+const destination = new Connection('autotec1_root', 'OhiOn330!','autotec1_hotline1');
 destination.connect();
 
 

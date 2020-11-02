@@ -27,6 +27,7 @@ export default class UsersTable extends BaseTable<Props> {
     this.addField('LicenseBegin', 'Lisenssi alku',    'date');
     this.addField('LicenseEnd',   'Lisenssi loppu',   'date');
     this.addEnabled();
+    this.addConverted();
   }
 
   protected getTitle(): string {

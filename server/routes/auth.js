@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const connection = require('../connection');
+const connection = require('../localConnection');
 const auth = require('../middleware/auth');
 const asyncMiddleware = require('../middleware/async');
 

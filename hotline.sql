@@ -91,6 +91,7 @@ CREATE TABLE usergroup
   Class VARCHAR(255),
   ChangeBy VARCHAR(10),
   Data JSON,
+  Converted BOOLEAN NOT NULL DEFAULT FALSE,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   CreatedBy BIGINT UNSIGNED,
@@ -130,6 +131,7 @@ CREATE TABLE user
   MaxOpenQuestionCount INTEGER NOT NULL DEFAULT 2,
   Class VARCHAR(255),
   Data JSON,
+  Converted BOOLEAN NOT NULL DEFAULT FALSE,
   Enabled BOOLEAN NOT NULL DEFAULT TRUE,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   CreatedBy BIGINT UNSIGNED,
@@ -203,7 +205,7 @@ CREATE TABLE question
 (
   Id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
   UserId BIGINT UNSIGNED NOT NULL,
-  Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP /* ON UPDATE CURRENT_TIMESTAMP */,
   Make VARCHAR(80) NOT NULL,
   Model VARCHAR(80) NOT NULL,
   ModelYear SMALLINT UNSIGNED,
@@ -215,7 +217,7 @@ CREATE TABLE question
   CylinderCount SMALLINT UNSIGNED,
   EngineSize SMALLINT UNSIGNED,
   EnginePower SMALLINT UNSIGNED,
-  EngineCode VARCHAR(10),
+  EngineCode VARCHAR(50),
   MID VARCHAR(10),
   VIN VARCHAR(20),
   TypeNumber INTEGER UNSIGNED,
@@ -230,6 +232,7 @@ CREATE TABLE question
   SolutionDate DATETIME,
   Status SMALLINT UNSIGNED NOT NULL DEFAULT 0, /* 0=open, 1=solved, 2=unsolved */
   Data JSON,
+  Converted BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (Id),
   FOREIGN KEY (UserId) REFERENCES user(Id)
 );
@@ -277,6 +280,7 @@ INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Passwo
 
 
 /* Merkit ja mallit */
+/*
 INSERT INTO make(Name) VALUES('SEAT');
 INSERT INTO make(Name) VALUES('Skoda');
 INSERT INTO make(Name) VALUES('Volkswagen');
@@ -355,3 +359,4 @@ INSERT INTO question(Date, UserId, Make, Model, RegistrationYear, RegistrationNu
   VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa pahasti', 'Ohjaus ravistaa kiihdytyksessä.');
 
 INSERT INTO answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
+*/

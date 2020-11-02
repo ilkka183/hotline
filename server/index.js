@@ -7,7 +7,7 @@ require('./startup/logging')();
 require('./startup/config')();
 require('./startup/routes')(app);
 
-const connection = require('./connection');
+const connection = require('./localConnection');
 
 connection.connect(err => {
   if (err) {

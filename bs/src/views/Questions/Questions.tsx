@@ -4,7 +4,7 @@ import QuestionsTable from './QuestionsTable';
 import UserComponent from '../UserComponent';
 import { QuestionStatus } from './Question';
 
-export const TESTING = true;
+export const TESTING = false;
 
 function parseQuery(queryString: string) {
   var query: any = {};

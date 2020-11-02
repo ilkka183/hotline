@@ -1,7 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 const Transport = require('winston-transport');
 
-const connection = require('../connection');
+const connection = require('../localConnection');
 
 
 class DatabaseTransport extends Transport {

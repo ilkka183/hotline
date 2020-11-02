@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-const config = require('config');
 
 class Connection {
   constructor(user, password, database) {
@@ -55,16 +54,4 @@ class Connection {
   }
 }
 
-
-class LocalConnection extends Connection {
-  constructor() {
-    super(
-      config.get('db.user'),
-      config.get('db.password'),
-      config.get('db.database'));
-  }
-}
-
-const connection = new LocalConnection;
-
-module.exports = connection;
+module.exports = Connection;

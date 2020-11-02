@@ -35,6 +35,7 @@ export default class UserForm extends BaseForm<Props> {
     this.addField('LastLogout',           'Viimeinen uloskirjautuminen',    'datetime', { readonly: true });
     this.addTimestamps(true);
     this.addEnabled();
+    this.addConverted();
 
     this.state.data = this.getEmptyData();
   }
