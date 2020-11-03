@@ -31,7 +31,7 @@ export default class ProfileForm extends BaseForm<Props> {
   }
 
   protected getApiName(): string {
-    return 'users';
+    return 'user';
   }
 
   protected getInsertTitle(): string {

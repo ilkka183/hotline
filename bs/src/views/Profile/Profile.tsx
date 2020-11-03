@@ -24,7 +24,7 @@ export default class Profile extends UserComponent<{}, State> {
   }
 
   async componentDidMount() {
-    const { data: user } = await http.get('/users/' + this.userId);
+    const { data: user } = await http.get('/user/' + this.userId);
 
     this.setState({ user });
   }
@@ -38,7 +38,7 @@ export default class Profile extends UserComponent<{}, State> {
   }
 
   private readonly handleSubmit = async () => {
-    const { data: user } = await http.get('/users/' + this.userId);
+    const { data: user } = await http.get('/user/' + this.userId);
 
     this.setState({ user, showModal: false });
   }

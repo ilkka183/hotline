@@ -38,7 +38,7 @@ export default class QuestionsTable extends BaseTable<Props> {
   }
 
   public getApiName(): string {
-    return 'questions';
+    return 'question';
   }
 
   public getModalForm(): any {

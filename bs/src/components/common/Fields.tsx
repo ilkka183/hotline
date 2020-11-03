@@ -222,6 +222,7 @@ export class Field {
 
     switch (this.type) {
       case 'boolean': return this.formatBoolean(value);
+      case 'password': return '*'.repeat(value.length);
     }
 
     if (formatDateTime)

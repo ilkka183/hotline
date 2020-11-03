@@ -1,0 +1,7 @@
+@point = http://webservice.bovsoft.com:150/bovsoft.regnum.run
+@id = 55
+@seccode = 43fc50aaeef3dfc95caebb365b974d55
+@endpoint = {{point}}?id={{id}}&seccode={{seccode}}
+
+GET {{endpoint}}&nameservice=getktypefornumplatefinland&regnum=ZLP-833&contenttype=JSON
+###

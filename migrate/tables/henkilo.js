@@ -73,7 +73,7 @@ function insertHenkilot(destination, koulut, henkilot) {
       PostOffice: text(item.O_CITY),
       Country: text(item.O_COUNTRY),
       Phone: text(item.O_PHONE),
-      Fax: text(item.O_FAX),
+      Fax: text(item.O_TELEFAX),
       Class: text(item.O_CLASS),
       LicenseBegin: date(item.O_PVM1),
       LicenseEnd: date(item.O_PVM2),

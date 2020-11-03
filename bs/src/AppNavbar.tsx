@@ -33,6 +33,13 @@ const AppNavbar: React.FC<Props> = ({ user }) => {
               <NavItemLink to="/usersessions">Kirjautumiset</NavItemLink>
               <NavItemLink to="/systemlog">Virheloki</NavItemLink>
             </NavDropdown>}
+            {user.isPowerOrAdmin && <NavDropdown title="Taulut" id="basic-nav-dropdown">
+              <NavItemLink to="/table/usergroups">Käyttäjäryhmät</NavItemLink>
+              <NavItemLink to="/table/users">Käyttäjät</NavItemLink>
+              <NavItemLink to="/table/makes">Automerkit</NavItemLink>
+              <NavItemLink to="/table/models">Automallit</NavItemLink>
+              <NavItemLink to="/table/questions">Vikatapaukset</NavItemLink>
+            </NavDropdown>}
             <NavItemLink to="/about">Tietoja</NavItemLink>
           </Nav>
         }

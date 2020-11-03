@@ -9,7 +9,7 @@ const router = express.Router();
 const table = 'make';
 
 const sql = 
-  'SELECT Id, Name, Info, Enabled, CreatedAt, UpdatedAt ' +
+  'SELECT Id, Name, Info, Enabled, InsertedAt, UpdatedAt ' +
   'FROM make ' + 
   'ORDER BY name';
 

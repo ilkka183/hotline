@@ -11,9 +11,9 @@ export default class QuestionForm extends BaseForm<Props> {
 
     this.addId();
     this.addField('Date',               'Pvm',                  'datetime', { required: true, readonly: true, visible: this.isPowerOrAdmin });
-    this.addField('UserId',             'Lähettäjä',            'number',   { required: true, readonly: true, lookupUrl: 'Users', show: row => this.showUser(row) });
+    this.addField('UserId',             'Lähettäjä',            'number',   { required: true, readonly: true, lookupUrl: 'user', show: row => this.showUser(row) });
     this.addField('Make',               'Merkki',               'text',     { required: true });
-    this.addField('Model',              'Malli',                'text',     { required: true });
+    this.addField('Model',              'Malli',                'text');
     this.addField('ModelYear',          'Vuosimalli',           'number');
     this.addField('ModelBeginYear',     'Vuodesta',             'number');
     this.addField('ModelEndYear',       'Vuoteen',              'number');
@@ -26,10 +26,11 @@ export default class QuestionForm extends BaseForm<Props> {
     this.addField('EngineCode',         'Moottorin tunnus',     'text');
     this.addField('MID',                'MID',                  'text');
     this.addField('VIN',                'VIN',                  'text');
-    this.addField('TypeNumber',         'Tyyppinumero',         'number');
+    this.addField('KType',              'KType',                'number');
     this.addField('NetWeight',          'Omamassa (kg)',        'number');
     this.addField('GrossWeight',        'Kokonaismassa (kg)',   'number');
     this.addField('Info',               'Lisätietoja',          'textarea', { rows: 3 });
+    this.addField('Tags',               'Tunnisteet',           'textarea', { rows: 6 });
     this.addField('Title',              'Otsikko',              'text',     { required: true });
     this.addField('Description',        'Kuvaus',               'textarea', { required: true, renderText: text => QuestionForm.renderText(text), rows: 10 });
     this.addField('DescriptionFile',    'Liite',                'tex',      { readonly: true });
@@ -43,7 +44,7 @@ export default class QuestionForm extends BaseForm<Props> {
   }
 
   protected getApiName(): string {
-    return 'questions';
+    return 'question';
   }
 
   protected getInsertTitle(): string {
@@ -63,12 +64,12 @@ export default class QuestionForm extends BaseForm<Props> {
   }
 
   public static renderText(text: string): JSX.Element | null {
-    function addLine() {
+    function addLine(index: number) {
       if (line.length > 0) {
         if (heading)
-          buffer.push(<div className="question-section">{line}</div>);
+          buffer.push(<div className="question-section" key={index}>{line}</div>);
         else
-          buffer.push(<div className="question-text">{line}</div>);
+          buffer.push(<div className="question-text" key={index}>{line}</div>);
       }
     }
 
@@ -76,12 +77,13 @@ export default class QuestionForm extends BaseForm<Props> {
 
     let line = '';
     let heading = false;
+    let index = 0;
 
     for (let i = 0; i< text.length; i++) {
       const c = text[i];
 
       if ((c === '\r') || (c === '\n')) {
-        addLine();
+        addLine(index++);
         line = '';
         heading = false;
       } else {
@@ -90,7 +92,7 @@ export default class QuestionForm extends BaseForm<Props> {
       }
     }
 
-    addLine();
+    addLine(index);
 
     return <div>{buffer}</div>;
   }

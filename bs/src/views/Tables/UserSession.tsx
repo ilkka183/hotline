@@ -1,13 +1,11 @@
 import BaseTable from '../BaseTable';
 import { USER_ROLES } from '../../services/authService';
 
-export const API_USER_SESSIONS = 'usersessions';
+const NAME = 'usersession';
 
-interface Props {
-}
 
-export default class UserSessionsTable extends BaseTable<Props> {
-  constructor(props: Props) {
+export class UserSessionsTable extends BaseTable<{}> {
+  constructor(props: any) {
     super(props);
 
     this.addId();
@@ -26,14 +24,10 @@ export default class UserSessionsTable extends BaseTable<Props> {
   }
 
   protected getApiName(): string {
-    return API_USER_SESSIONS;
+    return NAME;
   }
 
   protected getModalForm(): any {
-    return undefined;
-  }
-
-  protected canUpdateRow(row: any): boolean {
-    return false;
+    return null;
   }
 }

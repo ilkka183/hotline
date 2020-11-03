@@ -1,12 +1,10 @@
 import BaseTable from '../BaseTable';
 
-export const API_SYSTEM_LOGS = 'systemlogs';
+const NAME = 'systemlog';
 
-interface Props {
-}
 
-export default class SystemLogsTable extends BaseTable<Props> {
-  constructor(props: Props) {
+export class SystemLogsTable extends BaseTable<{}> {
+  constructor(props: any) {
     super(props);
 
     this.addId();
@@ -25,14 +23,10 @@ export default class SystemLogsTable extends BaseTable<Props> {
   }
 
   protected getApiName(): string {
-    return API_SYSTEM_LOGS;
+    return NAME;
   }
 
   protected getModalForm(): any {
-    return undefined;
-  }
-
-  protected canUpdateRow(row: any): boolean {
-    return false;
+    return null;
   }
 }

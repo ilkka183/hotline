@@ -34,11 +34,11 @@ export default abstract class BaseForm<P> extends DataForm<P> {
     this.addField('CreatedAt', 'Luotu', 'datetime', { required: true, readonly: true });
 
     if (by)
-      this.addField('CreatedBy', 'Luoja', 'number', { readonly: true, lookupUrl: 'Users' });
+      this.addField('CreatedBy', 'Luoja', 'number', { readonly: true, lookupUrl: 'user' });
 
     this.addField('UpdatedAt', 'Muokattu',  'datetime', { readonly: true });
 
     if (by)
-      this.addField('UpdatedBy', 'Muokkaaja', 'number', { readonly: true, lookupUrl: 'Users' });
+      this.addField('UpdatedBy', 'Muokkaaja', 'number', { readonly: true, lookupUrl: 'user' });
   }
 }

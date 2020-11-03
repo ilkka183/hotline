@@ -11,9 +11,9 @@ const table = 'user';
 
 const sql =
   'SELECT user.Id, user.GroupId, usergroup.Name AS GroupName, user.Role, user.Email, user.Username, user.Password, ' + 
-  'user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.CompanyName, user.Title, ' +
-  'user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Url, ' +
-  'user.Info, user.LicenseBegin, user.LicenseEnd, user.Enabled, user.Converted ' +
+  'user.FirstName, user.LastName, CONCAT(user.FirstName, " ", user.LastName) AS Name, user.Language, user.CompanyName, user.Title, user.BusinessId, ' +
+  'user.Address, user.PostalCode, user.PostOffice, user.Country, user.Phone, user.Fax, user.Url, user.Info, ' +
+  'user.LicenseBegin, user.LicenseEnd, user.LastLogin, user.LastLogout, user.Class, user.Enabled, user.Converted, user.InsertedAt, user.UpdatedAt ' +
   'FROM user, usergroup ' +
   'WHERE user.GroupId = usergroup.Id';
 

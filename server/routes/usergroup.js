@@ -9,9 +9,9 @@ const router = express.Router();
 const table = 'usergroup';
 
 const sql = 
-  'SELECT Id, Tunnus, Name, ContactPerson,' +
-  'Address, PostalCode, PostOffice, Country, Phone, Email, Url, ' +
-  'Logo, Info, Class, LicenseBegin, LicenseEnd, Enabled, Converted ' +
+  'SELECT Id, Tunnus, Name, BusinessId, ContactPerson,' +
+  'Address, PostalCode, PostOffice, Country, Phone, Email, Url, Info, ' +
+  'Logo, LogoText, LogoFile, LicenseBegin, LicenseEnd, Class, Enabled, Converted, InsertedAt, UpdatedAt ' +
   'FROM usergroup';
 
 router.get('', asyncMiddleware(async (req, res) => { await http.getRows(req, res, sql) }));

@@ -13,14 +13,14 @@ export default class AnswerForm extends BaseForm<Props> {
     this.addId();
     this.addField('QuestionId', 'Vikatapaus', 'number',   { required: true, readonly: true, visible: true, getDefaultValue: () => props.parent.Id });
     this.addField('Date',       'Pvm',        'datetime', { required: true, readonly: true });
-    this.addField('UserId',     'Lähettäjä',  'number',   { required: true, readonly: true, lookupUrl: 'Users', getDefaultValue: () => this.user ? this.user.id : null });
+    this.addField('UserId',     'Lähettäjä',  'number',   { required: true, readonly: true, lookupUrl: 'user', getDefaultValue: () => this.user ? this.user.id : null });
     this.addField('Message',    'Viesti',     'textarea', { required: true, rows: 5 });
 
     this.state.data = this.getEmptyData();
   }
 
   protected getApiName(): string {
-    return 'answers';
+    return 'answer';
   }
 
   protected getInsertTitle(): string {

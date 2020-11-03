@@ -8,17 +8,18 @@ import Home from './views/Home';
 import About from './views/About';
 import NotFound from './views/NotFound';
 
-import MakesTable from './views/Makes/MakesTable';
-import ModelsTable from './views/Models/ModelsTable';
-import UserGroupsTable from './views/UserGroups/UserGroupsTable';
-import UsersTable from './views/Users/UsersTable';
-import UserSessionsTable from './views/UserSessions/UserSessionsTable';
-import SystemLogTable from './views/SystemLog/SystemLogTable';
+import { MakeTable, MakesTable } from './views/Tables/Make';
+import { ModelTable, ModelsTable } from './views/Tables/Model';
+import { UserGroupTable, UserGroupsTable } from './views/Tables/UserGroup';
+import { UserTable, UsersTable } from './views/Tables/User';
+import { UserSessionsTable } from './views/Tables/UserSession';
+import { SystemLogsTable } from './views/Tables/SystemLog';
 
 import Question from './views/Questions/Question';
 import OpenQuestions from './views/Questions/OpenQuestions';
 import SolvedQuestions from './views/Questions/SolvedQuestions';
 import UserQuestions from './views/Questions/UserQuestions';
+import QuestionTable from './views/Questions/QuestionTable';
 
 import Profile from './views/Profile/Profile';
 import Logout from './views/Login/Logout';
@@ -54,9 +55,14 @@ export default class App extends React.Component<{}, State> {
             <ProtectedRoute path="/usergroups" component={UserGroupsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/users" component={UsersTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/usersessions" component={UserSessionsTable} requiredRole={UserRole.Power} />
-            <ProtectedRoute path="/systemlog" component={SystemLogTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/systemlog" component={SystemLogsTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/makes" component={MakesTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/models" component={ModelsTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/table/usergroups" component={UserGroupTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/table/users" component={UserTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/table/makes" component={MakeTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/table/models" component={ModelTable} requiredRole={UserRole.Power} />
+            <ProtectedRoute path="/table/questions" component={QuestionTable} requiredRole={UserRole.Power} />
             <ProtectedRoute path="/about" component={About} />
             <ProtectedRoute path="/profile" component={Profile} />
             <Route path="/logout" component={Logout} />

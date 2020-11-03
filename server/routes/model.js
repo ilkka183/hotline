@@ -11,7 +11,8 @@ const table = 'model';
 const sql = 
   'SELECT model.Id, model.MakeId, make.Name AS MakeName, model.Name, model.Grouping, model.AdditionalInfo, model.Sequence, ' +
   'model.StartYear, model.EndYear, model.FuelType, model.VehicleType, model.Tune, ' +
-  'model.EngineSize, model.CylinderCount, model.EnginePower, model.EnginePowerAt, model.EngineCode, model.MID, model.Enabled ' +
+  'model.EngineSize, model.CylinderCount, model.EnginePower, model.EnginePowerAt, model.EngineCode, model.MID, ' +
+  'model.Enabled, model.InsertedAt, model.UpdatedAt ' +
   'FROM model, make ' +
   'WHERE model.MakeId = make.Id';
 

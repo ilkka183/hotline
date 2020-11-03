@@ -28,14 +28,14 @@ module.exports = function(app) {
 
   app.use(express.json());
   app.use(apiPath + 'auth', auth);
-  app.use(apiPath + 'Makes', make);
-  app.use(apiPath + 'Models', model);
-  app.use(apiPath + 'Questions', question);
-  app.use(apiPath + 'Answers', answer);
-  app.use(apiPath + 'UserGroups', usergroup);
-  app.use(apiPath + 'Users', user);
-  app.use(apiPath + 'UserSessions', usersession);
-  app.use(apiPath + 'SystemLogs', systemlog);
+  app.use(apiPath + 'usergroup', usergroup);
+  app.use(apiPath + 'user', user);
+  app.use(apiPath + 'make', make);
+  app.use(apiPath + 'model', model);
+  app.use(apiPath + 'usersession', usersession);
+  app.use(apiPath + 'systemlog', systemlog);
+  app.use(apiPath + 'question', question);
+  app.use(apiPath + 'answer', answer);
   app.use(apiPath + 'traficom', traficom);
   app.use(apiPath + 'tecdoc', tecdoc);
   app.use(apiPath + 'data', data);

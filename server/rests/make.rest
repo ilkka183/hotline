@@ -1,6 +1,6 @@
 @host = http://localhost:4000
 @host2 = http://autotechsystems.fi
-@endPoint = {{host}}/hotline/api/makes
+@endPoint = {{host}}/hotline/api/make
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJpbGtrYTE4MyIsImZpcnN0TmFtZSI6Iklsa2thIiwibGFzdE5hbWUiOiJTYWxtZW5pdXMiLCJlbWFpbCI6Imlsa2thLnNhbG1lbml1c0Bpa2kuZmkiLCJwaG9uZSI6bnVsbCwicm9sZSI6MCwiaWF0IjoxNjAzOTczNjI2fQ.5HcT19zUgw2pzdzW2gMQyZulpAHF0v55vtqBLF0TpD4
 
 GET {{endPoint}}

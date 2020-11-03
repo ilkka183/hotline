@@ -66,8 +66,8 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
 
   private async loadData() {
     try {
-      const { data: question } = await http.get('/questions/open/' + this.questionId);
-      const { data: { rows: answers } } = await http.get('/answers?QuestionId=' + this.questionId);
+      const { data: question } = await http.get('/question/open/' + this.questionId);
+      const { data: { rows: answers } } = await http.get('/answer?QuestionId=' + this.questionId);
 
       this.setState({ question, answers });
     }
@@ -114,7 +114,7 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
   }
 
   private readonly handleAnswerDelete = async (answer: any) => {
-    await http.delete('/answers/' + answer.Id);
+    await http.delete('/answer/' + answer.Id);
     await this.loadData();
   }
 

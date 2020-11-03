@@ -12,7 +12,7 @@ const table = 'question';
 const sql = 
   'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
   'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
-  'question.VIN, question.MID, question.TypeNumber, question.Info, ' +
+  'question.VIN, question.MID, question.KType, question.Info, question.Tags, ' +
   'question.Title, question.Description, question.DescriptionFile, question.Solution, question.SolutionFile, question.SolutionDate, question.Status ' +
   'FROM question, user ' +
   'WHERE question.UserId = user.Id ' +
@@ -57,6 +57,7 @@ async function getQuestions(req, res) {
   let sql = 
     'SELECT question.Id, question.Date, question.UserId, CONCAT(user.FirstName, " ", user.LastName) AS UserName, question.RegistrationYear, question.RegistrationNumber, ' +
     'question.Make, question.Model, question.ModelYear, question.FuelType, question.EngineCode, question.EnginePower, question.CylinderCount, ' +
+    'question.KType, question.VIN, question.MID, question.Info, question.Tags, ' +
     'question.Title, question.Description, question.Solution, question.Status, question.Converted ' +
     'FROM question, user ' +
     'WHERE question.UserId = user.Id ';

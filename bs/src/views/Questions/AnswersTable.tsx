@@ -27,7 +27,7 @@ export default class AnswersTable extends BaseTable<Props> {
   }
 
   protected getApiName(): string {
-    return 'answers';
+    return 'answer';
   }
 
   protected getModalForm(): any {

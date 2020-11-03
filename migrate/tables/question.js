@@ -46,21 +46,34 @@ function insertQuestions(destination, henkilot, questions) {
 
     if (!Date)
       Date = '2000-01-01';
+
+    let Tags = '';
+
+    if (item.HQ_MALLI)
+      Tags += 'MALLI: ' + item.HQ_MALLI + '\n';
+  
+    if (item.HQ_VUOSIMALLI)
+      Tags += 'VUOSIMALLI: ' + item.HQ_VUOSIMALLI + '\n';
+  
+    if (item.HQ_MTYYPPI)
+      Tags += 'MTYYPPI: ' + item.HQ_MTYYPPI + '\n';
+  
+    if (item.HQ_CM3)
+      Tags += 'CM3: ' + item.HQ_CM3 + '\n';
+  
+    if (item.HQ_MID)
+      Tags += 'MID: ' + item.HQ_MID + '\n';
   
     const row = {
       Id: item.HQ_ID,
       UserId,
       Date,
       Make: item.HQ_MERKKI,
-      Model: item.HQ_MALLI,
-      ModelYear: int(item.HQ_VUOSIMALLI),
-      EngineCode: item.HQ_MTYYPPI,
       RegistrationNumber: text(item.HQ_REKNRO),
       VIN: text(item.HQ_ALNRO),
-      MID: text(item.HQ_MID),
-      EngineSize: getEngineSize(item.HQ_CM3),
       FuelType: item.HQ_KVOIMA ? (item.HQ_KVOIMA === 'D' ? 1 : 0) : undefined,
       Info: text(item.HQ_ERITYIS),
+      Tags,
       Title: item.HQ_TITLE,
       Description: item.HQ_ONGELMA,
       DescriptionFile: text(item.HQ_FILE1),
