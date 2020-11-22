@@ -90,7 +90,7 @@ export default class UserForm extends BaseForm<{}> {
     this.addField('FirstName',    'Etunimi',          'text',     { required: true });
     this.addField('LastName',     'Sukunimi',         'text',     { required: true });
     this.addField('Role',         'Rooli',            'number',   { required: true, enums: USER_ROLES });
-    this.addField('GroupId',      'Ryhmä',            'number',   { required: true, lookupUrl: 'UserGroups' });
+    this.addField('GroupId',      'Ryhmä',            'number',   { required: true, lookupUrl: 'usergroup' });
     this.addField('Email',        'Sähköposti',       'email',    { required: true });
     this.addField('Username',     'Käyttäjätunnus',   'text',     { min: 5, required: true });
     this.addField('Password',     'Salasana',         'password', { min: 5, required: true });
@@ -105,11 +105,11 @@ export default class UserForm extends BaseForm<{}> {
     this.addField('Phone',        'Puhelin',          'phone');
     this.addField('Url',          'Nettisivut',       'url');
     this.addField('Class',        'Luokka',           'text');
-    this.addField('MaxOpenQuestionCount', 'Avoimia vikatapauksia enintään', 'number');
-    this.addField('LicenseBegin',         'Lisenssi alku',                  'date');
-    this.addField('LicenseEnd',           'Lisenssi loppu',                 'date');
-    this.addField('LastLogin',            'Viimeinen sisäänkirjautuminen',  'datetime', { readonly: true });
-    this.addField('LastLogout',           'Viimeinen uloskirjautuminen',    'datetime', { readonly: true });
+    this.addField('MaxOpenQuestions', 'Avoimia vikatapauksia enintään', 'number');
+    this.addField('LicenseBegin',     'Lisenssi alku',                  'date');
+    this.addField('LicenseEnd',       'Lisenssi loppu',                 'date');
+    this.addField('LastLogin',        'Viimeinen sisäänkirjautuminen',  'datetime', { readonly: true });
+    this.addField('LastLogout',       'Viimeinen uloskirjautuminen',    'datetime', { readonly: true });
     this.addTimestamps(true);
     this.addEnabled();
     this.addConverted();

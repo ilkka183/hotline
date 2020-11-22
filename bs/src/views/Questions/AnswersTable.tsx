@@ -13,7 +13,7 @@ export default class AnswersTable extends BaseTable<Props> {
   constructor(props: any) {
     super(props);
 
-    this.addId();
+    this.addId(true);
     this.addField('QuestionId', 'Vikatapaus', 'number',   { visible: false });
     this.addField('Date',       'Pvm',        'datetime', { displayFormat: 'date' });
     this.addField('UserName',   'Lähettäjä',  'text',     { show: row => this.showUser(row) });

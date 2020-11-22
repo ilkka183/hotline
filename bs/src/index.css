@@ -28,6 +28,15 @@ body {
   color: gray;
 }
 
+.false {
+  color: red;
+  font-weight: bold;
+}
+
+.true {
+  color: gray;
+}
+
 .disabled {
   color: #D3D3D3;
 }
@@ -50,3 +59,6 @@ body {
   margin-bottom: 0.5em;
 }
 
+.div-inline{
+  display:inline-block;
+}

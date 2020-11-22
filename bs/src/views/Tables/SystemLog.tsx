@@ -18,7 +18,7 @@ export class SystemLogsTable extends BaseTable<{}> {
     return 'Virheloki';
   }
 
-  protected getPageSize(): number {
+  protected getDefaultPageSize(): number {
     return 5;
   }
 

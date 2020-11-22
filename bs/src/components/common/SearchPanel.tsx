@@ -16,20 +16,57 @@ interface Props {
 
 const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear, onNew, onSearch }) => {
 
-  function renderTextInput(field: Field): JSX.Element {
+  function renderText(field: Field): JSX.Element {
     const searchValues: any = table.state.searchValues;
 
     return (
+      <Form.Control
+        type="text"
+        name={field.name}
+        value={searchValues[field.name]}
+        onChange={onChange}
+      />
+    );
+  }
+
+  function renderEnums(field: Field): JSX.Element {
+    const searchValues: any = table.state.searchValues;
+
+    return (
+      <Form.Control as="select" defaultValue={searchValues[field.name]} onChange={onChange}>
+        <option></option>
+        {field.enums && field.enums.map((text: string, index: number) => <option value={index}>{text}</option>)}
+      </Form.Control>
+    );
+  }
+
+  function renderBoolean(field: Field): JSX.Element {
+    const searchValues: any = table.state.searchValues;
+
+    return (
+      <Form.Control as="select" defaultValue={searchValues[field.name]} onChange={onChange}>
+        <option></option>
+        <option value={0}>Kyllä</option>
+        <option value={1}>Ei</option>
+      </Form.Control>
+    );
+  }
+
+  function renderControl(field: any): JSX.Element {
+    if (field.type === 'boolean')
+      return renderBoolean(field);
+
+    if (field.enums)
+      return renderEnums(field);
+
+    return renderText(field);
+  }
+
+  function renderField(field: any): JSX.Element {
+    return (
       <Form.Group key={field.name} as={Row}>
         <Form.Label column sm="2">{field.label}</Form.Label>
-        <Col sm="10">
-          <Form.Control
-            type="text"
-            name={field.name}
-            value={searchValues[field.name]}
-            onChange={onChange}
-          />
-        </Col>
+        <Col sm="10">{renderControl(field)}</Col>
       </Form.Group>
     );
   }
@@ -38,7 +75,7 @@ const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear,
 
   return (
     <Form className="mb-4" >
-      {fields.map((field: any) => renderTextInput(field))}
+      {fields.map((field: any) => renderField(field))}
       <Row>
         <Col sm="2"></Col>
         <Col sm="10">

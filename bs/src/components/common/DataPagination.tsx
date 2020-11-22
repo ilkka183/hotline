@@ -5,14 +5,12 @@ interface Props {
   rowCount: number,
   pageIndex: number,
   pageSize: number,
-  onPageChange: (index: number) => void
+  onPageChange: (index: number) => void,
+  onPageSize: (size: number) => void
 }
 
-const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPageChange }) => {
+const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPageChange, onPageSize }) => {
   const pageCount: number = Math.ceil(rowCount/pageSize);
-
-  if (pageCount <= 1)
-    return null;
 
   const pages: number[] = [];
 
@@ -23,6 +21,10 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
     if ((index >= 0) && (index < pageCount)) {
       onPageChange(index);
     }
+  }
+
+  function changePageSize(event: any) {
+    onPageSize(event.target.value);
   }
 
   function renderPage(index: number) {
@@ -61,16 +63,38 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
       return null;
   }
 
+  function renderPages() {
+    if (pageCount <= 1)
+      return null;
+
+    return (
+      <span className="d-inline-block">
+        <Pagination>
+          <Pagination.First onClick={() => changePage(0)} />
+          <Pagination.Prev onClick={() => changePage(pageIndex - 1)} />
+          {pages.map(index => renderPage(index))}
+          <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
+          <Pagination.Last onClick={() => changePage(pageCount - 1)} />
+          <div className="pagination-rows">{rowCount} riviä</div>
+        </Pagination>
+      </span>
+    );
+  }
+
   return (
-    <Pagination>
-      <Pagination.First onClick={() => changePage(0)} />
-      <Pagination.Prev onClick={() => changePage(pageIndex - 1)} />
-      {pages.map(index => renderPage(index))}
-      <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
-      <Pagination.Last onClick={() => changePage(pageCount - 1)} />
-      <div className="pagination-rows">{rowCount} tietuetta</div>
-    </Pagination>
-  );
+    <div>
+      {renderPages()}
+      <select className="d-inline-block ml-3" value={pageSize} onChange={changePageSize}>
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>50</option>
+        <option>100</option>
+        <option value="-1">kaikki</option>
+      </select>      
+      <span className="d-inline-block pagination-rows">riviä sivulla</span>
+    </div>
+);
 }
 
 export default DataPagination;

@@ -116,7 +116,7 @@ async function getRows(req, res, sql) {
     }
   }
 
-  if (pageSize) {
+  if (pageSize && pageSize > 0) {
     sql += ' LIMIT ';
 
     if (pageIndex) {

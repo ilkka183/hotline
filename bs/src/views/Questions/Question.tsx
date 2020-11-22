@@ -157,6 +157,7 @@ export default class Question extends UserComponent<RouteComponentProps<Params>,
           question={question}
           rows={answers}
           showTitle={false}
+          creatable={this.user?.isUserOrHigher}
           onSolution={this.handleShowSolutionModal}
           onEdited={this.handleAnswerEdited}
           onDelete={this.handleAnswerDelete}

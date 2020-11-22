@@ -1,3 +1,4 @@
+import React from 'react';
 import queryString from 'query-string';
 import { Field } from '../components/common/Fields';
 import FieldsTable, { SearchOptions, Rows } from '../components/common/FieldsTable';
@@ -34,7 +35,7 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
     let query: any = {}
     this.getItemsQuery(query);
     query.pageIndex = options.pageIndex;
-    query.pageSize = this.pageSize;
+    query.pageSize = options.pageSize;
 
     if (sortFields.length > 0) {
       query.sortFields = sortFields.length;
@@ -84,6 +85,17 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
   }
 
   protected addConverted(): Field {
-    return this.addField('Converted', 'Konvertoitu', 'boolean', { required: true, visible: this.isPowerOrAdmin, getDefaultValue: () => false });
+    return this.addField(
+      'Converted',
+      'Konvertoitu',
+      'boolean',
+      { required: true, visible: this.isPowerOrAdmin, search: true, render: this.renderConverted, getDefaultValue: () => false });
+  }
+
+  private renderConverted(row: any): JSX.Element {
+    const classNames = ['false', 'true'];
+    const TEXTS = ['ei', 'kyllä'];
+    
+    return <span className={classNames[row.Converted]}>{TEXTS[row.Converted]}</span>
   }
 }

@@ -16,6 +16,10 @@ abstract class AbstractMakeTable extends BaseTable<{}> {
   protected getModalForm(): any {
     return MakeForm;
   }
+
+  protected getDefaultPageSize(): number {
+    return 20;
+  }
 }
 
 

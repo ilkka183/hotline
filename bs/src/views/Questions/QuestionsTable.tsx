@@ -16,21 +16,22 @@ export default class QuestionsTable extends BaseTable<Props> {
     super(props);
 
     this.addId();
-    this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
+//    this.addField('Date',        'Pvm',                  'datetime', { displayFormat: 'date' });
     this.addField('UserName',    'Lähettäjä',            'text',     { visible: this.isPowerOrAdmin });
-    this.addField('Make',        'Merkki',               'text',     { search: true });
-    this.addField('Model',       'Malli',                'text',     { search: true });
-    this.addField('ModelYear',   'Vuosimalli',           'number');
-    this.addField('FuelType',    'Käyttövoima',          'number',   { enums: FUEL_TYPE_TEXTS });
-    this.addField('EngineCode',  'Moottorin tunnus',     'text',     { visible: false, search: true });
+    this.addField('Vehicle',     'Mallinimi',            'text',     { render: this.renderVehicle });
+    this.addField('Make',        'Merkki',               'text',     { visible: false, search: true });
+    this.addField('Model',       'Malli',                'text',     { visible: false, search: true });
+//    this.addField('ModelYear',   'Vuosimalli',           'number');
+    this.addField('FuelType',    'Käyttövoima',          'number',   { search: true, enums: FUEL_TYPE_TEXTS });
+    this.addField('EngineCode',  'Moottorin tunnus',     'text',     { visible: false });
 //    this.addField('Title',       'Otsikko',              'text',     { search: true, link: item => '/question/' + item.Id });
     this.addField('Description', 'Kuvaus ja vastaukset', 'text',     { search: true, render: this.renderDescription });
     this.addField('Status',      'Tila',                 'number',   { render: this.renderStatus });
     this.addConverted();
   }
 
-  protected getPageSize(): number {
-    return 5;
+  protected getDefaultPageSize(): number {
+    return 50;
   }
 
   public getTitle(): string {
@@ -63,15 +64,34 @@ export default class QuestionsTable extends BaseTable<Props> {
     return this.owns(row.UserId);
   }
 
+  private renderVehicle(row: any): JSX.Element {
+    return <>{row.Make} {row.Model} {row.ModelYear}</>
+  }
+
   private renderDescription(row: any): JSX.Element {
+    const renderAnswer = (answer: any, index: number): JSX.Element => {
+      let className: string = '';
+
+      if (answer.UserId === row.UserId)
+        className = 'text-primary';
+      else if (this.isPowerOrAdmin)
+        className = 'text-secondary';
+      else
+        className = 'text-dark';
+  
+      return (
+        <div className={className} key={index}>- {truncate(answer.Message)}</div>
+      );
+    }
+    
     return (
       <>
         <Link to={'/question/' + row.Id}>{row.Title}</Link>
         <div className="description1">
           {truncate(row.Description)}
         </div>
-        {row.Solution && <div>{truncate(row.Solution)}</div>}
-        {!row.Solution && row.Answers.map((reply: any, index: number) => <div key={index}>- {truncate(reply.Message)}</div>)}
+        {row.Solution && <div className="text-success">{truncate(row.Solution)}</div>}
+        {!row.Solution && row.Answers.map((answer: any, index: number) => renderAnswer(answer, index))}
       </>
     );
   }

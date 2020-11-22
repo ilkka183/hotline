@@ -128,7 +128,7 @@ CREATE TABLE user
   LastLogout DATETIME,
   LicenseBegin DATE,
   LicenseEnd DATE,
-  MaxOpenQuestionCount INTEGER NOT NULL DEFAULT 2,
+  MaxOpenQuestions INTEGER NOT NULL DEFAULT 2,
   Data JSON,
   Class VARCHAR(255),
   Converted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -268,20 +268,24 @@ CREATE TABLE systemlog
 
 /* Käyttäjät */
 INSERT INTO usergroup(Id, Name, ContactPerson, Url, Enabled) VALUES(1, 'Tuntematon', '', '', False);
-INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(2, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
-INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(3, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
-INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(4, 'Prodiags', NULL, 'http://www.prodiags.com');
+INSERT INTO usergroup(Id, Name, ContactPerson, Url, Enabled) VALUES(2, 'Demoryhmä',  '', '', False);
 
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd, Enabled) VALUES(1, 1, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi', 'tuntematon', 'weber', NULL, NULL, False);
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, Address, PostalCode, PostOffice, LicenseBegin, LicenseEnd) VALUES(2, 2, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi', 'ilkka183', 'weber', 'Heikintie 2 A 5', '47400', 'Kausala', NOW(), NULL);
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(3, 3, 1, 'Jorma', 'Höyteinen',   'jorma.hoyteinen@hmv-systems.fi', 'jormaTesti',  'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(4, 4, 1, 'Arto',  'Aalto',       'arto.aalto@prodiags.com',        'artoTesti',   'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(5, 4, 2, 'Jarmo', 'Aalto',       'jarmo.aalto@prodiags.com',       'jarmoTesti',  'weber', CURDATE() - INTERVAL 1 DAY, NULL);
-INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, LicenseEnd) VALUES(6, 3, 2, 'Janne', 'Fröberg',     'jan.froberg@hmv-systems.fi',     'janTesti',    'weber', CURDATE() - INTERVAL 1 DAY, NULL);
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin, Enabled)
+  VALUES(1, 1, 2, 'Matti', 'Meikäläinen', 'matti.meikalainen@iki.fi', 'tuntematon', 'weber', NULL, False);
 
 
-/* Merkit ja mallit */
-/*
+INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(12, 'Juniper Code', 'Ilkka Salmenius', 'http://www.junipercode.com');
+INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(13, 'HMV-Systems', 'Jorma Höyteinen', 'http://www.hmv-systems.fi');
+INSERT INTO usergroup(Id, Name, ContactPerson, Url) VALUES(14, 'Prodiags', NULL, 'http://www.prodiags.com');
+
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(2, 12, 0, 'Ilkka', 'Salmenius', 'ilkka.salmenius@iki.fi',         'ilkka183', 'weber', NOW());
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(3, 13, 1, 'Jorma', 'Höyteinen', 'jorma.hoyteinen@hmv-systems.fi', 'jorma',    'weber', CURDATE() - INTERVAL 1 DAY);
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(4, 14, 1, 'Arto',  'Aalto',     'arto.aalto@prodiags.com',        'arto',     'weber', CURDATE() - INTERVAL 1 DAY);
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(5, 14, 2, 'Jarmo', 'Aalto',     'jarmo.aalto@prodiags.com',       'jarmo',    'weber', CURDATE() - INTERVAL 1 DAY);
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(6, 13, 2, 'Janne', 'Fröberg',   'jan.froberg@hmv-systems.fi',     'jan',      'weber', CURDATE() - INTERVAL 1 DAY);
+INSERT INTO user(Id, GroupId, Role, FirstName, LastName, Email, Username, Password, LicenseBegin) VALUES(7, 13, 3, 'Teppo', 'Testaaja',  'teppo.testaaja@gmail.com',       'teppo',    'weber', NULL);
+
+
 INSERT INTO make(Name) VALUES('SEAT');
 INSERT INTO make(Name) VALUES('Skoda');
 INSERT INTO make(Name) VALUES('Volkswagen');
@@ -360,4 +364,3 @@ INSERT INTO question(Date, UserId, Make, Model, RegistrationYear, RegistrationNu
   VALUES(NOW() - INTERVAL 1 DAY, 3, 'Ford', 'Focus 1.8 TDdi', 1999, 'SIO-913', 1, 1769, 66, 'HWDA', 'WVWZZZ1JZ5W079439', 'Ohjaus ravistaa pahasti', 'Ohjaus ravistaa kiihdytyksessä.');
 
 INSERT INTO answer(QuestionId, UserId, Message) VALUES(5, 1, 'Vaihda vetonivelet');
-*/

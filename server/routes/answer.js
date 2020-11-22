@@ -1,7 +1,6 @@
 const express = require('express');
 const http = require('./methods');
 const auth = require('../middleware/auth');
-const power = require('../middleware/power');
 const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();

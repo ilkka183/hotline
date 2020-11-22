@@ -52,6 +52,10 @@ export class User implements IUser {
     return this.role <= UserRole.Power;
   }
 
+  public get isUserOrHigher(): boolean {
+    return this.role <= UserRole.User;
+  }
+
   public owns(userId: number): boolean {
     return userId === this.id || this.isPowerOrAdmin;
   }

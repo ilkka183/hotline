@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { Pagination } from '../../components/common/FieldsTable';
 import QuestionsTable from './QuestionsTable';
 import UserComponent from '../UserComponent';
 import { QuestionStatus } from './Question';
@@ -52,7 +53,7 @@ export default abstract class Questions extends UserComponent<RouteComponentProp
         status={this.getStatus()}
         userId={this.getUserId()}
         newButtonText="Lisää uusi vikatapaus"
-        paginate={true}
+        pagination={Pagination.Bottom}
         routedPages={true}
         history={this.props.history}
         location={this.props.location}

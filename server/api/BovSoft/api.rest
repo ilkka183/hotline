@@ -5,3 +5,5 @@
 
 GET {{endpoint}}&nameservice=getktypefornumplatefinland&regnum=ZLP-833&contenttype=JSON
 ###
+GET {{endpoint}}&nameservice=getktypeforvincode &regnum=VSSZZZ5FZHR046587&contenttype=JSON
+###

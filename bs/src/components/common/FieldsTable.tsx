@@ -10,6 +10,8 @@ import SearchPanel from './SearchPanel';
 import SortIcon from './SortIcon';
 import { EditMode } from './FieldsForm';
 
+export enum Pagination { None, Top, Bottom, Both }
+
 interface SortField {
   name: string,
   order: SortOrder
@@ -22,17 +24,19 @@ export interface Rows {
 
 export interface SearchOptions {
   pageIndex?: number,
+  pageSize?: number,
   searchValues?: object,
   sortFields?: SortField[]
 }
 
 export interface FieldsTableProps {
   newButtonText?: string,
-  paginate?: boolean,
+  pagination?: Pagination,
   routedPages?: boolean,
   history?: any,
   location?: any,
   pageIndex?: number,
+  pageSize?: number,
   creatable?: boolean,
   editable?: boolean,
   deletable?: boolean,
@@ -51,6 +55,7 @@ export interface FieldsTableState {
   rows: any[],
   rowCount: number,
   pageIndex: number,
+  pageSize: number,
   searchValues: object,
   searchPanel: boolean,
   sortFields: SortField[],
@@ -64,9 +69,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   static defaultProps = {
     showTitle: true,
     searchPanel: true,
-    paginate: true,
+    pagination: Pagination.Bottom,
     routedPages: false,
     pageIndex: 0,
+    pageSize: 10,
     readOnly: false,
     creatable: true,
     editable: true,
@@ -77,6 +83,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     rows: [],
     rowCount: 0,
     pageIndex: 0,
+    pageSize: this.getDefaultPageSize(),
     searchValues: {},
     searchPanel: false,
     sortFields: [],
@@ -91,10 +98,10 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   public get pageSize(): number {
-    return this.getPageSize();
+    return this.props.routedPages ? this.props.pageSize! : this.state.pageSize;
   }
 
-  protected getPageSize(): number {
+  protected getDefaultPageSize(): number {
     return 10;
   }
 
@@ -142,10 +149,13 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   protected abstract async getItems(options: SearchOptions): Promise<Rows>;
 
   protected async fetchItems(options: SearchOptions) {
-    let { pageIndex, searchValues, sortFields } = options;
+    let { pageIndex, pageSize, searchValues, sortFields } = options;
 
     if (pageIndex === undefined)
       pageIndex = this.pageIndex;
+
+    if (pageSize === undefined)
+      pageSize = this.pageSize;
 
     if (searchValues === undefined)
       searchValues = this.state.searchValues;
@@ -153,7 +163,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     if (sortFields === undefined)
       sortFields = this.state.sortFields
 
-    const { rowCount, rows } = await this.getItems({ pageIndex, searchValues, sortFields });
+    const { rowCount, rows } = await this.getItems({ pageIndex, pageSize, searchValues, sortFields });
 
     this.setState({ rowCount, rows, searchValues, sortFields });
   }
@@ -189,10 +199,16 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     } else {
       this.setState({ pageIndex });
 
-      if (!this.props.rows) {
+      if (!this.props.rows)
         await this.fetchItems({ pageIndex });
-      }
     }
+  }
+
+  private readonly handlePageSize = async (size: number) => {
+    this.setState({ pageIndex: 0, pageSize: size });
+
+    if (!this.props.rows)
+      await this.fetchItems({ pageIndex: 0, pageSize: size });
   }
 
   private readonly handleSortField = async (name: string) => {
@@ -401,6 +417,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
           pageIndex={this.pageIndex}
           pageSize={this.pageSize}
           onPageChange={this.handlePageChange}
+          onPageSize={this.handlePageSize}
         />
       </div>
     );
@@ -525,14 +542,14 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }  
 
   private getRows(): Rows {
-    const { paginate } = this.props;
+    const { pagination } = this.props;
 
     if (this.props.rows) {
       const filteredRows = this.filterRows(this.props.rows!);
 
       return {
         rowCount: filteredRows.length,
-        rows: paginate ? this.paginateRows(filteredRows, this.pageIndex, this.pageSize) : filteredRows
+        rows: (pagination !== Pagination.None) ? this.paginateRows(filteredRows, this.pageIndex, this.pageSize) : filteredRows
       }
     }
     else
@@ -559,7 +576,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
   }
 
   public render(): JSX.Element {
-    const { paginate } = this.props;
+    const { pagination } = this.props;
     const { editMode } = this.state;
 
     const { rowCount, rows } = this.getRows();
@@ -569,7 +586,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
       <>
         {this.renderHeader()}
         {this.renderSearchPanel()}
-        {paginate && this.renderPagination(rowCount)}
+        {(pagination === Pagination.Top || pagination === Pagination.Both) && this.renderPagination(rowCount)}
         <table className="table">
           <thead>
             <tr>
@@ -587,7 +604,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
               </tr>))}
           </tbody>
         </table>
-        {paginate && this.renderPagination(rowCount)}
+        {(pagination === Pagination.Bottom || pagination === Pagination.Both) && this.renderPagination(rowCount)}
         {(editMode !== undefined) && this.renderEditModal()}
         {this.renderModals()}
       </>

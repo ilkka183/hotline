@@ -69,8 +69,13 @@ function insertQuestions(destination, henkilot, questions) {
       UserId,
       Date,
       Make: item.HQ_MERKKI,
+//        Model: item.HQ_MALLI,
+//        ModelYear: int(item.HQ_VUOSIMALLI),
+//        EngineCode: item.HQ_MTYYPPI,
       RegistrationNumber: text(item.HQ_REKNRO),
       VIN: text(item.HQ_ALNRO),
+//        MID: text(item.HQ_MID),
+//        EngineSize: getEngineSize(item.HQ_CM3),
       FuelType: item.HQ_KVOIMA ? (item.HQ_KVOIMA === 'D' ? 1 : 0) : undefined,
       Info: text(item.HQ_ERITYIS),
       Tags,
@@ -82,6 +87,7 @@ function insertQuestions(destination, henkilot, questions) {
       SolutionDate: date(item.HQ_DATE2),
       Status: item.HQ_STATUS
     }
+      
 
     destination.insert('Question', row);
   }

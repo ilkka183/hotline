@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('./methods');
 const connection = require('../localConnection');
 const auth = require('../middleware/auth');
-const power = require('../middleware/power');
+const user = require('../middleware/user');
 const asyncMiddleware = require('../middleware/async');
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get('/open/:Id', asyncMiddleware(async (req, res) => { await http.getRow(
 router.get('/:Id', asyncMiddleware(async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) }));
 router.post('', [auth], asyncMiddleware(async (req, res) => { await http.postRow(req, res, table) }));
 router.put('/:Id', [auth], asyncMiddleware(async (req, res) => { await http.putRow(req, res, table, { Id: req.params.Id }) }));
-router.delete('/:Id', [auth, power], asyncMiddleware(async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) }));
+router.delete('/:Id', [auth, user.power], asyncMiddleware(async (req, res) => { await http.deleteRow(req, res, table, { Id: req.params.Id }) }));
 
 function getFilter(req, counter) {
   let sql = '';
@@ -88,7 +88,7 @@ async function getQuestions(req, res) {
   const { results: answers } = await connection.query(answerSql);
 
   for (const row of rows)
-    row.Answers = answers.filter(answer => answer.QuestionId === row.Id).reverse();
+    row.Answers = answers.filter(answer => answer.QuestionId === row.Id);
 
   const response = {
     rowCount: count[0].Count,
