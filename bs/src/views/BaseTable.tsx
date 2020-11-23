@@ -56,8 +56,22 @@ export default abstract class BaseTable<P> extends FieldsTable<P> {
       const searchValues: any = options.searchValues;
 
       for (const key in searchValues)
-        if (searchValues[key])
-          query[key] = searchValues[key];
+        if (searchValues[key]) {
+          const field = this.findField(key);
+
+          if (field) {
+            let name = 'filter_';
+
+            if (field.isString)
+              name += 'string_';
+            else
+              name += 'number_';
+
+            name += key;
+  
+            query[name] = searchValues[key];
+          }
+        }
     }
 
     let endpoint: string = this.apiPath;

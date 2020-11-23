@@ -64,17 +64,22 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
   }
 
   function renderPages() {
-    if (pageCount <= 1)
-      return null;
+    return (
+      <>
+        <Pagination.First onClick={() => changePage(0)} />
+        <Pagination.Prev onClick={() => changePage(pageIndex - 1)} />
+        {pages.map(index => renderPage(index))}
+        <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
+        <Pagination.Last onClick={() => changePage(pageCount - 1)} />
+      </>
+    );
+  }
 
+  function renderBar() {
     return (
       <span className="d-inline-block">
         <Pagination>
-          <Pagination.First onClick={() => changePage(0)} />
-          <Pagination.Prev onClick={() => changePage(pageIndex - 1)} />
-          {pages.map(index => renderPage(index))}
-          <Pagination.Next onClick={() => changePage(pageIndex + 1)} />
-          <Pagination.Last onClick={() => changePage(pageCount - 1)} />
+          {(pageCount > 1) && renderPages()}
           <div className="pagination-rows">{rowCount} riviä</div>
         </Pagination>
       </span>
@@ -83,7 +88,7 @@ const DataPagination: React.FC<Props> = ({ rowCount, pageIndex, pageSize, onPage
 
   return (
     <div>
-      {renderPages()}
+      {renderBar()}
       <select className="d-inline-block ml-3" value={pageSize} onChange={changePageSize}>
         <option>5</option>
         <option>10</option>

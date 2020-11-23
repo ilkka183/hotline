@@ -16,9 +16,7 @@ interface Props {
 
 const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear, onNew, onSearch }) => {
 
-  function renderText(field: Field): JSX.Element {
-    const searchValues: any = table.state.searchValues;
-
+  function renderText(field: Field, searchValues: any): JSX.Element {
     return (
       <Form.Control
         type="text"
@@ -29,37 +27,48 @@ const SearchPanel: React.FC<Props> = ({ table, newButtonText, onChange, onClear,
     );
   }
 
-  function renderEnums(field: Field): JSX.Element {
-    const searchValues: any = table.state.searchValues;
-
+  function renderSelect(field: Field, options: object[], searchValues: any): JSX.Element {
     return (
-      <Form.Control as="select" defaultValue={searchValues[field.name]} onChange={onChange}>
+      <Form.Control
+        as="select"
+        name={field.name}
+        value={searchValues[field.name]}
+        onChange={onChange}
+      >
         <option></option>
-        {field.enums && field.enums.map((text: string, index: number) => <option value={index}>{text}</option>)}
+        {options.map((item: any) => <option key={item.value} value={item.value}>{item.text}</option>)}
       </Form.Control>
     );
   }
 
-  function renderBoolean(field: Field): JSX.Element {
-    const searchValues: any = table.state.searchValues;
+  function renderEnums(field: Field, searchValues: any): JSX.Element {
+    let options: object[] = [];
+    
+    if (field.enums)
+      options = field.enums.map((text: string, value: number) => { return { value, text }});
 
-    return (
-      <Form.Control as="select" defaultValue={searchValues[field.name]} onChange={onChange}>
-        <option></option>
-        <option value={0}>Kyllä</option>
-        <option value={1}>Ei</option>
-      </Form.Control>
-    );
+    return renderSelect(field, options, searchValues);
+  }
+
+  function renderBoolean(field: Field, searchValues: any): JSX.Element {
+    const options = [
+      { value: 0, text: 'Ei'},
+      { value: 1, text: 'Kyllä'}
+    ];
+
+    return renderSelect(field, options, searchValues);
   }
 
   function renderControl(field: any): JSX.Element {
+    const searchValues: any = table.state.searchValues;
+
     if (field.type === 'boolean')
-      return renderBoolean(field);
+      return renderBoolean(field, searchValues);
 
     if (field.enums)
-      return renderEnums(field);
+      return renderEnums(field, searchValues);
 
-    return renderText(field);
+    return renderText(field, searchValues);
   }
 
   function renderField(field: any): JSX.Element {

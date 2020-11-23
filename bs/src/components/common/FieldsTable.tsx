@@ -179,7 +179,7 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     }
     else {
       const sortFields: SortField[] = []
-      await this.fetchItems({ sortFields });
+      await this.fetchItems({ sortFields, searchValues });
     }
   }
 
@@ -245,16 +245,18 @@ export default abstract class FieldsTable<P> extends FieldsComponent<P & FieldsT
     const searchValues: any = {...this.state.searchValues};
     searchValues[currentTarget.name] = currentTarget.value;
 
+    console.log(searchValues);
+
     this.setState({ searchValues });
   }
 
-  private readonly handleSearchClear = () => {
+  private readonly handleSearchClear = async () => {
     const searchValues: any = {...this.state.searchValues};
 
     for (const name in searchValues)
       searchValues[name] = '';
 
-    this.setState({ searchValues });
+    await this.fetchItems({ pageIndex: 0, searchValues });
   }
 
   private readonly handleToggleSearchPanel = () => {

@@ -10,8 +10,7 @@ const table = 'make';
 
 const sql = 
   'SELECT Id, Name, Info, Enabled, InsertedAt, UpdatedAt ' +
-  'FROM make ' + 
-  'ORDER BY name';
+  'FROM make';
 
 router.get('', asyncMiddleware(async (req, res) => { await http.getRows(req, res, sql) }));
 router.get('/:Id', asyncMiddleware(async (req, res) => { await http.getRow(req, res, http.sql(table, req.params.Id)) }));

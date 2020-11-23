@@ -28,21 +28,22 @@ router.delete('/:Id', [auth, user.power], asyncMiddleware(async (req, res) => { 
 function getFilter(req, counter) {
   let sql = '';
 
-  for (const field in req.query) {
-    if (field === 'pageIndex' || field === 'pageSize')
-      continue;
+  for (const key in req.query) {
+    if (key.startsWith('filter_')) {
+      const fields = key.split('_');
 
-    if (counter === 0)
-      sql += ' WHERE ';
-    else
-      sql += ' AND ';
+      if (counter === 0)
+        sql += ' WHERE ';
+      else
+        sql += ' AND ';
 
-    if (field === 'Status' || field === 'UserId')
-      sql += field + ' = ' + req.query[field] + ' ';
-    else
-      sql += field + ' LIKE "%' + req.query[field] + '%" ';
+      if (fields[1] === 'string')
+        sql += fields[2] + ' LIKE "%' + req.query[key] + '%" ';
+      else
+        sql += fields[2] + ' = ' + req.query[key] + ' ';
 
-    counter++;
+      counter++;
+    }
   }
 
   return sql;
